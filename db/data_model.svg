@@ -1,0 +1,493 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN" "http://www.w3.org/TR/2001/PR-SVG-20010719/DTD/svg10.dtd">
+<svg width="66cm" height="43cm" viewBox="346 111 1319 854" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <g>
+    <rect style="fill: #ffffff" x="607.829" y="202.955" width="58.8" height="36"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="607.829" y="202.955" width="58.8" height="36"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:monospace;font-style:normal;font-weight:normal" x="637.229" y="224.155">User</text>
+  </g>
+  <g>
+    <ellipse style="fill: #ffffff" cx="519.348" cy="220.347" rx="46.95" ry="18"/>
+    <ellipse style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" cx="519.348" cy="220.347" rx="46.95" ry="18"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:monospace;font-style:normal;font-weight:normal" x="519.348" y="223.547">user_id</text>
+    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="492.398" y1="228.347" x2="546.298" y2="228.347"/>
+  </g>
+  <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="567.266" y1="220.594" x2="606.823" y2="220.798"/>
+  <g>
+    <ellipse style="fill: #ffffff" cx="512.844" cy="175.879" rx="50.8" ry="18"/>
+    <ellipse style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" cx="512.844" cy="175.879" rx="50.8" ry="18"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:monospace;font-style:normal;font-weight:normal" x="512.844" y="179.079">username</text>
+  </g>
+  <g>
+    <ellipse style="fill: #ffffff" cx="533.549" cy="136.41" rx="70.05" ry="18"/>
+    <ellipse style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" cx="533.549" cy="136.41" rx="70.05" ry="18"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:monospace;font-style:normal;font-weight:normal" x="533.549" y="139.61">password_hash</text>
+  </g>
+  <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="606.823" y1="209.936" x2="549.3" y2="189.09"/>
+  <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="613.929" y1="201.955" x2="555.375" y2="154.208"/>
+  <g>
+    <ellipse style="fill: #ffffff" cx="667.444" cy="130.942" rx="62.35" ry="18"/>
+    <ellipse style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" cx="667.444" cy="130.942" rx="62.35" ry="18"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:monospace;font-style:normal;font-weight:normal" x="667.444" y="134.142">update_date</text>
+  </g>
+  <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="643.606" y1="201.957" x2="661.111" y2="149.808"/>
+  <g>
+    <ellipse style="fill: #ffffff" cx="729.149" cy="169.474" rx="54.65" ry="18"/>
+    <ellipse style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" cx="729.149" cy="169.474" rx="54.65" ry="18"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:monospace;font-style:normal;font-weight:normal" x="729.149" y="172.674">is_active</text>
+  </g>
+  <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="667.625" y1="203.931" x2="700.581" y2="185.474"/>
+  <g>
+    <rect style="fill: #ffffff" x="1007.83" y="202.955" width="58.8" height="36"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="1007.83" y="202.955" width="58.8" height="36"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:monospace;font-style:normal;font-weight:normal" x="1037.23" y="224.155">Role</text>
+  </g>
+  <g>
+    <ellipse style="fill: #ffffff" cx="995.779" cy="164.955" rx="46.95" ry="18"/>
+    <ellipse style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" cx="995.779" cy="164.955" rx="46.95" ry="18"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:monospace;font-style:normal;font-weight:normal" x="995.779" y="168.155">role_id</text>
+    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="968.829" y1="172.955" x2="1022.73" y2="172.955"/>
+  </g>
+  <g>
+    <ellipse style="fill: #ffffff" cx="1100.23" cy="161.955" rx="35.4" ry="18"/>
+    <ellipse style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" cx="1100.23" cy="161.955" rx="35.4" ry="18"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:monospace;font-style:normal;font-weight:normal" x="1100.23" y="165.155">role</text>
+  </g>
+  <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="1057.47" y1="201.999" x2="1082.62" y2="178.448"/>
+  <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="1009.19" y1="183.07" x2="1023.17" y2="201.965"/>
+  <g>
+    <ellipse style="fill: #ffffff" cx="1191.18" cy="219.955" rx="62.35" ry="18"/>
+    <ellipse style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" cx="1191.18" cy="219.955" rx="62.35" ry="18"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:monospace;font-style:normal;font-weight:normal" x="1191.18" y="223.155">description</text>
+  </g>
+  <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="1067.62" y1="220.757" x2="1127.84" y2="220.366"/>
+  <g>
+    <rect style="fill: #ffffff" x="773.675" y="861.829" width="97.3" height="36"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="773.675" y="861.829" width="97.3" height="36"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:monospace;font-style:normal;font-weight:normal" x="822.325" y="883.029">Candidate</text>
+  </g>
+  <g>
+    <ellipse style="fill: #ffffff" cx="625.687" cy="877.625" rx="66.2" ry="18"/>
+    <ellipse style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" cx="625.687" cy="877.625" rx="66.2" ry="18"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:monospace;font-style:normal;font-weight:normal" x="625.687" y="880.825">candidate_id</text>
+    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="579.487" y1="885.625" x2="671.887" y2="885.625"/>
+  </g>
+  <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="692.825" y1="878.377" x2="772.673" y2="879.272"/>
+  <g>
+    <ellipse style="fill: #ffffff" cx="624.597" cy="792.967" rx="35.4" ry="18"/>
+    <ellipse style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" cx="624.597" cy="792.967" rx="35.4" ry="18"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:monospace;font-style:normal;font-weight:normal" x="624.597" y="796.167">name</text>
+  </g>
+  <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="652.257" y1="805.118" x2="782.161" y2="862.185"/>
+  <g>
+    <ellipse style="fill: #ffffff" cx="725.175" cy="798.373" rx="27.7" ry="18"/>
+    <ellipse style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" cx="725.175" cy="798.373" rx="27.7" ry="18"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:monospace;font-style:normal;font-weight:normal" x="725.175" y="801.573">cv</text>
+  </g>
+  <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="742.868" y1="813.208" x2="799.697" y2="860.857"/>
+  <g>
+    <rect style="fill: #ffffff" x="1077.83" y="697.955" width="174.3" height="36"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="1077.83" y="697.955" width="174.3" height="36"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:monospace;font-style:normal;font-weight:normal" x="1164.98" y="719.155">Opportunity_Profile</text>
+  </g>
+  <g>
+    <ellipse style="fill: #ffffff" cx="1044.33" cy="763.955" rx="58.5" ry="18"/>
+    <ellipse style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" cx="1044.33" cy="763.955" rx="58.5" ry="18"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:monospace;font-style:normal;font-weight:normal" x="1044.33" y="767.155">profile_id</text>
+    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="1005.83" y1="771.955" x2="1082.83" y2="771.955"/>
+  </g>
+  <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="1117.23" y1="734.951" x2="1081.04" y2="749.347"/>
+  <g>
+    <ellipse style="fill: #ffffff" cx="1108.78" cy="801.955" rx="46.95" ry="18"/>
+    <ellipse style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" cx="1108.78" cy="801.955" rx="46.95" ry="18"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:monospace;font-style:normal;font-weight:normal" x="1108.78" y="805.155">profile</text>
+  </g>
+  <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="1152.57" y1="734.946" x2="1120.69" y2="783.73"/>
+  <g>
+    <ellipse style="fill: #ffffff" cx="1201.18" cy="770.955" rx="62.35" ry="18"/>
+    <ellipse style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" cx="1201.18" cy="770.955" rx="62.35" ry="18"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:monospace;font-style:normal;font-weight:normal" x="1201.18" y="774.155">description</text>
+  </g>
+  <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="1177.46" y1="734.915" x2="1189" y2="752.451"/>
+  <g>
+    <rect style="fill: #ffffff" x="772.675" y="191.955" width="97.3" height="58.38"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="772.675" y="191.955" width="97.3" height="58.38"/>
+    <polygon style="fill: #ffffff" points="772.675,221.145 821.325,191.955 869.975,221.145 821.325,250.335 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="772.675,221.145 821.325,191.955 869.975,221.145 821.325,250.335 "/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:monospace;font-style:normal;font-weight:normal" x="821.325" y="224.345">User_Role</text>
+  </g>
+  <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="667.636,220.955 719.652,220.955 719.652,221.145 771.668,221.145 "/>
+  <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="870.981,221.145 938.901,221.145 938.901,220.955 1006.82,220.955 "/>
+  <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="747.829" y="207.955">
+    <tspan x="747.829" y="207.955">N</tspan>
+  </text>
+  <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="887.829" y="207.955">
+    <tspan x="887.829" y="207.955">N</tspan>
+  </text>
+  <g>
+    <rect style="fill: #ffffff" x="780.829" y="461.955" width="81.9" height="36"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="780.829" y="461.955" width="81.9" height="36"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:monospace;font-style:normal;font-weight:normal" x="821.779" y="483.155">Request</text>
+  </g>
+  <g>
+    <polygon style="fill: #ffffff" points="802.162,335.955 822.162,323.955 842.162,335.955 822.162,347.955 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="802.162,335.955 822.162,323.955 842.162,335.955 822.162,347.955 "/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="826.162" y="317.955">N</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="826.162" y="369.955">N</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:monospace;font-style:normal;font-weight:normal" x="822.162" y="339.155"></text>
+  </g>
+  <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="822.162,323.955 822.162,287.648 821.325,287.648 821.325,251.342 "/>
+  <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="822.162,347.955 822.162,404.45 821.779,404.45 821.779,460.945 "/>
+  <g>
+    <rect style="fill: #ffffff" x="780.829" y="650.955" width="81.9" height="49.14"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="780.829" y="650.955" width="81.9" height="49.14"/>
+    <polygon style="fill: #ffffff" points="780.829,675.525 821.779,650.955 862.729,675.525 821.779,700.095 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="780.829,675.525 821.779,650.955 862.729,675.525 821.779,700.095 "/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:monospace;font-style:normal;font-weight:normal" x="821.779" y="678.725">Process</text>
+  </g>
+  <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="821.779,649.948 821.779,648.948 821.779,499.964 821.779,498.964 "/>
+  <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="821.779,701.101 821.779,780.96 822.325,780.96 822.325,860.819 "/>
+  <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="838.829" y="638.955">
+    <tspan x="838.829" y="638.955">N</tspan>
+  </text>
+  <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="833.829" y="719.955">
+    <tspan x="833.829" y="719.955">N</tspan>
+  </text>
+  <g>
+    <ellipse style="fill: #ffffff" cx="858.529" cy="391.955" rx="27.7" ry="18"/>
+    <ellipse style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" cx="858.529" cy="391.955" rx="27.7" ry="18"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:monospace;font-style:normal;font-weight:normal" x="858.529" y="395.155">id</text>
+    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="850.829" y1="399.955" x2="866.229" y2="399.955"/>
+  </g>
+  <g>
+    <polygon style="fill: #ffffff" points="1246.83,479.955 1266.83,467.955 1286.83,479.955 1266.83,491.955 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="1246.83,479.955 1266.83,467.955 1286.83,479.955 1266.83,491.955 "/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:end;font-family:monospace;font-style:normal;font-weight:normal" x="1240.83" y="473.955">N</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="1292.83" y="473.955">1</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:monospace;font-style:normal;font-weight:normal" x="1266.83" y="483.155"></text>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="863.734,477.455 869.734,477.455 1245.83,477.455 1246.83,477.455 "/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="863.734,482.455 864.734,482.455 1240.83,482.455 1246.83,482.455 "/>
+  </g>
+  <g>
+    <polygon style="fill: #ffffff" points="983.829,715.955 1003.83,703.955 1023.83,715.955 1003.83,727.955 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="983.829,715.955 1003.83,703.955 1023.83,715.955 1003.83,727.955 "/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:end;font-family:monospace;font-style:normal;font-weight:normal" x="977.829" y="709.955">N</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="1029.83" y="709.955">N</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:monospace;font-style:normal;font-weight:normal" x="1003.83" y="719.155"></text>
+  </g>
+  <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="871.981,879.829 927.434,879.829 927.434,715.955 982.887,715.955 "/>
+  <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="1024.77,715.955 1025.77,715.955 1075.82,715.955 1076.82,715.955 "/>
+  <g>
+    <rect style="fill: #ffffff" x="362.829" y="461.955" width="158.9" height="36"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="362.829" y="461.955" width="158.9" height="36"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:monospace;font-style:normal;font-weight:normal" x="442.279" y="483.155">Opportunity_Skill</text>
+  </g>
+  <g>
+    <polygon style="fill: #ffffff" points="597.829,479.955 617.829,467.955 637.829,479.955 617.829,491.955 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="597.829,479.955 617.829,467.955 637.829,479.955 617.829,491.955 "/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:end;font-family:monospace;font-style:normal;font-weight:normal" x="591.829" y="473.955">1</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="643.829" y="473.955">N</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:monospace;font-style:normal;font-weight:normal" x="617.829" y="483.155"></text>
+  </g>
+  <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="522.738,479.955 523.738,479.955 595.887,479.955 596.887,479.955 "/>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="638.771,477.455 639.771,477.455 773.823,477.455 779.823,477.455 "/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="638.771,482.455 644.771,482.455 778.823,482.455 779.823,482.455 "/>
+  </g>
+  <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="829.714" y1="460.952" x2="850.902" y2="410.216"/>
+  <g>
+    <ellipse style="fill: #ffffff" cx="1001.18" cy="394.331" rx="62.35" ry="18"/>
+    <ellipse style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" cx="1001.18" cy="394.331" rx="62.35" ry="18"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:monospace;font-style:normal;font-weight:normal" x="1001.18" y="397.531">description</text>
+  </g>
+  <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="861.57" y1="460.963" x2="968.012" y2="410.161"/>
+  <g>
+    <ellipse style="fill: #ffffff" cx="765.629" cy="361.331" rx="50.8" ry="18"/>
+    <ellipse style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" cx="765.629" cy="361.331" rx="50.8" ry="18"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:monospace;font-style:normal;font-weight:normal" x="765.629" y="364.531">quantity</text>
+  </g>
+  <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="774.46" y1="379.989" x2="812.782" y2="460.949"/>
+  <g>
+    <ellipse style="fill: #ffffff" cx="1131.03" cy="385.955" rx="66.2" ry="18"/>
+    <ellipse style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" cx="1131.03" cy="385.955" rx="66.2" ry="18"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:monospace;font-style:normal;font-weight:normal" x="1131.03" y="389.155">request_date</text>
+  </g>
+  <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="863.728" y1="467.204" x2="1085.94" y2="399.661"/>
+  <g>
+    <ellipse style="fill: #ffffff" cx="1121.18" cy="426.955" rx="62.35" ry="18"/>
+    <ellipse style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" cx="1121.18" cy="426.955" rx="62.35" ry="18"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:monospace;font-style:normal;font-weight:normal" x="1121.18" y="430.155">target_date</text>
+  </g>
+  <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="863.662" y1="472.54" x2="1067.04" y2="436.538"/>
+  <g>
+    <rect style="fill: #ffffff" x="1405.63" y="498.689" width="174.3" height="36"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="1405.63" y="498.689" width="174.3" height="36"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:monospace;font-style:normal;font-weight:normal" x="1492.78" y="519.889">Opportunity_Project</text>
+  </g>
+  <g>
+    <ellipse style="fill: #ffffff" cx="405.629" cy="533.955" rx="50.8" ry="18"/>
+    <ellipse style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" cx="405.629" cy="533.955" rx="50.8" ry="18"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:monospace;font-style:normal;font-weight:normal" x="405.629" y="537.155">skill_id</text>
+    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="374.829" y1="541.955" x2="436.429" y2="541.955"/>
+  </g>
+  <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="418.07" y1="515.623" x2="429.385" y2="498.952"/>
+  <g>
+    <polygon style="fill: #ffffff" points="1245.21,516.955 1265.21,504.955 1285.21,516.955 1265.21,528.955 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="1245.21,516.955 1265.21,504.955 1285.21,516.955 1265.21,528.955 "/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:end;font-family:monospace;font-style:normal;font-weight:normal" x="1239.21" y="510.955">N</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="1291.21" y="510.955">1</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:monospace;font-style:normal;font-weight:normal" x="1265.21" y="520.155"></text>
+  </g>
+  <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="821.779,498.941 821.779,518.955 1245.21,518.955 1245.21,516.955 "/>
+  <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="1285.21,516.955 1344.92,516.955 1344.92,516.689 1404.62,516.689 "/>
+  <g>
+    <ellipse style="fill: #ffffff" cx="1464.92" cy="438.829" rx="58.5" ry="18"/>
+    <ellipse style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" cx="1464.92" cy="438.829" rx="58.5" ry="18"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:monospace;font-style:normal;font-weight:normal" x="1464.92" y="442.029">project_id</text>
+    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="1426.42" y1="446.829" x2="1503.42" y2="446.829"/>
+  </g>
+  <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="1471.66" y1="457.657" x2="1486" y2="497.756"/>
+  <g>
+    <ellipse style="fill: #ffffff" cx="461.829" cy="574.205" rx="39.25" ry="18"/>
+    <ellipse style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" cx="461.829" cy="574.205" rx="39.25" ry="18"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:monospace;font-style:normal;font-weight:normal" x="461.829" y="577.405">skill</text>
+  </g>
+  <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="457.91" y1="555.313" x2="446.216" y2="498.938"/>
+  <g>
+    <ellipse style="fill: #ffffff" cx="520.179" cy="531.955" rx="62.35" ry="18"/>
+    <ellipse style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" cx="520.179" cy="531.955" rx="62.35" ry="18"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:monospace;font-style:normal;font-weight:normal" x="520.179" y="535.155">description</text>
+  </g>
+  <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="494.594" y1="514.876" x2="470.749" y2="498.96"/>
+  <g>
+    <ellipse style="fill: #ffffff" cx="1597.09" cy="462.891" rx="46.95" ry="18"/>
+    <ellipse style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" cx="1597.09" cy="462.891" rx="46.95" ry="18"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:monospace;font-style:normal;font-weight:normal" x="1597.09" y="466.091">project</text>
+  </g>
+  <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="1529.55" y1="497.723" x2="1568.2" y2="477.792"/>
+  <g>
+    <ellipse style="fill: #ffffff" cx="1578.14" cy="417.625" rx="62.35" ry="18"/>
+    <ellipse style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" cx="1578.14" cy="417.625" rx="62.35" ry="18"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:monospace;font-style:normal;font-weight:normal" x="1578.14" y="420.825">description</text>
+  </g>
+  <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="1509.14" y1="497.703" x2="1562.45" y2="435.836"/>
+  <g>
+    <ellipse style="fill: #ffffff" cx="964.829" cy="306.955" rx="97" ry="18"/>
+    <ellipse style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" cx="964.829" cy="306.955" rx="97" ry="18"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:monospace;font-style:normal;font-weight:normal" x="964.829" y="310.155">date_to_send_profile</text>
+  </g>
+  <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="837.46" y1="460.991" x2="949.488" y2="325.507"/>
+  <g>
+    <ellipse style="fill: #ffffff" cx="989.629" cy="349.955" rx="50.8" ry="18"/>
+    <ellipse style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" cx="989.629" cy="349.955" rx="50.8" ry="18"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:monospace;font-style:normal;font-weight:normal" x="989.629" y="353.155">progress</text>
+  </g>
+  <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="846.304" y1="460.959" x2="967.7" y2="366.939"/>
+  <g>
+    <rect style="fill: #ffffff" x="1305.83" y="336.955" width="189.7" height="36"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="1305.83" y="336.955" width="189.7" height="36"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:monospace;font-style:normal;font-weight:normal" x="1400.68" y="358.155">Opportunity_State_Csl</text>
+  </g>
+  <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="1286.83,479.955 1286.83,479.967 1400.68,479.967 1400.68,373.954 "/>
+  <g>
+    <ellipse style="fill: #ffffff" cx="1284.03" cy="305.955" rx="66.2" ry="18"/>
+    <ellipse style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" cx="1284.03" cy="305.955" rx="66.2" ry="18"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:monospace;font-style:normal;font-weight:normal" x="1284.03" y="309.155">state_csl_id</text>
+    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="1237.83" y1="313.955" x2="1330.23" y2="313.955"/>
+  </g>
+  <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="1355.44" y1="335.952" x2="1320.71" y2="321.363"/>
+  <g>
+    <ellipse style="fill: #ffffff" cx="1401.48" cy="273.955" rx="54.65" ry="18"/>
+    <ellipse style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" cx="1401.48" cy="273.955" rx="54.65" ry="18"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:monospace;font-style:normal;font-weight:normal" x="1401.48" y="277.155">state_csl</text>
+  </g>
+  <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="1400.87" y1="335.96" x2="1401.29" y2="292.949"/>
+  <g>
+    <ellipse style="fill: #ffffff" cx="1500.18" cy="304.955" rx="62.35" ry="18"/>
+    <ellipse style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" cx="1500.18" cy="304.955" rx="62.35" ry="18"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:monospace;font-style:normal;font-weight:normal" x="1500.18" y="308.155">description</text>
+  </g>
+  <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="1438.5" y1="335.948" x2="1468.26" y2="320.995"/>
+  <g>
+    <ellipse style="fill: #ffffff" cx="667.329" cy="320.955" rx="58.5" ry="18"/>
+    <ellipse style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" cx="667.329" cy="320.955" rx="58.5" ry="18"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:monospace;font-style:normal;font-weight:normal" x="667.329" y="324.155">anglophone</text>
+  </g>
+  <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="803.33" y1="460.963" x2="684.768" y2="338.908"/>
+  <g>
+    <ellipse style="fill: #ffffff" cx="647.179" cy="362.955" rx="62.35" ry="18"/>
+    <ellipse style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" cx="647.179" cy="362.955" rx="62.35" ry="18"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:monospace;font-style:normal;font-weight:normal" x="647.179" y="366.155">francophone</text>
+  </g>
+  <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="793.421" y1="460.952" x2="672.68" y2="380.043"/>
+  <g>
+    <rect style="fill: #ffffff" x="347.829" y="333.955" width="158.9" height="36"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="347.829" y="333.955" width="158.9" height="36"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:monospace;font-style:normal;font-weight:normal" x="427.279" y="355.155">Opportunity_State</text>
+  </g>
+  <g>
+    <ellipse style="fill: #ffffff" cx="398.629" cy="304.705" rx="50.8" ry="18"/>
+    <ellipse style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" cx="398.629" cy="304.705" rx="50.8" ry="18"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:monospace;font-style:normal;font-weight:normal" x="398.629" y="307.905">state_id</text>
+    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="367.829" y1="312.705" x2="429.429" y2="312.705"/>
+  </g>
+  <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="415.807" y1="333.036" x2="409.596" y2="322.793"/>
+  <g>
+    <ellipse style="fill: #ffffff" cx="526.579" cy="311.455" rx="39.25" ry="18"/>
+    <ellipse style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" cx="526.579" cy="311.455" rx="39.25" ry="18"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:monospace;font-style:normal;font-weight:normal" x="526.579" y="314.655">state</text>
+  </g>
+  <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="473.85" y1="332.96" x2="496.711" y2="323.636"/>
+  <g>
+    <ellipse style="fill: #ffffff" cx="476.179" cy="276.955" rx="62.35" ry="18"/>
+    <ellipse style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" cx="476.179" cy="276.955" rx="62.35" ry="18"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:monospace;font-style:normal;font-weight:normal" x="476.179" y="280.155">description</text>
+  </g>
+  <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="439.659" y1="332.967" x2="464.121" y2="295.448"/>
+  <g>
+    <rect style="fill: #ffffff" x="408.329" y="658.512" width="135.8" height="36"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="408.329" y="658.512" width="135.8" height="36"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:monospace;font-style:normal;font-weight:normal" x="476.229" y="679.712">Process_Status</text>
+  </g>
+  <g>
+    <ellipse style="fill: #ffffff" cx="414.979" cy="723.189" rx="54.65" ry="18"/>
+    <ellipse style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" cx="414.979" cy="723.189" rx="54.65" ry="18"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:monospace;font-style:normal;font-weight:normal" x="414.979" y="726.389">status_id</text>
+    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="380.329" y1="731.189" x2="449.629" y2="731.189"/>
+  </g>
+  <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="437.23" y1="706.232" x2="451.316" y2="695.497"/>
+  <g>
+    <ellipse style="fill: #ffffff" cx="475.929" cy="764.435" rx="43.1" ry="18"/>
+    <ellipse style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" cx="475.929" cy="764.435" rx="43.1" ry="18"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:monospace;font-style:normal;font-weight:normal" x="475.929" y="767.635">status</text>
+  </g>
+  <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="475.993" y1="745.438" x2="476.164" y2="695.509"/>
+  <g>
+    <ellipse style="fill: #ffffff" cx="547.179" cy="722.435" rx="62.35" ry="18"/>
+    <ellipse style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" cx="547.179" cy="722.435" rx="62.35" ry="18"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:monospace;font-style:normal;font-weight:normal" x="547.179" y="725.635">description</text>
+  </g>
+  <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="520.945" y1="705.455" x2="505.329" y2="695.347"/>
+  <g>
+    <polygon style="fill: #ffffff" points="608.029,675.841 628.029,663.841 648.029,675.841 628.029,687.841 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="608.029,675.841 628.029,663.841 648.029,675.841 628.029,687.841 "/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:end;font-family:monospace;font-style:normal;font-weight:normal" x="602.029" y="669.841">1</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="654.029" y="669.841">N</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:monospace;font-style:normal;font-weight:normal" x="628.029" y="679.041"></text>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="648.029,673.341 711.426,673.341 711.426,673.025 779.823,673.025 "/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="648.029,678.341 716.426,678.341 716.426,678.025 779.823,678.025 "/>
+  </g>
+  <g>
+    <ellipse style="fill: #ffffff" cx="600.403" cy="834.791" rx="54.65" ry="18"/>
+    <ellipse style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" cx="600.403" cy="834.791" rx="54.65" ry="18"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:monospace;font-style:normal;font-weight:normal" x="600.403" y="837.991">available</text>
+  </g>
+  <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="772.682" y1="869.754" x2="647.891" y2="844.428"/>
+  <g>
+    <polygon style="fill: #ffffff" points="982.329,649.628 1002.33,637.628 1022.33,649.628 1002.33,661.628 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="982.329,649.628 1002.33,637.628 1022.33,649.628 1002.33,661.628 "/>
+    <text font-size="12.7998" style="fill: #000000;text-anchor:end;font-family:monospace;font-style:normal;font-weight:normal" x="976.329" y="643.628">N</text>
+    <text font-size="12.7998" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="1028.33" y="643.628">1</text>
+    <text font-size="12.7998" style="fill: #000000;text-anchor:middle;font-family:monospace;font-style:normal;font-weight:normal" x="1002.33" y="653.628"></text>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="863.734,477.455 925.531,477.455 925.531,647.128 982.329,647.128 "/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="863.734,482.455 920.531,482.455 920.531,652.128 982.329,652.128 "/>
+  </g>
+  <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="1022.33,649.628 1022.33,650.628 1164.98,650.628 1164.98,697.007 "/>
+  <g>
+    <polygon style="fill: #ffffff" points="598.329,416.936 618.329,404.936 638.329,416.936 618.329,428.936 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="598.329,416.936 618.329,404.936 638.329,416.936 618.329,428.936 "/>
+    <text font-size="12.7998" style="fill: #000000;text-anchor:end;font-family:monospace;font-style:normal;font-weight:normal" x="592.329" y="410.936">1</text>
+    <text font-size="12.7998" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="644.329" y="410.936">N</text>
+    <text font-size="12.7998" style="fill: #000000;text-anchor:middle;font-family:monospace;font-style:normal;font-weight:normal" x="618.329" y="420.936"></text>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="639.271,414.436 712.047,414.436 712.047,477.455 779.823,477.455 "/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="639.271,419.436 707.047,419.436 707.047,482.455 779.823,482.455 "/>
+  </g>
+  <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="597.387,416.936 552.562,416.936 552.562,351.955 507.738,351.955 "/>
+  <g>
+    <ellipse style="fill: #ffffff" cx="718.779" cy="586.202" rx="85.45" ry="18"/>
+    <ellipse style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" cx="718.779" cy="586.202" rx="85.45" ry="18"/>
+    <text font-size="12.7998" style="fill: #000000;text-anchor:middle;font-family:monospace;font-style:normal;font-weight:normal" x="718.779" y="590.202">interview_details</text>
+  </g>
+  <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="739.707" y1="604.351" x2="792.294" y2="649.956"/>
+  <g>
+    <ellipse style="fill: #ffffff" cx="705.379" cy="633.827" rx="31.55" ry="18"/>
+    <ellipse style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" cx="705.379" cy="633.827" rx="31.55" ry="18"/>
+    <text font-size="12.7998" style="fill: #000000;text-anchor:middle;font-family:monospace;font-style:normal;font-weight:normal" x="705.379" y="637.827">...</text>
+  </g>
+  <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="733.029" y1="643.732" x2="779.827" y2="660.496"/>
+  <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="608.029,675.841 576.583,675.841 576.583,676.512 545.137,676.512 "/>
+  <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="845.329,499.25 845.329,606.25 1233.33,606.25 1233.33,606.68 "/>
+  <g>
+    <rect style="fill: #ffffff" x="1498.33" y="588.007" width="66.5" height="36"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="1498.33" y="588.007" width="66.5" height="36"/>
+    <text font-size="12.7998" style="fill: #000000;text-anchor:middle;font-family:monospace;font-style:normal;font-weight:normal" x="1531.58" y="610.007">Phase</text>
+  </g>
+  <g>
+    <ellipse style="fill: #ffffff" cx="1438.13" cy="651.967" rx="50.8" ry="18"/>
+    <ellipse style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" cx="1438.13" cy="651.967" rx="50.8" ry="18"/>
+    <text font-size="12.7998" style="fill: #000000;text-anchor:middle;font-family:monospace;font-style:normal;font-weight:normal" x="1438.13" y="655.967">phase_id</text>
+    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="1407.33" y1="659.967" x2="1468.93" y2="659.967"/>
+  </g>
+  <g>
+    <ellipse style="fill: #ffffff" cx="1530.58" cy="683.967" rx="39.25" ry="18"/>
+    <ellipse style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" cx="1530.58" cy="683.967" rx="39.25" ry="18"/>
+    <text font-size="12.7998" style="fill: #000000;text-anchor:middle;font-family:monospace;font-style:normal;font-weight:normal" x="1530.58" y="687.967">phase</text>
+  </g>
+  <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="1530.82" y1="664.962" x2="1531.33" y2="625.011"/>
+  <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="1468.71" y1="636.925" x2="1497.33" y2="622.849"/>
+  <g>
+    <ellipse style="fill: #ffffff" cx="1601.68" cy="649.967" rx="62.35" ry="18"/>
+    <ellipse style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" cx="1601.68" cy="649.967" rx="62.35" ry="18"/>
+    <text font-size="12.7998" style="fill: #000000;text-anchor:middle;font-family:monospace;font-style:normal;font-weight:normal" x="1601.68" y="653.967">description</text>
+  </g>
+  <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="1561.87" y1="625.003" x2="1574.77" y2="633.09"/>
+  <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="870.975,879.829 996.532,879.829 996.532,879.674 1122.09,879.674 "/>
+  <text font-size="12.7998" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="1374.33" y="592.967">
+    <tspan x="1374.33" y="592.967">N</tspan>
+  </text>
+  <text font-size="12.7998" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="1205.33" y="593.967">
+    <tspan x="1205.33" y="593.967">N</tspan>
+  </text>
+  <g>
+    <ellipse style="fill: #ffffff" cx="1014.17" cy="911.553" rx="58.5" ry="18"/>
+    <ellipse style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" cx="1014.17" cy="911.553" rx="58.5" ry="18"/>
+    <text font-size="12.7998" style="fill: #000000;text-anchor:middle;font-family:monospace;font-style:normal;font-weight:normal" x="1014.17" y="915.553">phase_date</text>
+  </g>
+  <g>
+    <ellipse style="fill: #ffffff" cx="1142.63" cy="946.25" rx="89.3" ry="18"/>
+    <ellipse style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" cx="1142.63" cy="946.25" rx="89.3" ry="18"/>
+    <text font-size="12.7998" style="fill: #000000;text-anchor:middle;font-family:monospace;font-style:normal;font-weight:normal" x="1142.63" y="950.25">present/attendance</text>
+  </g>
+  <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="1142.74" y1="927.249" x2="1142.95" y2="892.417"/>
+  <g>
+    <rect style="fill: #ffffff" x="1233.33" y="568.25" width="128.1" height="76.86"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="1233.33" y="568.25" width="128.1" height="76.86"/>
+    <polygon style="fill: #ffffff" points="1233.33,606.68 1297.38,568.25 1361.43,606.68 1297.38,645.11 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="1233.33,606.68 1297.38,568.25 1361.43,606.68 1297.38,645.11 "/>
+    <text font-size="12.7998" style="fill: #000000;text-anchor:middle;font-family:monospace;font-style:normal;font-weight:normal" x="1297.38" y="610.68">Request_Phase</text>
+  </g>
+  <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="1362.44,606.68 1429.88,606.68 1429.88,606.007 1497.32,606.007 "/>
+  <g>
+    <polygon style="fill: #ffffff" points="1123.03,879.674 1143.03,867.674 1163.03,879.674 1143.03,891.674 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="1123.03,879.674 1143.03,867.674 1163.03,879.674 1143.03,891.674 "/>
+    <text font-size="12.7998" style="fill: #000000;text-anchor:end;font-family:monospace;font-style:normal;font-weight:normal" x="1117.03" y="873.674">N</text>
+    <text font-size="12.7998" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="1169.03" y="873.674">N</text>
+    <text font-size="12.7998" style="fill: #000000;text-anchor:middle;font-family:monospace;font-style:normal;font-weight:normal" x="1143.03" y="883.674"></text>
+  </g>
+  <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="1297.38,645.11 1297.38,879.674 1163.03,879.674 1163.03,879.674 "/>
+  <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="1060.74" y1="900.032" x2="1122.08" y2="884.857"/>
+  <g>
+    <ellipse style="fill: #ffffff" cx="1313.88" cy="920.674" rx="100.85" ry="18"/>
+    <ellipse style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" cx="1313.88" cy="920.674" rx="100.85" ry="18"/>
+    <text font-size="12.7998" style="fill: #000000;text-anchor:middle;font-family:monospace;font-style:normal;font-weight:normal" x="1313.88" y="924.674">unavailability_reason</text>
+  </g>
+  <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="1164.02" y1="884.711" x2="1252.72" y2="905.997"/>
+</svg>
