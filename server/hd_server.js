@@ -2,16 +2,15 @@
 const express = require('express')
 
 
-const PORT = process.env.PORT || '8080';
+const PORT = process.argv[2] || '8080';
 
-const hd_db = require('./hd_db.js').init(DB_INFO)
-const hd_services = require('./hd_services.js').init(hd_db)
-const hd_api = require('./hd_api.js')(ciborgService, express.Router())
+const hd_db = require('./db/hd_db.js')()
+const hd_services = require('./services/hd_services.js')(hd_db)
+const hd_api = require('./routes/hd_api.js')(hd_services, express.Router())
 
 const app = express()
 app.use(express.json())
-app.use(express.static('dist'))
-app.use('/ciborg', ciborgApi)
+// app.use(express.static('dist'))
+app.use('/hd', hd_api)
 
-let today = new Date();
-app.listen(PORT,()=>console.log(`Server listening on port ${PORT} @ ${today}`))
+app.listen(PORT,()=>console.log(`Server listening on port ${PORT} @ ${new Date()}`))
