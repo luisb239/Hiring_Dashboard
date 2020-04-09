@@ -8,7 +8,7 @@ module.exports  = (service, router/*, handler*/) => {
         return service.getAllStates().then(r => res.end(JSON.stringify(r)))
     }
 
-    // function postState(req, res){
-    //     return handler.request(service.postState(req.body), res, 201)
-    // }
+    function postState(req, res){
+        return handler.request(service.postState(req.body), res, 201)
+    }
 }

@@ -4,7 +4,8 @@
   "description": "",
   "main": "hd_server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon hd_server.js 8080"
   },
   "author": "",
   "license": "ISC",
