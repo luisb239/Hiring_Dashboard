@@ -10,8 +10,12 @@ module.exports = () => {
 //         process.exit(-1)
 //     })
 //
-    const states = require('./state_db.js')((text, params) => pool.query(text, params))
+    function query(text, params) {
+        return pool.query(text, params)
+    }
+
     return {
-        states: states
+        states: require('./state_db.js')(query),
+        generic: require('./generic_db.js')(query)
     }
 }

@@ -1,16 +1,16 @@
 'use strict'
 
 module.exports = (query) => {
-    function getAllStates() {
-        return query('SELECT * FROM request_state')
+    function getAll(entity) {
+        return query(`SELECT * FROM ${entity}`)
             .then(res => res)
             .catch(err => {
                 console.log(err.stack)
             })
     }
 
-    function postState(name) {
-        return query('INSERT INTO request_state(request_state) VALUES ($1) RETURNING *', [name])
+    function post(entity, key) {
+        return query(`INSERT INTO ${entity}(id) VALUES ($1) RETURNING *`, [key])
             .then(res => res)
             .catch(err => {
                 console.log(err.stack)
@@ -18,7 +18,7 @@ module.exports = (query) => {
     }
 
     return {
-        getAllStates: getAllStates,
-        postState: postState
+        getAll: getAll,
+        post: post
     }
 }

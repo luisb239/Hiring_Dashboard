@@ -9,6 +9,7 @@ module.exports = (db) => {
         }
     }
     return {
-        states: require('./state_services.js')(db.states, responseHandler)
+        states: require('./state_services.js')(db.states, responseHandler),
+        generic: require('./generic_services.js')(db.generic, responseHandler)
     }
 }
