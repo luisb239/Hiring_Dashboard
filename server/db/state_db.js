@@ -1,22 +1,17 @@
 'use strict'
 
-module.exports = (pool) => {
+module.exports = (query) => {
     function getAllStates(){
-        pool
-            .connect()
-            .then(client => {
-                return client
-                    .query('SELECT * FROM states')
+                return query('SELECT * FROM request_state')
                     .then(res => {
-                        client.release()
-                        console.log(res.rows.map(s => s.state))
+                        const result = res.rows
+                        console.log(result)
+                        return result
                     })
                     .catch(err => {
-                        client.release()
                         console.log(err.stack)
                     })
-            })
-    }
+            }
     return {
         getAllStates: getAllStates
     }
