@@ -3,11 +3,7 @@
 module.exports = (query) => {
     function getAllStates(){
                 return query('SELECT * FROM request_state')
-                    .then(res => {
-                        const result = res.rows
-                        console.log(result)
-                        return result
-                    })
+                    .then(res => res)
                     .catch(err => {
                         console.log(err.stack)
                     })
