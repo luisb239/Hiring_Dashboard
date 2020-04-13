@@ -1,15 +1,10 @@
-'use strict'
+'use strict';
 
 module.exports = (db) => {
-    function responseHandler(message, status_code, result){
-        return {
-            message: message,
-            status_code: status_code,
-            result: result
-        }
-    }
+
+    const domain = require('../domain/hd_domain.js')();
+
     return {
-        states: require('./state_services.js')(db.states, responseHandler),
-        generic: require('./generic_services.js')(db.generic, responseHandler)
+        request_properties: require('./request_properties_services.js')(db.request_properties, domain)
     }
 }

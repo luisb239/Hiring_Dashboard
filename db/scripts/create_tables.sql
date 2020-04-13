@@ -42,45 +42,31 @@ PRIMARY KEY (user_id, role_id)
 );
 
 CREATE TABLE request_state(
-state_id INT GENERATED ALWAYS AS IDENTITY,
-request_state VARCHAR UNIQUE NOT NULL,
-PRIMARY KEY (state_id)
+request_state VARCHAR PRIMARY KEY
 );
 
 CREATE TABLE request_skill(
-skill_id INT GENERATED ALWAYS AS IDENTITY,
-request_skill VARCHAR UNIQUE NOT NULL,
-PRIMARY KEY (skill_id)
+request_skill VARCHAR PRIMARY KEY
 );
 
 CREATE TABLE request_state_csl(
-state_csl_id INT GENERATED ALWAYS AS IDENTITY,
-request_state_csl VARCHAR UNIQUE NOT NULL,
-PRIMARY KEY (state_csl_id)
+request_state_csl VARCHAR PRIMARY KEY
 );
 
 CREATE TABLE request_project(
-project_id INT GENERATED ALWAYS AS IDENTITY,
-request_project VARCHAR UNIQUE NOT NULL,
-PRIMARY KEY (project_id)
+request_project VARCHAR PRIMARY KEY
 );
 
 CREATE TABLE request_profile(
-profile_id INT GENERATED ALWAYS AS IDENTITY,
-request_profile VARCHAR UNIQUE NOT NULL,
-PRIMARY KEY (profile_id)
+request_profile VARCHAR PRIMARY KEY
 );
 
 CREATE TABLE request_language(
-language_id INT GENERATED ALWAYS AS IDENTITY,
-language VARCHAR UNIQUE NOT NULL,
-PRIMARY KEY (language_id)
+language VARCHAR PRIMARY KEY
 );
 
 CREATE TABLE workflow(
-workflow_id INT GENERATED ALWAYS AS IDENTITY,
-workflow_name VARCHAR UNIQUE NOT NULL,
-PRIMARY KEY (workflow_id)
+workflow_name VARCHAR PRIMARY KEY
 ); 
 
 CREATE TYPE month_enum AS ENUM
@@ -104,20 +90,20 @@ quantity INT NOT NULL CHECK(quantity > 0),
 description VARCHAR NOT NULL,
 request_date DATE NOT NULL DEFAULT CURRENT_DATE,
 target_date month_enum NOT NULL, -- mês -> enumerado
-state_id INT,
-skill_id INT,
-state_csl_id INT,
-project_id INT,
-profile_id INT,
-workflow_id INT,
+request_state VARCHAR,
+request_skill VARCHAR,
+request_state_csl VARCHAR,
+request_project VARCHAR,
+request_profile VARCHAR,
+request_workflow VARCHAR,
 date_to_send_profile DATE NULL DEFAULT NULL,
 progress INT NOT NULL DEFAULT 0 CHECK(progress >= 0 AND progress <= 100),
-FOREIGN KEY (state_id) REFERENCES request_state(state_id),
-FOREIGN KEY (skill_id) REFERENCES request_skill(skill_id),
-FOREIGN KEY (state_csl_id) REFERENCES request_state_csl(state_csl_id),
-FOREIGN KEY (project_id) REFERENCES request_project(project_id),
-FOREIGN KEY (profile_id) REFERENCES request_profile(profile_id),
-FOREIGN KEY (workflow_id) REFERENCES workflow(workflow_id),
+FOREIGN KEY (request_state) REFERENCES request_state(request_state),
+FOREIGN KEY (request_skill) REFERENCES request_skill(request_skill),
+FOREIGN KEY (request_state_csl) REFERENCES request_state_csl(request_state_csl),
+FOREIGN KEY (request_project) REFERENCES request_project(request_project),
+FOREIGN KEY (request_profile) REFERENCES request_profile(request_profile),
+FOREIGN KEY (request_workflow) REFERENCES workflow(workflow_name),
 PRIMARY KEY (request_id)
 );
 
@@ -133,11 +119,11 @@ PRIMARY KEY (user_id, role_id, request_id)
 
 CREATE TABLE request_language_requirements(
 request_id INT,
-language_id INT,
+language VARCHAR,
 yes_valued BOOLEAN,
 FOREIGN KEY (request_id) REFERENCES request(request_id),	
-FOREIGN KEY (language_id) REFERENCES request_language(language_id),
-PRIMARY KEY (request_id, language_id)
+FOREIGN KEY (language) REFERENCES request_language(language),
+PRIMARY KEY (request_id, language)
 );
 
 CREATE TABLE phase(
@@ -147,12 +133,12 @@ PRIMARY KEY (phase_id)
 );
 
 CREATE TABLE workflow_phase(
-workflow_id INT,
+workflow VARCHAR,
 phase_id INT,
 phase_number INT NOT NULL check(phase_number > 0),
-FOREIGN KEY (workflow_id) REFERENCES workflow(workflow_id),
+FOREIGN KEY (workflow) REFERENCES workflow(workflow_name),
 FOREIGN KEY (phase_id) REFERENCES phase(phase_id),
-PRIMARY KEY (workflow_id, phase_id)
+PRIMARY KEY (workflow, phase_id)
 );
 
 CREATE TABLE candidate(
@@ -165,15 +151,13 @@ PRIMARY KEY (candidate_id)
 );
 
 CREATE TABLE process_status(
-status_id INT GENERATED ALWAYS AS IDENTITY,
-status VARCHAR UNIQUE NOT NULL,
-PRIMARY KEY (status_id)
+status VARCHAR PRIMARY KEY
 );
 
 CREATE TABLE process(
 request_id INT,
 candidate_id INT,
-status_id INT,
+status VARCHAR,
 score INT NULL DEFAULT NULL,
 interview_details VARCHAR NULL DEFAULT NULL,
 relevant_remarks VARCHAR NULL DEFAULT NULL,
@@ -182,42 +166,40 @@ started BOOLEAN DEFAULT FALSE,
 starting_date DATE NULL DEFAULT NULL,
 FOREIGN KEY (request_id) REFERENCES request(request_id),
 FOREIGN KEY (candidate_id) REFERENCES candidate(candidate_id),
-FOREIGN KEY (status_id) REFERENCES process_status(status_id),
+FOREIGN KEY (status) REFERENCES process_status(status),
 PRIMARY KEY (request_id, candidate_id)
 );
 
 CREATE TABLE unavailable_reason(
-reason_id INT GENERATED ALWAYS AS IDENTITY,
-reason VARCHAR UNIQUE NOT NULL,
-PRIMARY KEY (reason_id)
+reason VARCHAR PRIMARY KEY
 );
 
 CREATE TABLE process_unavailable_reason(
 request_id INT,
 candidate_id INT,
-reason_id INT,
+reason VARCHAR,
 FOREIGN KEY (request_id, candidate_id) REFERENCES process(request_id, candidate_id),
-FOREIGN KEY (reason_id) REFERENCES unavailable_reason(reason_id),
+FOREIGN KEY (reason) REFERENCES unavailable_reason(reason),
 PRIMARY KEY (request_id, candidate_id)
 );
 
 CREATE TABLE process_workflow_phase(
 request_id INT,
 candidate_id INT,
-workflow_id INT,
+workflow VARCHAR,
 phase_id INT,
 phase_date DATE NOT NULL DEFAULT current_date,
 notes VARCHAR NULL DEFAULT NULL,
 FOREIGN KEY (request_id, candidate_id) REFERENCES process(request_id, candidate_id),
-FOREIGN KEY (workflow_id, phase_id) REFERENCES workflow_phase(workflow_id, phase_id),
-PRIMARY KEY (request_id, candidate_id, workflow_id, phase_id)
+FOREIGN KEY (workflow, phase_id) REFERENCES workflow_phase(workflow, phase_id),
+PRIMARY KEY (request_id, candidate_id, workflow, phase_id)
 );
 
 CREATE TABLE candidate_request_profile(
 candidate_id INT,
-profile_id INT,
+profile VARCHAR,
 FOREIGN KEY (candidate_id) REFERENCES candidate(candidate_id),
-FOREIGN KEY (profile_id) REFERENCES request_profile(profile_id),
-PRIMARY KEY (candidate_id, profile_id)
+FOREIGN KEY (profile) REFERENCES request_profile(request_profile),
+PRIMARY KEY (candidate_id, profile)
 );
 
