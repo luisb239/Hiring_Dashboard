@@ -13,5 +13,6 @@ module.exports = () => {
 
     return {
         request_properties : require('./request_properties_db.js')(query),
+        request: require('./request_db.js')(query)
     }
 }

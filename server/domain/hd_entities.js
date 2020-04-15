@@ -13,6 +13,22 @@ module.exports = () => {
         is_active: "is_active"
     }
 
+    const request = {
+        table: "request",
+        id: "request_id",
+        quantity: 'quantity',
+        description: 'description',
+        request_date: 'request_date',
+        target_date: 'target_date',
+        request_state: 'request_state',
+        request_skill: 'request_skill',
+        request_state_csl: 'request_state-csl',
+        request_project: 'request_project',
+        request_profile: 'request_profile',
+        request_workflow: 'request_workflow',
+        date_to_send_profile: 'date_to_send_profile',
+        progress: 'request_state-csl'
+    }
     //...
     const role = 'role';
     const role_type = 'role_type';
@@ -57,21 +73,21 @@ module.exports = () => {
     };
 
     const request_profile = {
-        table : 'request_profile',
-        key : 'request_profile',
-        profile : 'request_profile'
+        table: 'request_profile',
+        key: 'request_profile',
+        profile: 'request_profile'
     };
 
     const request_language = {
-        table : 'request_language',
-        key : 'language',
-        language : 'language'
+        table: 'request_language',
+        key: 'language',
+        language: 'language'
     };
 
     const request_workflow = {
-        table : 'workflow',
-        key : 'workflow_name',
-        name : 'workflow_name'
+        table: 'workflow',
+        key: 'workflow_name',
+        name: 'workflow_name'
     }
 
 
@@ -79,6 +95,7 @@ module.exports = () => {
 
     return {
         user,
+        request,
         role: role,
         role_type: role_type,
         user_role: user_role,
