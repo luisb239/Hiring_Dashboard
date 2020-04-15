@@ -86,16 +86,16 @@ module.exports = () => {
 
     const request_workflow = {
         table: 'workflow',
-        key: 'workflow_name',
-        name: 'workflow_name'
+        key: 'workflow',
+        name: 'workflow'
     }
 
 
     //other tables.. and their attributes
 
     return {
-        user,
-        request,
+        user : user,
+        request : request,
         role: role,
         role_type: role_type,
         user_role: user_role,

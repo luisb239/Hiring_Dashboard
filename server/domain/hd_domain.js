@@ -16,7 +16,8 @@ module.exports = () => {
 
     const request_properties = [state, skill, state_csl, project, profile, language, workflow];
 
-    const request_id = {value: 'request_id', redirectTo: entities.request.request_id}
+    /*
+    const request_id = {value: 'request_id', redirectTo: entities.request.id}
     const quantity = {value: 'quantity', redirectTo: entities.request.quantity}
     const description = {value: 'description', redirectTo: entities.request.description}
     const request_date = {value: 'request_date', redirectTo: entities.request.request_date}
@@ -29,6 +30,8 @@ module.exports = () => {
     const request_workflow = {value: 'request_workflow', redirectTo: entities.request.request_workflow}
     const date_to_send_profile = {value: 'date_to_send_profile', redirectTo: entities.request.date_to_send_profile}
     const progress = {value: 'progress', redirectTo: entities.request.progress}
+    
+     */
     //
     // const request = [request_id,
     //     quantity,

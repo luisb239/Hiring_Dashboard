@@ -72,8 +72,8 @@ INSERT INTO request_language
 	('French'),
 	('Russian');
 	
-INSERT INTO workflow
-	VALUES
+INSERT INTO workflow(workflow)
+	VALUES 
 	('Software Development'),
 	('Software Testing'),
 	('Consulting');
@@ -107,17 +107,17 @@ INSERT INTO phase(phase)
 	('Job Offer'),
 	('Offer Accepted');
 	
-INSERT INTO workflow_phase(workflow, phase_id, phase_number)
+INSERT INTO workflow_phase(workflow, phase, phase_number, phase_attributes)
 	VALUES
-	('Software Development', 1, 1),
-	('Software Development', 2, 2),
-	('Software Development', 4, 3),
-	('Software Development', 5, 4),
+	('Software Development', 'First Interview', 1, NULL),
+	('Software Development', 'Technicall Interview', 2, '{"interview_details" : null, "score" : 0, "seniority" : null}'),
+	('Software Development', 'Job Offer', 3, '{"relevant_remarks" : null}'),
+	('Software Development', 'Offer Accepted', 4, '{"starting_date" : null}'),
 	
-	('Software Testing', 3, 1),
-	('Software Testing', 4, 2),
-	('Software Testing', 5, 3);
-	
+	('Software Testing', 'First Interview + Technicall Interview', 1, '{"interview_details" : null, "score" : 0, "seniority" : null}'),
+	('Software Testing', 'Job Offer', 2, '{"relevant_remarks" : null}'),
+	('Software Testing', 'Offer Accepted', 3, '{"starting_date" : null}');
+
 INSERT INTO candidate(name)
 	VALUES
 	('Michael Corleone'),
@@ -149,12 +149,12 @@ INSERT INTO process_unavailable_reason(request_id, candidate_id, reason)
 	VALUES
 	(1, 4, 'Candidate withdrawned from proposal');
 	
-INSERT INTO process_workflow_phase(request_id, candidate_id, workflow, phase_id, notes)
+INSERT INTO process_workflow_phase(request_id, candidate_id, workflow, phase, notes)
 	VALUES
-	(1, 1, 'Software Development', 1, 'First Interview went well. Profile Info added!'),
-	(1, 1, 'Software Development', 2, 'Good Technicall Interview'),
-	(1, 1, 'Software Development', 4, '..'),
-	(1, 1, 'Software Development', 5, 'Candidate accepted offer.');
+	(1, 1, 'Software Development', 'First Interview', 'First Interview went well. Profile Info added!'),
+	(1, 1, 'Software Development', 'Technicall Interview', 'Good Technicall Interview'),
+	(1, 1, 'Software Development', 'Job Offer', NULL),
+	(1, 1, 'Software Development', 'Offer Accepted', 'Candidate accepted offer.');
 	
 INSERT INTO candidate_request_profile(candidate_id, profile)
 	VALUES
