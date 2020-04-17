@@ -10,16 +10,14 @@ module.exports = (db) => {
     }
 
     function postCandidate(body) {
-        const values = [body.name, body.available] // If candidate only starts with these 2
-        const success = {
-            status : 201,
-            message : `Candidate created with success`,
-        }
-        if(body)
-            return db.postCandidate(values)
-        else 
-            return Promise.reject("Request  body missing")
-            
+            if(body.name)
+                if(body.available) {
+                    return db.postCandidate(body.name, body.available)
+                }
+                else 
+                    Promise.reject("Candidate field 'available' missing")
+            else 
+                Promise.reject("Candidate field 'name' missing")
     }
 
 }

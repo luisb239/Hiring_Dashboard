@@ -33,12 +33,15 @@ module.exports = (service, router) => {
     }
 
     function postCandidate(req, res) {
-        const success = {
-            status : 201,
-            message : `Candidate created with success`,
+        function success (id) {
+            return {
+                status: 201,
+                message: "Candidate created with success",
+                path: `/hd/candidates/${id}`
+            }
         }
         service.postCandidate(req.body)
-            .then(result => res.status(200).send(success))
+            .then(result => res.status(200).send(success(result.candidate_id)))
             .catch(error => res.status(400).send({error : error}))
     }
 

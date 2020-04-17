@@ -34,11 +34,12 @@ module.exports = (query, entities) => {
             .then(res => res.rows)
     }
 
-    function postCandidate(values) {
+    function postCandidate(name, available) {
+        const values = [name, available]
         const statement = `INSERT INTO ${candidate}(${candidate_name},${candidate_available})\
-        VALUES ('$1', $2);`
-        return query(statement, [values])
-            .then(res => res)
+        VALUES ($1, $2) RETURNING ${candidate_id};`
+        return query(statement, values)
+            .then(res => res.rows[0])
     }
 
 }
