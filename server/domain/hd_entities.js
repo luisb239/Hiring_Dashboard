@@ -29,6 +29,22 @@ module.exports = () => {
         date_to_send_profile: 'date_to_send_profile',
         progress: 'request_state-csl'
     }
+
+    const candidate = {
+        table: "candidate",
+        id: "candidate_id",
+        name: "name",
+        cv: "cv",
+        available: "available",
+        profile_info: "profile_info" 
+    }
+
+    const process = {
+        table: "process",
+        request_id: "request_id",
+        candidate_id: "candidate_id",
+        status: "status"
+    }
     //...
     const role = 'role';
     const role_type = 'role_type';
@@ -96,6 +112,8 @@ module.exports = () => {
     return {
         user : user,
         request : request,
+        candidate : candidate,
+        process: process,
         role: role,
         role_type: role_type,
         user_role: user_role,
