@@ -3,21 +3,35 @@
 module.exports = (db) => {
 
     return {
-        getCandidates: db.getCandidates,
-        getCandidateById:(id) => db.getCandidateById(id),
-        getCandidateByRequest:(req_id) => db.getCandidateByRequest(req_id),
-        postCandidate: (body) => postCandidate(body)
+        getCandidates: getCandidates,
+        getCandidateById: getCandidateById,
+        getCandidateByRequest: getCandidateByRequest,
+        postCandidate: postCandidate
     }
 
-    function postCandidate(body) {
-            if(body.name)
-                if(body.available) {
-                    return db.postCandidate(body.name, body.available)
-                }
-                else 
-                    Promise.reject("Candidate field 'available' missing")
-            else 
-                Promise.reject("Candidate field 'name' missing")
+    function getCandidates() {
+        return db.getCandidates()
+    }
+
+    function getCandidateById(candidate_id) {
+        if (!candidate_id) return Promise.reject("Candidate Id not valid")
+
+        return db.getCandidateById(candidate_id)
+    }
+
+    function getCandidateByRequest(request_id) {
+        if (!request_id) return Promise.reject("Request Id not valid")
+
+        return db.getCandidateByRequest(request_id)
+    }
+
+    function postCandidate(candidate_name, candidate_availability) {
+        if (!candidate_name)
+            return Promise.reject("Candidate name not valid")
+        if (!candidate_availability)
+            return Promise.reject("Candidate availability not valid")
+
+        return db.postCandidate(candidate_name, candidate_availability)
     }
 
 }

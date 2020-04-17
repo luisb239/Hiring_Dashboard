@@ -8,10 +8,11 @@ module.exports = (query, entities) => {
     const candidate_name = entities.candidate.name
     const candidate_available = entities.candidate.available
     const request_id = entities.process.request_id
+
     return {
         getCandidates: getCandidates,
         getCandidateById: getCandidateById,
-        getCandidateByRequest: getCandidateByRequest,
+        getCandidateByRequest: getCandidateByRequestId,
         postCandidate: postCandidate
     }
 
@@ -25,7 +26,7 @@ module.exports = (query, entities) => {
             .then(res => res.rows)
     }
 
-    function getCandidateByRequest(req_id) {
+    function getCandidateByRequestId(req_id) {
         const statement = `SELECT ${candidate}.*\
         FROM ${process} INNER JOIN ${candidate}\
         ON ${process}.${candidate_id} = ${candidate}.${candidate_id}\
@@ -35,10 +36,9 @@ module.exports = (query, entities) => {
     }
 
     function postCandidate(name, available) {
-        const values = [name, available]
         const statement = `INSERT INTO ${candidate}(${candidate_name},${candidate_available})\
         VALUES ($1, $2) RETURNING ${candidate_id};`
-        return query(statement, values)
+        return query(statement, [name, available])
             .then(res => res.rows[0])
     }
 

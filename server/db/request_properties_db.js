@@ -18,7 +18,7 @@ module.exports = (query) => {
             .then(res => res.rows)
     }
 
-    function findPropertyByKey(table, value, key) {
+    function findPropertyByKey(table, key, value) {
         return query(`SELECT * FROM ${table} WHERE ${key} = $1;`, [value])
             .then(res => res.rowCount === 0 ? undefined : res.rows)
     }

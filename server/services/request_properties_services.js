@@ -32,7 +32,7 @@ module.exports = (db, domain) => {
 
         const db_model = propertyValid.redirectTo;
 
-        return db.findPropertyByKey(db_model.table, property_to_add, db_model.key)
+        return db.findPropertyByKey(db_model.table, db_model.key, property_to_add)
             .then(exists => {
                 if (exists) return Promise.reject(`${property_to_add} of ${propertyTable} type already exists.`)
                 return db.postProperty(propertyValid.redirectTo.table, property_to_add);
