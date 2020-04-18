@@ -1,5 +1,7 @@
 'use strict'
 
+const querystring = require('querystring');
+
 module.exports = (db) => {
 
     return {
@@ -9,18 +11,19 @@ module.exports = (db) => {
         postCandidate: postCandidate
     }
 
-    function getCandidates() {
-        return db.getCandidates()
+    function getCandidates(query) {
+        const queryValues = querystring.stringify(query).split('=')
+        return db.getCandidates(queryValues)
     }
 
     function getCandidateById(candidate_id) {
-        if (!candidate_id) return Promise.reject("Candidate Id not valid")
+        if (!candidate_id) return Promise.reject("Candidate Id missing")
 
         return db.getCandidateById(candidate_id)
     }
 
     function getCandidateByRequest(request_id) {
-        if (!request_id) return Promise.reject("Request Id not valid")
+        if (!request_id) return Promise.reject("Request Id missing")
 
         return db.getCandidateByRequest(request_id)
     }

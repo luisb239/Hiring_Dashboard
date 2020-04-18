@@ -12,7 +12,7 @@ module.exports = (service, router) => {
     router.get(`/${requests}/:request_id/${root}`, getCandidateByRequest)
 
     function getCandidates(req, res) {
-        service.getCandidates()
+        service.getCandidates(req.query)
             .then(result => res.status(200).send(result))
             .catch(error => res.status(400).send({error: error}))
     }

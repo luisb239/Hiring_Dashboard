@@ -16,9 +16,13 @@ module.exports = (query, entities) => {
         postCandidate: postCandidate
     }
 
-    function getCandidates() {
-        return query(`SELECT * FROM ${candidate};`)
+    function getCandidates(queryValues) {
+        // Had issues passing the whole queryvalues to $1 had to split in 2
+        if(queryValues)
+            return query(`SELECT * FROM ${candidate} WHERE ${queryValues[0]} = $1;`, [queryValues[1]])
             .then(res => res.rows)
+        return query(`SELECT * FROM ${candidate};`)
+        .then(res => res.rows)
     }
 
     function getCandidateById(id) {

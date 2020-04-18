@@ -3,10 +3,10 @@
 
 module.exports = (db, domain) => {
 
-    return {
-        getRequests : getRequests,
-        postRequest : postRequest,
-    }
+    // return {
+    //     getRequests : getRequests,
+    //     postRequest : postRequest,
+    // }
 
     /*
     function getRequests(query) {
