@@ -5,7 +5,6 @@ const saltRounds = 10;
 
 module.exports = (db) => {
 
-
     return {
         authenticate: authenticate,
         getUserById: getUserById,
@@ -14,6 +13,7 @@ module.exports = (db) => {
     }
 
     function authenticate(username, password) {
+        // mudar para método
         if (!username)
             return Promise.reject("Username missing")
         if (!password)
@@ -22,10 +22,8 @@ module.exports = (db) => {
         return db.getUserByUsername(username)
             .then(user => {
                 if (!user) return Promise.reject("Username not existent")
-                return bcrypt.compare(password, user.password)
-                    .then(match => {
-                        if (!match) return Promise.reject("Incorrect password")
-                    });
+                return bcrypt.compare(password, user.password_hash)
+                    .then(match => match ? user : Promise.reject("Incorrect password"));
             });
     }
 
@@ -39,17 +37,24 @@ module.exports = (db) => {
             .then(user => {
                 if (user) return Promise.reject("Username already exists")
                 return bcrypt.hash(password, saltRounds)
-                    .then(hash => {
-                        return db.createUser(username, hash)
-                    })
+                    .then(hash => db.createUser(username, hash))
             })
     }
 
     function getUserById(userId) {
+        if (!userId)
+            return Promise.reject("User Id missing")
 
+        return db.getUserById(userId)
+            .then(user => user ? user : Promise.reject(`No user found with id : ${userId}`))
     }
 
-    function logout(userId) {
-
+    // Should we verify the 'user' argument properties?
+    function logout(user) {
+        return db.updateUserLastSignIn(user)
+            .then(res => res)
     }
+
+    // TODO - Typify service responses -> Routes will only accept the typified responses
+    // Do the same thing for db?
 }

@@ -10,48 +10,66 @@ module.exports = function (global, auth_service, router) {
     passport.serializeUser(serializeUser)
     passport.deserializeUser(deserializeUser)
 
-    //router.get('/session', getSession)
-    //router.post('/login', login)
-    //router.post('/logout', logout)
-    router.post('/sign_up', sign_up)
+    router.get('/session', getSession)
+    router.post('/login', verifyNotAuthenticated, login)
+    router.post('/logout', verifyAuthenticated, logout)
+    router.post('/signup', verifyNotAuthenticated, sign_up)
 
     return router
 
-    function getSession(req, resp) {
+    function verifyNotAuthenticated(req, res, next) {
+        if (!req.isAuthenticated())
+            return next()
+        sendUnauthorized(res, "Already Authenticated")
+    }
+
+    // Code repetition and should be in routes layer
+    function verifyAuthenticated(req, rsp, next) {
+        if (req.isAuthenticated())
+            return next()
+        rsp.status(403).json({message: "Not Authenticated"})
+    }
+
+    function getSession(req, res) {
         const isAuthenticated = req.isAuthenticated();
         const username = isAuthenticated ? req.user.username : undefined;
-        resp.json({
+        res.json({
             'auth': isAuthenticated,
             'username': username
         })
     }
 
-    function login(req, resp) {
+    function login(req, res) {
         auth_service
             .authenticate(req.body.username, req.body.password)
             .then(user => {
                 req.login(user, (err) => {
-                    if (err) sendUnauthorized(resp, err)
-                    else resp.json(user)
+                    if (err) sendUnauthorized(res, err)
+                    else res.json(user)
                 })
             })
-            .catch(() => sendUnauthorized(resp, "Unable to authenticate"))
+            .catch(err => sendUnauthorized(res, err))
     }
 
-    function logout(req, resp) {
-        req.logout()
-        getSession(req, resp)
+    function logout(req, res) {
+        auth_service
+            .logout(req.user)
+            .then(() => {
+                req.logout()
+                getSession(req, res)
+            })
     }
 
-    function sign_up(req, resp) {
+    function sign_up(req, res) {
         auth_service
             .createUser(req.body.username, req.body.password)
             .then(user => {
                 req.login(user, (err) => {
-                    if (err) sendUnauthorized(resp, err)
-                    else resp.json(user)
+                    if (err) sendUnauthorized(res, err)
+                    else res.json(user)
                 });
-            });
+            })
+            .catch(err => sendUnauthorized(res, err))
     }
 
     function serializeUser(user, done) {
@@ -67,8 +85,8 @@ module.exports = function (global, auth_service, router) {
             .catch(err => done(err))
     }
 
-    function sendUnauthorized(resp, err) {
-        resp.status(403).json({status: "Unauthorized", message: err})
+    function sendUnauthorized(res, err) {
+        res.status(403).json({status: "Unauthorized", message: err})
     }
 
 }

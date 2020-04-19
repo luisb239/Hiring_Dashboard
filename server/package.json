@@ -12,6 +12,7 @@
   "dependencies": {
     "bcrypt": "^4.0.1",
     "express": "^4.17.1",
+    "express-session": "^1.17.1",
     "nodemon": "^2.0.2",
     "passport": "^0.4.1",
     "pg": "^8.0.0",

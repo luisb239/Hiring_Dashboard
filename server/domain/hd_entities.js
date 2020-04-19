@@ -6,10 +6,11 @@ module.exports = () => {
 
     const user = {
         table: "user_profile",
-        id: "user_id",
+        user_id: "user_id",
         username: "username",
         password_hash: "password_hash",
-        last_sign_fds: "last_sign_in",
+        created_at: "created_at",
+        last_sign_in: "last_sign_in",
         is_active: "is_active"
     }
 
