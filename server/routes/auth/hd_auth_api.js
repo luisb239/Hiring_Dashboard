@@ -13,7 +13,7 @@ module.exports = function (global, auth_service, router) {
     router.get('/session', getSession)
     router.post('/login', verifyNotAuthenticated, login)
     router.post('/logout', verifyAuthenticated, logout)
-    router.post('/signup', verifyNotAuthenticated, sign_up)
+    router.post('/sign_up', verifyNotAuthenticated, sign_up)
 
     return router
 

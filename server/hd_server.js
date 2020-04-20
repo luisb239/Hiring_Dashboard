@@ -14,6 +14,7 @@ const hd_auth_db = require('./db/auth/hd_auth_db.js')(hd_db);
 const hd_services = require('./services/hd_services.js')(hd_db);
 const hd_auth_services = require('./services/auth/auth_services.js')(hd_auth_db);
 
+const cors = require('cors')
 const express = require('express');
 const express_session = require('express-session');
 
@@ -29,6 +30,7 @@ app.use(express.json())
 const hd_api = require('./routes/hd_api.js')(hd_services, express.Router())
 const hd_auth_api = require('./routes/auth/hd_auth_api.js')(app, hd_auth_services, express.Router())
 
+app.use(cors())
 app.use(api_auth_root, hd_auth_api);
 // app.use(api_root, verifyAuthenticated, hd_api); // Uncomment for required authentication
 app.use(api_root, hd_api);

@@ -8,21 +8,27 @@ import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import { BoardComponent } from './board/board.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {DragDropModule} from "@angular/cdk/drag-drop";
+import {ReactiveFormsModule} from "@angular/forms";
+import { HomeComponent } from './home/home.component';
+import {HttpClientModule} from "@angular/common/http";
 
 @NgModule({
   declarations: [
     AppComponent,
     SignUpComponent,
-    BoardComponent
+    BoardComponent,
+    HomeComponent
   ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    NgbModule,
-    BrowserAnimationsModule,
-    DragDropModule
-  ],
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
+        NgbModule,
+        BrowserAnimationsModule,
+        DragDropModule,
+        ReactiveFormsModule,
+        HttpClientModule
+    ],
   providers: [],
-  bootstrap: [AppComponent, SignUpComponent]
+  bootstrap: [AppComponent]
 })
 export class AppModule { }
