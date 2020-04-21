@@ -19,4 +19,15 @@ module.exports = (db, domain) => {
     function postRequest(body) {
     }
      */
+
+    function queryToString(queryKeys) {
+        function simplify(acc, curr, idx) {
+            if (idx === 0)
+                return `${curr} = $${idx + 1}`
+            else
+                return acc + ` AND ${curr} = $${idx + 1}`
+        }
+
+        return queryKeys.reduce(simplify)
+    }
 }
