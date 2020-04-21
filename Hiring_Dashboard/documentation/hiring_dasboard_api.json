@@ -1,0 +1,1620 @@
+{
+  "swagger" : "2.0",
+  "info" : {
+    "description" : "Web application to support the recruitment process of an IT business.",
+    "version" : "1.0.0",
+    "title" : "Hiring Dashboard API",
+    "contact" : {
+      "email" : "you@your-company.com"
+    },
+    "license" : {
+      "name" : "Apache 2.0",
+      "url" : "http://www.apache.org/licenses/LICENSE-2.0.html"
+    }
+  },
+  "host" : "virtserver.swaggerhub.com",
+  "basePath" : "/Hiring_Dashboard/Hiring_Dashboard/1.0.0",
+  "tags" : [ {
+    "name" : "admins",
+    "description" : "Secured Admin-only calls"
+  }, {
+    "name" : "developers",
+    "description" : "Operations available to regular developers"
+  } ],
+  "schemes" : [ "https" ],
+  "paths" : {
+    "/user" : {
+      "get" : {
+        "tags" : [ "developers" ],
+        "summary" : "Gets all users",
+        "description" : "Returns all the users from the system that the user has access to\n",
+        "operationId" : "getUsers",
+        "produces" : [ "application/json" ],
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "List of users matching criteria",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/User"
+              }
+            }
+          },
+          "500" : {
+            "description" : "internal Server Error",
+            "schema" : {
+              "$ref" : "#/definitions/Error_500"
+            }
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "developers" ],
+        "summary" : "Creates a user",
+        "description" : "Creates a user and adds it to the system",
+        "operationId" : "createUser",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "request",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/Request_PostBody"
+          }
+        } ],
+        "responses" : {
+          "201" : {
+            "description" : "request created",
+            "schema" : {
+              "$ref" : "#/definitions/Success_201"
+            }
+          },
+          "400" : {
+            "description" : "invalid input, object invalid"
+          },
+          "500" : {
+            "description" : "internal Server Error",
+            "schema" : {
+              "$ref" : "#/definitions/Error_500"
+            }
+          }
+        }
+      }
+    },
+    "/user/{id}" : {
+      "get" : {
+        "tags" : [ "developers" ],
+        "summary" : "Gets {id} user",
+        "description" : "Finds the request with the specified id\n",
+        "operationId" : "getUser",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "description" : "User's id",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int32"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "User found",
+            "schema" : {
+              "$ref" : "#/definitions/User"
+            }
+          },
+          "404" : {
+            "description" : "User not found",
+            "schema" : {
+              "$ref" : "#/definitions/Error_404"
+            }
+          }
+        }
+      }
+    },
+    "/role" : {
+      "get" : {
+        "tags" : [ "developers" ],
+        "summary" : "Gets all roles",
+        "description" : "Returns all the roles from the system that the user has access to\n",
+        "operationId" : "getRoles",
+        "produces" : [ "application/json" ],
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "List of roles matching criteria",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/Role"
+              }
+            }
+          },
+          "500" : {
+            "description" : "internal Server Error",
+            "schema" : {
+              "$ref" : "#/definitions/Error_500"
+            }
+          }
+        }
+      }
+    },
+    "/skill" : {
+      "get" : {
+        "tags" : [ "developers" ],
+        "summary" : "Gets all skills",
+        "description" : "Returns all the skills from the system that the user has access to\n",
+        "operationId" : "getSkills",
+        "produces" : [ "application/json" ],
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "List of skills matching criteria",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/Skill"
+              }
+            }
+          },
+          "500" : {
+            "description" : "internal Server Error",
+            "schema" : {
+              "$ref" : "#/definitions/Error_500"
+            }
+          }
+        }
+      }
+    },
+    "/project" : {
+      "get" : {
+        "tags" : [ "developers" ],
+        "summary" : "Gets all projects",
+        "description" : "Returns all the request projects from the system that the user has access to\n",
+        "operationId" : "getProjects",
+        "produces" : [ "application/json" ],
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "List of projects matching criteria",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/Project"
+              }
+            }
+          },
+          "500" : {
+            "description" : "internal Server Error",
+            "schema" : {
+              "$ref" : "#/definitions/Error_500"
+            }
+          }
+        }
+      }
+    },
+    "/process" : {
+      "get" : {
+        "tags" : [ "developers" ],
+        "summary" : "Gets all processes",
+        "description" : "Returns all the request processes from the system that the user has access to\n",
+        "operationId" : "getProcesses",
+        "produces" : [ "application/json" ],
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "List of processes matching criteria",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/Process"
+              }
+            }
+          },
+          "500" : {
+            "description" : "internal Server Error",
+            "schema" : {
+              "$ref" : "#/definitions/Error_500"
+            }
+          }
+        }
+      }
+    },
+    "/state" : {
+      "get" : {
+        "tags" : [ "developers" ],
+        "summary" : "Gets all states",
+        "description" : "Returns all the request states from the system that the user has access to\n",
+        "operationId" : "getStates",
+        "produces" : [ "application/json" ],
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "List of states matching criteria",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/State"
+              }
+            }
+          },
+          "500" : {
+            "description" : "internal Server Error",
+            "schema" : {
+              "$ref" : "#/definitions/Error_500"
+            }
+          }
+        }
+      }
+    },
+    "/profile" : {
+      "get" : {
+        "tags" : [ "developers" ],
+        "summary" : "Gets all profiles",
+        "description" : "Returns all the request profiles from the system that the user has access to\n",
+        "operationId" : "getProfiles",
+        "produces" : [ "application/json" ],
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "List of profiles matching criteria",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/Profile"
+              }
+            }
+          },
+          "500" : {
+            "description" : "internal Server Error",
+            "schema" : {
+              "$ref" : "#/definitions/Error_500"
+            }
+          }
+        }
+      }
+    },
+    "/state_csl" : {
+      "get" : {
+        "tags" : [ "developers" ],
+        "summary" : "Gets all states_csl",
+        "description" : "Returns all the request states_csl from the system that the user has access to\n",
+        "operationId" : "getStatesCsl",
+        "produces" : [ "application/json" ],
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "List of states_csl matching criteria",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/State_Csl"
+              }
+            }
+          },
+          "500" : {
+            "description" : "internal Server Error",
+            "schema" : {
+              "$ref" : "#/definitions/Error_500"
+            }
+          }
+        }
+      }
+    },
+    "/process_status" : {
+      "get" : {
+        "tags" : [ "developers" ],
+        "summary" : "Gets all process_status",
+        "description" : "Returns all the process_status from the system that the user has access to\n",
+        "operationId" : "getProcessStatus",
+        "produces" : [ "application/json" ],
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "List of process_status matching criteria",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/Process_Status"
+              }
+            }
+          },
+          "500" : {
+            "description" : "internal Server Error",
+            "schema" : {
+              "$ref" : "#/definitions/Error_500"
+            }
+          }
+        }
+      }
+    },
+    "/workflow" : {
+      "get" : {
+        "tags" : [ "developers" ],
+        "summary" : "Gets all workflows",
+        "description" : "Returns all the workflows from the system that the user has access to\n",
+        "operationId" : "getWorkflows",
+        "produces" : [ "application/json" ],
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "List of workflows matching criteria",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/Workflow"
+              }
+            }
+          },
+          "500" : {
+            "description" : "internal Server Error",
+            "schema" : {
+              "$ref" : "#/definitions/Error_500"
+            }
+          }
+        }
+      }
+    },
+    "/role_type" : {
+      "get" : {
+        "tags" : [ "developers" ],
+        "summary" : "Gets all role_types",
+        "description" : "Returns all the role_types from the system that the user has access to\n",
+        "operationId" : "getRoleTypes",
+        "produces" : [ "application/json" ],
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "List of role_types matching criteria",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/Role_Type"
+              }
+            }
+          },
+          "500" : {
+            "description" : "internal Server Error",
+            "schema" : {
+              "$ref" : "#/definitions/Error_500"
+            }
+          }
+        }
+      }
+    },
+    "/request_language" : {
+      "get" : {
+        "tags" : [ "developers" ],
+        "summary" : "Gets all request_languages",
+        "description" : "Returns all the request_languages from the system that the user has access to\n",
+        "operationId" : "getRequestLanguages",
+        "produces" : [ "application/json" ],
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "List of request_languages matching criteria",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/Request_Language"
+              }
+            }
+          },
+          "500" : {
+            "description" : "internal Server Error",
+            "schema" : {
+              "$ref" : "#/definitions/Error_500"
+            }
+          }
+        }
+      }
+    },
+    "/unavailable_reason" : {
+      "get" : {
+        "tags" : [ "developers" ],
+        "summary" : "Gets all unavailable_reasons",
+        "description" : "Returns all the unavailable_reasons from the system that the user has access to\n",
+        "operationId" : "getUnavailableReasons",
+        "produces" : [ "application/json" ],
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "List of unavailable_reasons matching criteria",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/Unavailable_Reason"
+              }
+            }
+          },
+          "500" : {
+            "description" : "internal Server Error",
+            "schema" : {
+              "$ref" : "#/definitions/Error_500"
+            }
+          }
+        }
+      }
+    },
+    "/request" : {
+      "get" : {
+        "tags" : [ "developers" ],
+        "summary" : "Gets all requests",
+        "description" : "By passing in the appropriate options, you can search for\nevery request in the system\n",
+        "operationId" : "getRequests",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "skill_id",
+          "in" : "query",
+          "description" : "pass an optional skill to filter candidates",
+          "required" : false,
+          "type" : "integer",
+          "minimum" : 0,
+          "format" : "int32"
+        }, {
+          "name" : "state_id",
+          "in" : "query",
+          "description" : "pass an optional state to filter candidates",
+          "required" : false,
+          "type" : "integer",
+          "minimum" : 0,
+          "format" : "int32"
+        }, {
+          "name" : "profile_id",
+          "in" : "query",
+          "description" : "pass an optional profile to filter candidates",
+          "required" : false,
+          "type" : "integer",
+          "minimum" : 0,
+          "format" : "int32"
+        }, {
+          "name" : "project_id",
+          "in" : "query",
+          "description" : "pass an optional project to filter candidates",
+          "required" : false,
+          "type" : "integer",
+          "minimum" : 0,
+          "format" : "int32"
+        }, {
+          "name" : "state_csl_id",
+          "in" : "query",
+          "description" : "pass an optional CSL state to filter candidates",
+          "required" : false,
+          "type" : "integer",
+          "minimum" : 0,
+          "format" : "int32"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "search results matching criteria",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/Request"
+              }
+            }
+          },
+          "400" : {
+            "description" : "bad input parameter"
+          },
+          "500" : {
+            "description" : "internal Server Error",
+            "schema" : {
+              "$ref" : "#/definitions/Error_500"
+            }
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "developers" ],
+        "summary" : "Creates a request",
+        "description" : "Creates a request and adds it to the system",
+        "operationId" : "createRequests",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "request",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/Request_PostBody"
+          }
+        } ],
+        "responses" : {
+          "201" : {
+            "description" : "request created",
+            "schema" : {
+              "$ref" : "#/definitions/Success_201"
+            }
+          },
+          "400" : {
+            "description" : "invalid input, object invalid"
+          },
+          "500" : {
+            "description" : "internal Server Error",
+            "schema" : {
+              "$ref" : "#/definitions/Error_500"
+            }
+          }
+        }
+      }
+    },
+    "/request/user/{user_id}" : {
+      "get" : {
+        "tags" : [ "developers" ],
+        "summary" : "Gets request from user {user_id}",
+        "description" : "By passing in the appropriate options, you can search for\nevery request associated to the {user_id} user in the system\n",
+        "operationId" : "getRequestbyUser",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "user_id",
+          "in" : "path",
+          "description" : "pass the user's id",
+          "required" : true,
+          "type" : "integer",
+          "minimum" : 1,
+          "format" : "int32"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "search results matching user id",
+            "schema" : {
+              "$ref" : "#/definitions/Request"
+            }
+          },
+          "400" : {
+            "description" : "bad input parameter"
+          },
+          "404" : {
+            "description" : "request not found"
+          },
+          "500" : {
+            "description" : "internal Server Error",
+            "schema" : {
+              "$ref" : "#/definitions/Error_500"
+            }
+          }
+        }
+      }
+    },
+    "/request/{id}" : {
+      "get" : {
+        "tags" : [ "developers" ],
+        "summary" : "Get request by id",
+        "description" : "Finds the request with the specified id\n",
+        "operationId" : "getRequest",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "description" : "Request's id",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int32"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Request found",
+            "schema" : {
+              "$ref" : "#/definitions/Request"
+            }
+          },
+          "404" : {
+            "description" : "Request not found"
+          }
+        }
+      },
+      "put" : {
+        "tags" : [ "developers" ],
+        "summary" : "Updates a request",
+        "description" : "Updates the request with the specified id\n",
+        "operationId" : "update_request",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "description" : "Request id",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int32"
+        }, {
+          "in" : "body",
+          "name" : "request",
+          "description" : "Request to update",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/Request_PutBody"
+          }
+        } ],
+        "responses" : {
+          "201" : {
+            "description" : "Request updated",
+            "schema" : {
+              "$ref" : "#/definitions/Success_201"
+            }
+          },
+          "404" : {
+            "description" : "Request not found"
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "developers" ],
+        "summary" : "Delete request by id",
+        "description" : "Delete the request with the specified id\n",
+        "operationId" : "deleteRequest",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "description" : "Request's id",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int32"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Request deleted",
+            "schema" : {
+              "$ref" : "#/definitions/Success_201"
+            }
+          },
+          "404" : {
+            "description" : "Request not found"
+          }
+        }
+      }
+    },
+    "/request/{id}/phase" : {
+      "get" : {
+        "tags" : [ "developers" ],
+        "summary" : "Get phases of {id} request",
+        "description" : "Finds all the phases from the {id} request\n",
+        "operationId" : "getPhaseByRequest",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "description" : "Phase's id",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int32"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Phases found",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/Phase"
+              }
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error",
+            "schema" : {
+              "$ref" : "#/definitions/Error_500"
+            }
+          }
+        }
+      }
+    },
+    "/phase" : {
+      "get" : {
+        "tags" : [ "developers" ],
+        "summary" : "Gets all phases",
+        "description" : "Returns all the phases from the system that the user has access to\n",
+        "operationId" : "getPhases",
+        "produces" : [ "application/json" ],
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "List of phases matching criteria",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/Phase"
+              }
+            }
+          },
+          "500" : {
+            "description" : "internal Server Error",
+            "schema" : {
+              "$ref" : "#/definitions/Error_500"
+            }
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "developers" ],
+        "summary" : "Creates a phase",
+        "description" : "Creates a phase and adds it to the system",
+        "operationId" : "createPhases",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "phase",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/Phase_ReqBody"
+          }
+        } ],
+        "responses" : {
+          "201" : {
+            "description" : "phase created",
+            "schema" : {
+              "$ref" : "#/definitions/Success_201"
+            }
+          },
+          "400" : {
+            "description" : "invalid input, object invalid"
+          },
+          "500" : {
+            "description" : "internal Server Error",
+            "schema" : {
+              "$ref" : "#/definitions/Error_500"
+            }
+          }
+        }
+      }
+    },
+    "/phase/{id}" : {
+      "delete" : {
+        "tags" : [ "developers" ],
+        "summary" : "Delete phase by id",
+        "description" : "Delete the phase with the specified id\n",
+        "operationId" : "deletePhase",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "description" : "Phase's id",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int32"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Phase deleted",
+            "schema" : {
+              "$ref" : "#/definitions/Success_201"
+            }
+          },
+          "404" : {
+            "description" : "Phase not found",
+            "schema" : {
+              "$ref" : "#/definitions/Error_404"
+            }
+          }
+        }
+      }
+    },
+    "/candidate" : {
+      "get" : {
+        "tags" : [ "developers" ],
+        "summary" : "Gets all candidates",
+        "description" : "Finds all candidates\n",
+        "operationId" : "getCandidates",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "available",
+          "in" : "query",
+          "description" : "available boolean on candidate",
+          "required" : false,
+          "type" : "boolean"
+        }, {
+          "name" : "request_id",
+          "in" : "query",
+          "description" : "the request id",
+          "required" : false,
+          "type" : "integer",
+          "format" : "int32"
+        }, {
+          "name" : "phase_id",
+          "in" : "query",
+          "description" : "the phase id",
+          "required" : false,
+          "type" : "integer",
+          "format" : "int32"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "all candidates retrieved successfully",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/Candidate"
+              }
+            }
+          },
+          "400" : {
+            "description" : "bad input parameter"
+          },
+          "500" : {
+            "description" : "internal Server Error",
+            "schema" : {
+              "$ref" : "#/definitions/Error_500"
+            }
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "developers" ],
+        "summary" : "Add a candidate",
+        "description" : "Adds a candidate to the system\n",
+        "operationId" : "addCandidate",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "candidate",
+          "description" : "Candidate to add",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/Candidate"
+          }
+        } ],
+        "responses" : {
+          "201" : {
+            "description" : "Candidate added with success",
+            "schema" : {
+              "$ref" : "#/definitions/Success_201"
+            }
+          },
+          "400" : {
+            "description" : "bad input parameter"
+          }
+        }
+      }
+    },
+    "/candidate/{id}" : {
+      "get" : {
+        "tags" : [ "developers" ],
+        "summary" : "Get candidate",
+        "description" : "Finds the candidate with the specified id\n",
+        "operationId" : "getCandidate",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "description" : "Candidate id",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int32"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Candidate found",
+            "schema" : {
+              "$ref" : "#/definitions/Candidate"
+            }
+          },
+          "404" : {
+            "description" : "Candidate not found"
+          }
+        }
+      },
+      "put" : {
+        "tags" : [ "developers" ],
+        "summary" : "Updates a candidate",
+        "description" : "Updates the candidate with the specified id\n",
+        "operationId" : "update_candidate",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "description" : "Candidate id",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int32"
+        }, {
+          "in" : "body",
+          "name" : "candidate",
+          "description" : "Candidate to update",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/Candidate"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Candidate updated",
+            "schema" : {
+              "$ref" : "#/definitions/Candidate"
+            }
+          },
+          "404" : {
+            "description" : "Candidate not found"
+          }
+        }
+      }
+    }
+  },
+  "definitions" : {
+    "User" : {
+      "type" : "object",
+      "required" : [ "id", "is_active", "last_sign_in", "password_hash", "username" ],
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "uuid",
+          "example" : 123
+        },
+        "username" : {
+          "type" : "string",
+          "example" : "John Doe"
+        },
+        "password_hash" : {
+          "type" : "string",
+          "example" : "asgjahHasjf"
+        },
+        "is_active" : {
+          "type" : "boolean",
+          "example" : true
+        },
+        "last_sign_in" : {
+          "type" : "string",
+          "format" : "date",
+          "example" : "2020/02/02"
+        }
+      }
+    },
+    "Role" : {
+      "type" : "object",
+      "required" : [ "id", "role" ],
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "uuid",
+          "example" : 123
+        },
+        "role" : {
+          "type" : "string",
+          "example" : "Recruiter"
+        }
+      }
+    },
+    "Candidate" : {
+      "type" : "object",
+      "required" : [ "available", "cv", "id", "name", "profile_info" ],
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "uuid",
+          "example" : 123
+        },
+        "name" : {
+          "type" : "string",
+          "example" : "John Doe"
+        },
+        "cv" : {
+          "type" : "string",
+          "format" : "date",
+          "example" : "2016/08/29T09:12:33.001Z"
+        },
+        "available" : {
+          "type" : "boolean",
+          "example" : true
+        },
+        "profile_info" : {
+          "type" : "string",
+          "example" : "Recruitment Team"
+        }
+      }
+    },
+    "Request" : {
+      "type" : "object",
+      "required" : [ "date_to_send_profile", "description", "id", "progress", "project_id", "quantity", "request_date", "skill_id", "state_csl_id", "state_id", "target_date", "workflow_id" ],
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "uuid",
+          "example" : 123
+        },
+        "quantity" : {
+          "type" : "integer",
+          "example" : 4
+        },
+        "description" : {
+          "type" : "string",
+          "example" : "Tests experience"
+        },
+        "request_date" : {
+          "type" : "string",
+          "format" : "date",
+          "example" : "2020/02/02"
+        },
+        "target_date" : {
+          "type" : "string",
+          "example" : "April"
+        },
+        "state_id" : {
+          "type" : "integer",
+          "format" : "uuid",
+          "example" : 235
+        },
+        "workflow_id" : {
+          "type" : "integer",
+          "format" : "uuid",
+          "example" : 145
+        },
+        "skill_id" : {
+          "type" : "integer",
+          "format" : "uuid",
+          "example" : 145
+        },
+        "state_csl_id" : {
+          "type" : "integer",
+          "format" : "uuid",
+          "example" : 123
+        },
+        "project_id" : {
+          "type" : "integer",
+          "format" : "uuid",
+          "example" : 145
+        },
+        "date_to_send_profile" : {
+          "type" : "string",
+          "format" : "date",
+          "example" : "2020/03/12"
+        },
+        "progress" : {
+          "type" : "integer",
+          "example" : 75
+        }
+      }
+    },
+    "Phase" : {
+      "type" : "object",
+      "required" : [ "id", "phase" ],
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "uuid",
+          "example" : 123
+        },
+        "phase" : {
+          "type" : "string",
+          "example" : "First Interview"
+        }
+      }
+    },
+    "Skill" : {
+      "type" : "object",
+      "required" : [ "id", "skill" ],
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "uuid",
+          "example" : 123
+        },
+        "skill" : {
+          "type" : "string",
+          "example" : "IS"
+        }
+      }
+    },
+    "Project" : {
+      "type" : "object",
+      "required" : [ "id", "project" ],
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "uuid",
+          "example" : 123
+        },
+        "project" : {
+          "type" : "string",
+          "example" : "ABC Enterprise"
+        }
+      }
+    },
+    "Process" : {
+      "type" : "object",
+      "required" : [ "candidate_id", "interview_details", "relevant_remarks", "request_id", "score", "seniority", "started", "starting_date", "status_id" ],
+      "properties" : {
+        "request_id" : {
+          "type" : "integer",
+          "format" : "uuid",
+          "example" : 123
+        },
+        "candidate_id" : {
+          "type" : "integer",
+          "format" : "uuid",
+          "example" : 123
+        },
+        "status_id" : {
+          "type" : "integer",
+          "format" : "uuid",
+          "example" : 123
+        },
+        "score" : {
+          "type" : "integer",
+          "example" : 4
+        },
+        "seniority" : {
+          "type" : "string",
+          "example" : "Senior Developer"
+        },
+        "interview_details" : {
+          "type" : "string",
+          "example" : "Candidate shows great promise"
+        },
+        "relevant_remarks" : {
+          "type" : "string",
+          "example" : "Unavailable for a couple months"
+        },
+        "starting_date" : {
+          "type" : "string",
+          "format" : "date",
+          "example" : "2020/02/02"
+        },
+        "started" : {
+          "type" : "string",
+          "format" : "date",
+          "example" : "2020/02/03"
+        }
+      }
+    },
+    "State" : {
+      "type" : "object",
+      "required" : [ "id", "state" ],
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "uuid",
+          "example" : 123
+        },
+        "state" : {
+          "type" : "string",
+          "example" : "Closed"
+        }
+      }
+    },
+    "Profile" : {
+      "type" : "object",
+      "required" : [ "id", "profile" ],
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "uuid",
+          "example" : 123
+        },
+        "profile" : {
+          "type" : "string",
+          "example" : "Mobile Dev"
+        }
+      }
+    },
+    "State_Csl" : {
+      "type" : "object",
+      "required" : [ "id", "state" ],
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "uuid",
+          "example" : 123
+        },
+        "state" : {
+          "type" : "string",
+          "example" : "Requested"
+        }
+      }
+    },
+    "Process_Status" : {
+      "type" : "object",
+      "required" : [ "id", "status" ],
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "uuid",
+          "example" : 123
+        },
+        "status" : {
+          "type" : "string",
+          "example" : "Placed"
+        }
+      }
+    },
+    "Workflow" : {
+      "type" : "object",
+      "required" : [ "id", "name" ],
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "uuid",
+          "example" : 123
+        },
+        "name" : {
+          "type" : "string",
+          "example" : "Recruiment Team"
+        }
+      }
+    },
+    "Role_Type" : {
+      "type" : "object",
+      "required" : [ "id", "role_type" ],
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "uuid",
+          "example" : 123
+        },
+        "role_type" : {
+          "type" : "string",
+          "example" : "Team Leader"
+        }
+      }
+    },
+    "Request_Language" : {
+      "type" : "object",
+      "required" : [ "id", "language" ],
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "uuid",
+          "example" : 123
+        },
+        "language" : {
+          "type" : "string",
+          "example" : "Anglophone"
+        }
+      }
+    },
+    "Unavailable_Reason" : {
+      "type" : "object",
+      "required" : [ "id" ],
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "uuid",
+          "example" : 123
+        },
+        "language" : {
+          "type" : "string",
+          "example" : "No longer Interested"
+        }
+      }
+    },
+    "User_Role" : {
+      "type" : "object",
+      "required" : [ "role_id", "role_type_id", "user_id" ],
+      "properties" : {
+        "user_id" : {
+          "type" : "integer",
+          "format" : "uuid",
+          "example" : 123
+        },
+        "role_id" : {
+          "type" : "integer",
+          "format" : "uuid",
+          "example" : 123
+        },
+        "role_type_id" : {
+          "type" : "integer",
+          "format" : "uuid",
+          "example" : 123
+        }
+      }
+    },
+    "Workflow_Phase" : {
+      "type" : "object",
+      "required" : [ "phase_id", "phase_number", "workflow_id" ],
+      "properties" : {
+        "workflow_id" : {
+          "type" : "integer",
+          "format" : "uuid",
+          "example" : 123
+        },
+        "phase_id" : {
+          "type" : "integer",
+          "format" : "uuid",
+          "example" : 123
+        },
+        "phase_number" : {
+          "type" : "integer",
+          "example" : 1
+        }
+      }
+    },
+    "Request_Phase" : {
+      "type" : "object",
+      "required" : [ "phase_id", "request_id" ],
+      "properties" : {
+        "request_id" : {
+          "type" : "integer",
+          "format" : "uuid",
+          "example" : 123
+        },
+        "phase_id" : {
+          "type" : "integer",
+          "format" : "uuid",
+          "example" : 123
+        }
+      }
+    },
+    "Request_Language_Request" : {
+      "type" : "object",
+      "required" : [ "is_mandatory", "language_id", "request_id" ],
+      "properties" : {
+        "language_id" : {
+          "type" : "integer",
+          "format" : "uuid",
+          "example" : 123
+        },
+        "request_id" : {
+          "type" : "integer",
+          "format" : "uuid",
+          "example" : 123
+        },
+        "is_mandatory" : {
+          "type" : "boolean",
+          "example" : true
+        }
+      }
+    },
+    "User_Role_Request" : {
+      "type" : "object",
+      "required" : [ "request_id", "role_id", "user_id" ],
+      "properties" : {
+        "user_id" : {
+          "type" : "integer",
+          "format" : "uuid",
+          "example" : 123
+        },
+        "role_id" : {
+          "type" : "integer",
+          "format" : "uuid",
+          "example" : 123
+        },
+        "request_id" : {
+          "type" : "integer",
+          "format" : "uuid",
+          "example" : 123
+        }
+      }
+    },
+    "Process_Unavailable_Reason" : {
+      "type" : "object",
+      "required" : [ "candidate_id", "reason_id", "request_id" ],
+      "properties" : {
+        "request_id" : {
+          "type" : "integer",
+          "format" : "uuid",
+          "example" : 123
+        },
+        "candidate_id" : {
+          "type" : "integer",
+          "format" : "uuid",
+          "example" : 123
+        },
+        "reason_id" : {
+          "type" : "integer",
+          "example" : 123
+        }
+      }
+    },
+    "Process_Workflow_Phase" : {
+      "type" : "object",
+      "required" : [ "notes", "phase_date", "phase_id", "process_id", "workflow_id" ],
+      "properties" : {
+        "process_id" : {
+          "type" : "integer",
+          "format" : "uuid",
+          "example" : 123
+        },
+        "workflow_id" : {
+          "type" : "integer",
+          "format" : "uuid",
+          "example" : 123
+        },
+        "phase_id" : {
+          "type" : "integer",
+          "format" : "uuid",
+          "example" : 123
+        },
+        "phase_date" : {
+          "type" : "string",
+          "format" : "date",
+          "example" : "2020/02/02"
+        },
+        "notes" : {
+          "type" : "string",
+          "example" : "Candidate Excelled in interview"
+        }
+      }
+    },
+    "Candidate_Request_Profile" : {
+      "type" : "object",
+      "required" : [ "candidate_id", "profile_id" ],
+      "properties" : {
+        "candidate_id" : {
+          "type" : "integer",
+          "format" : "uuid",
+          "example" : 123
+        },
+        "profile_id" : {
+          "type" : "integer",
+          "format" : "uuid",
+          "example" : 123
+        }
+      }
+    },
+    "Error_500" : {
+      "type" : "object",
+      "required" : [ "error", "uri" ],
+      "properties" : {
+        "error" : {
+          "type" : "string",
+          "example" : "Internal Server Error"
+        },
+        "uri" : {
+          "type" : "string",
+          "format" : "uri",
+          "example" : "/"
+        }
+      }
+    },
+    "Error_404" : {
+      "type" : "object",
+      "required" : [ "error", "uri" ],
+      "properties" : {
+        "error" : {
+          "type" : "string",
+          "example" : "Resource Not Found"
+        },
+        "uri" : {
+          "type" : "string",
+          "format" : "uri",
+          "example" : "/"
+        }
+      }
+    },
+    "Success_201" : {
+      "type" : "object",
+      "required" : [ "success" ],
+      "properties" : {
+        "success" : {
+          "type" : "boolean",
+          "example" : true
+        }
+      }
+    },
+    "Request_PostBody" : {
+      "type" : "object",
+      "required" : [ "date_to_send_profile", "description", "progress", "project_id", "quantity", "request_date", "skill_id", "state_csl_id", "state_id", "target_date", "workflow_id" ],
+      "properties" : {
+        "quantity" : {
+          "type" : "integer",
+          "example" : 4
+        },
+        "description" : {
+          "type" : "string",
+          "example" : "Tests experience"
+        },
+        "request_date" : {
+          "type" : "string",
+          "format" : "date",
+          "example" : "2020/02/02"
+        },
+        "target_date" : {
+          "type" : "string",
+          "example" : "April"
+        },
+        "state_id" : {
+          "type" : "integer",
+          "format" : "uuid",
+          "example" : 235
+        },
+        "workflow_id" : {
+          "type" : "integer",
+          "format" : "uuid",
+          "example" : 145
+        },
+        "skill_id" : {
+          "type" : "integer",
+          "format" : "uuid",
+          "example" : 145
+        },
+        "state_csl_id" : {
+          "type" : "integer",
+          "format" : "uuid",
+          "example" : 123
+        },
+        "project_id" : {
+          "type" : "integer",
+          "format" : "uuid",
+          "example" : 145
+        },
+        "date_to_send_profile" : {
+          "type" : "string",
+          "format" : "date",
+          "example" : "2020/03/12"
+        },
+        "progress" : {
+          "type" : "integer",
+          "example" : 75
+        }
+      }
+    },
+    "Request_PutBody" : {
+      "type" : "object",
+      "properties" : {
+        "quantity" : {
+          "type" : "integer",
+          "example" : 4
+        },
+        "description" : {
+          "type" : "string",
+          "example" : "Tests experience"
+        },
+        "request_date" : {
+          "type" : "string",
+          "format" : "date",
+          "example" : "2020/02/02"
+        },
+        "target_date" : {
+          "type" : "string",
+          "example" : "April"
+        },
+        "state_id" : {
+          "type" : "integer",
+          "format" : "uuid",
+          "example" : 235
+        },
+        "workflow_id" : {
+          "type" : "integer",
+          "format" : "uuid",
+          "example" : 145
+        },
+        "skill_id" : {
+          "type" : "integer",
+          "format" : "uuid",
+          "example" : 145
+        },
+        "state_csl_id" : {
+          "type" : "integer",
+          "format" : "uuid",
+          "example" : 123
+        },
+        "project_id" : {
+          "type" : "integer",
+          "format" : "uuid",
+          "example" : 145
+        },
+        "date_to_send_profile" : {
+          "type" : "string",
+          "format" : "date",
+          "example" : "2020/03/12"
+        },
+        "progress" : {
+          "type" : "integer",
+          "example" : 75
+        }
+      }
+    },
+    "Phase_ReqBody" : {
+      "type" : "object",
+      "required" : [ "description", "phase" ],
+      "properties" : {
+        "phase" : {
+          "type" : "string",
+          "example" : "First Interview"
+        },
+        "description" : {
+          "example" : "First chance to get to know Candidate"
+        }
+      }
+    }
+  }
+}
