@@ -20,13 +20,23 @@ module.exports = () => {
         return request_properties.find(p => p.value === property);
     }
 
-    function isRequestQueryValid(property) {
-        return entities.request[property]
+    function getQueryValues(query) {
+        let result = []
+        let idx = 0
+        Object.keys(entities).forEach(prop => {
+                if (query[prop] !== undefined)
+                    result[idx] = query[prop]
+                else
+                    result[idx] = null
+                idx++
+            }
+        )
+        return result
     }
 
     return {
         isPropertyValid: isPropertyValid,
-        isRequestQueryValid: isRequestQueryValid
+        getQueryValues: getQueryValues
     }
 
 }
