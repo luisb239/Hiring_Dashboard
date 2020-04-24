@@ -2,8 +2,9 @@ import {Component, OnInit, TemplateRef} from '@angular/core';
 import {CdkDragDrop, moveItemInArray, transferArrayItem} from '@angular/cdk/drag-drop';
 import {Board} from 'src/app/model/board';
 import {Column} from 'src/app/model/column';
-import {Candidate} from '../model/candidate';
+import {Candidate} from '../../model/candidate';
 import {NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
+import {PopupComponent} from '../popup/popup.component';
 
 @Component({
   selector: 'app-board',
@@ -56,12 +57,10 @@ export class BoardComponent implements OnInit {
     }
   }
 
-  onClick(content: TemplateRef<any>) {
-    this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
-      this.closeResult = `Closed with: ${result}`;
-    }, (reason) => {
-      this.closeResult = `Dismissed`;
-    });
+  onClick(candidate: Candidate) {
+    const modalRef = this.modalService.open(PopupComponent);
+    candidate.available = false;
+    modalRef.componentInstance.candidate = candidate;
   }
 
 }
