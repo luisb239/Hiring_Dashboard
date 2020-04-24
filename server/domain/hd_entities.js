@@ -1,7 +1,5 @@
 'use strict';
 
-//hd_entities -> domain or db ??
-
 module.exports = () => {
 
     const user = {
@@ -37,7 +35,10 @@ module.exports = () => {
         name: "name",
         cv: "cv",
         available: "available",
-        profile_info: "profile_info" 
+        profile_info: "profile_info",
+        queryFilter: [
+            {available: "available"}
+        ]
     }
 
     const process = {

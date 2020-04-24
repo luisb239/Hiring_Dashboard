@@ -8,6 +8,7 @@ module.exports = (db) => {
         getCandidates: getCandidates,
         getCandidateById: getCandidateById,
         getCandidateByRequest: getCandidateByRequest,
+        getCandidateByRequestPhase: getCandidateByRequestPhase,
         postCandidate: postCandidate
     }
 
@@ -26,6 +27,13 @@ module.exports = (db) => {
         if (!request_id) return Promise.reject("Request Id missing")
 
         return db.getCandidateByRequest(request_id)
+    }
+
+    function getCandidateByRequestPhase(request_id, phase_id) {
+        if (!request_id) return Promise.reject("Request Id missing")
+        if (!phase_id) return Promise.reject("Phase Id missing")
+
+        return db.getCandidateByRequestPhase(request_id, phase_id)
     }
 
     function postCandidate(candidate_name, candidate_availability) {

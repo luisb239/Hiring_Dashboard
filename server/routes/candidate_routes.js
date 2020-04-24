@@ -1,7 +1,8 @@
 'use strict';
 
 const root = 'candidates';
-const requests = 'requests'
+const requests = 'requests';
+const phases = 'phases';
 
 module.exports = (service, router) => {
 
@@ -10,6 +11,7 @@ module.exports = (service, router) => {
     router.post(`/${root}`, postCandidate)
 
     router.get(`/${requests}/:request_id/${root}`, getCandidateByRequest)
+    router.get(`/${requests}/:request_id/${phases}/:phase_id/${root}`, getCandidateByRequestPhase)
 
     function getCandidates(req, res) {
         service.getCandidates(req.query)
@@ -25,6 +27,14 @@ module.exports = (service, router) => {
 
     function getCandidateByRequest(req, res) {
         service.getCandidateByRequest(req.params.request_id)
+            .then(result => res.status(200).send(result))
+            .catch(error => res.status(400).send({error : error}))
+    }
+    
+    function getCandidateByRequestPhase(req, res) {
+        const request_id = req.params.request_id
+        const phase_id = req.params.phase_id
+        service.getCandidateByRequestPhase(request_id, phase_id)
             .then(result => res.status(200).send(result))
             .catch(error => res.status(400).send({error : error}))
     }
