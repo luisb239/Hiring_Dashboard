@@ -2,16 +2,16 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import {SignUpComponent} from './components/sign-up/sign-up.component';
 import {BoardComponent} from './components/board/board.component';
-import {HomeComponent} from "./components/home/home.component";
-
+import {HomeComponent} from './components/home/home.component';
+import {CreateRequestComponent} from './components/create-request/create-request.component';
 
 const routes: Routes = [
   {path: 'board', component: BoardComponent},
   {path: 'sign_up', component: SignUpComponent},
   {path: 'home', component: HomeComponent},
-
+  {path: 'add_request', component: CreateRequestComponent},
   // otherwise redirect to home
-  { path: '**', redirectTo: '' },
+  { path: '**', redirectTo: '' }
 ];
 
 @NgModule({

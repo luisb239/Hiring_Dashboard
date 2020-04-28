@@ -1,9 +1,9 @@
-import {Component, OnInit, TemplateRef} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {CdkDragDrop, moveItemInArray, transferArrayItem} from '@angular/cdk/drag-drop';
 import {Board} from 'src/app/model/board';
 import {Column} from 'src/app/model/column';
 import {Candidate} from '../../model/candidate';
-import {NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
+import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {PopupComponent} from '../popup/popup.component';
 
 @Component({
@@ -59,7 +59,7 @@ export class BoardComponent implements OnInit {
 
   onClick(candidate: Candidate) {
     const modalRef = this.modalService.open(PopupComponent);
-    candidate.available = false;
+    candidate.available = true;
     modalRef.componentInstance.candidate = candidate;
   }
 
