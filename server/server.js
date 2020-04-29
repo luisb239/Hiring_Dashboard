@@ -27,9 +27,9 @@ const routes = require('./controllers/routes.js')(app, express.Router(), control
 const cors = require('cors')
 app.use(cors())
 
-const root = '/hd'
+const root = 'hd'
 
-app.use(`${root}`, routes)
+app.use(`/${root}`, routes)
 
 const not_found = require('./controllers/middlewares/not_found.js')
 app.use(not_found)

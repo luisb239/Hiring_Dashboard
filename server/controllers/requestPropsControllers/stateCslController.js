@@ -2,11 +2,12 @@
 
 module.exports = (service) => {
 
-    return {getStates, }
+    return {getStatesCsl, }
 
-    async function getStates(req, res) {
+    async function getStatesCsl(req, res) {
         try {
-            const states = service.getStates()
+            const statesCsl = await service.getStatesCsl()
+            res.status(200).send(statesCsl)
         }
         catch (e) {
             res.status(500).send({error: 'An unknown error occurred.'})

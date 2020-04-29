@@ -32,7 +32,11 @@ module.exports = function (global, router, controllers) {
 
     router.get(`/${requestAttributes}/${skills}`, controllers.skill.getSkills)
     router.get(`/${requestAttributes}/${states}`, controllers.state.getStates)
-    // TODO -> stateCsl, projects, profiles,...
+    router.get(`/${requestAttributes}/${statesCsl}`, controllers.stateCsl.getStatesCsl)
+    router.get(`/${requestAttributes}/${projects}`, controllers.project.getProjects)
+    router.get(`/${requestAttributes}/${profiles}`, controllers.profile.getProfiles)
+    router.get(`/${requestAttributes}/${languages}`, controllers.language.getLanguages)
+    router.get(`/${requestAttributes}/${workflows}`, controllers.workflow.getWorkflows)
 
     // Get Candidates + Available Filter
     router.get(`/${candidates}`, controllers.candidate.getCandidates)
