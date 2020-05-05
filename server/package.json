@@ -2,10 +2,10 @@
   "name": "server",
   "version": "1.0.0",
   "description": "",
-  "main": "hd_server.js",
+  "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon hd_server.js 8080"
+    "start": "nodemon server.js 8080"
   },
   "author": "",
   "license": "ISC",

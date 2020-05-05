@@ -1,9 +1,10 @@
-'use strict';
+'use strict'
 
+/*
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 
-module.exports = (db) => {
+module.exports = (dals) => {
 
     return {
         authenticate: authenticate,
@@ -19,7 +20,7 @@ module.exports = (db) => {
         if (!password)
             return Promise.reject("Password missing")
 
-        return db.getUserByUsername(username)
+        return dals.getUserByUsername(username)
             .then(user => {
                 if (!user) return Promise.reject("Username not existent")
                 return bcrypt.compare(password, user.password_hash)
@@ -33,11 +34,11 @@ module.exports = (db) => {
         if (!password)
             return Promise.reject("Password missing")
 
-        return db.getUserByUsername(username)
+        return dals.getUserByUsername(username)
             .then(user => {
                 if (user) return Promise.reject("Username already exists")
                 return bcrypt.hash(password, saltRounds)
-                    .then(hash => db.createUser(username, hash))
+                    .then(hash => dals.createUser(username, hash))
             })
     }
 
@@ -45,16 +46,16 @@ module.exports = (db) => {
         if (!userId)
             return Promise.reject("User Id missing")
 
-        return db.getUserById(userId)
+        return dals.getUserById(userId)
             .then(user => user ? user : Promise.reject(`No user found with id : ${userId}`))
     }
 
     // Should we verify the 'user' argument properties?
     function logout(user) {
-        return db.updateUserLastSignIn(user)
+        return dals.updateUserLastSignIn(user)
             .then(res => res)
     }
 
-    // TODO - Typify service responses -> Routes will only accept the typified responses
-    // Do the same thing for db?
 }
+
+ */
