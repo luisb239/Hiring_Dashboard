@@ -1,0 +1,28 @@
+<div class="modal-header">
+  <h4 class="modal-title">{{candidate.name}}</h4>
+  <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body">
+  <div style="display: block">
+    <h5 class="headers">CV:</h5>
+    <p>{{candidate.cv}} TEST TEST TEST</p>
+  </div>
+  <div style="display: block">
+    <h5 class="headers">Available?
+      <div *ngIf="candidate.available" class="circle available"></div>
+      <div *ngIf="!candidate.available" class="circle not_available"></div>
+    </h5>
+  </div>
+  <div style="display: block">
+    <h5 class="headers">Profile Information</h5>
+    <textarea>{{candidate.profileInfo}}</textarea>
+  </div>
+</div>
+<div>
+  <a href="#">More about {{candidate.name}}</a>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-outline-dark" (click)="activeModal.close('Close click')">Close</button>
+</div>

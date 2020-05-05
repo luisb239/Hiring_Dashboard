@@ -13,7 +13,7 @@ module.exports = (service) => {
     async function getRequests(req, res) {
         try {
             const requests = await service.getRequests({
-                skill : req.query.skill = undefined,
+                skill : req.query.skill,
                 state : req.query.state,
                 stateCsl : req.query.state_csl,
                 profile : req.query.profile,
