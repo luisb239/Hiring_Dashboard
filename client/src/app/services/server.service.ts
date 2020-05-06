@@ -1,8 +1,8 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpErrorResponse, HttpHeaders} from '@angular/common/http';
 import {catchError} from 'rxjs/operators';
+import {RequestDao} from '../model/dao/request-dao';
 import {throwError} from 'rxjs';
-import {UserDao} from '../model/dao/user-dao';
 
 const httpOptions = {
   headers: new HttpHeaders({
@@ -14,44 +14,15 @@ const httpOptions = {
 @Injectable({
   providedIn: 'root'
 })
-export class AuthService {
+export class ServerService {
+  constructor(private http: HttpClient) { }
 
-  // We can also add UserService instead of HttpClient, the UserService
-  // would be responsible for creating and managing users (create/get)
-  constructor(private http: HttpClient) {
-  }
+  baseUrl = `http://localhost:8080/hd`;
 
-  authUrl = `http://localhost:8080/hd/auth`;
+  requestsUrl = `${this.baseUrl}/requests`;
 
-  registerUrl = `${this.authUrl}/sign_up`;
-  loginUrl = `${this.authUrl}/login`;
-  logoutUrl = `${this.authUrl}/logout`;
-
-
-  // We can call also call GET '/session' api endpoint
-  isAuthenticated(): boolean {
-    return (this.getUserInfo());
-  }
-
-
-  getUserInfo() {
-    return JSON.parse(localStorage.getItem('userInfo'));
-  }
-
-  setUserInfo(user) {
-    localStorage.setItem('userInfo', JSON.stringify(user));
-  }
-
-  login(username: string, password: string) {
-    return this.http.post<UserDao>(this.loginUrl, {username: username, password: password}, )
-      .pipe(data => {
-          return data;
-        },
-        catchError(this.handleError));
-  }
-
-  register(username: string, password: string) {
-    return this.http.post<UserDao>(this.registerUrl, {username: username, password: password}, httpOptions)
+  getRequests() {
+    return this.http.get<RequestDao[]>(this.requestsUrl, httpOptions)
       .pipe(data => {
           return data;
         },
@@ -74,7 +45,4 @@ export class AuthService {
     return throwError(
       'Something bad happened; please try again later.');
   }
-
 }
-
-

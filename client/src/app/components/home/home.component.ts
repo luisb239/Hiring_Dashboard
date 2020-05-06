@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import {AuthService} from "../../services/auth.service";
-import {User} from "../../model/user";
+import {AuthService} from '../../services/auth.service';
+import {UserDao} from '../../model/dao/user-dao';
 
 @Component({
   selector: 'app-home',
@@ -8,12 +8,12 @@ import {User} from "../../model/user";
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
-  user:User;
+  user: UserDao;
 
   constructor(private authService: AuthService) { }
 
   ngOnInit(): void {
-    this.user = this.authService.getUserInfo()
+    this.user = this.authService.getUserInfo();
   }
 
 }

@@ -1,10 +1,12 @@
-import {Component, OnInit, TemplateRef} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {CdkDragDrop, moveItemInArray, transferArrayItem} from '@angular/cdk/drag-drop';
-import {Board} from 'src/app/model/board';
-import {Column} from 'src/app/model/column';
 import {Candidate} from '../../model/candidate';
-import {NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
+import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {PopupComponent} from '../popup/popup.component';
+import {ServerService} from '../../services/server.service';
+import {Board} from '../../model/board';
+import {Request} from '../../model/request';
+import {Column} from '../../model/column';
 
 @Component({
   selector: 'app-board',
@@ -14,9 +16,10 @@ import {PopupComponent} from '../popup/popup.component';
 export class BoardComponent implements OnInit {
   closeResult = '';
 
-  constructor(private modalService: NgbModal) {
+  constructor(private modalService: NgbModal, private serverService: ServerService) {
   }
-
+  workflows: string[] = [...new Set([].map(r => r.workflow))];
+  // board: Board = new Board('Test', []);
   board: Board = new Board('Test Board', [
     new Column('Ideas', [
       new Candidate('Some random idea'),
@@ -44,6 +47,13 @@ export class BoardComponent implements OnInit {
   ]);
 
   ngOnInit(): void {
+    // this.serverService.getRequests()
+    //   .subscribe(
+    //     requests => {
+    //       this.requests = requests.map(r => new Request(r.workflow_id, r.progress, r.state_id));
+    //     },
+    //     error => {
+    //     });
   }
 
   drop(event: CdkDragDrop<Candidate[], any>) {
