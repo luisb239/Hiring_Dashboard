@@ -1,4 +1,4 @@
 export class Workflow {
-  constructor() {
+  constructor(public _workflow: string) {
   }
 }
