@@ -1,3 +1,3 @@
-export class Request_Profile {
+export class RequestProfile {
     constructor(public _profile: string) {}
   }

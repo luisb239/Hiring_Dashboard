@@ -1,3 +1,3 @@
-export class Request_State_Csl {
+export class RequestStateCsl {
     constructor(public _stateCsl: string) {}
   }

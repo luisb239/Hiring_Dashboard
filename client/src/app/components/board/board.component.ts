@@ -5,7 +5,6 @@ import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {PopupComponent} from '../popup/popup.component';
 import {ServerService} from '../../services/server.service';
 import {Board} from '../../model/board';
-import {Request} from '../../model/request';
 import {Column} from '../../model/column';
 
 @Component({
@@ -19,6 +18,7 @@ export class BoardComponent implements OnInit {
   constructor(private modalService: NgbModal, private serverService: ServerService) {
   }
   workflows: string[] = [...new Set([].map(r => r.workflow))];
+  hidden: boolean = false;
   // board: Board = new Board('Test', []);
   board: Board = new Board('Test Board', [
     new Column('Ideas', [
@@ -71,6 +71,14 @@ export class BoardComponent implements OnInit {
     const modalRef = this.modalService.open(PopupComponent);
     candidate.available = false;
     modalRef.componentInstance.candidate = candidate;
+  }
+
+  toggleRow(idx: number) {
+    this.board.columns[idx].hidden = !this.board.columns[idx].hidden;
+  }
+
+  hide() {
+    this.hidden = !this.hidden;
   }
 
 }

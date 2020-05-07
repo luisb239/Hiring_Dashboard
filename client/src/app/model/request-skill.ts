@@ -1,3 +1,3 @@
-export class Request_Skill {
+export class RequestSkill {
     constructor(public _skill: string) {}
   }

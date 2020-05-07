@@ -1,3 +1,3 @@
-export class Request_State {
+export class RequestState {
     constructor(public _state: string) {}
   }

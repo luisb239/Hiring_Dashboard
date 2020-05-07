@@ -1,3 +1,3 @@
-export class Request_Project {
+export class RequestProject {
     constructor(public _project: string) {}
   }
