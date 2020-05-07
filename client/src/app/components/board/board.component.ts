@@ -3,9 +3,10 @@ import {CdkDragDrop, moveItemInArray, transferArrayItem} from '@angular/cdk/drag
 import {Candidate} from '../../model/candidate';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {PopupComponent} from '../popup/popup.component';
-import {ServerService} from '../../services/server.service';
+import {RequestService} from '../../services/request/request.service';
 import {Board} from '../../model/board';
 import {Column} from '../../model/column';
+import {Request} from '../../model/request';
 
 @Component({
   selector: 'app-board',
@@ -15,10 +16,11 @@ import {Column} from '../../model/column';
 export class BoardComponent implements OnInit {
   closeResult = '';
 
-  constructor(private modalService: NgbModal, private serverService: ServerService) {
+  constructor(private modalService: NgbModal, private requestService: RequestService) {
   }
   workflows: string[] = [...new Set([].map(r => r.workflow))];
-  hidden: boolean = false;
+  hidden = false;
+  requests: Request[] = [];
   // board: Board = new Board('Test', []);
   board: Board = new Board('Test Board', [
     new Column('Ideas', [
@@ -47,13 +49,14 @@ export class BoardComponent implements OnInit {
   ]);
 
   ngOnInit(): void {
-    // this.serverService.getRequests()
-    //   .subscribe(
-    //     requests => {
-    //       this.requests = requests.map(r => new Request(r.workflow_id, r.progress, r.state_id));
-    //     },
-    //     error => {
-    //     });
+    this.requestService.getRequestsByUser()
+      .subscribe(
+        requests => {
+          this.requests = requests.map(r => new Request(r.workflow, r.progress, r.state));
+        },
+        error => {
+          console.log(error);
+        });
   }
 
   drop(event: CdkDragDrop<Candidate[], any>) {

@@ -64,7 +64,6 @@
             [cdkDropListData]="board.columns[3].candidates"
             (cdkDropListDropped)="drop($event)">
           <div class="task" *ngFor="let item of board.columns[3].candidates" cdkDrag (click)="onClick(item)">{{ item.name }}</div>
-          <div class="task">+</div>
         </td>
       </tr>
     </table>

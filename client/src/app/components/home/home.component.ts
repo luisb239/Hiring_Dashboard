@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {AuthService} from '../../services/auth.service';
+import {AuthService} from '../../services/auth/auth.service';
 import {UserDao} from '../../model/dao/user-dao';
 
 @Component({
