@@ -1,4 +1,4 @@
-export class User {
+export class UserDao {
   id: number;
   username: string;
   created_at: string;

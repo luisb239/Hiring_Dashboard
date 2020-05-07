@@ -1,67 +1,103 @@
 <div class="root">
   <div class="board">
-
-    <div class="board-bar">
-      <p class="board-name">{{ board.name }}</p>
-    </div>
     <!--    <div class="swim-lane">Request 1</div>-->
-    <div class="board-wrapper">
-            <div class="board-columns" cdkDropListGroup>
-              <div class="board-column" *ngFor="let column of board.columns">
-                <div class="column-title">
-                  {{ column.name }}
-                </div>
-                <div class="tasks-container"
-                     cdkDropList
-                     [cdkDropListData]="column.candidates"
-                     (cdkDropListDropped)="drop($event)"
-                >
-                  <div class="task" *ngFor="let item of column.candidates" cdkDrag (click)="onClick(item)">
-                    {{ item.name }}
-                  </div>
-                </div>
-              </div>
-            </div>
-<!--      <table *ngFor="let column of board.columns">-->
-<!--        <thead>-->
-<!--        <tr>-->
-<!--          <th scope="col">{{column.name}}</th>-->
-<!--        </tr>-->
-<!--        </thead>-->
-<!--        <tbody>-->
-<!--        <ng-template #content let-modal>-->
-<!--          <div class="modal-header">-->
-<!--            <h4 class="modal-title" id="modal-basic-title">Profile update</h4>-->
-<!--            <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">-->
-<!--              <span aria-hidden="true">&times;</span>-->
-<!--            </button>-->
-<!--          </div>-->
-<!--          <div class="modal-body">-->
-<!--            <form>-->
-<!--              <div class="form-group">-->
-<!--                <label for="dateOfBirth">Date of birth</label>-->
-<!--                <div class="input-group">-->
-<!--                  <input id="dateOfBirth" class="form-control" placeholder="yyyy-mm-dd" name="dp" ngbDatepicker-->
-<!--                         #dp="ngbDatepicker">-->
-<!--                  <div class="input-group-append">-->
-<!--                    <button class="btn btn-outline-secondary calendar" (click)="dp.toggle()"-->
-<!--                            type="button"></button>-->
-<!--                  </div>-->
-<!--                </div>-->
-<!--              </div>-->
-<!--            </form>-->
-<!--          </div>-->
-<!--          <div class="modal-footer">-->
-<!--            <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Save</button>-->
-<!--          </div>-->
-<!--        </ng-template>-->
-<!--        <tr *ngFor="let item of column.candidates" cdkDrag>-->
-<!--          <td (click)="onClick(content)">{{item.name}}</td>-->
-<!--        </tr>-->
-<!--        </tbody>-->
-<!--      </table>-->
-    </div>
+    <!--    <div class="board-wrapper">-->
+    <!--            <div class="board-columns" cdkDropListGroup>-->
+    <!--              <div class="board-column" *ngFor="let column of board.columns">-->
+    <!--                <div class="column-title">-->
+    <!--                  {{ column.name }}-->
+    <!--                </div>-->
+    <!--                <div class="tasks-container"-->
+    <!--                     cdkDropList-->
+    <!--                     [cdkDropListData]="column.candidates"-->
+    <!--                     (cdkDropListDropped)="drop($event)"-->
+    <!--                >-->
+    <!--                  <div class="task" *ngFor="let item of column.candidates" cdkDrag (click)="onClick(item)">-->
+    <!--                    {{ item.name }}-->
+    <!--                  </div>-->
+    <!--                </div>-->
+    <!--              </div>-->
+    <!--            </div>-->
+    <table>
+      <tr>
+        <th colspan="2">
+          <div class="workflow" (click)="hide()">WORKFLOW A</div>
+        </th>
+      </tr>
+      <tr [hidden]="hidden">
+        <td><h3>FASE 1</h3></td>
+        <td><h3>FASE 2</h3></td>
+      </tr>
+      <tr class="swim-lane" [hidden]="hidden">
+        <td colspan="2" (click)="toggleRow(0)">
+          <h5>SWIM LANE</h5>
+        </td>
+      </tr>
+      <tr cdkDropListGroup [hidden]="board.columns[0].hidden || hidden">
+        <td class="tasks-container"
+            cdkDropList
+            [cdkDropListData]="board.columns[0].candidates"
+            (cdkDropListDropped)="drop($event)">
+          <div class="task" *ngFor="let item of board.columns[0].candidates" cdkDrag
+               (click)="onClick(item)">{{ item.name }}</div>
+        </td>
+        <td class="tasks-container"
+            cdkDropList
+            [cdkDropListData]="board.columns[1].candidates"
+            (cdkDropListDropped)="drop($event)">
+          <div class="task" *ngFor="let item of board.columns[1].candidates" cdkDrag
+               (click)="onClick(item)">{{ item.name }}</div>
+        </td>
+      </tr>
+      <tr class="swim-lane" [hidden]="hidden">
+        <td colspan="2" (click)="toggleRow(1)">
+          <h5>SWIM LANE</h5>
+        </td>
+      </tr>
+      <tr cdkDropListGroup [hidden]="board.columns[1].hidden || hidden">
+        <td class="tasks-container"
+            cdkDropList
+            [cdkDropListData]="board.columns[2].candidates"
+            (cdkDropListDropped)="drop($event)">
+          <div class="task" *ngFor="let item of board.columns[2].candidates" cdkDrag
+               (click)="onClick(item)">{{ item.name }}</div>
+        </td>
+        <td class="tasks-container"
+            cdkDropList
+            [cdkDropListData]="board.columns[3].candidates"
+            (cdkDropListDropped)="drop($event)">
+          <div class="task" *ngFor="let item of board.columns[3].candidates" cdkDrag
+               (click)="onClick(item)">{{ item.name }}</div>
+        </td>
+      </tr>
+    </table>
 
+
+    <!--    <table *ngFor="let workflow in board.workflows">-->
+    <!--      <tr>-->
+    <!--        <th [colSpan]= workflow.phases.length>-->
+    <!--          <div class="workflow">{{workflow.name}}</div>-->
+    <!--        </th>-->
+    <!--      </tr>-->
+    <!--      <tr>-->
+    <!--        <td *ngFor="let phase in workflow.phases"><h3>{{phase.name}}</h3></td>-->
+    <!--      </tr>-->
+    <!--      <tr class="swim-lane" *ngFor="let request in workflow.requests">-->
+    <!--        <td [colSpan]= workflow.phases.length>-->
+    <!--          <h5>{{request.name}}</h5>-->
+    <!--        </td>-->
+    <!--      </tr>-->
+    <!--      <tr cdkDropListGroup *ngFor="let request in workflow.request">-->
+    <!--        <td class="tasks-container"-->
+    <!--            cdkDropList-->
+    <!--            *ngFor="let phase in request.phase"-->
+    <!--            [cdkDropListData]="phase.candidates"-->
+    <!--            (cdkDropListDropped)="drop($event)">-->
+    <!--          <div class="task" *ngFor="let candidate of phase.candidate" cdkDrag (click)="onClick(candidate)">{{ candidate.name }}</div>-->
+    <!--        </td>-->
+    <!--      </tr>-->
+    <!--    </table>-->
   </div>
 
 </div>
+

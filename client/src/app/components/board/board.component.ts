@@ -1,10 +1,16 @@
-import {Component, OnInit, TemplateRef} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {CdkDragDrop, moveItemInArray, transferArrayItem} from '@angular/cdk/drag-drop';
-import {Board} from 'src/app/model/board';
-import {Column} from 'src/app/model/column';
 import {Candidate} from '../../model/candidate';
-import {NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
+import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {PopupComponent} from '../popup/popup.component';
+import {RequestService} from '../../services/request/request.service';
+import {Board} from '../../model/board';
+import {Column} from '../../model/column';
+import {Request} from '../../model/request';
+import {CandidateService} from '../../services/candidate/candidate.service';
+import {PhaseService} from '../../services/phase/phase.service';
+import {Workflow} from '../../model/workflow';
+import {Phase} from "../../model/phase";
 
 @Component({
   selector: 'app-board',
@@ -14,9 +20,19 @@ import {PopupComponent} from '../popup/popup.component';
 export class BoardComponent implements OnInit {
   closeResult = '';
 
-  constructor(private modalService: NgbModal) {
+  constructor(private modalService: NgbModal,
+              private requestService: RequestService,
+              private candidateService: CandidateService,
+              private phaseService: PhaseService
+  ) {
   }
 
+  workflows: Workflow[] = [];
+  hidden = false;
+  requests: Request[] = [];
+  candidates: Candidate[] = [];
+  phases: Phase[] = [];
+  // board: Board = new Board('Test', []);
   board: Board = new Board('Test Board', [
     new Column('Ideas', [
       new Candidate('Some random idea'),
@@ -44,6 +60,24 @@ export class BoardComponent implements OnInit {
   ]);
 
   ngOnInit(): void {
+    this.requestService.getRequestsByUser(1, 1)
+      .subscribe(
+        requests => {
+          this.requests = requests.map(r => new Request(r.workflow, r.progress, r.state));
+          this.workflows = [...new Set(this.requests.map(r => r.workflow))].map(w => new Workflow(w, []));
+          this.workflows.forEach(workflow =>
+            this.phaseService.getPhasesByWorkflow(workflow._workflow).subscribe(
+              phases => {
+                workflow.phases = phases.map(phase => new Phase(phase.phase, phase.phase_attributes));
+              }, error => {
+                console.log(error);
+              }
+            )
+          );
+        },
+        error => {
+          console.log(error);
+        });
   }
 
   drop(event: CdkDragDrop<Candidate[], any>) {
@@ -61,6 +95,14 @@ export class BoardComponent implements OnInit {
     const modalRef = this.modalService.open(PopupComponent);
     candidate.available = false;
     modalRef.componentInstance.candidate = candidate;
+  }
+
+  toggleRow(idx: number) {
+    this.board.columns[idx].hidden = !this.board.columns[idx].hidden;
+  }
+
+  hide() {
+    this.hidden = !this.hidden;
   }
 
 }

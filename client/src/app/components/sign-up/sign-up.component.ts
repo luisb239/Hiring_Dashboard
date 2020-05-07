@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {Router} from "@angular/router";
-import {AuthService} from "../../services/auth.service";
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {Router} from '@angular/router';
+import {AuthService} from '../../services/auth/auth.service';
 
 @Component({
   templateUrl: './sign-up.component.html',
@@ -38,8 +38,8 @@ export class SignUpComponent implements OnInit {
       .subscribe(
         user => {
           // alert user
-          this.authService.setUserInfo(user)
-          //this.alertService.success('Registration successful', true);
+          this.authService.setUserInfo(user);
+          // this.alertService.success('Registration successful', true);
           this.router.navigate(['/home']);
         },
         error => {

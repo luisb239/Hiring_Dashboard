@@ -5,20 +5,33 @@
   </button>
 </div>
 <div class="modal-body">
-  <div style="display: block">
-    <h5 class="headers">CV:</h5>
-    <p>{{candidate.cv}} TEST TEST TEST</p>
-  </div>
-  <div style="display: block">
-    <h5 class="headers">Available?
+  <div>
+    <div style="display: block">
+      <h5 style="display: inline">CV:</h5>
+      <p style="display: inline">{{candidate.cv}} TEST TEST TEST</p>
+    </div>
+    <div style="display: block">
+      <h5>Available?</h5>
       <div *ngIf="candidate.available" class="circle available"></div>
       <div *ngIf="!candidate.available" class="circle not_available"></div>
-    </h5>
+    </div>
+    <div style="display: block">
+      <h5>Profile Information</h5>
+      <label>
+        <textarea>{{candidate.profileInfo}}</textarea>
+      </label>
+    </div>
   </div>
-  <div style="display: block">
-    <h5 class="headers">Profile Information</h5>
-    <textarea>{{candidate.profileInfo}}</textarea>
-  </div>
+  <!--  <div *ngFor="let attribute in candidate.phase.attributes">-->
+  <!--    <h5>{{attribute.name}}</h5>-->
+  <!--    <p>{{attribute.value}}</p>-->
+  <!--  </div>-->
+  <!--  <div>-->
+  <!--    <div class="form-group" *ngFor="let attribute in phase.attributes">-->
+  <!--      <label [htmlFor]="attribute.name">{{attribute.name}}</label>-->
+  <!--      <input [type]="attribute.type" class="form-control" [id]="attribute.name">-->
+  <!--    </div>-->
+  <!--  </div>-->
 </div>
 <div>
   <a href="#">More about {{candidate.name}}</a>
