@@ -44,7 +44,7 @@ module.exports = (dals) => {
 
     function getUserById(userId) {
         if (!userId)
-            return Promise.reject("User Id missing")
+            return Promise.reject("UserDao Id missing")
 
         return dals.getUserById(userId)
             .then(user => user ? user : Promise.reject(`No user found with id : ${userId}`))

@@ -146,4 +146,6 @@ temp/
 # Ignore all local history of files
 .history
 
+## Dia generated files ##
+.dia~
 # End of https://www.gitignore.io/api/node,angular,visualstudiocode
