@@ -24,6 +24,19 @@ module.exports = function (global, router, controllers) {
     // Get Request By Id
     router.get(`/${requests}/:id`, controllers.request.getRequestById)
 
+
+
+    // Get Request By User And Role
+    router.get(`/${users}/:userId/${roles}/:roleId/${requests}`, controllers.request.getRequestsByUserAndRole)
+
+    // Get Phases By Workflow
+    router.get(`/${workflows}/:workflow/${phases}`, controllers.phase.getPhasesByWorkflow)
+
+    // Get Candidates By Request And Phase
+    router.get(`/${requests}/:requestId/${phases}/:phase/${candidates}`, controllers.candidate.getCandidatesByRequestAndPhase)
+
+
+
     // Create Request
     router.post(`/${requests}`, controllers.request.postRequest)
 

@@ -7,7 +7,8 @@ module.exports = (service) => {
     return {
         getRequests : getRequests,
         postRequest : postRequest,
-        getRequestById : getRequestById
+        getRequestById : getRequestById,
+        getRequestsByUserAndRole : getRequestsByUserAndRole,
     }
 
     async function getRequests(req, res) {
@@ -27,7 +28,7 @@ module.exports = (service) => {
             res.status(200).send(requests)
         }
         catch (e) {
-            res.status(400).send({error: e.message})
+            res.status(400).send({error: 'Invalid Input Syntax'})
         }
     }
     
@@ -43,7 +44,7 @@ module.exports = (service) => {
                 res.status(404).send({error: e.message})
             }
             else {
-                res.status(400).send({error: e.message})
+                res.status(400).send({error: 'Invalid Input Syntax'})
             }
         }
     }
@@ -65,7 +66,26 @@ module.exports = (service) => {
             res.status(201).send(request)
         }
         catch (e) {
-            res.status(400).send({error: e.message})
+            if (e.type === errors.missingInput) {
+                res.status(400).send({error: e.message})
+            }
+            else {
+                res.status(400).send({error : 'Invalid Input Syntax'})
+            }
+        }
+    }
+
+    async function getRequestsByUserAndRole(req, res) {
+        try {
+            const requests = await service.getRequestsByUserAndRole({
+                userId : req.params.userId,
+                roleId : req.params.roleId,
+            })
+            res.status(200).send(requests)
+        }
+        catch (e) {
+            // TODO
+            res.status(500).send({error: 'Errors not handled yet'})
         }
     }
 }

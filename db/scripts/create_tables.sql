@@ -128,7 +128,8 @@ PRIMARY KEY (request_id, language)
 );
 
 CREATE TABLE phase(
-phase VARCHAR PRIMARY KEY
+phase VARCHAR PRIMARY KEY,
+phase_attributes JSONB NULL
 );
 
 -- Outra opção: phase_number DEFAULT NULL, criar trigger(INSTEAD OF INSERT) 
@@ -137,7 +138,6 @@ CREATE TABLE workflow_phase(
 workflow VARCHAR,
 phase VARCHAR,
 phase_number INT NOT NULL check(phase_number > 0),
-phase_attributes JSONB NULL,
 FOREIGN KEY (workflow) REFERENCES workflow(workflow),
 FOREIGN KEY (phase) REFERENCES phase(phase),
 PRIMARY KEY (workflow, phase)
@@ -179,17 +179,16 @@ FOREIGN KEY (reason) REFERENCES unavailable_reason(reason),
 PRIMARY KEY (request_id, candidate_id)
 );
 
-CREATE TABLE process_workflow_phase(
+CREATE TABLE process_phase(
 request_id INT,
 candidate_id INT,
-workflow VARCHAR,
 phase VARCHAR,
 phase_date DATE NOT NULL DEFAULT current_date,
 notes VARCHAR NULL DEFAULT NULL,
 attributes JSONB NULL DEFAULT NULL, -- trigger(instead of insert) que copia os atributos de workflow_phase para este campo 
 FOREIGN KEY (request_id, candidate_id) REFERENCES process(request_id, candidate_id),
-FOREIGN KEY (workflow, phase) REFERENCES workflow_phase(workflow, phase),
-PRIMARY KEY (request_id, candidate_id, workflow, phase)
+FOREIGN KEY (phase) REFERENCES phase(phase),
+PRIMARY KEY (request_id, candidate_id, phase)
 );
 
 CREATE TABLE candidate_request_profile(

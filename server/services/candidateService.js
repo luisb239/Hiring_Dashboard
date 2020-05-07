@@ -9,8 +9,8 @@ module.exports = (db) => {
         getCandidates: getCandidates,
         getCandidateById: getCandidateById,
         getCandidatesByRequestId: getCandidatesByRequestId,
-        //getCandidatesByRequestPhase: getCandidatesByRequestPhase,
-        createCandidate: createCandidate
+        createCandidate: createCandidate,
+        getCandidatesByRequestAndPhase: getCandidatesByRequestAndPhase
     }
 
     async function getCandidates({available = null} = {}) {
@@ -19,7 +19,7 @@ module.exports = (db) => {
 
     async function getCandidateById({ id }) {
         if (!id)
-            throw new AppError(errors.invalidInput, "You must supply a candidate id")
+            throw new AppError(errors.missingInput, "You must supply a candidate id")
 
         const candidateFound = await db.getCandidateById({id})
 
@@ -31,16 +31,20 @@ module.exports = (db) => {
 
     async function getCandidatesByRequestId({ requestId, available = null } = {}) {
         if (!requestId)
-            throw new AppError(errors.invalidInput, "You must supply a request id")
+            throw new AppError(errors.missingInput, "You must supply a request id")
 
         return await db.getCandidatesByRequestId({requestId, available})
     }
 
-    function createCandidate({ name, cv = null, available = true, profileInfo = null } = {}) {
+    async function createCandidate({ name, cv = null, available = true, profileInfo = null } = {}) {
         if (!name)
-            throw new AppError(errors.invalidInput, "You must supply a name")
+            throw new AppError(errors.missingInput, "You must supply a name")
 
-        return db.createCandidate({name, cv, available, profileInfo})
+        return await db.createCandidate({name, cv, available, profileInfo})
+    }
+
+    async function getCandidatesByRequestAndPhase({request, phase}) {
+        return await db.getCandidatesByRequestAndPhase({request, phase})
     }
 
 }

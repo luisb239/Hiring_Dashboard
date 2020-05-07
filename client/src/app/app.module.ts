@@ -12,6 +12,7 @@ import {ReactiveFormsModule} from "@angular/forms";
 import { HomeComponent } from './components/home/home.component';
 import {HttpClientModule} from "@angular/common/http";
 import { PopupComponent } from './components/popup/popup.component';
+import { ListRequests } from './components/list-requests/list-requests.component.component';
 
 @NgModule({
   declarations: [
@@ -19,7 +20,8 @@ import { PopupComponent } from './components/popup/popup.component';
     SignUpComponent,
     BoardComponent,
     HomeComponent,
-    PopupComponent
+    PopupComponent,
+    ListRequests.ComponentComponent
   ],
     imports: [
         BrowserModule,

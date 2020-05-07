@@ -1,11 +1,12 @@
 'use strict'
 
-const schema = require('../schemas/requestSchema.js')
+const reqSchema = require('../schemas/requestSchema.js')
+const userRoleReqSchema = require('../schemas/userRoleRequestSchema.js')
 
 module.exports = (query) => {
 
     return {
-        getRequests, getRequestById, createRequest
+        getRequests, getRequestById, createRequest, getRequestsByUserAndRole,
     }
 
     async function getRequests({
@@ -16,16 +17,16 @@ module.exports = (query) => {
         const statement = {
             name: 'Get Requests',
             text:
-                `SELECT * FROM ${schema.table} ` +
+                `SELECT * FROM ${reqSchema.table} ` +
                 `WHERE ` +
-                `(${schema.skill} = $1 OR $1 is null) AND ` +
-                `(${schema.state} = $2 OR $2 is null) AND ` +
-                `(${schema.stateCsl} = $3 OR $3 is null) AND ` +
-                `(${schema.profile} = $4 OR $4 is null) AND ` +
-                `(${schema.project} = $5 OR $5 is null) AND ` +
-                `(${schema.workflow} = $6 OR $6 is null) AND ` +
-                `((${schema.quantity} BETWEEN $7 AND $8) OR ($7 is null) OR ($8 is null)) AND ` +
-                `((${schema.progress} BETWEEN $9 AND $10) OR ($9 is null) OR ($10 is null));`,
+                `(${reqSchema.skill} = $1 OR $1 is null) AND ` +
+                `(${reqSchema.state} = $2 OR $2 is null) AND ` +
+                `(${reqSchema.stateCsl} = $3 OR $3 is null) AND ` +
+                `(${reqSchema.profile} = $4 OR $4 is null) AND ` +
+                `(${reqSchema.project} = $5 OR $5 is null) AND ` +
+                `(${reqSchema.workflow} = $6 OR $6 is null) AND ` +
+                `((${reqSchema.quantity} BETWEEN $7 AND $8) OR ($7 is null) OR ($8 is null)) AND ` +
+                `((${reqSchema.progress} BETWEEN $9 AND $10) OR ($9 is null) OR ($10 is null));`,
             values: [skill, state, stateCsl, profile, project, workflow, minQuantity, maxQuantity, minProgress, maxProgress]
         }
 
@@ -37,8 +38,8 @@ module.exports = (query) => {
         const statement = {
             name: 'Get Request By Id',
             text:
-                `SELECT * FROM ${schema.table} ` +
-                `WHERE ${schema.id} = $1;`,
+                `SELECT * FROM ${reqSchema.table} ` +
+                `WHERE ${reqSchema.id} = $1;`,
             values: [id]
         }
         const result = await query(statement)
@@ -54,10 +55,10 @@ module.exports = (query) => {
         const statement = {
             name: 'Create Request',
             text:
-                `INSERT INTO ${schema.table} `+
-                `(${schema.quantity}, ${schema.description}, ${schema.target_date}, ${schema.state},` +
-                `${schema.skill}, ${schema.stateCsl}, ${schema.project}, ` +
-                `${schema.profile}, ${schema.workflow}, ${schema.dateToSendProfile}) ` +
+                `INSERT INTO ${reqSchema.table} `+
+                `(${reqSchema.quantity}, ${reqSchema.description}, ${reqSchema.target_date}, ${reqSchema.state},` +
+                `${reqSchema.skill}, ${reqSchema.stateCsl}, ${reqSchema.project}, ` +
+                `${reqSchema.profile}, ${reqSchema.workflow}, ${reqSchema.dateToSendProfile}) ` +
                 `VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING *;`,
             values: [quantity, description, targetDate, state, skill, stateCsl, project, profile, workflow, dateToSendProfile]
         }
@@ -66,21 +67,37 @@ module.exports = (query) => {
         return result.rows.map(row => extract(row))[0]
     }
 
+    async function getRequestsByUserAndRole({userId, roleId}) {
+        const statement = {
+            name: 'Get Requests By User And Role',
+            text:
+                `SELECT R.* FROM ${userRoleReqSchema.table} AS URR `+
+                `INNER JOIN ${reqSchema.table} AS R ` +
+                `ON URR.${userRoleReqSchema.requestId} = R.${reqSchema.id} ` +
+                `WHERE URR.${userRoleReqSchema.userId} = $1 AND `+
+                `URR.${userRoleReqSchema.roleId} = $2;`,
+            values: [userId, roleId]
+        };
+
+        const result = await query(statement)
+        return result.rows.map(row => extract(row))
+    }
+
     function extract(obj) {
         return {
-            id : obj[schema.id],
-            quantity: obj[schema.quantity],
-            description : obj[schema.description],
-            requestDate : obj[schema.request_date],
-            targetDate : obj[schema.target_date],
-            state : obj[schema.state],
-            skill : obj[schema.skill],
-            stateCsl : obj[schema.stateCsl],
-            project : obj[schema.project],
-            profile : obj[schema.profile],
-            workflow : obj[schema.workflow],
-            dateToSendProfile : obj[schema.dateToSendProfile],
-            progress : obj[schema.progress]
+            id : obj[reqSchema.id],
+            quantity: obj[reqSchema.quantity],
+            description : obj[reqSchema.description],
+            requestDate : obj[reqSchema.request_date],
+            targetDate : obj[reqSchema.target_date],
+            state : obj[reqSchema.state],
+            skill : obj[reqSchema.skill],
+            stateCsl : obj[reqSchema.stateCsl],
+            project : obj[reqSchema.project],
+            profile : obj[reqSchema.profile],
+            workflow : obj[reqSchema.workflow],
+            dateToSendProfile : obj[reqSchema.dateToSendProfile],
+            progress : obj[reqSchema.progress]
         }
     }
 

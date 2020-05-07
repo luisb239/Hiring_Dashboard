@@ -18,8 +18,9 @@ module.exports = () => {
     const profile = require('./requestPropsDal/profileDal.js')(query)
     const language = require('./requestPropsDal/languageDal.js')(query)
     const workflow = require('./requestPropsDal/workflowDal.js')(query)
+    const phase = require('./phaseDal.js')(query)
 
     return {
-        request, candidate, skill, state, stateCsl, project, profile, language, workflow
+        request, candidate, skill, state, stateCsl, project, profile, language, workflow, phase
     }
 }

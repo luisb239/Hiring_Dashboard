@@ -8,7 +8,8 @@ module.exports = (db) => {
     return {
         getRequests: getRequests,
         createRequest: createRequest,
-        getRequestById: getRequestById
+        getRequestById: getRequestById,
+        getRequestsByUserAndRole : getRequestsByUserAndRole,
     }
 
 
@@ -34,26 +35,31 @@ module.exports = (db) => {
     async function createRequest({quantity, description, targetDate, state, skill, stateCsl,
                                      project, profile, workflow, dateToSendProfile = null} = {}) {
 
-        if (!quantity) throw new AppError(errors.invalidInput, "You must supply a quantity")
+        if (!quantity) throw new AppError(errors.missingInput, "You must supply a quantity")
 
-        if (!description) throw new AppError(errors.invalidInput, "You must supply a description")
+        if (!description) throw new AppError(errors.missingInput, "You must supply a description")
 
-        if (!targetDate) throw new AppError(errors.invalidInput, "You must supply a target date")
+        if (!targetDate) throw new AppError(errors.missingInput, "You must supply a target date")
 
-        if (!state) throw new AppError(errors.invalidInput, "You must supply the request state")
+        if (!state) throw new AppError(errors.missingInput, "You must supply the request state")
 
-        if (!skill) throw new AppError(errors.invalidInput, "You must supply the request skill")
+        if (!skill) throw new AppError(errors.missingInput, "You must supply the request skill")
 
-        if (!stateCsl) throw new AppError(errors.invalidInput, "You must supply the request stateCsl")
+        if (!stateCsl) throw new AppError(errors.missingInput, "You must supply the request stateCsl")
 
-        if (!project) throw new AppError(errors.invalidInput, "You must supply the request project")
+        if (!project) throw new AppError(errors.missingInput, "You must supply the request project")
 
-        if (!profile) throw new AppError(errors.invalidInput, "You must supply the request profile")
+        if (!profile) throw new AppError(errors.missingInput, "You must supply the request profile")
 
-        if (!workflow) throw new AppError(errors.invalidInput, "You must supply the request workflow")
+        if (!workflow) throw new AppError(errors.missingInput, "You must supply the request workflow")
 
         return await db.createRequest({
             quantity, description, targetDate, state, skill, stateCsl, project, profile, workflow, dateToSendProfile
         })
+    }
+
+    async function getRequestsByUserAndRole({userId, roleId}) {
+        // Check if User and Role exist??
+        return await db.getRequestsByUserAndRole({userId, roleId})
     }
 }

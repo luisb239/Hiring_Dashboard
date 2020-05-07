@@ -8,7 +8,8 @@ module.exports = (service) => {
         getCandidates: getCandidates,
         getCandidateById: getCandidateById,
         getCandidatesByRequest: getCandidatesByRequest,
-        postCandidate: postCandidate
+        postCandidate: postCandidate,
+        getCandidatesByRequestAndPhase : getCandidatesByRequestAndPhase,
     }
 
     async function getCandidates(req, res) {
@@ -18,7 +19,8 @@ module.exports = (service) => {
             })
             res.status(200).send(candidates)
         } catch (e) {
-            res.status(500).send({error: e.message})
+            //TODO -> SERVICE DEVE TER TRY CATCH E MANDA ESTE ERRO, juntamente com os detalhes dos erros
+            res.status(400).send({error: 'Invalid Input Syntax'})
         }
     }
 
@@ -32,7 +34,8 @@ module.exports = (service) => {
             if (e.type === errors.resourceNotFound) {
                 res.status(404).send({error: e.message})
             } else {
-                res.status(400).send({error: e.message})
+                //TODO -> SERVICE DEVE TER TRY CATCH E MANDA ESTE ERRO
+                res.status(400).send({error: 'Invalid Input Syntax'})
             }
         }
     }
@@ -62,5 +65,21 @@ module.exports = (service) => {
             res.status(400).send({error: e.message})
         }
     }
+
+    async function getCandidatesByRequestAndPhase(req, res) {
+        try {
+            const candidates = await service.getCandidatesByRequestAndPhase({
+                request : req.params.requestId,
+                phase : req.params.phase
+            })
+            res.status(200).send(candidates)
+        }
+        catch (e) {
+            // TODO
+            res.status(500).send({error: 'Errors not handled yet'})
+        }
+    }
+
+
 
 }

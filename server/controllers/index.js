@@ -12,8 +12,10 @@ module.exports = (service) => {
     const language = require('./requestPropsControllers/languageController.js')(service.language)
     const workflow = require('./requestPropsControllers/workflowController.js')(service.workflow)
 
+    const phase = require('./phaseController.js')(service.phase)
+
     const candidate = require('./candidateController.js')(service.candidate)
 
-    return {request, candidate, state, skill, stateCsl, project, profile, language, workflow}
+    return {request, candidate, state, skill, stateCsl, project, profile, language, workflow, phase}
 
 }

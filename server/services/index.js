@@ -11,8 +11,9 @@ module.exports = (db) => {
     const profile = require('./requestPropsServices/profileService.js')(db.profile)
     const language = require('./requestPropsServices/languageService.js')(db.language)
     const workflow = require('./requestPropsServices/workflowService.js')(db.workflow)
+    const phase = require('./phaseService.js')(db.phase)
 
     return {
-        request, candidate, skill, state, stateCsl, project, profile, language, workflow
+        request, candidate, skill, state, stateCsl, project, profile, language, workflow, phase
     }
 }
