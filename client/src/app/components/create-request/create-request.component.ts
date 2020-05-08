@@ -5,8 +5,8 @@ import { RequestStateCsl } from 'src/app/model/request-state-csl';
 import { RequestProject } from 'src/app/model/request-project';
 import { RequestProfile } from 'src/app/model/request-profile';
 import { Workflow } from 'src/app/model/workflow';
-import { RequestPropsService } from 'src/app/services/requestProps/requestProps.service'
-import {WorkflowService} from 'src/app/services/workflow/workflow.service'
+import { RequestPropsService } from 'src/app/services/requestProps/requestProps.service';
+import {WorkflowService} from 'src/app/services/workflow/workflow.service';
 import { RequestLanguage } from 'src/app/model/request-language';
 
 @Component({
@@ -33,41 +33,41 @@ export class CreateRequestComponent implements OnInit {
   //   this.profiles,
   //   this.workflows);
 
-  skills: RequestSkill[]
-  states: RequestState[]
-  statesCsl: RequestStateCsl[]
-  profiles: RequestProfile[]
-  projects: RequestProject[]
-  workflows: Workflow[]
-  languages: RequestLanguage[]
+  skills: RequestSkill[];
+  states: RequestState[];
+  statesCsl: RequestStateCsl[];
+  profiles: RequestProfile[];
+  projects: RequestProject[];
+  workflows: Workflow[];
+  languages: RequestLanguage[];
   ngOnInit(): void {
     this.reqPropsService.getRequestSkills()
       .subscribe(skills => { this.skills = skills.map(s => new RequestSkill(s.id)); },
-        error => { console.log(error); })
+        error => { console.log(error); });
 
     this.reqPropsService.getRequestStates()
       .subscribe(states => { this.states = states.map(s => new RequestState(s.id)); },
-        error => { console.log(error); })
+        error => { console.log(error); });
 
     this.reqPropsService.getRequestStatesCsl()
       .subscribe(statesCsl => { this.statesCsl = statesCsl.map(s => new RequestStateCsl(s.id)); },
-        error => { console.log(error); })
+        error => { console.log(error); });
 
     this.reqPropsService.getRequestProjects()
       .subscribe(projects => { this.projects = projects.map(p => new RequestProject(p.id)); },
-        error => { console.log(error); })
+        error => { console.log(error); });
 
     this.reqPropsService.getRequestProfiles()
       .subscribe(profiles => { this.profiles = profiles.map(p => new RequestProfile(p.id)); },
-        error => { console.log(error); })
+        error => { console.log(error); });
 
     this.reqPropsService.getRequestLanguages()
       .subscribe(languages => { this.languages = languages.map(l => new RequestLanguage(l.id)); },
-        error => { console.log(error); })
+        error => { console.log(error); });
 
     this.workflowService.getAllWorkflows()
-      .subscribe(workflows => { this.workflows = workflows.map(w => new Workflow(w.id)); },
-        error => { console.log(error); })
+      .subscribe(workflows => { this.workflows = workflows.map(w => new Workflow(w.id, [])); },
+        error => { console.log(error); });
   }
 
 
