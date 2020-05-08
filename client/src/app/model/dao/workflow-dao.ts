@@ -1,3 +1,3 @@
 export class WorkflowDao {
-    id: string;
+    workflows: string[];
 }

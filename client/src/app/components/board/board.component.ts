@@ -66,7 +66,7 @@ export class BoardComponent implements OnInit {
           this.requests = requests.map(r => new Request(r.workflow, r.progress, r.state));
           this.workflows = [...new Set(this.requests.map(r => r.workflow))].map(w => new Workflow(w, []));
           this.workflows.forEach(workflow =>
-            this.phaseService.getPhasesByWorkflow(workflow._workflow).subscribe(
+            this.phaseService.getPhasesByWorkflow(workflow.workflow).subscribe(
               phases => {
                 workflow.phases = phases.map(phase => new Phase(phase.phase, phase.phase_attributes));
               }, error => {

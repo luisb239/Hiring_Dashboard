@@ -20,7 +20,7 @@ export class WorkflowService {
   baseUrl = `http://localhost:8080/hd/requests-properties`;
 
   getAllWorkflows() {
-    return this.http.get<WorkflowDao[]>(`${this.baseUrl}/workflows`, httpOptions)
+    return this.http.get<WorkflowDao>(`${this.baseUrl}/workflows`, httpOptions)
       .pipe(data => {
         return data;
       },
