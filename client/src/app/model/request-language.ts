@@ -1,3 +1,3 @@
-export class RequestLanguage {
-    constructor(public _language: string) {}
-  }
+// export class RequestLanguage {
+//     constructor(public language: string) {}
+//   }

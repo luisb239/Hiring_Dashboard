@@ -1,4 +1,4 @@
-export class RequestSkill {
-  constructor(public _skill: string) {
-  }
-}
+// export class RequestSkill {
+//   constructor(public skill: string) {
+//   }
+// }

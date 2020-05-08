@@ -2,7 +2,12 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { catchError } from 'rxjs/operators';
 import { ErrorHandler } from '../error-handler';
-import { RequestPropsDao } from 'src/app/model/dao/requestProps-dao';
+import {RequestStateDao} from '../../model/dao/requestProps-dao/state-dao'
+import {RequestStateCslDao} from '../../model/dao/requestProps-dao/stateCsl-dao'
+import {RequestProfileDao} from '../../model/dao/requestProps-dao/profile-dao'
+import {RequestProjectDao} from '../../model/dao/requestProps-dao/project-dao'
+import {RequestLanguageDao} from '../../model/dao/requestProps-dao/language-dao'
+import {RequestSkillDao} from '../../model/dao/requestProps-dao/skill-dao'
 
 const httpOptions = {
   headers: new HttpHeaders({
@@ -20,7 +25,7 @@ export class RequestPropsService {
   baseUrl = `http://localhost:8080/hd/requests-properties`;
 
   getRequestStates() {
-    return this.http.get<RequestPropsDao[]>(`${this.baseUrl}/states`, httpOptions)
+    return this.http.get<RequestStateDao>(`${this.baseUrl}/states`, httpOptions)
       .pipe(data => {
         return data;
       },
@@ -28,7 +33,7 @@ export class RequestPropsService {
   }
 
   getRequestStatesCsl() {
-    return this.http.get<RequestPropsDao[]>(`${this.baseUrl}/states-csl`, httpOptions)
+    return this.http.get<RequestStateCslDao>(`${this.baseUrl}/states-csl`, httpOptions)
       .pipe(data => {
         return data;
       },
@@ -36,7 +41,7 @@ export class RequestPropsService {
   }
 
   getRequestProfiles() {
-    return this.http.get<RequestPropsDao[]>(`${this.baseUrl}/profiles`, httpOptions)
+    return this.http.get<RequestProfileDao>(`${this.baseUrl}/profiles`, httpOptions)
       .pipe(data => {
         return data;
       },
@@ -44,7 +49,7 @@ export class RequestPropsService {
   }
 
   getRequestProjects() {
-    return this.http.get<RequestPropsDao[]>(`${this.baseUrl}/projects`, httpOptions)
+    return this.http.get<RequestProjectDao>(`${this.baseUrl}/projects`, httpOptions)
       .pipe(data => {
         return data;
       },
@@ -52,7 +57,7 @@ export class RequestPropsService {
   }
 
   getRequestSkills() {
-    return this.http.get<RequestPropsDao[]>(`${this.baseUrl}/skills`, httpOptions)
+    return this.http.get<RequestSkillDao>(`${this.baseUrl}/skills`, httpOptions)
       .pipe(data => {
         return data;
       },
@@ -60,7 +65,7 @@ export class RequestPropsService {
   }
 
   getRequestLanguages() {
-    return this.http.get<RequestPropsDao[]>(`${this.baseUrl}/languages`, httpOptions)
+    return this.http.get<RequestLanguageDao>(`${this.baseUrl}/languages`, httpOptions)
       .pipe(data => {
         return data;
       },

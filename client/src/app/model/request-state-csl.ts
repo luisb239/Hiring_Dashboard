@@ -1,4 +1,4 @@
-export class RequestStateCsl {
-  constructor(public _stateCsl: string) {
-  }
-}
+// export class RequestStateCsl {
+//   constructor(public stateCsl: string) {
+//   }
+// }

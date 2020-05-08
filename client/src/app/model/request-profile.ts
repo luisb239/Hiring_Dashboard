@@ -1,4 +1,4 @@
-export class RequestProfile {
-  constructor(public _profile: string) {
-  }
-}
+// export class RequestProfile {
+//   constructor(public profile: string) {
+//   }
+// }

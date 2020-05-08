@@ -1,4 +1,4 @@
-export class RequestState {
-  constructor(public _state: string) {
-  }
-}
+// export class RequestState {
+//   constructor(public state: string) {
+//   }
+// }

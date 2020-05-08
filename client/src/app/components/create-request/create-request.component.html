@@ -15,21 +15,21 @@
       <label for="inputState">State</label>
       <select class="custom-select" id="inputState">
         <option selected disabled>Choose a State</option>
-        <option *ngFor="let state of states">{{state._state}}</option>
+        <option *ngFor="let state of states">{{state.state}}</option>
       </select>
     </div>
       <div class="form-group col-md-4">
         <label for="inputSkill">Skill</label>
         <select class="custom-select" id="inputSkill">
           <option selected disabled>Choose a Skill</option>
-          <option *ngFor="let skill of skills">{{skill._skill}}</option>
+          <option *ngFor="let skill of skills">{{skill.skill}}</option>
         </select>
       </div>
       <div class="form-group col-md-4">
         <label for="inputStateCsl">State_CSL</label>
         <select class="custom-select" id="inputStateCsl">
           <option selected disabled>Choose a State_CSL</option>
-          <option *ngFor="let stateCsl of statesCsl">{{stateCsl._stateCsl}}</option>
+          <option *ngFor="let stateCsl of statesCsl">{{stateCsl.stateCsl}}</option>
         </select>
       </div>
     </div>
@@ -38,21 +38,21 @@
         <label for="inputProject">Project</label>
         <select class="custom-select" id="inputProject">
           <option selected disabled>Choose a Project</option>
-          <option *ngFor="let project of projects">{{project._project}}</option>
+          <option *ngFor="let project of projects">{{project.project}}</option>
         </select>
       </div>
       <div class="form-group col-md-4">
         <label for="inputProfile">Profile</label>
         <select class="custom-select" id="inputProfile">
           <option selected disabled>Choose a Profile</option>
-          <option *ngFor="let profile of profiles">{{profile._profile}}</option>
+          <option *ngFor="let profile of profiles">{{profile.profile}}</option>
         </select>
       </div>
       <div class="form-group col-md-4">
         <label for="inputWorkflow">Workflow</label>
         <select class="custom-select" id="inputWorkflow">
           <option selected disabled>Choose a Workflow</option>
-          <option *ngFor="let workflow of workflows">{{workflow._workflow}}</option>
+          <option *ngFor="let workflow of workflows">{{workflow.workflow}}</option>
         </select>
       </div>
     </div>
@@ -60,7 +60,7 @@
       <label for="inputLanguage">Language</label>
       <select class="custom-select" id="inputLanguage">
         <option selected disabled>Choose a Language</option>
-        <option *ngFor="let language of languages">{{language._language}}</option>
+        <option *ngFor="let language of languages">{{language.language}}</option>
       </select>
     </div>
     <button id= "submitForms"class="btn btn-primary" type="submit">Submit Request</button>
