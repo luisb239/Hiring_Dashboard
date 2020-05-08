@@ -20,10 +20,8 @@ export class RequestService {
 
   baseUrl = `http://localhost:8080/hd`;
 
-  requestsByUserUrl = `${this.baseUrl}/users/1/roles/1/requests`;
-
-  getRequestsByUser() {
-    return this.http.get<RequestDao[]>(this.requestsByUserUrl, httpOptions)
+  getRequestsByUser(userId: number, roleId: number) {
+    return this.http.get<RequestDao[]>(`${this.baseUrl}/users/${userId}/roles/${roleId}/requests`, httpOptions)
       .pipe(data => {
           return data;
         },
