@@ -7,5 +7,6 @@ module.exports = {
     phase: 'phase',
     phaseDate : 'phase_date',
     notes: 'notes',
-    attributes: 'attributes'
+    attributes: 'attributes',
+    isCurrentPhase : 'is_current_phase',
 }

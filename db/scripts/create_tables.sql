@@ -183,6 +183,7 @@ CREATE TABLE process_phase(
 request_id INT,
 candidate_id INT,
 phase VARCHAR,
+is_current_phase BOOLEAN NOT NULL DEFAULT TRUE, --FILTRO NO SERVER
 phase_date DATE NOT NULL DEFAULT current_date,
 notes VARCHAR NULL DEFAULT NULL,
 attributes JSONB NULL DEFAULT NULL, -- trigger(instead of insert) que copia os atributos de workflow_phase para este campo 

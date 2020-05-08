@@ -9,7 +9,7 @@ module.exports = (service) => {
         getCandidateById: getCandidateById,
         getCandidatesByRequest: getCandidatesByRequest,
         postCandidate: postCandidate,
-        getCandidatesByRequestAndPhase : getCandidatesByRequestAndPhase,
+        //getCandidatesByRequestAndPhase : getCandidatesByRequestAndPhase,
         getCandidatesInTheirCurrentPhase : getCandidatesInTheirCurrentPhase
     }
 
@@ -67,6 +67,7 @@ module.exports = (service) => {
         }
     }
 
+    /*
     async function getCandidatesByRequestAndPhase(req, res) {
         try {
             const candidates = await service.getCandidatesByRequestAndPhase({
@@ -80,6 +81,7 @@ module.exports = (service) => {
             res.status(500).send({error: 'Errors not handled yet'})
         }
     }
+     */
 
     async function getCandidatesInTheirCurrentPhase(req, res) {
         try {
@@ -93,7 +95,6 @@ module.exports = (service) => {
             // TODO
             res.status(500).send({error: 'Errors not handled yet'})
         }
-
     }
 
 

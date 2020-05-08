@@ -11,7 +11,8 @@ module.exports = (query) => {
         getCandidateById,
         getCandidatesByRequestId,
         createCandidate,
-        getCandidatesByRequestAndPhase
+        getCandidatesByRequestAndPhase,
+        getCandidatesInTheirCurrentPhase
     }
 
     async function getCandidates({available = null}) {
@@ -87,6 +88,24 @@ module.exports = (query) => {
             values: [request, phase]
         }
 
+        const result = await query(statement)
+        return result.rows.map(row => extract(row))
+    }
+
+    // TODO -> MOVE to different module instead of Candidate -> ProcessPhase
+    // passar o is_current_phase para filtro
+    async function getCandidatesInTheirCurrentPhase({request, phase}) {
+        const statement = {
+            name: 'Get Candidates In Their Current Phase',
+            text:
+                `SELECT C.* FROM ${processPhase.table} AS PP ` +
+                `INNER JOIN ${candidate.table} AS C `+
+                `ON PP.${processPhase.candidateId} = C.${candidate.id} ` +
+                `WHERE PP.${processPhase.requestId} = $1 `+
+                `AND PP.${processPhase.phase} = $2 ` +
+                `AND PP.${processPhase.isCurrentPhase} = TRUE;`,
+            values: [request, phase]
+        }
         const result = await query(statement)
         return result.rows.map(row => extract(row))
     }

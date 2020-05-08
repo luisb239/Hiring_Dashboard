@@ -157,17 +157,17 @@ INSERT INTO process_unavailable_reason(request_id, candidate_id, reason)
 	VALUES
 	(1, 4, 'Candidate withdrawned from proposal');
 	
-INSERT INTO process_phase(request_id, candidate_id, phase, notes)
+INSERT INTO process_phase(request_id, candidate_id, phase, notes, is_current_phase)
 	VALUES
-	(1, 1, 'First Interview', 'First Interview went well. Profile Info added!'),
-	(1, 1, 'Technicall Interview', 'Good Technical Interview'),
-	(1, 1, 'Job Offer', NULL),
-	(1, 1, 'Offer Accepted', 'Candidate accepted offer.'),
+	(1, 1, 'First Interview', 'First Interview went well. Profile Info added!', FALSE),
+	(1, 1, 'Technicall Interview', 'Good Technical Interview', FALSE),
+	(1, 1, 'Job Offer', NULL, FALSE),
+	(1, 1, 'Offer Accepted', 'Candidate accepted offer.', TRUE),
 	
-	(1, 2, 'First Interview', NULL),
-	(1, 3, 'First Interview', NULL),
-	(1, 3, 'Technicall Interview', NULL),
-	(1, 4, 'First Interview', NULL);
+	(1, 2, 'First Interview', NULL, TRUE),
+	(1, 3, 'First Interview', NULL, FALSE),
+	(1, 3, 'Technicall Interview', NULL, TRUE),
+	(1, 4, 'First Interview', NULL, TRUE);
 	
 INSERT INTO candidate_request_profile(candidate_id, profile)
 	VALUES

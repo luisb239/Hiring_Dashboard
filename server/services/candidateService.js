@@ -10,7 +10,8 @@ module.exports = (db) => {
         getCandidateById: getCandidateById,
         getCandidatesByRequestId: getCandidatesByRequestId,
         createCandidate: createCandidate,
-        getCandidatesByRequestAndPhase: getCandidatesByRequestAndPhase
+        getCandidatesByRequestAndPhase: getCandidatesByRequestAndPhase,
+        getCandidatesInTheirCurrentPhase: getCandidatesInTheirCurrentPhase
     }
 
     async function getCandidates({available = null} = {}) {
@@ -45,6 +46,11 @@ module.exports = (db) => {
 
     async function getCandidatesByRequestAndPhase({request, phase}) {
         return await db.getCandidatesByRequestAndPhase({request, phase})
+    }
+
+    async function getCandidatesInTheirCurrentPhase({request, phase}) {
+        const candidates = await db.getCandidatesInTheirCurrentPhase({request, phase})
+        return {candidates: candidates}
     }
 
 }

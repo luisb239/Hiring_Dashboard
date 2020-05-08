@@ -34,13 +34,12 @@ module.exports = function (global, router, controllers) {
 
 
     // Get Candidates And Their Current Phase In a Request
-    router.get(`/${requests}/:requestId/${candidates}`, controllers.candidate.getCandidatesInTheirCurrentPhase)
+    router.get(`/${requests}/:requestId/${phases}/:phase/${candidates}`, controllers.candidate.getCandidatesInTheirCurrentPhase)
 
     // Process Phase Info
 
     // Get Candidates By Request And Phase
-    router.get(`/${requests}/:requestId/${phases}/:phase/${candidates}`, controllers.candidate.getCandidatesByRequestAndPhase)
-
+    //router.get(`/${requests}/:requestId/${phases}/:phase/${candidates}`, controllers.candidate.getCandidatesByRequestAndPhase)
 
 
     // Create Request
