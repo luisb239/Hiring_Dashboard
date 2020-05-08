@@ -29,7 +29,7 @@ module.exports = (query) => {
     function extract(obj) {
         return {
             phase : obj[phase.phase],
-            attributes: obj[phase.phaseAttributes]
+            attributes: JSON.stringify(obj[phase.phaseAttributes])
         }
     }
 }
