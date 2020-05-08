@@ -1,5 +1,5 @@
 DROP TABLE candidate_request_profile;
-DROP TABLE process_workflow_phase;
+DROP TABLE process_phase;
 DROP TABLE process_unavailable_reason;
 DROP TABLE unavailable_reason;
 DROP TABLE process;
