@@ -11,7 +11,6 @@ module.exports = (db) => {
         getCandidatesByRequestId: getCandidatesByRequestId,
         createCandidate: createCandidate,
         getCandidatesByRequestAndPhase: getCandidatesByRequestAndPhase,
-        getCandidatesInTheirCurrentPhase: getCandidatesInTheirCurrentPhase
     }
 
     async function getCandidates({available = null} = {}) {
@@ -37,19 +36,15 @@ module.exports = (db) => {
         return await db.getCandidatesByRequestId({requestId, available})
     }
 
-    async function createCandidate({ name, cv = null, available = true, profileInfo = null } = {}) {
+    async function createCandidate({name, cv = null, available = true, profileInfo = null} = {}) {
         if (!name)
             throw new AppError(errors.missingInput, "You must supply a name")
 
         return await db.createCandidate({name, cv, available, profileInfo})
     }
 
-    async function getCandidatesByRequestAndPhase({request, phase}) {
-        return await db.getCandidatesByRequestAndPhase({request, phase})
-    }
-
-    async function getCandidatesInTheirCurrentPhase({request, phase}) {
-        const candidates = await db.getCandidatesInTheirCurrentPhase({request, phase})
+    async function getCandidatesByRequestAndPhase({request, phase, inCurrentPhase = null}) {
+        const candidates = await db.getCandidatesByRequestAndPhase({request, phase, inCurrentPhase})
         return {candidates: candidates}
     }
 

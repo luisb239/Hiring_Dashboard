@@ -9,8 +9,7 @@ module.exports = (service) => {
         getCandidateById: getCandidateById,
         getCandidatesByRequest: getCandidatesByRequest,
         postCandidate: postCandidate,
-        //getCandidatesByRequestAndPhase : getCandidatesByRequestAndPhase,
-        getCandidatesInTheirCurrentPhase : getCandidatesInTheirCurrentPhase
+        getCandidatesByRequestAndPhase: getCandidatesByRequestAndPhase,
     }
 
     async function getCandidates(req, res) {
@@ -83,15 +82,15 @@ module.exports = (service) => {
     }
      */
 
-    async function getCandidatesInTheirCurrentPhase(req, res) {
+    async function getCandidatesByRequestAndPhase(req, res) {
         try {
-            const candidates = await service.getCandidatesInTheirCurrentPhase({
-                request : req.params.requestId,
-                phase : req.params.phase
+            const candidates = await service.getCandidatesByRequestAndPhase({
+                request: req.params.requestId,
+                phase: req.params.phase,
+                inCurrentPhase: req.query.in_current_phase
             })
             res.status(200).send(candidates)
-        }
-        catch (e) {
+        } catch (e) {
             // TODO
             res.status(500).send({error: 'Errors not handled yet'})
         }
