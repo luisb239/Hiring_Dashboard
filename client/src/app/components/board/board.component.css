@@ -1,5 +1,5 @@
 .root {
-  /*display: flex;*/
+  display: flex;
   flex-direction: column;
   height: 100%;
   background-color: beige;
@@ -22,46 +22,6 @@
   min-width: 0;
   min-height: 0;
 }
-
-/*.board .board-bar {*/
-/*  background: rgba(128, 128, 128, 0.5);*/
-/*  padding: 8px 15px;*/
-/*}*/
-/*.board .board-bar .board-name {*/
-/*  font-size: 20px;*/
-/*  font-weight: bold;*/
-/*  color: white;*/
-/*}*/
-/*.board .board-wrapper {*/
-/*  display: flex;*/
-/*  flex-grow: 1;*/
-/*  overflow-x: auto;*/
-/*}*/
-/*.board .board-wrapper .board-columns {*/
-/*  display: flex;*/
-/*  flex-grow: 1;*/
-/*}*/
-/*.board .board-wrapper .board-columns .board-column {*/
-/*  display: flex;*/
-/*  flex-direction: column;*/
-/*  flex-grow: 1;*/
-/*  flex-basis: 0;*/
-/*  min-width: 300px;*/
-/*  margin: 50px;*/
-/*  padding: 25px;*/
-/*  border-radius: 4px;*/
-/*  background: rgba(255, 255, 255, 0.5);*/
-/*}*/
-/*.board .board-wrapper .board-columns .board-column:not(:first-child) {*/
-/*  margin-left: 0;*/
-/*}*/
-/*.board .board-wrapper .board-columns .board-column .column-title {*/
-/*  font-size: 20px;*/
-/*  font-weight: 800;*/
-/*  font-family: 'Lato', sans-serif;*/
-/*  text-transform: uppercase;*/
-/*  margin-bottom: 20px;*/
-/*}*/
 .tasks-container {
   /*display: inline;*/
   min-height: 60px;
@@ -102,4 +62,9 @@
 
 td {
   vertical-align: top;
+}
+
+.phase{
+  min-width: fit-content;
+  margin-right: 20px;
 }
