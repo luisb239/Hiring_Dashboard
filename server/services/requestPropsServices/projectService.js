@@ -5,6 +5,7 @@ module.exports = (db) => {
     return {getProjects}
 
     async function getProjects() {
-        return await db.getProjects()
+        const projects = await db.getProjects()
+        return {projects : projects}
     }
 }

@@ -5,6 +5,7 @@ module.exports = (db) => {
     return {getStates, }
 
     async function getStates() {
-        return await db.getStates()
+        const states = await db.getStates()
+        return {states : states}
     }
 }

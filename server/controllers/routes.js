@@ -32,6 +32,12 @@ module.exports = function (global, router, controllers) {
     // Get Phases By Workflow
     router.get(`/${workflows}/:workflow/${phases}`, controllers.phase.getPhasesByWorkflow)
 
+
+    // Get Candidates And Their Current Phase In a Request
+    router.get(`/${requests}/:requestId/${candidates}`, controllers.candidate.getCandidatesInTheirCurrentPhase)
+
+    // Process Phase Info
+
     // Get Candidates By Request And Phase
     router.get(`/${requests}/:requestId/${phases}/:phase/${candidates}`, controllers.candidate.getCandidatesByRequestAndPhase)
 
@@ -61,7 +67,7 @@ module.exports = function (global, router, controllers) {
     // router.put(`/${candidates}/:id`, controllers.candidate.putCandidate)
 
     // Get Candidates In Request + Available Filter
-    router.get(`/${requests}/:id/${candidates}`, controllers.candidate.getCandidatesByRequest)
+    // router.get(`/${requests}/:id/${candidates}`, controllers.candidate.getCandidatesByRequest)
 
     // Get Candidates By Phase Of Request + Filter ??
     /*
