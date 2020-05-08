@@ -18,9 +18,7 @@ INSERT INTO role_type(role_type)
 	
 INSERT INTO user_role(user_id, role_id, role_type_id)
 	VALUES	
-	(1,1,1),
-	(2,2,2),
-	(3,2,1);
+	(1,1,1);
 	
 INSERT INTO request_state
 	VALUES
@@ -90,24 +88,27 @@ INSERT INTO request(quantity, description, target_date,
 INSERT INTO user_role_request(user_id, role_id, request_id)
 	VALUES 
 	(1, 1, 1),
-	(2, 2, 1),
 	(1, 1, 2),
-	(2, 2, 2);
+	(1, 1, 3),
+	(1, 1, 4);
 	
 INSERT INTO request_language_requirements(request_id, language, yes_valued)
 	VALUES
 	(1, 'English', TRUE),
 	(1, 'French', FALSE),
 	(2, 'English', TRUE),
-	(2, 'French', TRUE);
+	(2, 'French', TRUE),
+	(3, 'English', TRUE),
+	(4, 'English', TRUE);
+	
 	
 INSERT INTO phase(phase, phase_attributes)
 	VALUES 
 	('First Interview', NULL),
-	('Technicall Interview', NULL),
-	('First Interview + Technicall Interview', NULL),
-	('Job Offer', NULL),
-	('Offer Accepted', NULL);
+	('Technicall Interview', '{"interview_details" : null, "score" : 0, "seniority" : null}'),
+	('First Interview + Technicall Interview', '{"interview_details" : null, "score" : 0, "seniority" : null}'),
+	('Job Offer', '{"relevant_remarks" : null, "starting_date" : "null"}'),
+	('Offer Accepted', '{"salary" : 0}');
 	
 INSERT INTO workflow_phase(workflow, phase, phase_number)
 	VALUES
@@ -118,7 +119,12 @@ INSERT INTO workflow_phase(workflow, phase, phase_number)
 	
 	('Software Testing', 'First Interview + Technicall Interview', 1/*, '{"interview_details" : null, "score" : 0, "seniority" : null}'*/),
 	('Software Testing', 'Job Offer', 2/*, '{"relevant_remarks" : null}'*/),
-	('Software Testing', 'Offer Accepted', 3/*, '{"starting_date" : null}'*/);
+	('Software Testing', 'Offer Accepted', 3/*, '{"starting_date" : null}'*/),
+	
+	('Consulting', 'First Interview', 1),
+	('Consulting', 'Technicall Interview', 2),
+	('Consulting', 'Job Offer', 3),
+	('Consulting', 'Offer Accepted', 4);
 
 INSERT INTO candidate(name)
 	VALUES
@@ -153,10 +159,15 @@ INSERT INTO process_unavailable_reason(request_id, candidate_id, reason)
 	
 INSERT INTO process_phase(request_id, candidate_id, phase, notes)
 	VALUES
-	(1, 1,'First Interview', 'First Interview went well. Profile Info added!'),
-	(1, 1, 'Technicall Interview', 'Good Technicall Interview'),
+	(1, 1, 'First Interview', 'First Interview went well. Profile Info added!'),
+	(1, 1, 'Technicall Interview', 'Good Technical Interview'),
 	(1, 1, 'Job Offer', NULL),
-	(1, 1, 'Offer Accepted', 'Candidate accepted offer.');
+	(1, 1, 'Offer Accepted', 'Candidate accepted offer.'),
+	
+	(1, 2, 'First Interview', NULL),
+	(1, 3, 'First Interview', NULL),
+	(1, 3, 'Technicall Interview', NULL),
+	(1, 4, 'First Interview', NULL);
 	
 INSERT INTO candidate_request_profile(candidate_id, profile)
 	VALUES

@@ -28,7 +28,8 @@ module.exports = (query) => {
 
     function extract(obj) {
         return {
-            phase : obj[phase.phase]
+            phase : obj[phase.phase],
+            attributes: obj[phase.phaseAttributes]
         }
     }
 }
