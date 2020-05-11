@@ -42,7 +42,8 @@ export class BoardComponent implements OnInit {
                     request.phases.forEach(phase => {
                         this.candidateService.getCandidatesByRequestPhase(request.id, phase.name, true)
                           .subscribe(candidatesDao => {
-                            phase.candidates = candidatesDao.candidates.map(c => new Candidate(c.name));
+                            phase.candidates = candidatesDao.candidates.map(c =>
+                              new Candidate(c.name, c.profileInfo, c.available, c.cv));
                           });
                       }
                     );
@@ -68,7 +69,6 @@ export class BoardComponent implements OnInit {
 
   onClick(candidate: Candidate) {
     const modalRef = this.modalService.open(PopupComponent);
-    candidate.available = false;
     modalRef.componentInstance.candidate = candidate;
   }
 
