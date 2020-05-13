@@ -40,7 +40,8 @@ module.exports = (db) => {
         if (!name)
             throw new AppError(errors.missingInput, "You must supply a name")
 
-        return await db.createCandidate({name, cv, available, profileInfo})
+        const candidate = await db.createCandidate({name, cv, available, profileInfo})
+        return {candidate: candidate}
     }
 
     async function getCandidatesByRequestAndPhase({request, phase, inCurrentPhase = null}) {

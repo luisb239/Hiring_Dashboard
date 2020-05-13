@@ -19,8 +19,8 @@ const controllers = require('./controllers')(services)
 
 const routes = require('./controllers/routes.js')(app, express.Router(), controllers)
 
-//const cors = require('cors')
-//app.use(cors())
+const cors = require('cors')
+app.use(cors())
 
 const root = 'hd'
 
