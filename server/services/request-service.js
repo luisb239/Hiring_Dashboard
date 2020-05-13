@@ -17,10 +17,12 @@ module.exports = (db) => {
                                    project = null, workflow = null,
                                    minQuantity = null, maxQuantity = null,
                                    minProgress = null, maxProgress = null} = {}) {
-        return await db.getRequests({
+        const requests = await db.getRequests({
             skill, state, stateCsl, profile, project, workflow, minQuantity,
             maxQuantity, minProgress, maxProgress
         })
+
+        return {requests: requests}
     }
 
     async function getRequestById({id}) {
@@ -29,7 +31,7 @@ module.exports = (db) => {
         if (!requestFound)
             throw new AppError(errors.resourceNotFound, "Request not found")
 
-        return requestFound
+        return {request: requestFound}
     }
 
     async function createRequest({quantity, description, targetDate, state, skill, stateCsl,
