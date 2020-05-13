@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {HttpClient, HttpHeaders, HttpUrlEncodingCodec} from '@angular/common/http';
 import {ErrorHandler} from '../error-handler';
 import {catchError} from 'rxjs/operators';
 import {PhaseDao} from '../../model/dao/phase-dao';
@@ -22,7 +22,8 @@ export class PhaseService {
   baseUrl = `http://localhost:8080/hd`;
 
   getPhasesByWorkflow(workflowName: string) {
-    return this.http.get<PhaseDao[]>(`${this.baseUrl}/workflows/${workflowName}/phases`, httpOptions)
+    const url = new HttpUrlEncodingCodec().encodeValue(workflowName);
+    return this.http.get<PhaseDao[]>(`${this.baseUrl}/workflows/${url}/phases`, httpOptions)
       .pipe(data => {
           return data;
         },
