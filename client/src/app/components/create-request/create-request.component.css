@@ -2,4 +2,11 @@
   margin-left: 20px;
   width: fit-content;
 }
+.CreateRequest {
+  font-family: Arial, Helvetica, sans-serif;
+}
 .submissionfield { width: 90px; height: 390px; border: 1px solid #999999; padding: 5px; }
+
+.CheckboxInput {
+    margin: .4rem;
+}

@@ -1,35 +1,23 @@
-<h1>Create Request</h1>
-<div class="form">
+<div class='CreateRequest'>
+  <h1>Create Request</h1>
+  <div class="form">
     <div class="form-row">
-      <div class="form-group col-md-6">
+      <div class="form-group col-md-4">
         <label for="inputDescription">Description</label>
-        <input type="description" class="form-control" id="inputDescription" placeholder="Mandatory Description" required>
+        <input type="description" class="form-control" id="inputDescription" placeholder="Mandatory Description"
+          required>
       </div>
-      <div class="form-group col-md-6">
+      <div class="form-group col-md-4">
         <label for="inputQuantity">Quantity</label>
-        <input type="text" class="form-control" id="inputQuantity" placeholder="Candidates needed" min="1">
+        <div>
+          <input class="form-control" type="number" value="1" min="1" id="inputQuantity">
+        </div>
       </div>
-    </div>
-    <div class= "form-row">
-    <div class="form-group col-md-4">
-      <label for="inputState">State</label>
-      <select class="custom-select" id="inputState">
-        <option selected disabled>Choose a State</option>
-        <option *ngFor="let state of states">{{state.state}}</option>
-      </select>
-    </div>
       <div class="form-group col-md-4">
         <label for="inputSkill">Skill</label>
         <select class="custom-select" id="inputSkill">
           <option selected disabled>Choose a Skill</option>
           <option *ngFor="let skill of skills">{{skill.skill}}</option>
-        </select>
-      </div>
-      <div class="form-group col-md-4">
-        <label for="inputStateCsl">State_CSL</label>
-        <select class="custom-select" id="inputStateCsl">
-          <option selected disabled>Choose a State_CSL</option>
-          <option *ngFor="let stateCsl of statesCsl">{{stateCsl.stateCsl}}</option>
         </select>
       </div>
     </div>
@@ -56,12 +44,36 @@
         </select>
       </div>
     </div>
-    <div class="form-group col-md-4">
-      <label for="inputLanguage">Language</label>
-      <select class="custom-select" id="inputLanguage">
-        <option selected disabled>Choose a Language</option>
-        <option *ngFor="let language of languages">{{language.language}}</option>
-      </select>
+    <div class="form-row">
+      <div class="form-group col-md-4">
+        <label for="inputMandatoryLanguage">Select the Mandatory Languages</label>
+        <div *ngFor="let language of mandatoryLanguages">
+          <input class='CheckboxInput' type="checkbox" id="mandatoryLanguages" name="mandatoryLanguages">
+          <label for="mandatoryLanguages">{{language.language}}</label>
+        </div>
+      </div>
+      <div class="form-group col-md-4">
+        <label for="inputValuedLanguage">Select the Valued Languages</label>
+        <div *ngFor="let language of valuedLanguages">
+          <input class='CheckboxInput' type="checkbox" id="valuedLanguages" name="valuedLanguages">
+          <label for="valuedLanguages">{{language.language}}</label>
+        </div>
+      </div>
     </div>
-    <button id= "submitForms"class="btn btn-primary" type="submit">Submit Request</button>
+    <div class="form-row">
+      <div class="form-group col-md-4">
+        <label for="inputTargetDate">Target Date</label>
+        <select class="custom-select" id="inputTargetDate">
+          <option selected disabled>Choose a Target Date</option>
+          <option *ngFor="let month of targetDates">{{month.month}}</option>
+        </select>
+      </div>
+
+      <div class="form-group col-md-4">
+        <label for="inputDateToSendProf">Date to send Profile</label>
+        <input class="form-control" type="date" id="inputDateToSendProf">
+      </div>
+    </div>
+    <button id="createRequestSubmit" class="btn btn-primary" type="submit">Submit Request</button>
   </div>
+</div>

@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
-import { RequestPropsService } from 'src/app/services/requestProps/requestProps.service';
-import { WorkflowService } from 'src/app/services/workflow/workflow.service';
+import { Component, OnInit } from '@angular/core'
+import { RequestPropsService } from 'src/app/services/requestProps/requestProps.service'
+import { WorkflowService } from 'src/app/services/workflow/workflow.service'
 
 @Component({
   selector: 'app-create-request',
@@ -11,48 +11,42 @@ export class CreateRequestComponent implements OnInit {
 
   constructor(private reqPropsService: RequestPropsService, private workflowService: WorkflowService) { }
 
-  skills: string[];
-  states: string[];
-  statesCsl: string[];
-  profiles: string[];
-  projects: string[];
-  languages: string[];
-  workflows: string[];
-  ngOnInit(): void {
+  skills: string[]
+  profiles: string[]
+  projects: string[]
+  mandatoryLanguages: string[]
+  valuedLanguages: string[]
+  workflows: string[]
+  targetDates: string[]
 
-    this.reqPropsService.getRequestStates()
-      .subscribe(state => {
-        this.states = state.states
-        console.log(this.states)
-      },
-        error => { console.log(error); });
+  ngOnInit(): void {
 
     this.reqPropsService.getRequestSkills()
       .subscribe(skill => { this.skills = skill.skills },
-        error => { console.log(error); });
-
-
-
-    this.reqPropsService.getRequestStatesCsl()
-      .subscribe(stateCsl => { this.statesCsl = stateCsl.statesCsl },
-        error => { console.log(error); });
+        error => { console.log(error) })
 
     this.reqPropsService.getRequestProjects()
       .subscribe(project => { this.projects = project.projects },
-        error => { console.log(error); });
+        error => { console.log(error) })
 
     this.reqPropsService.getRequestProfiles()
       .subscribe(profile => { this.profiles = profile.profiles },
-        error => { console.log(error); });
+        error => { console.log(error) })
 
     this.reqPropsService.getRequestLanguages()
-      .subscribe(language => { this.languages = language.languages },
-        error => { console.log(error); });
+      .subscribe(language => {
+        this.mandatoryLanguages = language.languages
+        this.valuedLanguages = language.languages
+      },
+        error => { console.log(error) })
+
+    this.reqPropsService.getTargetDates()
+      .subscribe(month => { this.targetDates = month.months },
+        error => { console.log(error) })
 
     this.workflowService.getAllWorkflows()
       .subscribe(workflow => { this.workflows = workflow.workflows },
-        error => { console.log(error); });
+        error => { console.log(error) })
   }
-
 
 }
