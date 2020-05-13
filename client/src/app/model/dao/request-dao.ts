@@ -7,7 +7,7 @@ export class RequestDao {
   quantity: number;
   requestDate: string;
   skill: string;
-  state_csl: string;
+  stateCsl: string;
   state: number;
   targetDate: string;
   workflow: string; // <--

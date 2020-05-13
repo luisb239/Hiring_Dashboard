@@ -50,8 +50,8 @@ export class AllRequestsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.requestService.getAllRequests().subscribe(requestDaos =>
-        this.requests = requestDaos.map(r => new Request(r.id,
+    this.requestService.getAllRequests().subscribe(requestDao =>
+        this.requests = requestDao.requests.map(r => new Request(r.id,
           r.workflow,
           r.progress,
           r.state,
@@ -62,7 +62,7 @@ export class AllRequestsComponent implements OnInit {
           r.quantity,
           r.requestDate,
           r.skill,
-          r.state_csl,
+          r.stateCsl,
           r.targetDate,
           r.profile
         )), error => {

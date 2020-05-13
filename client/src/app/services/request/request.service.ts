@@ -3,6 +3,7 @@ import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {catchError} from 'rxjs/operators';
 import {RequestDao} from '../../model/dao/request-dao';
 import {ErrorHandler} from '../error-handler';
+import {RequestsDao} from '../../model/dao/requests-dao';
 
 const httpOptions = {
   headers: new HttpHeaders({
@@ -21,7 +22,7 @@ export class RequestService {
   baseUrl = `http://localhost:8080/hd`;
 
   getRequestsByUser(userId: number, roleId: number) {
-    return this.http.get<RequestDao[]>(`${this.baseUrl}/users/${userId}/roles/${roleId}/requests`, httpOptions)
+    return this.http.get<RequestsDao>(`${this.baseUrl}/users/${userId}/roles/${roleId}/requests`, httpOptions)
       .pipe(data => {
           return data;
         },
@@ -29,7 +30,7 @@ export class RequestService {
   }
 
   getAllRequests() {
-    return this.http.get<RequestDao[]>(`${this.baseUrl}/requests`, httpOptions)
+    return this.http.get<RequestsDao>(`${this.baseUrl}/requests`, httpOptions)
       .pipe(data => {
           return data;
         },
