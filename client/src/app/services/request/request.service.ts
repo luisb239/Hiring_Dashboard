@@ -27,4 +27,12 @@ export class RequestService {
         },
         catchError(this.errorHandler.handleError));
   }
+
+  getAllRequests() {
+    return this.http.get<RequestDao[]>(`${this.baseUrl}/requests`, httpOptions)
+      .pipe(data => {
+          return data;
+        },
+        catchError(this.errorHandler.handleError));
+  }
 }

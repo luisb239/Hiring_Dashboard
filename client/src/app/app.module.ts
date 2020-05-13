@@ -13,6 +13,7 @@ import {HomeComponent} from './components/home/home.component';
 import {HttpClientModule} from '@angular/common/http';
 import {PopupComponent} from './components/popup/popup.component';
 import {CreateRequestComponent} from './components/create-request/create-request.component';
+import { AllRequestsComponent } from './components/all-requests/all-requests.component';
 
 @NgModule({
   declarations: [
@@ -21,7 +22,8 @@ import {CreateRequestComponent} from './components/create-request/create-request
     BoardComponent,
     HomeComponent,
     PopupComponent,
-    CreateRequestComponent
+    CreateRequestComponent,
+    AllRequestsComponent
   ],
     imports: [
         BrowserModule,
