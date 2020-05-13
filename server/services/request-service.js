@@ -62,6 +62,7 @@ module.exports = (db) => {
 
     async function getRequestsByUserAndRole({userId, roleId}) {
         // Check if User and Role exist??
-        return await db.getRequestsByUserAndRole({userId, roleId})
+        const requests = await db.getRequestsByUserAndRole({userId, roleId})
+        return {requests: requests}
     }
 }
