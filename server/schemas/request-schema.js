@@ -2,7 +2,7 @@
 
 module.exports = {
     table : 'request',
-    id : 'request_id',
+    id: 'request_id',
     quantity: 'quantity',
     description: 'description',
     request_date: 'request_date',
@@ -12,7 +12,7 @@ module.exports = {
     stateCsl: 'request_state_csl',
     project: 'request_project',
     profile: 'request_profile',
-    workflow: 'request_workflow',
+    workflow: 'workflow',
     dateToSendProfile: 'date_to_send_profile',
     progress: 'progress'
 }
