@@ -1,7 +1,7 @@
 'use strict'
 
-const AppError = require('../utils/errors/app_error.js')
-const errors = require('../utils/errors/errors_type.js')
+const AppError = require('../controllers/errors/app-error.js')
+const errors = require('../controllers/errors/errors.js')
 
 module.exports = (db) => {
 

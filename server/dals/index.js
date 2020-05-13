@@ -10,17 +10,18 @@ function query(text, params) {
 module.exports = () => {
 
     const request = require('./requestDal.js')(query)
-    const candidate = require('./candidateDal.js')(query)
-    const skill = require('./requestPropsDal/skillDal.js')(query)
-    const state = require('./requestPropsDal/stateDal.js')(query)
-    const stateCsl = require('./requestPropsDal/stateCslDal.js')(query)
-    const project = require('./requestPropsDal/projectDal.js')(query)
-    const profile = require('./requestPropsDal/profileDal.js')(query)
-    const language = require('./requestPropsDal/languageDal.js')(query)
-    const workflow = require('./requestPropsDal/workflowDal.js')(query)
+    const candidate = require('./candidate-dal.js')(query)
+    const skill = require('./request-props-dal/skill-dal.js')(query)
+    const state = require('./request-props-dal/state-dal.js')(query)
+    const stateCsl = require('./request-props-dal/state-csl-dal.js')(query)
+    const project = require('./request-props-dal/project-dal.js')(query)
+    const profile = require('./request-props-dal/profile-dal.js')(query)
+    const language = require('./request-props-dal/language-dal.js')(query)
+    const months = require('./request-props-dal/months-dal.js')(query)
+    const workflow = require('./request-props-dal/workflow-dal.js')(query)
     const phase = require('./phaseDal.js')(query)
 
     return {
-        request, candidate, skill, state, stateCsl, project, profile, language, workflow, phase
+        request, candidate, skill, state, stateCsl, project, profile, language, workflow, phase, months
     }
 }

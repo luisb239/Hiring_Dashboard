@@ -1,12 +1,12 @@
 'use strict'
 
 module.exports = {
-    table : 'process_phase',
-    requestId : 'request_id',
+    table: 'process_phase',
+    requestId: 'request_id',
     candidateId: 'candidate_id',
     phase: 'phase',
-    phaseDate : 'phase_date',
+    startDate: 'start_date',
+    updateDate: 'update_date',
     notes: 'notes',
-    attributes: 'attributes',
-    isCurrentPhase : 'is_current_phase',
+    isCurrentPhase: 'process_current_phase'
 }

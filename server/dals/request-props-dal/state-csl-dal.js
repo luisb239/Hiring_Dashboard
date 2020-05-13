@@ -1,14 +1,14 @@
 'use strict'
 
-const schema = require('../../schemas/requestAttrSchemas/workflowSchema.js')
+const schema = require('../../schemas/request-props-schemas/state-csl-schema.js')
 
 module.exports = (query) => {
 
-    return {getWorkflows}
+    return {getStatesCsl}
 
-    async function getWorkflows() {
+    async function getStatesCsl() {
         const statement = {
-            name: 'Get Workflows',
+            name: 'Get Csl States',
             text:
                 `SELECT * FROM ${schema.table};`,
             values: []
@@ -20,7 +20,7 @@ module.exports = (query) => {
 
     function extract(obj) {
         return {
-            workflow : obj[schema.workflow]
+            stateCsl : obj[schema.stateCsl]
         }
     }
 }

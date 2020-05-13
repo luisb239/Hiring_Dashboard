@@ -1,5 +1,8 @@
+DELETE FROM process_info;
+DELETE FROM phase_info;
+DELETE FROM dynamic_info;
 DELETE FROM candidate_request_profile;
-DELETE FROM process_workflow_phase;
+DELETE FROM process_phase;
 DELETE FROM process_unavailable_reason;
 DELETE FROM unavailable_reason;
 DELETE FROM process;
@@ -17,6 +20,7 @@ DELETE FROM request_project;
 DELETE FROM request_state_csl;
 DELETE FROM request_skill;
 DELETE FROM request_state;
+DELETE FROM months;
 DELETE FROM user_role;
 DELETE FROM role_type;
 DELETE FROM role;

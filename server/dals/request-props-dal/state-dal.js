@@ -1,6 +1,6 @@
 'use strict'
 
-const schema = require('../../schemas/requestAttrSchemas/stateSchema.js')
+const schema = require('../../schemas/request-props-schemas/state-schema.js')
 
 module.exports = (query) => {
 

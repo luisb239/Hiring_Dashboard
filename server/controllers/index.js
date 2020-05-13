@@ -2,20 +2,22 @@
 
 module.exports = (service) => {
 
-    const request = require('./requestController.js')(service.request)
+    const request = require('./request-controller.js')(service.request)
+
     // request-properties
-    const state = require('./requestPropsControllers/stateController.js')(service.state)
-    const skill = require('./requestPropsControllers/skillController.js')(service.skill)
-    const stateCsl = require('./requestPropsControllers/stateCslController.js')(service.stateCsl)
-    const project = require('./requestPropsControllers/projectController.js')(service.project)
-    const profile = require('./requestPropsControllers/profileController.js')(service.profile)
-    const language = require('./requestPropsControllers/languageController.js')(service.language)
-    const workflow = require('./requestPropsControllers/workflowController.js')(service.workflow)
+    const state = require('./request-props-controllers/state-controller.js')(service.state)
+    const skill = require('./request-props-controllers/skill-controller.js')(service.skill)
+    const stateCsl = require('./request-props-controllers/state-csl-controller.js')(service.stateCsl)
+    const project = require('./request-props-controllers/project-controller.js')(service.project)
+    const profile = require('./request-props-controllers/profile-controller.js')(service.profile)
+    const language = require('./request-props-controllers/language-controller.js')(service.language)
+    const workflow = require('./request-props-controllers/workflow-controller.js')(service.workflow)
+    const months = require('./request-props-controllers/months-controller.js')(service.months)
 
-    const phase = require('./phaseController.js')(service.phase)
+    const phase = require('./phase-controller.js')(service.phase)
 
-    const candidate = require('./candidateController.js')(service.candidate)
+    const candidate = require('./candidate-controller.js')(service.candidate)
 
-    return {request, candidate, state, skill, stateCsl, project, profile, language, workflow, phase}
+    return {request, candidate, state, skill, stateCsl, project, profile, language, workflow, phase, months}
 
 }

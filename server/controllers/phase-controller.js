@@ -1,6 +1,6 @@
 'use strict'
 
-const errors = require('../utils/errors/errors_type.js')
+const errors = require('./errors/errors.js')
 
 module.exports = (service) => {
 

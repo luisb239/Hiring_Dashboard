@@ -1,6 +1,6 @@
 'use strict'
 
-const reqSchema = require('../schemas/requestSchema.js')
+const reqSchema = require('../schemas/request-schema.js')
 const userRoleReqSchema = require('../schemas/userRoleRequestSchema.js')
 
 module.exports = (query) => {

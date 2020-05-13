@@ -1,7 +1,7 @@
 'use strict'
 
-const errors = require('../utils/errors/errors_type.js')
-const AppError = require('../utils/errors/app_error.js')
+const errors = require('../controllers/errors/errors.js')
+const AppError = require('../controllers/errors/app-error.js')
 
 module.exports = (db) => {
 
@@ -9,7 +9,7 @@ module.exports = (db) => {
         getRequests: getRequests,
         createRequest: createRequest,
         getRequestById: getRequestById,
-        getRequestsByUserAndRole : getRequestsByUserAndRole,
+        getRequestsByUserAndRole: getRequestsByUserAndRole,
     }
 
 

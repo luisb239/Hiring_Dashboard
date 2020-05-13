@@ -17,14 +17,13 @@ module.exports = function (global, router, controllers) {
     const profiles = 'profiles'
     const languages = 'languages'
     const workflows = 'workflows'
+    const months = 'months'
 
     // Get Requests + Query Filter
     router.get(`/${requests}`, controllers.request.getRequests)
 
     // Get Request By Id
     router.get(`/${requests}/:id`, controllers.request.getRequestById)
-
-
 
     // Get Request By User And Role
     router.get(`/${users}/:userId/${roles}/:roleId/${requests}`, controllers.request.getRequestsByUserAndRole)
@@ -51,6 +50,7 @@ module.exports = function (global, router, controllers) {
     router.get(`/${requestAttributes}/${profiles}`, controllers.profile.getProfiles)
     router.get(`/${requestAttributes}/${languages}`, controllers.language.getLanguages)
     router.get(`/${requestAttributes}/${workflows}`, controllers.workflow.getWorkflows)
+    router.get(`/${requestAttributes}/${months}`, controllers.months.getMonths)
 
     // Get Candidates + Available Filter
     router.get(`/${candidates}`, controllers.candidate.getCandidates)

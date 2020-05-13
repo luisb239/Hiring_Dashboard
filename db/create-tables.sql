@@ -55,38 +55,30 @@ language VARCHAR PRIMARY KEY
 );
 
 CREATE TABLE workflow(
-workflow VARCHAR PRIMARY
+workflow VARCHAR PRIMARY KEY
 ); 
 
-CREATE TYPE month_enum AS ENUM
-('January', 
- 'February',
- 'March', 
- 'April',
- 'May',
- 'June',
- 'July',
- 'August',
- 'September',
- 'October',
- 'November',
- 'December'
+CREATE TABLE months(
+month_name VARCHAR PRIMARY KEY
 );
+
+-- checks e defaults passam a ficar na aplicação e nao na db
 
 CREATE TABLE request(
 request_id INT GENERATED ALWAYS AS IDENTITY,
 quantity INT NOT NULL CHECK(quantity > 0),
 description VARCHAR NOT NULL,
 request_date DATE NOT NULL DEFAULT CURRENT_DATE,
-target_date month_enum NOT NULL, -- mês -> enumerado
-request_state VARCHAR,
-request_skill VARCHAR,
-request_state_csl VARCHAR,
-request_project VARCHAR,
-request_profile VARCHAR,
-workflow VARCHAR,
+target_date VARCHAR NOT NULL,
+request_state VARCHAR NOT NULL,
+request_skill VARCHAR NOT NULL,
+request_state_csl VARCHAR NOT NULL,
+request_project VARCHAR NOT NULL,
+request_profile VARCHAR NOT NULL,
+workflow VARCHAR NOT NULL,
 date_to_send_profile DATE NULL DEFAULT NULL,
 progress INT NOT NULL DEFAULT 0 CHECK(progress >= 0 AND progress <= 100),
+FOREIGN KEY (target_date) REFERENCES months(month_name),
 FOREIGN KEY (request_state) REFERENCES request_state(request_state),
 FOREIGN KEY (request_skill) REFERENCES request_skill(request_skill),
 FOREIGN KEY (request_state_csl) REFERENCES request_state_csl(request_state_csl),
@@ -109,7 +101,7 @@ PRIMARY KEY (user_id, role_id, request_id)
 CREATE TABLE request_language_requirements(
 request_id INT,
 language VARCHAR,
-yes_valued BOOLEAN,
+mandatory BOOLEAN,
 FOREIGN KEY (request_id) REFERENCES request(request_id),	
 FOREIGN KEY (language) REFERENCES request_language(language),
 PRIMARY KEY (request_id, language)
@@ -175,16 +167,11 @@ start_date DATE NOT NULL DEFAULT CURRENT_DATE,
 update_date DATE NOT NULL DEFAULT CURRENT_DATE,
 notes VARCHAR NULL DEFAULT NULL,
 is_current BOOLEAN DEFAULT TRUE,
-completed BOOLEAN DEFAULT FALSE,
-/*
-attributes JSONB NULL DEFAULT NULL, -- trigger(instead of insert) que copia os atributos de workflow_phase para este campo 
-*/
 FOREIGN KEY (request_id, candidate_id) REFERENCES process(request_id, candidate_id),
 FOREIGN KEY (phase) REFERENCES phase(phase),
 PRIMARY KEY (request_id, candidate_id, phase)
 );
 
-/* Triggers para verificar o atributo jsonb? */
 CREATE TABLE dynamic_info(
 info_name VARCHAR,
 json_info JSONB NOT NULL,
@@ -195,7 +182,7 @@ CREATE TABLE process_dynamic_info(
 request_id INT,
 candidate_id INT,
 info_name VARCHAR,
-info_value JSONB, /* trigger instead of insert */
+info_value JSONB,
 FOREIGN KEY (request_id, candidate_id) REFERENCES process(request_id, candidate_id),
 FOREIGN KEY (info_name) REFERENCES dynamic_info(info_name),
 PRIMARY KEY (request_id, candidate_id, info_name)

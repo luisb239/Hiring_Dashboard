@@ -1,6 +1,7 @@
 'use strict'
 
-const errors = require('../utils/errors/errors_type.js')
+const errors = require('./errors/errors.js')
+const handler = require('./errors/handler.js')
 
 module.exports = (service) => {
 
@@ -19,8 +20,11 @@ module.exports = (service) => {
             })
             res.status(200).send(candidates)
         } catch (e) {
-            //TODO -> SERVICE DEVE TER TRY CATCH E MANDA ESTE ERRO, juntamente com os detalhes dos erros
+            handler(res, e, "Unable to retrieve candidates")
+            /*
             res.status(400).send({error: 'Invalid Input Syntax'})
+
+             */
         }
     }
 
@@ -65,22 +69,6 @@ module.exports = (service) => {
             res.status(400).send({error: e.message})
         }
     }
-
-    /*
-    async function getCandidatesByRequestAndPhase(req, res) {
-        try {
-            const candidates = await service.getCandidatesByRequestAndPhase({
-                request : req.params.requestId,
-                phase : req.params.phase
-            })
-            res.status(200).send(candidates)
-        }
-        catch (e) {
-            // TODO
-            res.status(500).send({error: 'Errors not handled yet'})
-        }
-    }
-     */
 
     async function getCandidatesByRequestAndPhase(req, res) {
         try {

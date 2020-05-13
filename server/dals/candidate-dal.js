@@ -1,6 +1,6 @@
 'use strict'
 
-const candidate = require('../schemas/candidateSchema.js')
+const candidate = require('../schemas/candidate-schema.js')
 const process = require('../schemas/process/processSchema.js')
 const processPhase = require('../schemas/process/processPhaseSchema.js')
 

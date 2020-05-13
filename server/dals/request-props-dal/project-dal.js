@@ -1,14 +1,14 @@
 'use strict'
 
-const schema = require('../../schemas/requestAttrSchemas/profileSchema.js')
+const schema = require('../../schemas/request-props-schemas/project-schema.js')
 
 module.exports = (query) => {
 
-    return {getProfiles}
+    return {getProjects}
 
-    async function getProfiles() {
+    async function getProjects() {
         const statement = {
-            name: 'Get Profiles',
+            name: 'Get Projects',
             text:
                 `SELECT * FROM ${schema.table};`,
             values: []
@@ -20,7 +20,7 @@ module.exports = (query) => {
 
     function extract(obj) {
         return {
-            profile : obj[schema.profile]
+            project : obj[schema.project]
         }
     }
 }

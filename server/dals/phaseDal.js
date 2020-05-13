@@ -1,7 +1,7 @@
 'use strict'
 
 const workflowPhase = require('../schemas/workflowPhaseSchema.js')
-const phase = require('../schemas/phaseSchema.js')
+const phase = require('../schemas/phase-schema.js')
 
 module.exports = (query) => {
 
