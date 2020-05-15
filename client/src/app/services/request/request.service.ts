@@ -12,6 +12,9 @@ const httpOptions = {
   // mode: 'no-cors'
 };
 
+const singleParams: string[] = ['skill', 'state', 'stateCsl', 'project', 'profile',
+  'workflow', 'targetDate'];
+
 @Injectable({
   providedIn: 'root'
 })
@@ -31,6 +34,37 @@ export class RequestService {
 
   getAllRequests() {
     return this.http.get<RequestsDao>(`${this.baseUrl}/requests`, httpOptions)
+      .pipe(data => {
+          return data;
+        },
+        catchError(this.errorHandler.handleError));
+  }
+
+  // getAllRequestsWithQuery(skill: string, state: string, stateCsl: string, project: string, profile: string,
+  //                         workflow: string, targetDate: string, quantityMin: number, quantityMax: number,
+  //                         progressMin: number, progressMax: number) {
+  getAllRequestsWithQuery(parameters: any) {
+    let parameterString = '';
+    singleParams.forEach(p => {
+      if (parameters[p] !== '') {
+        parameterString += `${p}=${parameters[p]}&`;
+      }
+    });
+
+    if (parameters.progress[0]) {
+      parameterString += `min_progress=${parameters.progress[0]}&`;
+    }
+    if (parameters.progress[1]) {
+      parameterString += `max_progress=${parameters.progress[1]}&`;
+    }
+    if (parameters.quantity[0]) {
+      parameterString += `min_quantity=${parameters.quantity[0]}&`;
+    }
+    if (parameters.quantity[1]) {
+      parameterString += `max_quantity=${parameters.quantity[1]}&`;
+    }
+    parameterString = parameterString.slice(0, -1);
+    return this.http.get<RequestsDao>(`${this.baseUrl}/requests?${parameterString}`, httpOptions)
       .pipe(data => {
           return data;
         },

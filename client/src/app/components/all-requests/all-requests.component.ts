@@ -4,6 +4,7 @@ import {RequestService} from '../../services/request/request.service';
 import {RequestPropsService} from '../../services/requestProps/requestProps.service';
 import {WorkflowService} from '../../services/workflow/workflow.service';
 import {Options} from 'ng5-slider';
+import {NgForm} from '@angular/forms';
 
 @Component({
   selector: 'app-all-requests',
@@ -21,9 +22,9 @@ export class AllRequestsComponent implements OnInit {
   workflows: string[];
   targetDates: string[];
   minValueProgress = 0;
-  maxValueProgress = 50;
+  maxValueProgress = 100;
   minValueQuantity = 1;
-  maxValueQuantity = 5;
+  maxValueQuantity = 10;
   optionsQuantity: Options = {
     floor: 1,
     ceil: 10
@@ -33,6 +34,16 @@ export class AllRequestsComponent implements OnInit {
     ceil: 100,
     step: 25
   };
+
+  state: string;
+  stateCsl: string;
+  skill: string;
+  profile: string;
+  project: string;
+  workflow: string;
+  targetDate: string;
+  quantity: number;
+  progress: number;
 
   constructor(private requestService: RequestService,
               private reqPropsService: RequestPropsService,
@@ -59,17 +70,17 @@ export class AllRequestsComponent implements OnInit {
         error => {
           console.log(error);
         });
-    this.reqPropsService.getRequestSkills()
-      .subscribe(skill => {
-          this.skills = skill.skills;
+    this.reqPropsService.getRequestProjects()
+      .subscribe(project => {
+          this.projects = project.projects;
         },
         error => {
           console.log(error);
         });
 
-    this.reqPropsService.getRequestProjects()
-      .subscribe(project => {
-          this.projects = project.projects;
+    this.reqPropsService.getRequestSkills()
+      .subscribe(skill => {
+          this.skills = skill.skills;
         },
         error => {
           console.log(error);
@@ -83,17 +94,17 @@ export class AllRequestsComponent implements OnInit {
           console.log(error);
         });
 
-    this.reqPropsService.getTargetDates()
-      .subscribe(month => {
-          this.targetDates = month.months;
+    this.workflowService.getAllWorkflows()
+      .subscribe(workflow => {
+          this.workflows = workflow.workflows;
         },
         error => {
           console.log(error);
         });
 
-    this.workflowService.getAllWorkflows()
-      .subscribe(workflow => {
-          this.workflows = workflow.workflows;
+    this.reqPropsService.getTargetDates()
+      .subscribe(month => {
+          this.targetDates = month.months;
         },
         error => {
           console.log(error);
@@ -119,5 +130,39 @@ export class AllRequestsComponent implements OnInit {
         )), error => {
       }
     );
+  }
+
+  onSubmit(form: NgForm) {
+    // this.requestService.getAllRequestsWithQuery(form.value.inputSkill,
+    //   form.value.inputState,
+    //   form.value.inputStateCsl,
+    //   form.value.inputProject,
+    //   form.value.inputProfile,
+    //   form.value.inputWorkflow,
+    //   form.value.inputTargetDate,
+    //   form.value.quantityBar[0],
+    //   form.value.quantityBar[1],
+    //   form.value.progressBar[0],
+    //   form.value.progressBar[0]
+    // )
+    this.requestService.getAllRequestsWithQuery(form.value)
+      .subscribe(requestDao =>
+          this.requests = requestDao.requests.map(r => new Request(r.id,
+            r.workflow,
+            r.progress,
+            r.state,
+            r.description,
+            [],
+            r.dateToSendProfile,
+            r.project,
+            r.quantity,
+            r.requestDate,
+            r.skill,
+            r.stateCsl,
+            r.targetDate,
+            r.profile
+          )), error => {
+        }
+      );
   }
 }

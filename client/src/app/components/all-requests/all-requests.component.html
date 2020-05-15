@@ -1,64 +1,69 @@
 <div class="table-responsive-xl d-flex flex-row root">
   <div class="p-2 filter-drawer">
     <h3>Filters</h3>
-    <div class="form-group">
-      <label for="inputSkill">Skill</label>
-      <select class="custom-select" id="inputSkill">
-        <option selected disabled>Choose a Skill</option>
-        <option *ngFor="let skill of skills">{{skill.skill}}</option>
-      </select>
-    </div>
-    <div class="form-group">
-      <label for="inputState">State</label>
-      <select class="custom-select" id="inputState">
-        <option selected disabled>Choose a State</option>
-        <option *ngFor="let state of states">{{state.state}}</option>
-      </select>
-    </div>
-    <div class="form-group">
-      <label for="inputStateCsl">CSL State</label>
-      <select class="custom-select" id="inputStateCsl">
-        <option selected disabled>Choose a CSL State</option>
-        <option *ngFor="let stateCsl of statesCsl">{{stateCsl.stateCsl}}</option>
-      </select>
-    </div>
-    <div class="form-group">
-      <label for="inputProject">Project</label>
-      <select class="custom-select" id="inputProject">
-        <option selected disabled>Choose a Project</option>
-        <option *ngFor="let project of projects">{{project.project}}</option>
-      </select>
-    </div>
-    <div class="form-group">
-      <label for="inputProfile">Profile</label>
-      <select class="custom-select" id="inputProfile">
-        <option selected disabled>Choose a Profile</option>
-        <option *ngFor="let profile of profiles">{{profile.profile}}</option>
-      </select>
-    </div>
-    <div class="form-group">
-      <label for="inputWorkflow">Workflow</label>
-      <select class="custom-select" id="inputWorkflow">
-        <option selected disabled>Choose a Workflow</option>
-        <option *ngFor="let workflow of workflows">{{workflow.workflow}}</option>
-      </select>
-    </div>
-    <div class="form-group">
-      <label for="inputTargetDate">Target Month</label>
-      <select class="custom-select" id="inputTargetDate">
-        <option selected disabled>Choose a Target Month</option>
-        <option *ngFor="let month of targetDates">{{month.month}}</option>
-      </select>
-    </div>
-    <div class="custom-slider">
-      <label for="quantityBar">Quantity</label>
-      <ng5-slider [(value)]="minValueQuantity" [(highValue)]="maxValueQuantity" [options]="optionsQuantity" id="quantityBar"></ng5-slider>
-    </div>
-    <div class="custom-slider">
-      <label for="progressBar">Progress</label>
-      <ng5-slider [(value)]="minValueProgress" [(highValue)]="maxValueProgress" [options]="optionsProgress" id="progressBar"></ng5-slider>
-    </div>
-    <button id="createRequestSubmit" class="btn btn-primary" type="submit">Filter</button>
+    <form #form="ngForm" (ngSubmit)="onSubmit(form)" novalidate class="form">
+      <div class="form-group">
+        <label for="inputSkill">Skill</label>
+        <select class="custom-select" id="inputSkill" name="skill" #skill='ngModel' ngModel>
+          <option selected value="">Choose a Skill</option>
+          <option *ngFor="let skill of skills">{{skill.skill}}</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="inputState">State</label>
+        <select class="custom-select" id="inputState" name="state" #state='ngModel' ngModel>
+          <option selected value="">Choose a State</option>
+          <option *ngFor="let state of states">{{state.state}}</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="inputStateCsl">CSL State</label>
+        <select class="custom-select" id="inputStateCsl" name="stateCsl" #stateCsl='ngModel' ngModel>
+          <option selected value="">Choose a CSL State</option>
+          <option *ngFor="let stateCsl of statesCsl">{{stateCsl.stateCsl}}</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="inputProject">Project</label>
+        <select class="custom-select" id="inputProject" name="project" #project='ngModel' ngModel>
+          <option selected value="">Choose a Project</option>
+          <option *ngFor="let project of projects">{{project.project}}</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="inputProfile">Profile</label>
+        <select class="custom-select" id="inputProfile" name="profile" #profile='ngModel' ngModel>
+          <option selected value="">Choose a Profile</option>
+          <option *ngFor="let profile of profiles">{{profile.profile}}</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="inputWorkflow">Workflow</label>
+        <select class="custom-select" id="inputWorkflow" name="workflow" #workflow='ngModel' ngModel>
+          <option selected value="">Choose a Workflow</option>
+          <option *ngFor="let workflow of workflows">{{workflow.workflow}}</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="inputTargetDate">Target Month</label>
+        <select class="custom-select" id="inputTargetDate" name="targetDate" #targetDate='ngModel' ngModel>
+          <option selected value="">Choose a Target Month</option>
+          <option *ngFor="let month of targetDates">{{month.month}}</option>
+        </select>
+      </div>
+      <div class="custom-slider">
+        <label for="quantityBar">Quantity</label>
+        <ng5-slider [(value)]="minValueQuantity" [(highValue)]="maxValueQuantity" [options]="optionsQuantity"
+                    id="quantityBar" name="quantity" #quantity='ngModel' ngModel></ng5-slider>
+      </div>
+      <div class="custom-slider">
+        <label for="progressBar">Progress</label>
+        <ng5-slider [(value)]="minValueProgress" [(highValue)]="maxValueProgress" [options]="optionsProgress"
+                    id="progressBar" name="progress" #progress='ngModel' ngModel></ng5-slider>
+      </div>
+      <button id="createRequestSubmit" class="btn btn-primary" type="submit">Filter</button>
+      <button id="resetRequestTable" class="btn btn-secondary reset-button" (click)="getRequests()">Reset Filter</button>
+    </form>
   </div>
   <table class="table table-hover p-2">
     <thead>
@@ -84,7 +89,7 @@
       <td>{{request.workflow}}</td>
       <td>{{request.description}}</td>
       <td>
-        <ngb-progressbar type="dark" textType="white" [value]="request.progress"
+        <ngb-progressbar type="blue" textType="white" [value]="request.progress"
                          [showValue]="true"></ngb-progressbar>
       </td>
       <td>{{request.project}}</td>
