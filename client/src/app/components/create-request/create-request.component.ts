@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core'
+import { NgForm } from '@angular/forms';
 import { RequestPropsService } from 'src/app/services/requestProps/requestProps.service'
 import { WorkflowService } from 'src/app/services/workflow/workflow.service'
+import { RequestService } from 'src/app/services/request/request.service'
+
 
 @Component({
   selector: 'app-create-request',
@@ -9,7 +12,19 @@ import { WorkflowService } from 'src/app/services/workflow/workflow.service'
 })
 export class CreateRequestComponent implements OnInit {
 
-  constructor(private reqPropsService: RequestPropsService, private workflowService: WorkflowService) { }
+  constructor(private reqPropsService: RequestPropsService,
+    private workflowService: WorkflowService,
+    private requestService: RequestService) { }
+
+  inputDescription: string
+  inputQuantity: string
+  inputSkill: string
+  inputProfile: string
+  inputMandatoryLanguage: string
+  inputValuedLanguage: string
+  inputWorkflow: string
+  inputTargetDate: string
+  inputDateToSendProfile: string
 
   skills: string[]
   profiles: string[]
@@ -47,6 +62,11 @@ export class CreateRequestComponent implements OnInit {
     this.workflowService.getAllWorkflows()
       .subscribe(workflow => { this.workflows = workflow.workflows },
         error => { console.log(error) })
+  }
+
+  onSubmit(form: NgForm) {
+    alert('Request has been created')
+    this.requestService.createRequest()
   }
 
 }

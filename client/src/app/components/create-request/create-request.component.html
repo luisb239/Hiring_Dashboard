@@ -1,21 +1,21 @@
 <div class='CreateRequest'>
   <h1>Create Request</h1>
-  <div class="form">
+  <form #form="ngForm" (ngSubmit)="onSubmit(form)" novalidate>
     <div class="form-row">
       <div class="form-group col-md-4">
         <label for="inputDescription">Description</label>
-        <input type="description" class="form-control" id="inputDescription" placeholder="Mandatory Description"
-          required>
+        <input name='inputDescription' ngModel required #inputDescription='ngModel' class="form-control" id="inputDescription"
+          placeholder="Request's Description">
       </div>
       <div class="form-group col-md-4">
         <label for="inputQuantity">Quantity</label>
         <div>
-          <input class="form-control" type="number" value="1" min="1" id="inputQuantity">
+          <input name='inputQuantity' ngModel required #inputQuantity='ngModel' class="form-control" type="number" placeholder="1" min="1" id="inputQuantity">
         </div>
       </div>
       <div class="form-group col-md-4">
         <label for="inputSkill">Skill</label>
-        <select class="custom-select" id="inputSkill">
+        <select name='inputSkill' ngModel required #inputSkill='ngModel' class="custom-select" placeholder='Choose a Skill' id="inputSkill">
           <option selected disabled>Choose a Skill</option>
           <option *ngFor="let skill of skills">{{skill.skill}}</option>
         </select>
@@ -62,9 +62,9 @@
     </div>
     <div class="form-row">
       <div class="form-group col-md-4">
-        <label for="inputTargetDate">Target Date</label>
+        <label for="inputTargetDate">Target Month</label>
         <select class="custom-select" id="inputTargetDate">
-          <option selected disabled>Choose a Target Date</option>
+          <option selected disabled>Choose a Target Month</option>
           <option *ngFor="let month of targetDates">{{month.month}}</option>
         </select>
       </div>
@@ -74,6 +74,6 @@
         <input class="form-control" type="date" id="inputDateToSendProf">
       </div>
     </div>
-    <button id="createRequestSubmit" class="btn btn-primary" type="submit">Submit Request</button>
-  </div>
+    <button id="createRequestSubmit" class="btn btn-primary">Submit Request</button>
+  </form>
 </div>
