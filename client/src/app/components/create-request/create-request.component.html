@@ -15,7 +15,7 @@
       </div>
       <div class="form-group col-md-4">
         <label for="inputSkill">Skill</label>
-        <select name='inputSkill' ngModel required #inputSkill='ngModel' class="custom-select" placeholder='Choose a Skill' id="inputSkill">
+        <select name='inputSkill' ngModel required #inputSkill='ngModel' class="custom-select" id="inputSkill">
           <option selected disabled>Choose a Skill</option>
           <option *ngFor="let skill of skills">{{skill.skill}}</option>
         </select>
