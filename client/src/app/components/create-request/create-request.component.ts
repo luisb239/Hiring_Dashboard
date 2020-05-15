@@ -66,7 +66,7 @@ export class CreateRequestComponent implements OnInit {
 
   onSubmit(form: NgForm) {
     alert('Request has been created')
-    this.requestService.createRequest()
+    // this.requestService.createRequest()
   }
 
 }
