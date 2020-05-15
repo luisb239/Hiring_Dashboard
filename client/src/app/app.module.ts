@@ -14,6 +14,7 @@ import {HttpClientModule} from '@angular/common/http';
 import {PopupComponent} from './components/popup/popup.component';
 import {CreateRequestComponent} from './components/create-request/create-request.component';
 import { AllRequestsComponent } from './components/all-requests/all-requests.component';
+import {Ng5SliderModule} from 'ng5-slider';
 
 @NgModule({
   declarations: [
@@ -25,15 +26,16 @@ import { AllRequestsComponent } from './components/all-requests/all-requests.com
     CreateRequestComponent,
     AllRequestsComponent
   ],
-    imports: [
-        BrowserModule,
-        AppRoutingModule,
-        NgbModule,
-        BrowserAnimationsModule,
-        DragDropModule,
-        ReactiveFormsModule,
-        HttpClientModule
-    ],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    NgbModule,
+    BrowserAnimationsModule,
+    DragDropModule,
+    ReactiveFormsModule,
+    HttpClientModule,
+    Ng5SliderModule
+  ],
   providers: [],
   bootstrap: [AppComponent]
 })

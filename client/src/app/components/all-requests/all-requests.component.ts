@@ -1,40 +1,9 @@
 import {Component, OnInit} from '@angular/core';
 import {Request} from '../../model/request';
 import {RequestService} from '../../services/request/request.service';
-
-interface Country {
-  name: string;
-  flag: string;
-  area: number;
-  population: number;
-}
-
-const COUNTRIES: Country[] = [
-  {
-    name: 'Russia',
-    flag: 'f/f3/Flag_of_Russia.svg',
-    area: 17075200,
-    population: 146989754
-  },
-  {
-    name: 'Canada',
-    flag: 'c/cf/Flag_of_Canada.svg',
-    area: 9976140,
-    population: 36624199
-  },
-  {
-    name: 'United States',
-    flag: 'a/a4/Flag_of_the_United_States.svg',
-    area: 9629091,
-    population: 324459463
-  },
-  {
-    name: 'China',
-    flag: 'f/fa/Flag_of_the_People%27s_Republic_of_China.svg',
-    area: 9596960,
-    population: 1409517397
-  }
-];
+import {RequestPropsService} from '../../services/requestProps/requestProps.service';
+import {WorkflowService} from '../../services/workflow/workflow.service';
+import {Options} from 'ng5-slider';
 
 @Component({
   selector: 'app-all-requests',
@@ -43,13 +12,106 @@ const COUNTRIES: Country[] = [
 })
 export class AllRequestsComponent implements OnInit {
 
-  countries = COUNTRIES;
   requests: Request[];
+  states: string[];
+  statesCsl: string[];
+  skills: string[];
+  profiles: string[];
+  projects: string[];
+  mandatoryLanguages: string[];
+  valuedLanguages: string[];
+  workflows: string[];
+  targetDates: string[];
+  minValueProgress = 0;
+  maxValueProgress = 50;
+  minValueQuantity = 1;
+  maxValueQuantity = 5;
+  optionsQuantity: Options = {
+    floor: 1,
+    ceil: 10
+  };
+  optionsProgress: Options = {
+    floor: 0,
+    ceil: 100,
+    step: 25
+  };
 
-  constructor(private requestService: RequestService) {
+  constructor(private requestService: RequestService,
+              private reqPropsService: RequestPropsService,
+              private workflowService: WorkflowService) {
   }
 
   ngOnInit(): void {
+    this.getFilterParameters();
+    this.getRequests();
+  }
+
+  getFilterParameters() {
+    this.reqPropsService.getRequestStates()
+      .subscribe(states => {
+          this.states = states.states;
+        },
+        error => {
+          console.log(error);
+        });
+    this.reqPropsService.getRequestStatesCsl()
+      .subscribe(stateCsl => {
+          this.statesCsl = stateCsl.statesCsl;
+        },
+        error => {
+          console.log(error);
+        });
+    this.reqPropsService.getRequestSkills()
+      .subscribe(skill => {
+          this.skills = skill.skills;
+        },
+        error => {
+          console.log(error);
+        });
+
+    this.reqPropsService.getRequestProjects()
+      .subscribe(project => {
+          this.projects = project.projects;
+        },
+        error => {
+          console.log(error);
+        });
+
+    this.reqPropsService.getRequestProfiles()
+      .subscribe(profile => {
+          this.profiles = profile.profiles;
+        },
+        error => {
+          console.log(error);
+        });
+
+    this.reqPropsService.getRequestLanguages()
+      .subscribe(language => {
+          this.mandatoryLanguages = language.languages;
+          this.valuedLanguages = language.languages;
+        },
+        error => {
+          console.log(error);
+        });
+
+    this.reqPropsService.getTargetDates()
+      .subscribe(month => {
+          this.targetDates = month.months;
+        },
+        error => {
+          console.log(error);
+        });
+
+    this.workflowService.getAllWorkflows()
+      .subscribe(workflow => {
+          this.workflows = workflow.workflows;
+        },
+        error => {
+          console.log(error);
+        });
+  }
+
+  getRequests() {
     this.requestService.getAllRequests().subscribe(requestDao =>
         this.requests = requestDao.requests.map(r => new Request(r.id,
           r.workflow,
