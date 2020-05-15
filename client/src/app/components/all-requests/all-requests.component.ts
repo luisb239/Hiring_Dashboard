@@ -18,8 +18,6 @@ export class AllRequestsComponent implements OnInit {
   skills: string[];
   profiles: string[];
   projects: string[];
-  mandatoryLanguages: string[];
-  valuedLanguages: string[];
   workflows: string[];
   targetDates: string[];
   minValueProgress = 0;
@@ -80,15 +78,6 @@ export class AllRequestsComponent implements OnInit {
     this.reqPropsService.getRequestProfiles()
       .subscribe(profile => {
           this.profiles = profile.profiles;
-        },
-        error => {
-          console.log(error);
-        });
-
-    this.reqPropsService.getRequestLanguages()
-      .subscribe(language => {
-          this.mandatoryLanguages = language.languages;
-          this.valuedLanguages = language.languages;
         },
         error => {
           console.log(error);
