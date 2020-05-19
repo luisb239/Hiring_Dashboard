@@ -30,7 +30,7 @@ export class BoardComponent implements OnInit {
     this.requestService.getRequestsByUser(1, 1)
       .subscribe(
         requestsDao => {
-          const requests = requestsDao.map(r => new Request(r.id, r.workflow, r.progress, r.state, r.description));
+          const requests = requestsDao.requests.map(r => new Request(r.id, r.workflow, r.progress, r.state, r.description));
           this.workflows = [...new Set(requests.map(r => r.workflow))].map(w => new Workflow(w));
           this.workflows.forEach(workflow => {
               this.phaseService.getPhasesByWorkflow(workflow.workflow)
