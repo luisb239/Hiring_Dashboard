@@ -1,6 +1,6 @@
 'use strict'
 
-const handler = require('../errors/handler.js')
+const handler = require('../handler.js')
 
 module.exports = (service) => {
 

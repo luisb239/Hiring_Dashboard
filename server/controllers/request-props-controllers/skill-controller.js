@@ -1,5 +1,7 @@
 'use strict'
 
+const handler = require('../handler.js')
+
 module.exports = (service) => {
 
     return {getSkills}
@@ -10,7 +12,7 @@ module.exports = (service) => {
             res.status(200).send(skills)
         }
         catch (e) {
-            res.status(500).send({error : "Unexpected Error"})
+            handler(e, res, "Unable to retrieve skills")
         }
     }
 }

@@ -7,6 +7,7 @@ module.exports = function (global, router, controllers) {
     const candidates = 'candidates'
     const requests = 'requests'
     const phases = 'phases'
+    const process = 'process'
 
     // request attributes
     const requestAttributes = 'requests-properties'
@@ -25,20 +26,25 @@ module.exports = function (global, router, controllers) {
     // Get Request By Id
     router.get(`/${requests}/:id`, controllers.request.getRequestById)
 
+    // Get Process Information
+    router.get(`/${requests}/:requestId/${candidates}/:candidateId/${process}`, controllers.process.getProcessDetail)
+
     // Get Request By User And Role
-    router.get(`/${users}/:userId/${roles}/:roleId/${requests}`, controllers.request.getRequestsByUserAndRole)
+    router.get(`/${users}/:userId/${roles}/:role/${requests}`, controllers.request.getRequestsByUserAndRole)
 
-    // Get Phases By Workflow
-    router.get(`/${workflows}/:workflow/${phases}`, controllers.phase.getPhasesByWorkflow)
+    // Get Workflows...
 
-    // Process Phase Info
+    // Get Workflow Info
+    router.get(`/${workflows}/:workflow`, controllers.workflow.getWorkflow)
 
-    // Get Candidates By Request And Phase
-    router.get(`/${requests}/:requestId/${phases}/:phase/${candidates}`, controllers.candidate.getCandidatesByRequestAndPhase)
+    // Get All Phases
+    router.get(`/${phases}`, controllers.phase.getPhases)
 
+    // Get Phase Info
+    router.get(`/${phases}/:phase`, controllers.phase.getPhase)
 
     // Create Request
-    router.post(`/${requests}`, controllers.request.postRequest)
+    //router.post(`/${requests}`, controllers.request.postRequest)
 
     // Update Request TODO
     // router.put(`/${requests}/:id`, )
@@ -52,7 +58,8 @@ module.exports = function (global, router, controllers) {
     router.get(`/${requestAttributes}/${workflows}`, controllers.workflow.getWorkflows)
     router.get(`/${requestAttributes}/${months}`, controllers.months.getMonths)
 
-    // Get Candidates + Available Filter
+    // TODO
+    // Get Candidates + Available Filter + profiles filter
     router.get(`/${candidates}`, controllers.candidate.getCandidates)
 
     // Get Candidate by id
@@ -60,15 +67,6 @@ module.exports = function (global, router, controllers) {
 
     // Update Candidate
     // router.put(`/${candidates}/:id`, controllers.candidate.putCandidate)
-
-    // Get Candidates In Request + Available Filter
-    // router.get(`/${requests}/:id/${candidates}`, controllers.candidate.getCandidatesByRequest)
-
-    // Get Candidates By Phase Of Request + Filter ??
-    /*
-    router.get(`/${requests}/:id/${phases}/:phaseId/${phases}/${candidates}`,
-        controllers.candidate.getCandidatesByRequestPhase)
-     */
 
     // Create Candidate
     router.post(`/${candidates}`, controllers.candidate.postCandidate)

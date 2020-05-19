@@ -4,7 +4,7 @@ const schema = require('../../schemas/request-props-schemas/workflow-schema.js')
 
 module.exports = (query) => {
 
-    return {getWorkflows}
+    return {getWorkflows, getWorkflow}
 
     async function getWorkflows() {
         const statement = {
@@ -18,9 +18,25 @@ module.exports = (query) => {
         return result.rows.map(row => extract(row))
     }
 
+    async function getWorkflow({workflow}) {
+        const statement = {
+            name: 'Get Workflow',
+            text:
+                `SELECT * FROM ${schema.table} ` +
+                `WHERE ${schema.workflow} = $1;`,
+            values: [workflow]
+        }
+        const result = await query(statement)
+
+        if (result.rowCount) {
+            return result.rows.map(row => extract(row))[0]
+        }
+        return null
+    }
+
     function extract(obj) {
         return {
-            workflow : obj[schema.workflow]
+            workflow: obj[schema.workflow]
         }
     }
 }

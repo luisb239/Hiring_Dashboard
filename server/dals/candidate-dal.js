@@ -1,8 +1,8 @@
 'use strict'
 
 const candidate = require('../schemas/candidate-schema.js')
-const process = require('../schemas/process/processSchema.js')
-const processPhase = require('../schemas/process/processPhaseSchema.js')
+const process = require('../schemas/process/process-schema.js')
+const processPhase = require('../schemas/process/process-phase-schema.js')
 
 module.exports = (query) => {
 
@@ -11,7 +11,6 @@ module.exports = (query) => {
         getCandidateById,
         getCandidatesByRequestId,
         createCandidate,
-        getCandidatesByRequestAndPhase
     }
 
     async function getCandidates({available = null}) {
@@ -44,16 +43,15 @@ module.exports = (query) => {
         return null
     }
 
-    async function getCandidatesByRequestId({requestId, available = null}) {
+    async function getCandidatesByRequestId({requestId}) {
         const statement = {
             name: 'Get Candidates By Request Id',
             text:
                 `SELECT C.* FROM ${process.table} AS P ` +
                 `INNER JOIN ${candidate.table} AS C ` +
                 `ON P.${process.candidateId} = C.${candidate.id} ` +
-                `WHERE (P.${process.requestId} = $1) AND ` +
-                `(C.${candidate.available} = $2 OR $2 is null);`,
-            values: [requestId, available]
+                `WHERE (P.${process.requestId} = $1);`,
+            values: [requestId]
         }
 
         const result = await query(statement)

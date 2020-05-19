@@ -1,8 +1,10 @@
 'use strict'
 
+const handler = require('../handler.js')
+
 module.exports = (service) => {
 
-    return {getStatesCsl, }
+    return {getStatesCsl,}
 
     async function getStatesCsl(req, res) {
         try {
@@ -10,7 +12,7 @@ module.exports = (service) => {
             res.status(200).send(statesCsl)
         }
         catch (e) {
-            res.status(500).send({error: 'An unknown error occurred.'})
+            handler(e, res, "Unable to retrieve states csl")
         }
     }
 }

@@ -5,5 +5,4 @@ module.exports = {
     workflow : 'workflow',
     phase: 'phase',
     phaseNumber: 'phase_number',
-    phaseAttrJson: 'phase_attributes'
 }

@@ -1,6 +1,6 @@
 'use strict'
 
-const errors = require('./errors/errors.js')
+const handler = require('./handler.js')
 
 module.exports = (service) => {
 
@@ -28,7 +28,7 @@ module.exports = (service) => {
             res.status(200).send(requests)
         }
         catch (e) {
-            res.status(400).send({error: 'Invalid Input Syntax'})
+            handler(e, res, "Error retrieving all requests")
         }
     }
     
@@ -40,52 +40,43 @@ module.exports = (service) => {
             res.status(200).send(request)
         }
         catch (e) {
-            if (e.type === errors.resourceNotFound) {
-                res.status(404).send({error: e.message})
-            }
-            else {
-                res.status(400).send({error: 'Invalid Input Syntax'})
-            }
+            handler(e, res, "Error retrieving request by id")
         }
     }
 
     async function postRequest(req, res) {
         try {
             const request = await service.createRequest({
-                quantity : req.body.quantity,
-                description : req.body.description,
-                targetDate : req.body.target_date,
-                state : req.body.state,
-                skill : req.body.skill,
-                stateCsl : req.body.state_csl,
-                project : req.body.project,
-                profile : req.body.profile,
-                workflow : req.body.workflow,
-                dateToSendProfile : req.body.date_to_send_profile
+                quantity: req.body.quantity,
+                description: req.body.description,
+                targetDate: req.body.target_date,
+                state: req.body.state,
+                skill: req.body.skill,
+                stateCsl: req.body.state_csl,
+                project: req.body.project,
+                profile: req.body.profile,
+                workflow: req.body.workflow,
+                dateToSendProfile: req.body.date_to_send_profile,
+
             })
             res.status(201).send(request)
-        }
-        catch (e) {
-            if (e.type === errors.missingInput) {
-                res.status(400).send({error: e.message})
-            }
-            else {
-                res.status(400).send({error : 'Invalid Input Syntax'})
-            }
+        } catch (e) {
+            handler(e, res, "Error creating request")
         }
     }
+
 
     async function getRequestsByUserAndRole(req, res) {
         try {
             const requests = await service.getRequestsByUserAndRole({
-                userId : req.params.userId,
-                roleId : req.params.roleId,
+                userId: req.params.userId,
+                role: req.params.role,
             })
             res.status(200).send(requests)
         }
         catch (e) {
-            // TODO
-            res.status(500).send({error: 'Errors not handled yet'})
+            handler(e, res, "Error retrieving requests by user and role")
         }
     }
+
 }

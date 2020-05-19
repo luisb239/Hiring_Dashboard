@@ -2,11 +2,12 @@
 
 // centralized error object that derives from Node’s Error
 class AppError {
-    constructor(type, message) {
+    constructor(commonError, title, detail) {
         Error.call(this)
         Error.captureStackTrace(this)
-        this.type = type
-        this.message = message
+        this.commonError = commonError
+        this.title = title;
+        this.detail = detail
         //...other properties assigned here
     }
 }

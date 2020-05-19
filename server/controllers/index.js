@@ -18,6 +18,8 @@ module.exports = (service) => {
 
     const candidate = require('./candidate-controller.js')(service.candidate)
 
-    return {request, candidate, state, skill, stateCsl, project, profile, language, workflow, phase, months}
+    const process = require('./process-controller.js')(service.process)
+
+    return {request, candidate, state, skill, stateCsl, project, profile, language, workflow, phase, months, process}
 
 }

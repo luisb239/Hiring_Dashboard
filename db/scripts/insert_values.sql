@@ -14,9 +14,9 @@ INSERT INTO role_type(role_type)
 	('Team Worker'),
 	('Team Leader');
 	
-INSERT INTO user_role(user_id, role_id, role_type_id)
+INSERT INTO user_role(user_id, role, role_type)
 	VALUES	
-	(1,1,1);
+	(1, 'Recruiter', 'Team Leader');
 	
 INSERT INTO request_state
 	VALUES
@@ -97,13 +97,13 @@ INSERT INTO request(quantity, description, target_date,
 	(1, 'Swat 1 Person', 'December', 'Open', 'SWAT', 'Asked', 'XPO', 'Tester', 'Consulting'),
 	(2, 'Swat 2 People', 'December', 'Open', 'SWAT', 'Asked', 'XPO', 'Tester', 'Software Testing');
 	
-INSERT INTO user_role_request(user_id, role_id, request_id)
+INSERT INTO user_role_request(user_id, role, request_id)
 	VALUES 
-	(1, 1, 1),
-	(1, 1, 2),
-	(1, 1, 3),
-	(1, 1, 4);
-	
+	(1, 'Recruiter', 1),
+	(1, 'Recruiter', 2),
+	(1, 'Recruiter', 3),
+	(1, 'Recruiter', 4);
+
 INSERT INTO request_language_requirements(request_id, language, mandatory)
 	VALUES
 	(1, 'English', TRUE),

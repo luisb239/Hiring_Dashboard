@@ -1,16 +1,28 @@
 'use strict'
 
+const handler = require('../handler.js')
+
 module.exports = (service) => {
 
-    return {getWorkflows}
+    return {getWorkflows, getWorkflow}
 
     async function getWorkflows(req, res) {
         try {
             const workflows = await service.getWorkflows()
             res.status(200).send(workflows)
+        } catch (e) {
+            handler(e, res, "Unable to retrieve workflows")
         }
-        catch (e) {
-            res.status(500).send({error : "Unexpected Error"})
+    }
+
+    async function getWorkflow(req, res) {
+        try {
+            const workflows = await service.getWorkflow({
+                workflow: req.params.workflow
+            })
+            res.status(200).send(workflows)
+        } catch (e) {
+            handler(e, res, "Unable to retrieve workflow")
         }
     }
 }

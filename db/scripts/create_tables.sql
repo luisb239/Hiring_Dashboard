@@ -2,32 +2,27 @@ CREATE TABLE user_profile(
 user_id INT GENERATED ALWAYS AS IDENTITY,
 username VARCHAR UNIQUE NOT NULL,
 password_hash VARCHAR NOT NULL,
-created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-last_sign_in TIMESTAMP WITH TIME ZONE NULL DEFAULT NULL,
+created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL,
 is_active BOOLEAN NOT NULL DEFAULT TRUE,
 PRIMARY KEY (user_id)
 );
 
 CREATE TABLE role(
-role_id INT GENERATED ALWAYS AS IDENTITY,
-role VARCHAR UNIQUE NOT NULL,
-PRIMARY KEY (role_id)
+role VARCHAR PRIMARY KEY
 );
 
 CREATE TABLE role_type(
-role_type_id INT GENERATED ALWAYS AS IDENTITY,
-role_type VARCHAR UNIQUE NOT NULL,
-PRIMARY KEY (role_type_id)
+role_type VARCHAR PRIMARY KEY
 );
 
 CREATE TABLE user_role(
 user_id INT,
-role_id INT,
-role_type_id INT,
+role VARCHAR,
+role_type VARCHAR,
 FOREIGN KEY (user_id) REFERENCES user_profile(user_id),
-FOREIGN KEY (role_id) REFERENCES role(role_id),
-FOREIGN KEY (role_type_id) REFERENCES role_type(role_type_id),
-PRIMARY KEY (user_id, role_id)
+FOREIGN KEY (role) REFERENCES role(role),
+FOREIGN KEY (role_type) REFERENCES role_type(role_type),
+PRIMARY KEY (user_id, role)
 );
 
 CREATE TABLE request_state(
@@ -90,11 +85,11 @@ PRIMARY KEY (request_id)
 
 CREATE TABLE user_role_request(
 user_id INT,
-role_id INT,
+role VARCHAR,
 request_id INT,
-FOREIGN KEY (user_id, role_id) REFERENCES user_role(user_id, role_id),
+FOREIGN KEY (user_id, role) REFERENCES user_role(user_id, role),
 FOREIGN KEY (request_id) REFERENCES request(request_id),	
-PRIMARY KEY (user_id, role_id, request_id)
+PRIMARY KEY (user_id, role, request_id)
 );
 
 

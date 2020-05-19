@@ -1,25 +1,31 @@
 'use strict'
 
-const errors = require('./errors/errors.js')
+const handler = require('./handler.js')
 
 module.exports = (service) => {
 
     return {
-        getPhasesByWorkflow: getPhasesByWorkflow,
+        getPhase, getPhases
     }
 
-    async function getPhasesByWorkflow(req, res) {
+    async function getPhase(req, res) {
         try {
-            const phases = await service.getPhasesByWorkflow({
-                workflow : req.params.workflow
+            const phase = await service.getPhase({
+                phase: req.params.phase
             })
-            res.status(200).send(phases)
-        }
-        catch (e) {
-            // TODO
-            res.status(500).send({error: 'Errors not handled yet'})
+            res.status(200).send(phase)
+        } catch (e) {
+            handler(e, res, "Unable to retrieve phase information")
         }
     }
 
+    async function getPhases(req, res) {
+        try {
+            const phases = await service.getPhases()
+            res.status(200).send(phases)
+        } catch (e) {
+            handler(e, res, "Unable to retrieve phases")
+        }
+    }
 
 }

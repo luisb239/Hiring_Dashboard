@@ -1,5 +1,6 @@
 'use strict'
 
+const user = require('./user-roles-schemas/user-schema.js')
 const requests = require('./request-schema.js')
 const candidates = require('./candidate-schema.js')
 const skill = require('./request-props-schemas/skill-schema.js')
@@ -10,11 +11,14 @@ const profile = require('./request-props-schemas/profile-schema.js')
 const workflow = require('./request-props-schemas/workflow-schema.js')
 const language = require('./request-props-schemas/language-schema.js')
 const months = require('./request-props-schemas/months-schema.js')
-const userRoleRequest = require('./userRoleRequestSchema.js')
-const phase = require('./phase-schema.js')
-const workflowPhase = require('./workflowPhaseSchema.js')
+const userRoleRequest = require('./user-roles-schemas/user-role-request-schema.js')
+const phase = require('./workflow-phases-schemas/phase-schema.js')
+const workflowPhase = require('./workflow-phases-schemas/workflow-phase-schema.js')
+const role = require('./user-roles-schemas/role-schema.js')
+const unavailableReasons = require('./process/process-unavailable-reasons-schema.js')
 
 module.exports = {
+    user,
     requests,
     candidates,
     skill,
@@ -27,5 +31,7 @@ module.exports = {
     months,
     userRoleRequest,
     phase,
-    workflowPhase
+    workflowPhase,
+    role,
+    unavailableReasons
 }
