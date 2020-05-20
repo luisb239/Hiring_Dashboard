@@ -50,15 +50,15 @@ module.exports = (requestDb, candidateDb, processDb) => {
 
         const status = await processDb.getProcessStatus({requestId, candidateId})
 
-        const reasons = await processDb.getProcessUnavailableReasons({requestId, candidateId})
+        const reason = await processDb.getProcessUnavailableReason({requestId, candidateId})
 
         const phases = await processDb.getPhasesOfProcess({requestId, candidateId})
 
         const infos = await processDb.getProcessInfos({requestId, candidateId})
 
         return {
-            status: status.status,
-            unavailableReasons: reasons,
+            status: status ? status.status : null,
+            unavailableReason: reason ? reason.unavailabilityReason : null,
             phases: phases,
             infos: infos.map(info => ({name: info.name, value: info.value.value}))
         }

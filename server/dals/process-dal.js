@@ -10,7 +10,7 @@ module.exports = (query) => {
     return {
         getPhasesOfProcess,
         getProcessStatus,
-        getProcessUnavailableReasons,
+        getProcessUnavailableReason: getProcessUnavailableReason,
         getProcessInfos
     }
 
@@ -56,6 +56,8 @@ module.exports = (query) => {
         if (result.rowCount) {
             return result.rows.map(row => extractProcessStatus(row))[0]
         }
+
+        return null
     }
 
     function extractProcessStatus(row) {
@@ -64,7 +66,7 @@ module.exports = (query) => {
         }
     }
 
-    async function getProcessUnavailableReasons({requestId, candidateId}) {
+    async function getProcessUnavailableReason({requestId, candidateId}) {
         const statement = {
             name: 'Get Process Unavailable Reasons',
             text:
@@ -74,7 +76,12 @@ module.exports = (query) => {
         }
 
         const result = await query(statement)
-        return result.rows.map(row => extractProcessUnavailableReasons(row))
+
+        if (result.rowCount) {
+            return result.rows.map(row => extractProcessUnavailableReasons(row))[0]
+        }
+
+        return null
     }
 
     function extractProcessUnavailableReasons(row) {

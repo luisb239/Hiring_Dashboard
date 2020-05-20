@@ -2,6 +2,7 @@
 
 const errors = require('../errors/common-errors.js')
 const AppError = require('../errors/app-error.js')
+const verify = require('../utils/type-validator.js')()
 
 module.exports = (requestDb, candidateDb, userDb, roleDb) => {
 
@@ -59,34 +60,53 @@ module.exports = (requestDb, candidateDb, userDb, roleDb) => {
                                  }) {
         // Checking mandatory arguments
         if (!quantity)
-            throw new AppError(errors.missingInput, "Missing Request Quantity", "You must supply a quantity")
+            throw new AppError(errors.missingInput, "Missing Quantity", "You must supply a quantity")
 
         if (!description)
-            throw new AppError(errors.missingInput, "Missing Request Description", "You must supply a description")
+            throw new AppError(errors.missingInput, "Missing Description", "You must supply a description")
 
         if (!targetDate)
-            throw new AppError(errors.missingInput, "Missing Request Target Date", "You must supply a target date")
+            throw new AppError(errors.missingInput, "Missing Target Date", "You must supply a target date")
 
         if (!state)
-            throw new AppError(errors.missingInput, "Missing Request State", "You must supply a state")
+            throw new AppError(errors.missingInput, "Missing State", "You must supply a state")
 
         if (!skill)
-            throw new AppError(errors.missingInput, "Missing Request SKill", "You must supply a skill")
+            throw new AppError(errors.missingInput, "Missing SKill", "You must supply a skill")
 
         if (!stateCsl)
-            throw new AppError(errors.missingInput, "Missing Request State Csl", "You must supply a state csl")
+            throw new AppError(errors.missingInput, "Missing State Csl", "You must supply a state csl")
 
         if (!project)
-            throw new AppError(errors.missingInput, "Missing Request Project", "You must supply a project")
+            throw new AppError(errors.missingInput, "Missing Project", "You must supply a project")
 
         if (!profile)
-            throw new AppError(errors.missingInput, "Missing Request Profile", "You must supply a profile")
+            throw new AppError(errors.missingInput, "Missing Profile", "You must supply a profile")
 
         if (!workflow)
-            throw new AppError(errors.missingInput, "Missing Request Workflow", "You must supply a workflow")
+            throw new AppError(errors.missingInput, "Missing Workflow", "You must supply a workflow")
 
-        if (!Number.isInteger(quantity))
-            throw new AppError(errors.invalidInput, "Invalid Request Quantity", "Quantity must be of type integer")
+        // Checking data types
+        if (!verify.isNumber(quantity))
+            throw new AppError(errors.invalidInput, "Invalid Quantity", "Quantity must be of integer type")
+
+        if (!verify.isString(description))
+            throw new AppError(errors.invalidInput, "Invalid Description", "Description must be of text type")
+
+        if (!verify.isString(targetDate))
+            throw new AppError(errors.invalidInput, "Invalid Target Date", "Target Date must be of text type")
+
+        if (!verify.isString(state))
+            throw new AppError(errors.invalidInput, "Invalid State", "State must be of text type")
+
+        if (!verify.isString(skill))
+            throw new AppError(errors.invalidInput, "Invalid Skill", "Skill must be of text type")
+
+        if (!verify.isString(stateCsl))
+            throw new AppError(errors.invalidInput, "Invalid State Csl", "State Csl must be of text type")
+
+        if (!verify.isString(project))
+            throw new AppError(errors.invalidInput, "Invalid Project", "Project must be of text type")
 
         /*
         if (quantity < 1)
@@ -107,7 +127,6 @@ module.exports = (requestDb, candidateDb, userDb, roleDb) => {
         }
     }
 
-
     async function getRequestsByUserAndRole({userId, role}) {
         if (!parseInt(userId))
             throw new AppError(errors.invalidInput, "Invalid User ID", "User ID must be of integer type")
@@ -124,4 +143,5 @@ module.exports = (requestDb, candidateDb, userDb, roleDb) => {
         const requests = await requestDb.getRequestsByUserAndRole({userId, role})
         return {requests: requests}
     }
+
 }
