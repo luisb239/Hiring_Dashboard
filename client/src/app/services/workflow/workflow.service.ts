@@ -2,7 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { catchError } from 'rxjs/operators';
 import { ErrorHandler } from '../error-handler';
-import { WorkflowDao } from 'src/app/model/dao/workflow-dao'
+import { WorkflowsDao } from 'src/app/model/dao/workflows-dao'
+import {WorkflowDao} from '../../model/dao/workflow-dao';
 
 const httpOptions = {
   headers: new HttpHeaders({
@@ -17,13 +18,21 @@ export class WorkflowService {
 
   constructor(private http: HttpClient, private errorHandler: ErrorHandler) { }
 
-  baseUrl = `http://localhost:8080/hd/requests-properties`;
+  baseUrl = `http://localhost:8080/hd`;
 
   getAllWorkflows() {
-    return this.http.get<WorkflowDao>(`${this.baseUrl}/workflows`, httpOptions)
+    return this.http.get<WorkflowsDao>(`${this.baseUrl}/requests-properties/workflows`, httpOptions)
       .pipe(data => {
         return data;
       },
+        catchError(this.errorHandler.handleError));
+  }
+
+  getWorkflowByName(workflowName: string) {
+    return this.http.get<WorkflowDao>(`${this.baseUrl}/workflows/${workflowName}`, httpOptions)
+      .pipe(data => {
+          return data;
+        },
         catchError(this.errorHandler.handleError));
   }
 }

@@ -133,18 +133,6 @@ export class AllRequestsComponent implements OnInit {
   }
 
   onSubmit(form: NgForm) {
-    // this.requestService.getAllRequestsWithQuery(form.value.inputSkill,
-    //   form.value.inputState,
-    //   form.value.inputStateCsl,
-    //   form.value.inputProject,
-    //   form.value.inputProfile,
-    //   form.value.inputWorkflow,
-    //   form.value.inputTargetDate,
-    //   form.value.quantityBar[0],
-    //   form.value.quantityBar[1],
-    //   form.value.progressBar[0],
-    //   form.value.progressBar[0]
-    // )
     this.requestService.getAllRequestsWithQuery(form.value)
       .subscribe(requestDao =>
           this.requests = requestDao.requests.map(r => new Request(r.id,

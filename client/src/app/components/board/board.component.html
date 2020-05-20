@@ -21,7 +21,7 @@
             [cdkDropListData]="phase.candidates"
             (cdkDropListDropped)="drop($event)">
           <div class="task" *ngFor="let candidate of phase.candidates" cdkDrag
-               (click)="onClick(candidate)">{{ candidate.name }}</div>
+               (click)="onClick(candidate.id, request.id, workflow.workflow, phase.name)">{{ candidate.name }}</div>
         </td>
       </tr>
     </table>

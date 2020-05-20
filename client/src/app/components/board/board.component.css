@@ -21,6 +21,7 @@
   flex-grow: 1;
   min-width: 0;
   min-height: 0;
+  margin-left: 10px;
 }
 .tasks-container {
   /*display: inline;*/
@@ -58,6 +59,7 @@
 
 .swim-lane {
   background-color: #2af598;
+  border-radius: 15px 50px;
 }
 
 td {

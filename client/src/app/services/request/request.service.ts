@@ -10,8 +10,7 @@ import {SuccessPostDao} from '../../model/dao/successPost-dao';
 const httpOptions = {
   headers: new HttpHeaders({
     'Content-Type': 'application/json'
-  }),
-  // mode: 'no-cors'
+  })
 };
 
 const singleParams: string[] = ['skill', 'state', 'stateCsl', 'project', 'profile',
@@ -26,8 +25,8 @@ export class RequestService {
 
   baseUrl = `http://localhost:8080/hd`;
 
-  getRequestsByUser(userId: number, roleId: number) {
-    return this.http.get<RequestsDao>(`${this.baseUrl}/users/${userId}/roles/${roleId}/requests`, httpOptions)
+  getRequestsByUser(userId: number, roleName: string) {
+    return this.http.get<RequestsDao>(`${this.baseUrl}/users/${userId}/roles/${roleName}/requests`, httpOptions)
       .pipe(data => {
           return data;
         },
@@ -42,9 +41,6 @@ export class RequestService {
         catchError(this.errorHandler.handleError));
   }
 
-  // getAllRequestsWithQuery(skill: string, state: string, stateCsl: string, project: string, profile: string,
-  //                         workflow: string, targetDate: string, quantityMin: number, quantityMax: number,
-  //                         progressMin: number, progressMax: number) {
   getAllRequestsWithQuery(parameters: any) {
     let parameterString = '';
     singleParams.forEach(p => {
@@ -88,8 +84,8 @@ export class RequestService {
       requestBody.dateToSendProfile);
     return this.http.post<SuccessPostDao>(`${this.baseUrl}/requests`, body, httpOptions)
       .pipe(data => {
-        return data;
-      },
+          return data;
+        },
         catchError(this.errorHandler.handleError));
   }
 }

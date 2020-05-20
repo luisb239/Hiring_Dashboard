@@ -1,7 +1,8 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {Candidate} from '../../model/candidate';
-import {ProcessPhaseService} from '../../services/process-phase/process-phase.service';
+import {ProcessPhase} from '../../model/process-phase';
+import {PhaseAttribute} from '../../model/phase-attribute';
 
 @Component({
   selector: 'app-popup',
@@ -9,20 +10,17 @@ import {ProcessPhaseService} from '../../services/process-phase/process-phase.se
   styleUrls: ['./popup.component.css']
 })
 export class PopupComponent implements OnInit {
-  @Input() candidate: Candidate;
 
-  constructor(public activeModal: NgbActiveModal,
-              private processPhaseService: ProcessPhaseService
+  @Input() phase: ProcessPhase;
+  @Input() candidate: Candidate;
+  @Input() attributeTemplates: PhaseAttribute[];
+
+  // @Input() attributeValues: PhaseAttributeFilled[]; TODO ???
+  constructor(public activeModal: NgbActiveModal
   ) {
   }
-  // processPhase: ProcessPhase;
+
   ngOnInit(): void {
-    // this.processPhaseService.getProcessPhaseById(1, 1, '')
-    //   .subscribe(
-    //     requests => {},
-    //     error => {
-    //       console.log(error);
-    //     });
   }
 
 }
