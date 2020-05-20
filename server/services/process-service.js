@@ -6,7 +6,33 @@ const AppError = require('../errors/app-error.js')
 module.exports = (requestDb, candidateDb, processDb) => {
 
     return {
-        getProcessDetail: getProcessDetail
+        getProcessDetail: getProcessDetail,
+        getProcessesByRequestId: getProcessesByRequestId
+    }
+
+    async function getProcessesByRequestId({requestId, inCurrentPhase = null}) {
+
+        if (!parseInt(requestId))
+            throw new AppError(errors.invalidInput, "Invalid Request ID", "Request ID must be of integer type")
+
+        if (!await requestDb.getRequestById({id: requestId}))
+            throw new AppError(errors.resourceNotFound, "Request Not Found", `Request with id ${requestId} does not exist`)
+
+        const candidates = await candidateDb.getCandidatesByRequestId({requestId});
+
+        const processes = await Promise.all(candidates.map(async (candidate) => ({
+            candidate: ({id: candidate.id, name: candidate.name}),
+            phases: await processDb.getPhasesOfProcess({
+                requestId,
+                candidateId: candidate.id,
+                currentPhase: inCurrentPhase
+            })
+                .then(phases => phases.map(p => ({phase: p.phase})))
+        })))
+
+        return {
+            processes: processes
+        }
     }
 
     async function getProcessDetail({requestId, candidateId}) {

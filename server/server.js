@@ -4,7 +4,6 @@ const PORT = process.argv[2] || '8080'
 // Should be environment variable -> process.env
 
 const express = require('express')
-const express_session = require('express-session')
 
 const app = express()
 

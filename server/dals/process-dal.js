@@ -14,7 +14,7 @@ module.exports = (query) => {
         getProcessInfos
     }
 
-    async function getPhasesOfProcess({requestId, candidateId}) {
+    async function getPhasesOfProcess({requestId, candidateId, currentPhase = null}) {
         const statement = {
             name: 'Get Phases Of Process',
             text:
@@ -22,8 +22,9 @@ module.exports = (query) => {
                 `INNER JOIN ${processPhase.table} AS ProcPhase ` +
                 `ON Proc.${process.requestId} = ProcPhase.${processPhase.requestId} ` +
                 `AND Proc.${process.candidateId} = ProcPhase.${processPhase.candidateId} ` +
-                `WHERE Proc.${process.requestId} = $1 AND Proc.${process.candidateId} = $2;`,
-            values: [requestId, candidateId]
+                `WHERE Proc.${process.requestId} = $1 AND Proc.${process.candidateId} = $2 ` +
+                `AND (ProcPhase.${processPhase.isCurrentPhase} = $3 OR $3 is null);`,
+            values: [requestId, candidateId, currentPhase]
         }
 
         const result = await query(statement)

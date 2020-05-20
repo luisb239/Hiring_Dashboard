@@ -57,7 +57,8 @@ module.exports = (service) => {
                 profile: req.body.profile,
                 workflow: req.body.workflow,
                 dateToSendProfile: req.body.date_to_send_profile,
-
+                mandatoryLanguages: req.body.mandatory_languages,
+                valuedLanguages: req.body.valued_languages,
             })
             res.status(201).send(request)
         } catch (e) {
