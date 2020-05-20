@@ -4,6 +4,8 @@ import {catchError} from 'rxjs/operators';
 import {RequestDao} from '../../model/dao/request-dao';
 import {ErrorHandler} from '../error-handler';
 import {RequestsDao} from '../../model/dao/requests-dao';
+import {SuccessPostDao} from '../../model/dao/successPost-dao';
+
 
 const httpOptions = {
   headers: new HttpHeaders({
@@ -68,6 +70,26 @@ export class RequestService {
       .pipe(data => {
           return data;
         },
+        catchError(this.errorHandler.handleError));
+  }
+
+  createRequest(requestBody) {
+    const body = new RequestDao(requestBody.description,
+      requestBody.project,
+      requestBody.quantity,
+      requestBody.skill,
+      requestBody.stateCsl,
+      requestBody.state,
+      requestBody.targetDate,
+      requestBody.workflow,
+      requestBody.profile,
+      requestBody.mandatoryLanguages,
+      requestBody.valuedLanguages,
+      requestBody.dateToSendProfile);
+    return this.http.post<SuccessPostDao>(`${this.baseUrl}/requests`, body, httpOptions)
+      .pipe(data => {
+        return data;
+      },
         catchError(this.errorHandler.handleError));
   }
 }

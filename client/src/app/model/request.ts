@@ -4,7 +4,7 @@ export class Request {
   constructor(public id: number,
               public workflow: string,
               public progress: number,
-              public state: number,
+              public state: string,
               public description: string,
               public phases: Phase[] = [],
               public dateToSendProfile: string = '',
