@@ -9,6 +9,10 @@ import {CandidateService} from '../../services/candidate/candidate.service';
 import {PhaseService} from '../../services/phase/phase.service';
 import {Workflow} from '../../model/workflow';
 import {Phase} from '../../model/phase';
+import {WorkflowService} from '../../services/workflow/workflow.service';
+import {ProcessService} from '../../services/process/process.service';
+import {ProcessPhase} from '../../model/process-phase';
+import {PhaseAttribute} from '../../model/phase-attribute';
 
 @Component({
   selector: 'app-board',
@@ -19,40 +23,42 @@ export class BoardComponent implements OnInit {
 
   constructor(private modalService: NgbModal,
               private requestService: RequestService,
+              private workflowService: WorkflowService,
+              private processService: ProcessService,
               private candidateService: CandidateService,
               private phaseService: PhaseService
   ) {
   }
 
   workflows: Workflow[] = [];
+  private requests: Request[] = [];
 
   ngOnInit(): void {
-    this.requestService.getRequestsByUser(1, 1)
+    this.requestService.getRequestsByUser(1, 'Recruiter')
       .subscribe(
         requestsDao => {
-          const requests = requestsDao.requests.map(r => new Request(r.id, r.workflow, r.progress, r.state, r.description));
-          this.workflows = [...new Set(requests.map(r => r.workflow))].map(w => new Workflow(w));
+          this.requests = requestsDao.requests.map(r => new Request(r.id, r.workflow, r.progress, r.state, r.description));
+          this.workflows = [...new Set(this.requests.map(r => r.workflow))].map(w => new Workflow(w));
           this.workflows.forEach(workflow => {
-              this.phaseService.getPhasesByWorkflow(workflow.workflow)
-                .subscribe(phasesDao => {
-                  workflow.phases = phasesDao.map(p => new Phase(p.phase, p.attributes));
-                  workflow.requests = requests.filter(request => request.workflow === workflow.workflow);
-                  workflow.requests.forEach(request => {
-                    request.phases = phasesDao.map(p => new Phase(p.phase, p.attributes));
-                    request.phases.forEach(phase => {
-                        this.candidateService.getCandidatesByRequestPhase(request.id, phase.name, true)
-                          .subscribe(candidatesDao => {
-                            phase.candidates = candidatesDao.candidates.map(c =>
-                              new Candidate(c.name, c.profileInfo, c.available, c.cv));
-                          });
-                      }
-                    );
-                  }, error => {
-                  });
+            this.workflowService.getWorkflowByName(workflow.workflow)
+              .subscribe(workflowDao => {
+                workflow.phases = workflowDao.phases.map(wp => new Phase(wp.phase));
+                workflow.requests = this.requests.filter(req => req.workflow === workflow.workflow);
+                workflow.requests.forEach(request => {
+                  request.phases = workflow.phases;
+                  this.processService.getProcessesByRequest(request.id, true)
+                    .subscribe(dao => {
+                      request.phases.forEach(phase => {
+                        phase.candidates = dao.processes
+                          .filter(process => process.phases[0].phase === phase.name)
+                          .map(process => new Candidate(process.candidate.name, process.candidate.id));
+                      });
+                    }, error => {
+                    });
                 });
-            },
-            error => {
-            });
+              }, error => {
+              });
+          });
         });
   }
 
@@ -67,9 +73,28 @@ export class BoardComponent implements OnInit {
     }
   }
 
-  onClick(candidate: Candidate) {
+  onClick(candidateId: number, requestId: number, workflowName: string, phaseName: string) {
     const modalRef = this.modalService.open(PopupComponent);
-    modalRef.componentInstance.candidate = candidate;
-  }
 
+    this.candidateService.getCandidateById(candidateId)
+      .subscribe(dao => {
+        modalRef.componentInstance.candidate = new Candidate(dao.candidate.name,
+          dao.candidate.id,
+          dao.candidate.profileInfo,
+          dao.candidate.available,
+          dao.candidate.cv);
+      }, error => {
+      });
+    this.processService.getProcess(requestId, candidateId)
+      .subscribe(dao => {
+        const phaseDetails = dao.phases.find(p => p.isCurrentPhase);
+        modalRef.componentInstance.phase = new ProcessPhase(phaseDetails.startDate, phaseDetails.updateDate, phaseDetails.notes);
+      }, error => {
+      });
+    this.phaseService.getPhasesByWorkflow(workflowName)
+      .subscribe(dao => {
+        modalRef.componentInstance.attributeTemplates = dao.phases.find(phase => phase.phase === phaseName)
+          .phaseInfo.map(pi => new PhaseAttribute(pi.name, pi.value));
+      }, error => {});
+  }
 }

@@ -12,16 +12,21 @@ import { RequestService } from 'src/app/services/request/request.service';
 })
 export class CreateRequestComponent implements OnInit {
 
-  constructor(private reqPropsService: RequestPropsService,
-              private workflowService: WorkflowService,
-              private requestService: RequestService) { }
+  constructor(
+    private reqPropsService: RequestPropsService,
+    private workflowService: WorkflowService,
+    private requestService: RequestService) { }
+
+  mandatoryCheckboxes = [];
+  valuedCheckboxes = [];
+  selectedMandatoryCheckboxes = [];
+  selectedValuedCheckboxes = [];
 
   inputDescription: string;
   inputQuantity: string;
   inputSkill: string;
   inputProfile: string;
-  inputMandatoryLanguage: string;
-  inputValuedLanguage: string;
+  inputProject: string;
   inputWorkflow: string;
   inputTargetDate: string;
   inputDateToSendProfile: string;
@@ -29,8 +34,6 @@ export class CreateRequestComponent implements OnInit {
   skills: string[];
   profiles: string[];
   projects: string[];
-  mandatoryLanguages: string[];
-  valuedLanguages: string[];
   workflows: string[];
   targetDates: string[];
 
@@ -50,8 +53,8 @@ export class CreateRequestComponent implements OnInit {
 
     this.reqPropsService.getRequestLanguages()
       .subscribe(language => {
-        this.mandatoryLanguages = language.languages;
-        this.valuedLanguages = language.languages;
+        this.mandatoryCheckboxes = this.getLanguagesCheckboxes(language.languages);
+        this.valuedCheckboxes = this.getLanguagesCheckboxes(language.languages);
       },
         error => { console.log(error); });
 
@@ -65,8 +68,42 @@ export class CreateRequestComponent implements OnInit {
   }
 
   onSubmit(form: NgForm) {
-    alert('Description is ' + form.value.inputDescription);
-    // this.requestService.createRequest()
+    this.fetchSelectedItems();
+    const value = form.value;
+    const body = {
+      description: value.inputDescription,
+      quantity: value.inputQuantity,
+      skill: value.inputSkill,
+      profile: value.inputProfile,
+      project: value.inputProject,
+      mandatoryLanguages: this.selectedMandatoryCheckboxes.map(item => item.label),
+      valuedLanguages: this.selectedValuedCheckboxes.map(item => item.label),
+      workflow: value.inputWorkflow,
+      targetDate: value.inputTargetDate,
+      dateToSendProfile: value.inputDateToSendProfile
+    };
+    this.requestService.createRequest(body)
+      .subscribe(success => alert('Request with id ' + success.id + ' created'),
+        error => { console.log(error); });
   }
 
+  private getLanguagesCheckboxes(languages) {
+    return languages.map(language => {
+      return {
+        label: language.language,
+        isChecked: false
+      };
+    });
+  }
+
+  private fetchSelectedItems() {
+    this.selectedMandatoryCheckboxes = this.mandatoryCheckboxes.filter((value, index) => {
+      return value.isChecked;
+    });
+    this.selectedValuedCheckboxes = this.valuedCheckboxes.filter((value, index) => {
+      return value.isChecked;
+    });
+  }
 }
+
+

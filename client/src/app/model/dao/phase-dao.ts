@@ -1,4 +1,6 @@
+import {PhaseInfoDao} from './phase-info-dao';
+
 export class PhaseDao {
   phase: string;
-  attributes: string;
+  phaseInfo: PhaseInfoDao[];
 }

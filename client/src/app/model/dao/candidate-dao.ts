@@ -1,7 +1,6 @@
+import {CandidateInformationDao} from './candidate-information-dao';
+
 export class CandidateDao {
-  id: number;
-  name: string;
-  cv: string;
-  available: boolean;
-  profileInfo: string;
+  candidate: CandidateInformationDao;
+  // TODO ADD PROFILE OBJECT
 }

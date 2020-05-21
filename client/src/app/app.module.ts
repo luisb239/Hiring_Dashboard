@@ -8,7 +8,7 @@ import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {BoardComponent} from './components/board/board.component';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {DragDropModule} from '@angular/cdk/drag-drop';
-import {ReactiveFormsModule, FormsModule} from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {HomeComponent} from './components/home/home.component';
 import {HttpClientModule} from '@angular/common/http';
 import {PopupComponent} from './components/popup/popup.component';

@@ -1,3 +1,6 @@
+import {WorkflowPhaseDao} from './workflow-phase-dao';
+
 export class WorkflowDao {
-    workflows: string[];
+  workflow: string;
+  phases: WorkflowPhaseDao[];
 }

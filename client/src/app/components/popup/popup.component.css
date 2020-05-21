@@ -16,3 +16,7 @@
 .not_available{
   background-color: darkred;
 }
+
+textarea {
+  width: 350px;
+}
