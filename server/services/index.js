@@ -2,7 +2,7 @@
 
 module.exports = (db) => {
 
-    const request = require('./request-service.js')(db.request, db.candidate, db.user, db.role)
+    const request = require('./request-service.js')(db.request, db.candidate, db.user, db.role, db.requestLanguage)
     const candidate = require('./candidate-service.js')(db.candidate, db.profile)
     const skill = require('./request-props-services/skill-service.js')(db.skill)
     const state = require('./request-props-services/state-service.js')(db.state)

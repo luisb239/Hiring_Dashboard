@@ -36,7 +36,7 @@ module.exports = (query) => {
         }
 
         const result = await query(statement)
-        return result.rows.map(row => extractRequestInfo(row))
+        return result.rows.map(row => extractRequest(row))
     }
 
     async function getRequestById({id}) {
@@ -50,26 +50,32 @@ module.exports = (query) => {
         const result = await query(statement)
 
         if(result.rowCount) {
-            return result.rows.map(row => extractRequestInfo(row))[0]
+            return result.rows.map(row => extractRequest(row))[0]
         }
         return null
     }
 
-    async function createRequest({quantity, description, targetDate, state, skill, stateCsl,
-                                     project, profile, workflow, dateToSendProfile }) {
+    async function createRequest({
+                                     quantity, description, targetDate, state, skill, stateCsl,
+                                     project, profile, workflow, dateToSendProfile, requestDate, progress
+                                 }) {
         const statement = {
             name: 'Create Request',
             text:
                 `INSERT INTO ${requestSchema.table} ` +
-                `(${requestSchema.quantity}, ${requestSchema.description}, ${requestSchema.target_date}, ${requestSchema.state},` +
-                `${requestSchema.skill}, ${requestSchema.stateCsl}, ${requestSchema.project}, ` +
-                `${requestSchema.profile}, ${requestSchema.workflow}, ${requestSchema.dateToSendProfile}) ` +
-                `VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING *;`,
-            values: [quantity, description, targetDate, state, skill, stateCsl, project, profile, workflow, dateToSendProfile]
+                `(${requestSchema.quantity}, ${requestSchema.description}, ` +
+                `${requestSchema.target_date}, ${requestSchema.state}, ` +
+                `${requestSchema.skill}, ${requestSchema.stateCsl}, ` +
+                `${requestSchema.project}, ${requestSchema.profile}, ` +
+                `${requestSchema.workflow}, ${requestSchema.dateToSendProfile}, ` +
+                `${requestSchema.request_date}, ${requestSchema.progress}) ` +
+                `VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12) RETURNING *;`,
+            values: [quantity, description, targetDate, state, skill,
+                stateCsl, project, profile, workflow, dateToSendProfile, requestDate, progress]
         }
 
         const result = await query(statement)
-        return result.rows.map(row => extractRequestInfo(row))[0]
+        return result.rows.map(row => extractRequest(row))[0]
     }
 
     // TODO -> CREATE USER-ROLE-DAL AND MOVE THIS METHOD
@@ -117,10 +123,10 @@ module.exports = (query) => {
         };
 
         const result = await query(statement)
-        return result.rows.map(row => extractRequestInfo(row))
+        return result.rows.map(row => extractRequest(row))
     }
 
-    function extractRequestInfo(obj) {
+    function extractRequest(obj) {
         return {
             id: obj[requestSchema.id],
             quantity: obj[requestSchema.quantity],

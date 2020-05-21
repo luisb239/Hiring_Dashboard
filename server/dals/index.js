@@ -21,7 +21,8 @@ const phase = require('./phase-dal.js')(query)
 const process = require('./process-dal.js')(query)
 const user = require('./user-dal.js')(query)
 const role = require('./role-dal.js')(query)
-const info = require('./info-schema.js')(query)
+const info = require('./info-dal.js')(query)
+const requestLanguage = require('./request-language-dal.js')(query)
 
 module.exports = () => {
     return {
@@ -39,6 +40,7 @@ module.exports = () => {
         process,
         user,
         role,
-        info
+        info,
+        requestLanguage
     }
 }

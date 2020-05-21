@@ -4,7 +4,7 @@ const errors = require('../errors/common-errors.js')
 const AppError = require('../errors/app-error.js')
 const verify = require('../utils/type-validator.js')()
 
-module.exports = (requestDb, candidateDb, userDb, roleDb) => {
+module.exports = (requestDb, candidateDb, userDb, roleDb, reqLanguagesDb) => {
 
     return {
         getRequests: getRequests,
@@ -54,75 +54,130 @@ module.exports = (requestDb, candidateDb, userDb, roleDb) => {
     }
 
     async function createRequest({
-                                     quantity, description, targetDate, state, skill, stateCsl,
+                                     quantity, description, targetDate,
+                                     state = "Open", skill, stateCsl = "Asked",
                                      project, profile, workflow, dateToSendProfile = null,
                                      mandatoryLanguages = null, valuedLanguages = null
                                  }) {
-        // Checking mandatory arguments
+        // Checking Quantity
         if (!quantity)
             throw new AppError(errors.missingInput, "Missing Quantity", "You must supply a quantity")
 
-        if (!description)
-            throw new AppError(errors.missingInput, "Missing Description", "You must supply a description")
-
-        if (!targetDate)
-            throw new AppError(errors.missingInput, "Missing Target Date", "You must supply a target date")
-
-        if (!state)
-            throw new AppError(errors.missingInput, "Missing State", "You must supply a state")
-
-        if (!skill)
-            throw new AppError(errors.missingInput, "Missing SKill", "You must supply a skill")
-
-        if (!stateCsl)
-            throw new AppError(errors.missingInput, "Missing State Csl", "You must supply a state csl")
-
-        if (!project)
-            throw new AppError(errors.missingInput, "Missing Project", "You must supply a project")
-
-        if (!profile)
-            throw new AppError(errors.missingInput, "Missing Profile", "You must supply a profile")
-
-        if (!workflow)
-            throw new AppError(errors.missingInput, "Missing Workflow", "You must supply a workflow")
-
-        // Checking data types
         if (!verify.isNumber(quantity))
             throw new AppError(errors.invalidInput, "Invalid Quantity", "Quantity must be of integer type")
+
+        if (quantity < 1)
+            throw new AppError(errors.invalidInput, "Invalid Quantity", "Quantity must be greater than 0")
+
+        // Checking Description
+        if (!description)
+            throw new AppError(errors.missingInput, "Missing Description", "You must supply a description")
 
         if (!verify.isString(description))
             throw new AppError(errors.invalidInput, "Invalid Description", "Description must be of text type")
 
+        if (description.length < 1)
+            throw new AppError(errors.invalidInput, "Invalid Description", "Description must be longer than 1 character")
+
+        // Checking Target Date
+        if (!targetDate)
+            throw new AppError(errors.missingInput, "Missing Target Date", "You must supply a target date")
+
         if (!verify.isString(targetDate))
             throw new AppError(errors.invalidInput, "Invalid Target Date", "Target Date must be of text type")
+
+        // Checking State
+        if (!state)
+            throw new AppError(errors.missingInput, "Missing State", "You must supply a state")
 
         if (!verify.isString(state))
             throw new AppError(errors.invalidInput, "Invalid State", "State must be of text type")
 
+        // Checking Skill
+        if (!skill)
+            throw new AppError(errors.missingInput, "Missing SKill", "You must supply a skill")
+
         if (!verify.isString(skill))
             throw new AppError(errors.invalidInput, "Invalid Skill", "Skill must be of text type")
+
+        // Checking State Csl
+        if (!stateCsl)
+            throw new AppError(errors.missingInput, "Missing State Csl", "You must supply a state csl")
 
         if (!verify.isString(stateCsl))
             throw new AppError(errors.invalidInput, "Invalid State Csl", "State Csl must be of text type")
 
+        //Checking Project
+        if (!project)
+            throw new AppError(errors.missingInput, "Missing Project", "You must supply a project")
+
         if (!verify.isString(project))
             throw new AppError(errors.invalidInput, "Invalid Project", "Project must be of text type")
 
-        /*
-        if (quantity < 1)
-            throw new AppError(errors.invalidInput, "Quantity must be greater than 1")
+        // Checking Profile
+        if (!profile)
+            throw new AppError(errors.missingInput, "Missing Profile", "You must supply a profile")
 
-         */
+        if (!verify.isString(profile))
+            throw new AppError(errors.invalidInput, "Invalid Profile", "Profile must be of text type")
 
-        //TODO -> FAZER RESTANTES VERIFICAÇÕES -> mandatory + valued languages array ... strings/numbers
+        // Checking Workflow
+        if (!workflow)
+            throw new AppError(errors.missingInput, "Missing Workflow", "You must supply a workflow")
 
+        if (!verify.isString(workflow))
+            throw new AppError(errors.invalidInput, "Invalid Workflow", "Workflow must be of text type")
+
+        // Checking Date To Send Profile (optional)
+        if (dateToSendProfile)
+            if (!verify.isDate())
+                throw new AppError(errors.invalidInput, "Invalid Date To Send Profile", "Date To Send Profile must be of date type")
+
+        // Check Mandatory Languages (optional)
+        if (mandatoryLanguages) {
+            if (!verify.isArray(mandatoryLanguages))
+                throw new AppError(errors.invalidInput, "Invalid Mandatory Languages", "Mandatory Languages must be of array type")
+            else {
+                if (!mandatoryLanguages.every((language) => verify.isString(language)))
+                    throw new AppError(errors.invalidInput, "Invalid Languages", "Each mandatory language in array must be of text type")
+            }
+        }
+
+        // Check Valued Languages (optional)
+        if (valuedLanguages) {
+            if (!verify.isArray(valuedLanguages))
+                throw new AppError(errors.invalidInput, "Invalid Valued Languages", "Valued Languages must be of array type")
+            else {
+                if (!valuedLanguages.every((language) => verify.isString(language)))
+                    throw new AppError(errors.invalidInput, "Invalid Languages", "Each valued language in array must be of text type")
+            }
+        }
 
         const request = await requestDb.createRequest({
-            quantity, description, targetDate, state, skill, stateCsl, project, profile, workflow, dateToSendProfile
+            quantity, description, targetDate, state, skill, stateCsl,
+            project, profile, workflow, dateToSendProfile, requestDate: new Date().toDateString(), progress: 0
         })
 
+        if (mandatoryLanguages) {
+            await Promise.all(
+                mandatoryLanguages
+                    .map(async (l) => {
+                        await reqLanguagesDb
+                            .createRequestLanguageRequirement({requestId: request.id, language: l, isMandatory: true})
+                    }))
+        }
+
+        if (valuedLanguages) {
+            await Promise.all(
+                valuedLanguages
+                    .map(async (l) => {
+                        await reqLanguagesDb
+                            .createRequestLanguageRequirement({requestId: request.id, language: l, isMandatory: false})
+                    }))
+        }
+
         return {
-            requestId: request.requestId,
+            id: request.requestId,
             message: "Request created successfully"
         }
     }

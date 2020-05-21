@@ -26,7 +26,10 @@ module.exports = (phaseDb, infoDb) => {
 
         return {
             phases: _phase.phase,
-            phaseInfo: infos
+            infos: infos.map(info => ({
+                name: info.name,
+                type: info.value.type
+            }))
         }
     }
 }

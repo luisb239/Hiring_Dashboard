@@ -47,7 +47,7 @@ module.exports = function (global, router, controllers) {
     router.get(`/${phases}/:phase`, controllers.phase.getPhase)
 
     // Create Request
-    //router.post(`/${requests}`, controllers.request.postRequest)
+    router.post(`/${requests}`, controllers.request.postRequest)
 
     // Update Request TODO
     // router.put(`/${requests}/:id`, )
