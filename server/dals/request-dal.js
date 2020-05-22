@@ -131,7 +131,7 @@ module.exports = (query) => {
             id: obj[requestSchema.id],
             quantity: obj[requestSchema.quantity],
             description: obj[requestSchema.description],
-            requestDate: obj[requestSchema.request_date],
+            requestDate: new Date(obj[requestSchema.request_date]).toLocaleDateString(),
             targetDate: obj[requestSchema.target_date],
             state: obj[requestSchema.state],
             skill: obj[requestSchema.skill],
@@ -139,7 +139,7 @@ module.exports = (query) => {
             project: obj[requestSchema.project],
             profile: obj[requestSchema.profile],
             workflow: obj[requestSchema.workflow],
-            dateToSendProfile: obj[requestSchema.dateToSendProfile],
+            dateToSendProfile: new Date(obj[requestSchema.dateToSendProfile]).toLocaleDateString(),
             progress: obj[requestSchema.progress]
         }
     }

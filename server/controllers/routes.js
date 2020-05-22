@@ -23,12 +23,26 @@ module.exports = function (global, router, controllers) {
     const workflows = 'workflows'
     const months = 'months'
 
+    /*
+            skill: req.query.skill,
+            state: req.query.state,
+            stateCsl: req.query.state_csl,
+            profile: req.query.profile,
+            project: req.query.project,
+            workflow: req.query.workflow,
+            minQuantity: req.query.minQuantity,
+            maxQuantity: req.query.maxQuantity,
+            minProgress: req.query.minProgress,
+            maxProgress: req.query.maxProgress
+     */
+
     // Get Requests + Query Filter
-    router.get(`/${requests}`, controllers.request.getRequests)
+    router.get(`/${requests}`, handler(controllers.request.getRequests))
 
     // Get Request By Id
     router.get(`/${requests}/:id`, [
-            validator.param('id').isInt().withMessage("Request Id must be a string")
+            validator.param('id')
+                .isInt({min: 1}).withMessage("Request Id must be of int type and greater than 0")
         ],
         handler(controllers.request.getRequestById))
 

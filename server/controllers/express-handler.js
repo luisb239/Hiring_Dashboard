@@ -11,7 +11,7 @@ module.exports = function handle(controller) {
             if (!validation.isEmpty()) {
                 const errors = validation.array()
                 res.status(400).send({
-                    title: `Invalid arguments at ${errors[0].location} `,
+                    title: `Invalid arguments at ${errors[0].location}`,
                     detail: `${errors[0].msg} (actual: ${errors[0].value})`
                 })
             } else return controller(req, res)
