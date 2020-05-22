@@ -20,12 +20,12 @@ module.exports = (phaseDb, infoDb) => {
         const _phase = await phaseDb.getPhase({phase})
 
         if (!_phase)
-            throw new AppError(errors.resourceNotFound, "Phase Not Found", `Phase ${phase} does not exist`)
+            throw new AppError(errors.notFound, "Phase Not Found", `Phase ${phase} does not exist`)
 
         const infos = await infoDb.getInfosByPhase({phase})
 
         return {
-            phases: _phase.phase,
+            phase: _phase.phase,
             infos: infos.map(info => ({
                 name: info.name,
                 type: info.value.type

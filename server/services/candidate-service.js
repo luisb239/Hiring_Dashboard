@@ -27,7 +27,7 @@ module.exports = (candidateDb, profilesDb) => {
         const candidateFound = await candidateDb.getCandidateById({id})
 
         if (!candidateFound)
-            throw new AppError(errors.resourceNotFound, "Candidate not found")
+            throw new AppError(errors.notFound, "Candidate not found")
 
         const profiles = await profilesDb.getCandidateProfiles({candidateId: id})
 

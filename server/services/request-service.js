@@ -37,7 +37,7 @@ module.exports = (requestDb, candidateDb, userDb, roleDb, reqLanguagesDb) => {
 
         const requestFound = await requestDb.getRequestById({id})
         if (!requestFound)
-            throw new AppError(errors.resourceNotFound, "Request not found", `Request with id ${id} does not exist`)
+            throw new AppError(errors.notFound, "Request not found", `Request with id ${id} does not exist`)
 
         // TODO -> CALL user_roles_db instead
         // Get users (and their roles) in current request
@@ -59,6 +59,7 @@ module.exports = (requestDb, candidateDb, userDb, roleDb, reqLanguagesDb) => {
                                      project, profile, workflow, dateToSendProfile = null,
                                      mandatoryLanguages = null, valuedLanguages = null
                                  }) {
+        /*
         // Checking Quantity
         if (!quantity)
             throw new AppError(errors.missingInput, "Missing Quantity", "You must supply a quantity")
@@ -153,6 +154,8 @@ module.exports = (requestDb, candidateDb, userDb, roleDb, reqLanguagesDb) => {
             }
         }
 
+         */
+
         const request = await requestDb.createRequest({
             quantity, description, targetDate, state, skill, stateCsl,
             project, profile, workflow, dateToSendProfile, requestDate: new Date().toDateString(), progress: 0
@@ -177,7 +180,7 @@ module.exports = (requestDb, candidateDb, userDb, roleDb, reqLanguagesDb) => {
         }
 
         return {
-            id: request.requestId,
+            id: request.id,
             message: "Request created successfully"
         }
     }
@@ -190,10 +193,10 @@ module.exports = (requestDb, candidateDb, userDb, roleDb, reqLanguagesDb) => {
             throw new AppError(errors.invalidInput, "Invalid Role", "Role must be of string type")
 
         if (!await userDb.getUserById({userId}))
-            throw new AppError(errors.resourceNotFound, "User Not Found", `User with id ${userId} does not exist`)
+            throw new AppError(errors.notFound, "User Not Found", `User with id ${userId} does not exist`)
 
         if (!await roleDb.getRole({role}))
-            throw new AppError(errors.resourceNotFound, "Role Not Found", `Role ${role} does not exist`)
+            throw new AppError(errors.notFound, "Role Not Found", `Role ${role} does not exist`)
 
         const requests = await requestDb.getRequestsByUserAndRole({userId, role})
         return {requests: requests}

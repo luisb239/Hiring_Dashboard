@@ -7,10 +7,10 @@ module.exports = (error, res, message) => {
     if (error.commonError === errors.missingInput || error.commonError === errors.invalidInput)
         res.status(400).send({error: message, title: error.title, detail: error.detail})
     // Not Found
-    else if (error.commonError === errors.resourceNotFound)
+    else if (error.commonError === errors.notFound)
         res.status(404).send({error: message, title: error.title, detail: error.detail})
     // Conflict
-    else if (error.commonError === errors.resourceAlreadyExistent)
+    else if (error.commonError === errors.alreadyExists)
         res.status(409).send({error: message, title: error.title, detail: error.detail})
     // Internal Server Error
     else

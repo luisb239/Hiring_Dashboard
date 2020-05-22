@@ -1,5 +1,8 @@
 'use strict'
 
+const validator = require('express-validator')
+const handler = require('./express-handler.js')
+
 module.exports = function (global, router, controllers) {
 
     const users = 'users'
@@ -24,7 +27,10 @@ module.exports = function (global, router, controllers) {
     router.get(`/${requests}`, controllers.request.getRequests)
 
     // Get Request By Id
-    router.get(`/${requests}/:id`, controllers.request.getRequestById)
+    router.get(`/${requests}/:id`, [
+            validator.param('id').isInt().withMessage("Request Id must be a string")
+        ],
+        handler(controllers.request.getRequestById))
 
     // Get Request By User And Role
     router.get(`/${users}/:userId/${roles}/:role/${requests}`, controllers.request.getRequestsByUserAndRole)

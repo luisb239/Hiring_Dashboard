@@ -16,7 +16,7 @@ module.exports = (requestDb, candidateDb, processDb) => {
             throw new AppError(errors.invalidInput, "Invalid Request ID", "Request ID must be of integer type")
 
         if (!await requestDb.getRequestById({id: requestId}))
-            throw new AppError(errors.resourceNotFound, "Request Not Found", `Request with id ${requestId} does not exist`)
+            throw new AppError(errors.notFound, "Request Not Found", `Request with id ${requestId} does not exist`)
 
         const candidates = await candidateDb.getCandidatesByRequestId({requestId});
 
@@ -43,10 +43,10 @@ module.exports = (requestDb, candidateDb, processDb) => {
             throw new AppError(errors.invalidInput, "Invalid Candidate ID", "Candidate ID must be of integer type")
 
         if (!await requestDb.getRequestById({id: requestId}))
-            throw new AppError(errors.resourceNotFound, "Request Not Found", `Request with id ${requestId} does not exist`)
+            throw new AppError(errors.notFound, "Request Not Found", `Request with id ${requestId} does not exist`)
 
         if (!await candidateDb.getCandidateById({id: candidateId}))
-            throw new AppError(errors.resourceNotFound, "Candidate Not Found", `Candidate with id ${candidateId} does not exist`)
+            throw new AppError(errors.notFound, "Candidate Not Found", `Candidate with id ${candidateId} does not exist`)
 
         const status = await processDb.getProcessStatus({requestId, candidateId})
 

@@ -17,7 +17,7 @@ module.exports = (workflowDb, phasesDb) => {
         const _workflow = await workflowDb.getWorkflow({workflow})
 
         if (!_workflow)
-            throw new AppError(errors.resourceNotFound, "Workflow Not Found", `Workflow ${workflow} does not exist`)
+            throw new AppError(errors.notFound, "Workflow Not Found", `Workflow ${workflow} does not exist`)
 
         const phases = await phasesDb.getPhasesByWorkflow({workflow})
         return {
