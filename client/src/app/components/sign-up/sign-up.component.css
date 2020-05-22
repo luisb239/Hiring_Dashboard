@@ -1,4 +1,7 @@
-@import '../../../../node_modules/bootstrap/dist/css/bootstrap.css';
+.root {
+  margin-left: 20px;
+  margin-top: 10px;
+}
 
 input{
   max-width: fit-content;

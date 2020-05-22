@@ -29,4 +29,13 @@ export class PhaseService {
         },
         catchError(this.errorHandler.handleError));
   }
+
+  getPhase(phaseName: string) {
+    const url = new HttpUrlEncodingCodec().encodeValue(phaseName);
+    return this.http.get<PhaseDao>(`${this.baseUrl}/phases/${url}`, httpOptions)
+      .pipe(data => {
+          return data;
+        },
+        catchError(this.errorHandler.handleError));
+  }
 }

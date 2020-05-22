@@ -73,7 +73,7 @@ export class BoardComponent implements OnInit {
     }
   }
 
-  onClick(candidateId: number, requestId: number, workflowName: string, phaseName: string) {
+  onClick(candidateId: number, requestId: number, phaseName: string) {
     const modalRef = this.modalService.open(PopupComponent);
 
     this.candidateService.getCandidateById(candidateId)
@@ -91,10 +91,10 @@ export class BoardComponent implements OnInit {
         modalRef.componentInstance.phase = new ProcessPhase(phaseDetails.startDate, phaseDetails.updateDate, phaseDetails.notes);
       }, error => {
       });
-    this.phaseService.getPhasesByWorkflow(workflowName)
+    this.phaseService.getPhase(phaseName)
       .subscribe(dao => {
-        modalRef.componentInstance.attributeTemplates = dao.phases.find(phase => phase.phase === phaseName)
-          .phaseInfo.map(pi => new PhaseAttribute(pi.name, pi.value));
+        modalRef.componentInstance.attributeTemplates = dao
+          .infos.map(pi => new PhaseAttribute(pi.name, pi.type));
       }, error => {});
   }
 }

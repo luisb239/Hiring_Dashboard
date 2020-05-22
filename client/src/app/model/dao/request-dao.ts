@@ -9,7 +9,7 @@ export class RequestDao {
   stateCsl: string;
   state: string;
   targetDate: string;
-  workflow: string; // <--
+  workflow: string;
   profile: string;
   mandatoryLanguages: string[];
   valuedLanguages: string[];

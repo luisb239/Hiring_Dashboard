@@ -3,6 +3,7 @@ import { NgForm } from '@angular/forms';
 import { RequestPropsService } from 'src/app/services/requestProps/requestProps.service';
 import { WorkflowService } from 'src/app/services/workflow/workflow.service';
 import { RequestService } from 'src/app/services/request/request.service';
+import {Router} from '@angular/router';
 
 
 @Component({
@@ -13,6 +14,7 @@ import { RequestService } from 'src/app/services/request/request.service';
 export class CreateRequestComponent implements OnInit {
 
   constructor(
+    private router: Router,
     private reqPropsService: RequestPropsService,
     private workflowService: WorkflowService,
     private requestService: RequestService) { }
@@ -83,7 +85,10 @@ export class CreateRequestComponent implements OnInit {
       dateToSendProfile: value.inputDateToSendProfile
     };
     this.requestService.createRequest(body)
-      .subscribe(success => alert('Request with id ' + success.id + ' created'),
+      .subscribe(success => {
+          alert('Request with id ' + success.id + ' created');
+          this.router.navigate(['/all-requests']);
+        },
         error => { console.log(error); });
   }
 

@@ -6,37 +6,33 @@
 </div>
 <div class="modal-body">
   <div>
-    <div style="display: block">
+    <div class="property">
       <h5 style="display: inline">CV:</h5>
       <p style="display: inline">{{candidate.cv}} TEST TEST TEST</p>
     </div>
-    <div style="display: block">
+    <div class="property">
       <h5>Available?</h5>
       <div *ngIf="candidate.available" class="circle available"></div>
       <div *ngIf="!candidate.available" class="circle not_available"></div>
     </div>
-    <div style="display: block">
+    <div class="property">
       <h5>Phase Notes</h5>
       <label>
-        <textarea *ngIf="phase.notes !== null">{{phase.notes}}</textarea>
-        <textarea *ngIf="phase.notes === null"></textarea>
+        <textarea>{{phase.notes}}</textarea>
       </label>
     </div>
   </div>
-  <div *ngFor="let attribute of attributeTemplates" style="display: block">
-    <label>{{attribute.name}}
-      <input [type]="attribute.value">
-    </label>
+  <div class="property">
+    <h5>Phase Attributes</h5>
+    <div *ngFor="let attribute of attributeTemplates" style="display: block">
+      <label>{{attribute.name}}
+        <input [type]="attribute.type" class="attribute">
+      </label>
+    </div>
   </div>
-  <!--  <div>-->
-  <!--    <div class="form-group" *ngFor="let attribute in phase.attributes">-->
-  <!--      <label [htmlFor]="attribute.name">{{attribute.name}}</label>-->
-  <!--      <input [type]="attribute.type" class="form-control" [id]="attribute.name">-->
-  <!--    </div>-->
-  <!--  </div>-->
-</div>
-<div>
-  <a href="#">More about {{candidate.name}}</a>
+  <div>
+    <a href="#">More about {{candidate.name}}</a>
+  </div>
 </div>
 <div class="modal-footer">
   <button type="button" class="btn btn-outline-dark" (click)="activeModal.close('Close click')">Close</button>
