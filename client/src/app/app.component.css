@@ -1,1 +1,7 @@
 @import '~bootstrap/dist/css/bootstrap.css';
+
+.navbar {
+  position: -webkit-sticky; /* Safari */
+  position: sticky;
+  top: 0;
+}

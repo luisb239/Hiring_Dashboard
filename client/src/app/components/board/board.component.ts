@@ -76,6 +76,8 @@ export class BoardComponent implements OnInit {
   onClick(candidateId: number, requestId: number, phaseName: string) {
     const modalRef = this.modalService.open(PopupComponent);
 
+    modalRef.componentInstance.requestId = requestId;
+
     this.candidateService.getCandidateById(candidateId)
       .subscribe(dao => {
         modalRef.componentInstance.candidate = new Candidate(dao.candidate.name,
@@ -95,6 +97,7 @@ export class BoardComponent implements OnInit {
       .subscribe(dao => {
         modalRef.componentInstance.attributeTemplates = dao
           .infos.map(pi => new PhaseAttribute(pi.name, pi.type));
-      }, error => {});
+      }, error => {
+      });
   }
 }

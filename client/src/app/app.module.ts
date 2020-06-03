@@ -16,6 +16,7 @@ import {CreateRequestComponent} from './components/create-request/create-request
 import {AllRequestsComponent} from './components/all-requests/all-requests.component';
 import {Ng5SliderModule} from 'ng5-slider';
 import { LogInComponent } from './components/log-in/log-in.component';
+import { CandidateDetailsComponent } from './components/candidate-details/candidate-details.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +27,8 @@ import { LogInComponent } from './components/log-in/log-in.component';
     PopupComponent,
     CreateRequestComponent,
     AllRequestsComponent,
-    LogInComponent
+    LogInComponent,
+    CandidateDetailsComponent
   ],
   imports: [
     BrowserModule,
