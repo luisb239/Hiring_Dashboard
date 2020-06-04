@@ -2,8 +2,8 @@ import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 import {catchError} from 'rxjs/operators';
 import {ErrorHandler} from '../error-handler';
-import {RequestProcessesDao} from '../../model/dao/request-processes-dao';
-import {ProcessDao} from '../../model/dao/process-dao';
+import {RequestProcessesDao} from '../../model/request/request-processes-dao';
+import {ProcessDao} from '../../model/process/process-dao';
 
 // const httpOptions = {
 //   headers: new HttpHeaders({

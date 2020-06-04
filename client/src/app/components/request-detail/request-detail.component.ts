@@ -1,9 +1,9 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 import { RequestService } from 'src/app/services/request/request.service';
-import { RequestList } from 'src/app/model/request-list';
-import { UserRole } from 'src/app/model/user-role';
-import { Candidate } from 'src/app/model/candidate';
+import { RequestList } from 'src/app/model/request/request-list';
+import { UserRole } from 'src/app/model/user/user-role';
+import { CandidateList } from 'src/app/model/candidate/candidate-list';
 
 @Component({
   selector: 'app-request-detail',
@@ -14,7 +14,7 @@ export class RequestDetailComponent implements OnInit {
   requestId: number;
   requestList: RequestList;
   userRoles: UserRole[];
-  candidates: Candidate[];
+  candidates: CandidateList[];
 
   constructor(
     private router: Router,
@@ -41,8 +41,8 @@ export class RequestDetailComponent implements OnInit {
         this.userRoles = reqDao.userRoles.map(
           userRoleDao => new UserRole(userRoleDao.id, userRoleDao.username, userRoleDao.role));
         this.candidates = reqDao.candidates.map(
-          candidateDao => new Candidate(
-            candidateDao.candidate.name, candidateDao.candidate.id, candidateDao.candidate.profileInfo, candidateDao.candidate.available));
+          candidateDao => new CandidateList(
+            candidateDao.id, candidateDao.name));
       }, error => {
       }
     );

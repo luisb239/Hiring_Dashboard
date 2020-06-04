@@ -2,15 +2,13 @@ import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {catchError} from 'rxjs/operators';
 import {ErrorHandler} from '../error-handler';
-// import { RequestStateDao } from '../../model/dao/requestProps-dao/state-dao'
-// import { RequestStateCslDao } from '../../model/dao/requestProps-dao/stateCsl-dao'
-import {RequestProfileDao} from '../../model/dao/requestProps-dao/profile-dao';
-import {RequestProjectDao} from '../../model/dao/requestProps-dao/project-dao';
-import {RequestLanguageDao} from '../../model/dao/requestProps-dao/language-dao';
-import {RequestSkillDao} from '../../model/dao/requestProps-dao/skill-dao';
-import {RequestTargetDateDao} from '../../model/dao/requestProps-dao/targetDate-dao';
-import {RequestStateCslDao} from '../../model/dao/requestProps-dao/stateCsl-dao';
-import {RequestStateDao} from '../../model/dao/requestProps-dao/state-dao';
+import { RequestStateDao } from 'src/app/model/requestProps/state-dao';
+import { RequestStateCslDao } from 'src/app/model/requestProps/stateCsl-dao';
+import { RequestProfileDao } from 'src/app/model/requestProps/profile-dao';
+import { RequestProjectDao } from 'src/app/model/requestProps/project-dao';
+import { RequestSkillDao } from 'src/app/model/requestProps/skill-dao';
+import { RequestLanguageDao } from 'src/app/model/requestProps/language-dao';
+import { RequestTargetDateDao } from 'src/app/model/requestProps/targetDate-dao';
 
 const httpOptions = {
   headers: new HttpHeaders({

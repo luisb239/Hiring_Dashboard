@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { catchError } from 'rxjs/operators';
 import { ErrorHandler } from '../error-handler';
-import { WorkflowsDao } from 'src/app/model/dao/workflows-dao'
-import {WorkflowDao} from '../../model/dao/workflow-dao';
+import { WorkflowsDao } from 'src/app/model/workflow/workflows-dao';
+import {WorkflowDao} from '../../model/workflow/workflow-dao';
 
 const httpOptions = {
   headers: new HttpHeaders({

@@ -1,18 +1,20 @@
 import {Component, OnInit} from '@angular/core';
 import {CdkDragDrop, moveItemInArray, transferArrayItem} from '@angular/cdk/drag-drop';
-import {Candidate} from '../../model/candidate';
+
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {PopupComponent} from '../popup/popup.component';
 import {RequestService} from '../../services/request/request.service';
 import {CandidateService} from '../../services/candidate/candidate.service';
 import {PhaseService} from '../../services/phase/phase.service';
-import {Workflow} from '../../model/workflow';
-import {Phase} from '../../model/phase';
+import {Workflow} from '../../model/workflow/workflow';
+import {Phase} from '../../model/phase/phase';
 import {WorkflowService} from '../../services/workflow/workflow.service';
 import {ProcessService} from '../../services/process/process.service';
-import {ProcessPhase} from '../../model/process-phase';
-import {PhaseAttribute} from '../../model/phase-attribute';
-import {RequestList} from '../../model/request-list';
+import {ProcessPhase} from '../../model/process/process-phase';
+import {PhaseAttribute} from '../../model/phase/phase-attribute';
+
+import { Candidate } from 'src/app/model/candidate/candidate';
+import { RequestList } from 'src/app/model/request/request-list';
 
 @Component({
   selector: 'app-board',

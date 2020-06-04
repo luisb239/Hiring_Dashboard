@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { catchError } from 'rxjs/operators';
-import { RequestListDao } from '../../model/dao/request-list-dao';
 import { ErrorHandler } from '../error-handler';
-import { RequestsDao } from '../../model/dao/requests-dao';
-import { SuccessPostDao } from '../../model/dao/successPost-dao';
-import { RequestDao } from 'src/app/model/dao/request-dao';
+import { SuccessPostDao } from '../../model/common/successPost-dao';
+import { RequestDao } from 'src/app/model/request/request-dao';
+import { RequestsDao } from 'src/app/model/request/requests-dao';
+import { RequestListDao } from 'src/app/model/request/request-list-dao';
 
 
 const httpOptions = {
