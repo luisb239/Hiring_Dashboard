@@ -40,7 +40,7 @@ module.exports = (requestDb, candidateDb, processDb, phaseDb, infoDb) => {
      * Represents Request Id
      * @param candidateId : number
      * Represents Candidate Id
-     * @returns {Promise<{unavailableReason: (*|null), phases: *, infos: [], status: (*|null)}>}
+     * @returns {Promise<{unavailableReason: (*|null), currentPhase: *, phases: number[], status: string}>}
      */
     async function getProcessDetail({requestId, candidateId}) {
         const currentPhase = await processDb.getProcessCurrentPhase({requestId, candidateId})
@@ -66,30 +66,11 @@ module.exports = (requestDb, candidateDb, processDb, phaseDb, infoDb) => {
             return procPhase
         }))
 
-
-        /*
-        phases:
-            "phase": "First Interview",
-            "startDate": "Fri May 15 2020",
-            "updateDate": "Fri May 15 2020",
-            "notes": "First Interview went well. Profile Info added!",
-			"infos" :
-			[
-
-				// OPCÇÃO A
-				{
-					"name" : "interview_details",
-					"value" : ".."
-				},
-         */
-
-
         return {
             status: status.status,
             unavailableReason: reason ? reason.unavailabilityReason : null,
             currentPhase: currentPhase,
-            phases: processPhases,
-            //infos: infos.map(info => ({name: info.name, value: info.value.value}))
+            phases: processPhases
         }
     }
 

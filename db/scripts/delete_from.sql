@@ -2,6 +2,7 @@ DELETE FROM process_info;
 DELETE FROM phase_info;
 DELETE FROM dynamic_info;
 DELETE FROM candidate_request_profile;
+DELETE FROM process_current_phase;
 DELETE FROM process_phase;
 DELETE FROM process_unavailable_reason;
 DELETE FROM unavailable_reason;
