@@ -96,7 +96,7 @@ module.exports = (requestDb, candidateDb, processDb, phaseDb) => {
 
 
         // Get process current phase
-        const {currentPhase} = await processDb.getProcessCurrentPhase({requestId, candidateId})
+        const currentPhase = await processDb.getProcessCurrentPhase({requestId, candidateId})
 
         // Process does not have a phase yet
         if (!currentPhase) {

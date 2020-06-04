@@ -58,9 +58,7 @@ module.exports = (query) => {
         const result = await query(statement)
 
         if (result.rowCount) {
-            return {
-                currentPhase: result.rows[0][processCurrPhase.currentPhase]
-            }
+            return result.rows[0][processCurrPhase.currentPhase]
         }
         return null
     }

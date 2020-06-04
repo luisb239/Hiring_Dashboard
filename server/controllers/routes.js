@@ -31,8 +31,6 @@ module.exports = function (global, router, controllers) {
         body('password').exists().withMessage("Password is required to signup")
     ], handle(controllers.authorization.signup))
 
-    router.get(`/teste`, handle(controllers.requestProps.teste))
-
     // Get Requests + Query Filter
     router.get(`/${requests}`, [
         query('skill').optional(),
