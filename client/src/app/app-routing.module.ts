@@ -7,6 +7,7 @@ import {CreateRequestComponent} from './components/create-request/create-request
 import {AllRequestsComponent} from './components/all-requests/all-requests.component';
 import {LogInComponent} from './components/log-in/log-in.component';
 import {CandidateDetailsComponent} from './components/candidate-details/candidate-details.component';
+import { RequestDetailComponent } from './components/request-detail/request-detail.component';
 
 
 const routes: Routes = [
@@ -17,6 +18,7 @@ const routes: Routes = [
   {path: 'all-requests', component: AllRequestsComponent},
   {path: 'log-in', component: LogInComponent},
   {path: 'candidate/:id', component: CandidateDetailsComponent},
+  { path: 'request-detail/:requestId ', component: RequestDetailComponent },
   // otherwise redirect to home
   {path: '**', redirectTo: ''}
 ];

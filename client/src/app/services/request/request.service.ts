@@ -1,10 +1,11 @@
-import {Injectable} from '@angular/core';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
-import {catchError} from 'rxjs/operators';
-import {RequestDao} from '../../model/dao/request-dao';
-import {ErrorHandler} from '../error-handler';
-import {RequestsDao} from '../../model/dao/requests-dao';
-import {SuccessPostDao} from '../../model/dao/successPost-dao';
+import { Injectable } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { catchError } from 'rxjs/operators';
+import { RequestListDao } from '../../model/dao/request-list-dao';
+import { ErrorHandler } from '../error-handler';
+import { RequestsDao } from '../../model/dao/requests-dao';
+import { SuccessPostDao } from '../../model/dao/successPost-dao';
+import { RequestDao } from 'src/app/model/dao/request-dao';
 
 
 const httpOptions = {
@@ -25,19 +26,27 @@ export class RequestService {
 
   baseUrl = `http://localhost:8080/hd`;
 
+  getRequest(requestId: number) {
+    return this.http.get<RequestDao>(`${this.baseUrl}/requests/${requestId}`, httpOptions)
+      .pipe(data => {
+        return data;
+      },
+        catchError(this.errorHandler.handleError));
+  }
+
   getRequestsByUser(userId: number, roleName: string) {
     return this.http.get<RequestsDao>(`${this.baseUrl}/users/${userId}/roles/${roleName}/requests`, httpOptions)
       .pipe(data => {
-          return data;
-        },
+        return data;
+      },
         catchError(this.errorHandler.handleError));
   }
 
   getAllRequests() {
     return this.http.get<RequestsDao>(`${this.baseUrl}/requests`, httpOptions)
       .pipe(data => {
-          return data;
-        },
+        return data;
+      },
         catchError(this.errorHandler.handleError));
   }
 
@@ -64,13 +73,13 @@ export class RequestService {
     parameterString = parameterString.slice(0, -1);
     return this.http.get<RequestsDao>(`${this.baseUrl}/requests?${parameterString}`, httpOptions)
       .pipe(data => {
-          return data;
-        },
+        return data;
+      },
         catchError(this.errorHandler.handleError));
   }
 
   createRequest(requestBody) {
-    const body = new RequestDao(requestBody.description,
+    const body = new RequestListDao(requestBody.description,
       requestBody.project,
       requestBody.quantity,
       requestBody.skill,
@@ -84,8 +93,8 @@ export class RequestService {
       requestBody.dateToSendProfile);
     return this.http.post<SuccessPostDao>(`${this.baseUrl}/requests`, body, httpOptions)
       .pipe(data => {
-          return data;
-        },
+        return data;
+      },
         catchError(this.errorHandler.handleError));
   }
 }
