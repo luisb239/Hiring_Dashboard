@@ -137,7 +137,7 @@ module.exports = (requestDb, candidateDb, processDb, phaseDb) => {
             else {
                 throw new AppError(errors.invalidInput,
                     "Invalid Phase Transition",
-                    `Cannot transition from ${currPhase.phase} to ${newPhase}`)
+                    `Cannot transition ${currPhase.phase} to ${newPhase}`)
             }
         }
     }

@@ -2,5 +2,5 @@
 
 module.exports = {
     table: 'role',
-    role: 'role'
+    roleId: 'role_id'
 }

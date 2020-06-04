@@ -62,7 +62,7 @@ module.exports = (service) => {
     async function getRequestsByUserAndRole(req, res) {
         const requests = await service.getRequestsByUserAndRole({
             userId: req.params.userId,
-            role: req.params.role,
+            roleId: req.params.roleId,
         })
         res.status(200).send(requests)
     }

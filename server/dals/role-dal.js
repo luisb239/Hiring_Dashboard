@@ -8,13 +8,13 @@ module.exports = (query) => {
         getRole: getRole
     }
 
-    async function getRole({role}) {
+    async function getRole({roleId}) {
         const statement = {
             name: 'Get Role',
             text:
                 `SELECT * FROM ${roleSchema.table} ` +
-                `WHERE ${roleSchema.role} = $1;`,
-            values: [role]
+                `WHERE ${roleSchema.roleId} = $1;`,
+            values: [roleId]
         }
         const result = await query(statement)
 
@@ -26,7 +26,7 @@ module.exports = (query) => {
 
     function extractRole(row) {
         return {
-            role: row[roleSchema.role]
+            roleId: row[roleSchema.roleId]
         }
     }
 }

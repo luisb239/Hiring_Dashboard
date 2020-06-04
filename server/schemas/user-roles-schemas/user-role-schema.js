@@ -3,6 +3,6 @@
 module.exports = {
     table: 'user_role',
     userId: 'user_id',
-    role: 'role',
+    roleId: 'role_id',
     roleType: 'role_type'
 }

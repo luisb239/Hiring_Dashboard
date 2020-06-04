@@ -74,6 +74,7 @@ module.exports = (query) => {
                 stateCsl, project, profile, workflow, dateToSendProfile, requestDate, progress]
         }
 
+        // TODO
         // try catch -> mapear o erro do node pg -> mandar um erro que faça sentido para o service..
         // log do erro original -> causa do erro
 
@@ -87,15 +88,12 @@ module.exports = (query) => {
         const statement = {
             name: 'Get User Roles In Request',
             text:
-                `SELECT ${userSchema.table}.${userSchema.id}, ${userSchema.table}.${userSchema.username}, URR.${userRoleSchema.role} ` +
+                `SELECT URR.${userRoleSchema.userId}, URR.${userRoleSchema.roleId} ` +
                 `FROM ${userRoleReqSchema.table} AS URR ` +
 
                 `INNER JOIN ${userRoleSchema.table} AS UR ` +
                 `ON URR.${userRoleReqSchema.userId} = UR.${userRoleSchema.userId} ` +
-                `AND URR.${userRoleReqSchema.role} = UR.${userRoleSchema.role} ` +
-
-                `INNER JOIN ${userSchema.table} ` +
-                `ON UR.${userRoleSchema.userId} = ${userSchema.table}.${userSchema.id} ` +
+                `AND URR.${userRoleReqSchema.roleId} = UR.${userRoleSchema.roleId} ` +
 
                 `WHERE URR.${userRoleReqSchema.requestId} = $1;`,
             values: [requestId]
@@ -106,15 +104,17 @@ module.exports = (query) => {
         return result.rows.map(row => extractUserRole(row))
     }
 
+    // TODO -> just for now -> name is retrieved from user_authentication_module
     function extractUserRole(obj) {
         return {
-            id: obj[userSchema.id],
-            username: obj[userSchema.username],
-            role: obj[userRoleSchema.role]
+            userId: obj[userRoleSchema.userId],
+            userName: 'Zé maria',
+            roleId: obj[userRoleSchema.roleId],
+
         }
     }
 
-    async function getRequestsByUserAndRole({userId, role}) {
+    async function getRequestsByUserAndRole({userId, roleId}) {
         const statement = {
             name: 'Get Requests By User And Role',
             text:
@@ -122,8 +122,8 @@ module.exports = (query) => {
                 `INNER JOIN ${requestSchema.table} AS R ` +
                 `ON URR.${userRoleReqSchema.requestId} = R.${requestSchema.id} ` +
                 `WHERE URR.${userRoleReqSchema.userId} = $1 AND ` +
-                `URR.${userRoleReqSchema.role} = $2;`,
-            values: [userId, role]
+                `URR.${userRoleReqSchema.roleId} = $2;`,
+            values: [userId, roleId]
         };
 
         const result = await query(statement)

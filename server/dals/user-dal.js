@@ -12,8 +12,6 @@ module.exports = (query) => {
     function extractUser(row) {
         return {
             id: row[user.id],
-            username: row[user.username],
-            createdAt: row[user.createdAt],
             isActive: row[user.isActive]
         }
     }
@@ -34,12 +32,11 @@ module.exports = (query) => {
         return null
     }
 
-    // More parameters??
     async function createUser({userId, isActive = true}) {
         const statement = {
             name: 'Create User',
             text:
-                `INSERT INTO ${user.table} (user_id, is_active) VALUES ` +
+                `INSERT INTO ${user.table} (${user.id}, ${user.isActive}) VALUES ` +
                 `($1, $2); `,
             values: [userId, isActive]
         }

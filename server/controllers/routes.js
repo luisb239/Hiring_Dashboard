@@ -52,8 +52,10 @@ module.exports = function (global, router, controllers) {
         handle(controllers.request.getRequestById))
 
     // Get Request By User And Role
-    router.get(`/${users}/:userId/${roles}/:role/${requests}`,
-        handle(controllers.request.getRequestsByUserAndRole))
+    router.get(`/${users}/:userId/${roles}/:roleId/${requests}`, [
+        param('userId').isInt().withMessage("User id must be of int type"),
+        param('roleId').isInt().withMessage("Role id must be of int type")
+    ], handle(controllers.request.getRequestsByUserAndRole))
 
     // Create Request
     router.post(`/${requests}`, [
