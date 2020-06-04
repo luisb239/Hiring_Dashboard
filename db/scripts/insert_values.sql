@@ -223,6 +223,6 @@ INSERT INTO process_info(request_id, candidate_id, info_name, info_value)
 	(1, 1, 'Interview Details', '{"value" : "Interview went well with candidate"}'),
 	(1, 1, 'Interview Score', '{"value" : "75"}'),
 	(1, 1, 'Salary', '{"value" : "900"}'),
-	(1, 1, 'Starting Date', '{"value" : "..."}');
+	(1, 1, 'Starting Date', '{"value" : "2020-01-26"}');
 	
 	
