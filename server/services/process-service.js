@@ -3,7 +3,7 @@
 const errors = require('../errors/common-errors.js')
 const AppError = require('../errors/app-error.js')
 
-module.exports = (requestDb, candidateDb, processDb, phaseDb) => {
+module.exports = (requestDb, candidateDb, processDb, phaseDb, infoDb) => {
 
     return {
         getProcessDetail: getProcessDetail,
@@ -43,36 +43,53 @@ module.exports = (requestDb, candidateDb, processDb, phaseDb) => {
      * @returns {Promise<{unavailableReason: (*|null), phases: *, infos: [], status: (*|null)}>}
      */
     async function getProcessDetail({requestId, candidateId}) {
-        /*
-        if (!parseInt(requestId))
-            throw new AppError(errors.invalidInput, "Invalid Request ID", "Request ID must be of integer type")
-
-        if (!parseInt(candidateId))
-            throw new AppError(errors.invalidInput, "Invalid Candidate ID", "Candidate ID must be of integer type")
-
-        if (!await requestDb.getRequestById({id: requestId}))
-            throw new AppError(errors.notFound, "Request Not Found", `Request with id ${requestId} does not exist`)
-
-        if (!await candidateDb.getCandidateById({id: candidateId}))
-            throw new AppError(errors.notFound, "Candidate Not Found", `Candidate with id ${candidateId} does not exist`)
-        */
-
         const currentPhase = await processDb.getProcessCurrentPhase({requestId, candidateId})
 
         const status = await processDb.getProcessStatus({requestId, candidateId})
 
         const reason = await processDb.getProcessUnavailableReason({requestId, candidateId})
 
-        const phases = await processDb.getPhasesOfProcess({requestId, candidateId})
+        const processInfos = await processDb.getProcessInfos({requestId, candidateId})
 
-        const infos = await processDb.getProcessInfos({requestId, candidateId})
+        let processPhases = await processDb.getPhasesOfProcess({requestId, candidateId})
+
+        processPhases = await Promise.all(processPhases.map(async (procPhase) => {
+            const phaseInfos = await infoDb.getInfosByPhase({phase: procPhase.phase})
+            const infos = []
+            phaseInfos.forEach(phaseInfo => {
+                infos.push({
+                    name: phaseInfo.name,
+                    value: processInfos.find(procInfo => procInfo.name === phaseInfo.name).value.value
+                })
+            })
+            procPhase.infos = infos
+            return procPhase
+        }))
+
+
+        /*
+        phases:
+            "phase": "First Interview",
+            "startDate": "Fri May 15 2020",
+            "updateDate": "Fri May 15 2020",
+            "notes": "First Interview went well. Profile Info added!",
+			"infos" :
+			[
+
+				// OPCÇÃO A
+				{
+					"name" : "interview_details",
+					"value" : ".."
+				},
+         */
+
 
         return {
-            status: status ? status.status : null,
+            status: status.status,
             unavailableReason: reason ? reason.unavailabilityReason : null,
             currentPhase: currentPhase,
-            phases: phases,
-            infos: infos.map(info => ({name: info.name, value: info.value.value}))
+            phases: processPhases,
+            //infos: infos.map(info => ({name: info.name, value: info.value.value}))
         }
     }
 

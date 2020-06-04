@@ -200,29 +200,29 @@ INSERT INTO process_current_phase(request_id, candidate_id, current_phase)
 	
 INSERT INTO dynamic_info(info_name, json_info)
 	VALUES
-	('interview_details',	'{"name" : "interview_details", "type": "text"}'),
-	('interview_score', 	'{"name" : "interview_score", 	"type": "number"}'),
-	('salary', 				'{"name" : "salary", 			"type" : "number"}'),
-	('starting_date', 		'{"name" : "starting_date", 	"type" : "date"}');
+	('Interview Details',	'{"name" : "interview_details", "type": "text"}'),
+	('Interview Score', 	'{"name" : "interview_score", 	"type": "number"}'),
+	('Salary', 				'{"name" : "salary", 			"type" : "number"}'),
+	('Starting Date', 		'{"name" : "starting_date", 	"type" : "date"}');
 	
 INSERT INTO phase_info(phase, info_name)
 	VALUES 
-	('First Interview', 'interview_details'),
+	('First Interview', 'Interview Details'),
 	
-	('Technicall Interview', 'interview_score'),
+	('Technicall Interview', 'Interview Score'),
 	
-	('First Interview And Technicall Interview', 'interview_details'),
-	('First Interview And Technicall Interview', 'interview_score'),
+	('First Interview And Technicall Interview', 'Interview Details'),
+	('First Interview And Technicall Interview', 'Interview Score'),
 	
-	('Job Offer', 'salary'),
+	('Job Offer', 'Salary'),
 	
-	('Offer Accepted', 'starting_date');
+	('Offer Accepted', 'Starting Date');
 
 INSERT INTO process_info(request_id, candidate_id, info_name, info_value)
 	VALUES
-	(1, 1, 'interview_details', '{"value" : "Interview went well with candidate"}'),
-	(1, 1, 'interview_score', '{"value" : "75"}'),
-	(1, 1, 'salary', '{"value" : "900"}'),
-	(1, 1, 'starting_date', '{"value" : "..."}');
+	(1, 1, 'Interview Details', '{"value" : "Interview went well with candidate"}'),
+	(1, 1, 'Interview Score', '{"value" : "75"}'),
+	(1, 1, 'Salary', '{"value" : "900"}'),
+	(1, 1, 'Starting Date', '{"value" : "..."}');
 	
 	
