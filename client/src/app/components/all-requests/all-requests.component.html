@@ -54,54 +54,58 @@
       <div class="custom-slider">
         <label for="quantityBar">Quantity</label>
         <ng5-slider [(value)]="minValueQuantity" [(highValue)]="maxValueQuantity" [options]="optionsQuantity"
-                    id="quantityBar" name="quantity" #quantity='ngModel' ngModel></ng5-slider>
+          id="quantityBar" name="quantity" #quantity='ngModel' ngModel></ng5-slider>
       </div>
       <div class="custom-slider">
         <label for="progressBar">Progress</label>
         <ng5-slider [(value)]="minValueProgress" [(highValue)]="maxValueProgress" [options]="optionsProgress"
-                    id="progressBar" name="progress" #progress='ngModel' ngModel></ng5-slider>
+          id="progressBar" name="progress" #progress='ngModel' ngModel></ng5-slider>
       </div>
       <button id="createRequestSubmit" class="btn btn-primary" type="submit">Filter</button>
-      <button id="resetRequestTable" class="btn btn-secondary reset-button" (click)="getRequests()">Reset Filter</button>
+      <button id="resetRequestTable" class="btn btn-secondary reset-button" (click)="getRequests()">Reset
+        Filter</button>
     </form>
   </div>
   <table class="table table-hover p-2">
     <thead>
-    <tr>
-      <th scope="col">#</th>
-      <th scope="col">Workflow</th>
-      <th scope="col">Description</th>
-      <th scope="col">Progress</th>
-      <th scope="col">Project</th>
-      <th scope="col">Quantity</th>
-      <th scope="col">Request Date</th>
-      <th scope="col">Skill</th>
-      <th scope="col">CSL State</th>
-      <th scope="col">State</th>
-      <th scope="col">Target Date</th>
-      <th scope="col">Profile</th>
-      <th scope="col">Date To Send Profile</th>
-    </tr>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col"></th>
+        <th scope="col">Workflow</th>
+        <th scope="col">Description</th>
+        <th scope="col">Progress</th>
+        <th scope="col">Project</th>
+        <th scope="col">Quantity</th>
+        <th scope="col">Request Date</th>
+        <th scope="col">Skill</th>
+        <th scope="col">CSL State</th>
+        <th scope="col">State</th>
+        <th scope="col">Target Date</th>
+        <th scope="col">Profile</th>
+        <th scope="col">Date To Send Profile</th>
+      </tr>
     </thead>
     <tbody>
-    <tr *ngFor="let request of requests; index as i">
-      <th scope="row">{{ i + 1 }}</th>
-      <td>{{request.workflow}}</td>
-      <td>{{request.description}}</td>
-      <td>
-        <ngb-progressbar type="blue" textType="white" [value]="request.progress"
-                         [showValue]="true"></ngb-progressbar>
-      </td>
-      <td>{{request.project}}</td>
-      <td>{{request.quantity}}</td>
-      <td>{{request.requestDate}}</td>
-      <td>{{request.skill}}</td>
-      <td>{{request.stateCSL}}</td>
-      <td>{{request.state}}</td>
-      <td>{{request.targetDate}}</td>
-      <td>{{request.profile}}</td>
-      <td>{{request.dateToSendProfile || 'Not Defined'}}</td>
-    </tr>
+      <tr *ngFor="let request of requests; index as i">
+        <th scope="row">{{ i + 1 }}</th>
+        <button type="button" class="btn btn-primary"
+          [routerLink]="['/request-detail', request.id]" [state]="{requestId: request.id}"> More</button>
+        <td>{{request.workflow}}</td>
+        <td>{{request.description}}</td>
+        <td>
+          <ngb-progressbar type=" blue" textType="white" [value]="request.progress" [showValue]="true">
+          </ngb-progressbar>
+        </td>
+        <td>{{request.project}}</td>
+        <td>{{request.quantity}}</td>
+        <td>{{request.requestDate}}</td>
+        <td>{{request.skill}}</td>
+        <td>{{request.stateCSL}}</td>
+        <td>{{request.state}}</td>
+        <td>{{request.targetDate}}</td>
+        <td>{{request.profile}}</td>
+        <td>{{request.dateToSendProfile || 'Not Defined'}}</td>
+      </tr>
     </tbody>
   </table>
 </div>

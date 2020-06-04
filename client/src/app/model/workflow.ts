@@ -1,9 +1,9 @@
 import {Phase} from './phase';
-import {Request} from './request';
+import {RequestList} from './request-list';
 
 export class Workflow {
   // constructor(public workflow: string, public phases: Phase[] = [], public requests: Request[] = []) {
   // }
-  constructor(public workflow: string, public requests: Request[] = [], public phases: Phase[] = []) {
+  constructor(public workflow: string, public requests: RequestList[] = [], public phases: Phase[] = []) {
   }
 }

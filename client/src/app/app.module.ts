@@ -17,6 +17,8 @@ import {AllRequestsComponent} from './components/all-requests/all-requests.compo
 import {Ng5SliderModule} from 'ng5-slider';
 import { LogInComponent } from './components/log-in/log-in.component';
 import { CandidateDetailsComponent } from './components/candidate-details/candidate-details.component';
+import {RequestDetailComponent} from './components/request-detail/request-detail.component'
+
 
 @NgModule({
   declarations: [
@@ -28,7 +30,8 @@ import { CandidateDetailsComponent } from './components/candidate-details/candid
     CreateRequestComponent,
     AllRequestsComponent,
     LogInComponent,
-    CandidateDetailsComponent
+    CandidateDetailsComponent,
+    RequestDetailComponent
   ],
   imports: [
     BrowserModule,

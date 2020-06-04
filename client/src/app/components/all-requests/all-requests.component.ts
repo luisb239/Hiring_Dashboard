@@ -1,10 +1,11 @@
-import {Component, OnInit} from '@angular/core';
-import {Request} from '../../model/request';
-import {RequestService} from '../../services/request/request.service';
-import {RequestPropsService} from '../../services/requestProps/requestProps.service';
-import {WorkflowService} from '../../services/workflow/workflow.service';
-import {Options} from 'ng5-slider';
-import {NgForm} from '@angular/forms';
+import { Component, OnInit, Output } from '@angular/core';
+import { RequestList } from '../../model/request-list';
+import { RequestService } from '../../services/request/request.service';
+import { RequestPropsService } from '../../services/requestProps/requestProps.service';
+import { WorkflowService } from '../../services/workflow/workflow.service';
+import { Options } from 'ng5-slider';
+import { NgForm, NgModel } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-all-requests',
@@ -13,7 +14,7 @@ import {NgForm} from '@angular/forms';
 })
 export class AllRequestsComponent implements OnInit {
 
-  requests: Request[];
+  requests: RequestList[];
   states: string[];
   statesCsl: string[];
   skills: string[];
@@ -35,6 +36,7 @@ export class AllRequestsComponent implements OnInit {
     step: 25
   };
 
+  requestId: number;
   state: string;
   stateCsl: string;
   skill: string;
@@ -45,9 +47,11 @@ export class AllRequestsComponent implements OnInit {
   quantity: number;
   progress: number;
 
-  constructor(private requestService: RequestService,
-              private reqPropsService: RequestPropsService,
-              private workflowService: WorkflowService) {
+  constructor(
+    private router: Router,
+    private requestService: RequestService,
+    private reqPropsService: RequestPropsService,
+    private workflowService: WorkflowService) {
   }
 
   ngOnInit(): void {
@@ -58,54 +62,54 @@ export class AllRequestsComponent implements OnInit {
   getFilterParameters() {
     this.reqPropsService.getRequestStates()
       .subscribe(states => {
-          this.states = states.states;
-        },
+        this.states = states.states;
+      },
         error => {
           console.log(error);
         });
     this.reqPropsService.getRequestStatesCsl()
       .subscribe(stateCsl => {
-          this.statesCsl = stateCsl.statesCsl;
-        },
+        this.statesCsl = stateCsl.statesCsl;
+      },
         error => {
           console.log(error);
         });
     this.reqPropsService.getRequestProjects()
       .subscribe(project => {
-          this.projects = project.projects;
-        },
+        this.projects = project.projects;
+      },
         error => {
           console.log(error);
         });
 
     this.reqPropsService.getRequestSkills()
       .subscribe(skill => {
-          this.skills = skill.skills;
-        },
+        this.skills = skill.skills;
+      },
         error => {
           console.log(error);
         });
 
     this.reqPropsService.getRequestProfiles()
       .subscribe(profile => {
-          this.profiles = profile.profiles;
-        },
+        this.profiles = profile.profiles;
+      },
         error => {
           console.log(error);
         });
 
     this.workflowService.getAllWorkflows()
       .subscribe(workflow => {
-          this.workflows = workflow.workflows;
-        },
+        this.workflows = workflow.workflows;
+      },
         error => {
           console.log(error);
         });
 
     this.reqPropsService.getTargetDates()
       .subscribe(month => {
-          this.targetDates = month.months;
-        },
+        this.targetDates = month.months;
+      },
         error => {
           console.log(error);
         });
@@ -113,7 +117,30 @@ export class AllRequestsComponent implements OnInit {
 
   getRequests() {
     this.requestService.getAllRequests().subscribe(requestDao =>
-        this.requests = requestDao.requests.map(r => new Request(r.id,
+      this.requests = requestDao.requests.map(r => new RequestList(
+        r.id,
+        r.workflow,
+        r.progress,
+        r.state,
+        r.description,
+        [],
+        r.dateToSendProfile,
+        r.project,
+        r.quantity,
+        r.requestDate,
+        r.skill,
+        r.stateCsl,
+        r.targetDate,
+        r.profile
+      )), error => {
+      }
+    );
+  }
+
+  onSubmit(form: NgForm) {
+    this.requestService.getAllRequestsWithQuery(form.value)
+      .subscribe(requestListDao =>
+        this.requests = requestListDao.requests.map(r => new RequestList(r.id,
           r.workflow,
           r.progress,
           r.state,
@@ -128,28 +155,6 @@ export class AllRequestsComponent implements OnInit {
           r.targetDate,
           r.profile
         )), error => {
-      }
-    );
-  }
-
-  onSubmit(form: NgForm) {
-    this.requestService.getAllRequestsWithQuery(form.value)
-      .subscribe(requestDao =>
-          this.requests = requestDao.requests.map(r => new Request(r.id,
-            r.workflow,
-            r.progress,
-            r.state,
-            r.description,
-            [],
-            r.dateToSendProfile,
-            r.project,
-            r.quantity,
-            r.requestDate,
-            r.skill,
-            r.stateCsl,
-            r.targetDate,
-            r.profile
-          )), error => {
         }
       );
   }
