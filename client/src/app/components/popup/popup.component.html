@@ -1,42 +1,42 @@
 <div class="modal-header">
-  <h4 class="modal-title">{{candidate.name}}</h4>
+  <h4 class="modal-title" *ngIf="candidate">{{candidate.name}}</h4>
   <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
     <span aria-hidden="true">&times;</span>
   </button>
 </div>
 <div class="modal-body">
   <div>
-    <div style="display: block">
+    <div class="property">
       <h5 style="display: inline">CV:</h5>
-      <p style="display: inline">{{candidate.cv}} TEST TEST TEST</p>
+      <p *ngIf="candidate" style="display: inline">{{candidate.cv}} TEST TEST TEST</p>
     </div>
-    <div style="display: block">
+    <div class="property">
       <h5>Available?</h5>
-      <div *ngIf="candidate.available" class="circle available"></div>
-      <div *ngIf="!candidate.available" class="circle not_available"></div>
+      <div *ngIf="candidate && candidate.available" class="circle available"></div>
+      <div *ngIf="candidate && !candidate.available" class="circle not_available"></div>
     </div>
-    <div style="display: block">
+    <div class="property">
       <h5>Phase Notes</h5>
       <label>
-        <textarea *ngIf="phase.notes !== null">{{phase.notes}}</textarea>
-        <textarea *ngIf="phase.notes === null"></textarea>
+        <textarea *ngIf="phase">{{phase.notes}}</textarea>
       </label>
     </div>
   </div>
-  <div *ngFor="let attribute of attributeTemplates" style="display: block">
-    <label>{{attribute.name}}
-      <input [type]="attribute.value">
-    </label>
+  <div class="property">
+    <h5>Phase Attributes</h5>
+    <div *ngFor="let attribute of attributeTemplates" style="display: block">
+      <label>{{attribute.name}}
+        <input [type]="attribute.type" class="attribute">
+      </label>
+    </div>
   </div>
-  <!--  <div>-->
-  <!--    <div class="form-group" *ngFor="let attribute in phase.attributes">-->
-  <!--      <label [htmlFor]="attribute.name">{{attribute.name}}</label>-->
-  <!--      <input [type]="attribute.type" class="form-control" [id]="attribute.name">-->
-  <!--    </div>-->
-  <!--  </div>-->
-</div>
-<div>
-  <a href="#">More about {{candidate.name}}</a>
+  <div>
+    <a *ngIf="candidate" [routerLink]="['/candidate/', candidate.id]"
+       [state]="{requestId: requestId, candidateId: candidate.id}"
+       (click)="activeModal.close('Close click')"
+    >
+      More about {{candidate.name}}</a>
+  </div>
 </div>
 <div class="modal-footer">
   <button type="button" class="btn btn-outline-dark" (click)="activeModal.close('Close click')">Close</button>

@@ -1,4 +1,4 @@
 export class PhaseInfoDao {
   name: string;
-  value: string;
+  type: string;
 }

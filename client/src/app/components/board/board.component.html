@@ -1,30 +1,36 @@
 <div class="root">
   <div class="board table-responsive-xl">
-    <table *ngFor="let workflow of workflows">
-      <tr>
-        <th [colSpan]=workflow.phases.length>
-          <div><h2>{{workflow.workflow}}</h2></div>
-        </th>
-      </tr>
-      <tr>
-        <td *ngFor="let phase of workflow.phases"><h3 class="phase">{{phase.name}}</h3></td>
-      </tr>
-      <tr class="swim-lane" *ngFor="let request of workflow.requests">
-        <td [colSpan]=workflow.phases.length>
-          <h5>{{request.description}}</h5>
-        </td>
-      </tr>
-      <tr cdkDropListGroup *ngFor="let request of workflow.requests">
-        <td class="tasks-container"
-            cdkDropList
-            *ngFor="let phase of request.phases"
-            [cdkDropListData]="phase.candidates"
-            (cdkDropListDropped)="drop($event)">
-          <div class="task" *ngFor="let candidate of phase.candidates" cdkDrag
-               (click)="onClick(candidate.id, request.id, workflow.workflow, phase.name)">{{ candidate.name }}</div>
-        </td>
-      </tr>
-    </table>
+    <div *ngFor="let workflow of workflows">
+      <table #tableContainer>
+        <tr>
+          <th [colSpan]=workflow.phases.length>
+            <div><h2>{{workflow.workflow}}</h2></div>
+          </th>
+        </tr>
+        <tr>
+          <td *ngFor="let phase of workflow.phases"><h3 class="phase">{{phase.name}}</h3></td>
+        </tr>
+      </table>
+      <table *ngFor="let request of workflow.requests">
+        <tr class="swim-lane">
+          <td [colSpan]=workflow.phases.length>
+            <h5>{{request.description}}</h5>
+          </td>
+        </tr>
+        <tr cdkDropListGroup>
+          <td class="tasks-container"
+              cdkDropList
+              [width]="tableContainer.offsetWidth/request.phases.length"
+              *ngFor="let phase of request.phases"
+              [cdkDropListData]="phase.candidates"
+              (cdkDropListDropped)="drop($event)">
+            <div class="task" *ngFor="let candidate of phase.candidates" cdkDrag
+                 (click)="onClick(candidate.id, request.id, phase.name)">{{ candidate.name }}</div>
+<!--            <div class="hidden-task"><p class="hidden-text">Add Candidate</p></div>-->
+          </td>
+        </tr>
+      </table>
+    </div>
   </div>
 
 </div>

@@ -5,6 +5,8 @@ import {BoardComponent} from './components/board/board.component';
 import {HomeComponent} from './components/home/home.component';
 import {CreateRequestComponent} from './components/create-request/create-request.component';
 import {AllRequestsComponent} from './components/all-requests/all-requests.component';
+import {LogInComponent} from './components/log-in/log-in.component';
+import {CandidateDetailsComponent} from './components/candidate-details/candidate-details.component';
 
 
 const routes: Routes = [
@@ -13,8 +15,10 @@ const routes: Routes = [
   {path: 'sign-up', component: SignUpComponent},
   {path: 'home', component: HomeComponent},
   {path: 'all-requests', component: AllRequestsComponent},
+  {path: 'log-in', component: LogInComponent},
+  {path: 'candidate/:id', component: CandidateDetailsComponent},
   // otherwise redirect to home
-  {path: '**', redirectTo: ''},
+  {path: '**', redirectTo: ''}
 ];
 
 @NgModule({

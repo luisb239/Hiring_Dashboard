@@ -1,0 +1,47 @@
+.root {
+  margin-left: 20px;
+  margin-top: 10px;
+  background-color: #ffffff;
+}
+
+.attribute {
+  display: block;
+}
+
+.inline {
+  display: inline;
+}
+
+.title {
+  margin-right: 10px;
+}
+
+.current {
+  color: black;
+}
+
+.older {
+  color: #7b7b7b;
+}
+
+.older:hover {
+  color: black;
+}
+
+table, tr, td {
+  border: solid red;
+}
+
+.circle{
+  height: 25px;
+  width: 25px;
+  border-radius: 50%;
+  margin-bottom: 10px;
+}
+
+.available{
+  background-color: green;
+}
+.not_available{
+  background-color: darkred;
+}

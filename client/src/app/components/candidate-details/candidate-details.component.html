@@ -1,0 +1,70 @@
+<div class="root">
+  <h2>{{candidate.name}}</h2>
+  <div class="property">
+    <h5 class="inline">CV:</h5>
+    <p class="inline">{{candidate.cv}} cv.docx</p>
+  </div>
+  <div>
+    <h5>Available?</h5>
+        <div *ngIf="candidate.available" class="circle available"></div>
+        <div *ngIf="!candidate.available" class="circle not_available"></div>
+  </div>
+  <p>{{candidate.profileInfo}}</p>
+  <table>
+    <tbody>
+    <tr>
+      <td colspan="3">
+        <h5 class="current">Current request</h5>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="3">Status</td>
+    </tr>
+    <tr>
+      <td colspan="3">Unavailable reason (if exists)</td>
+    </tr>
+    <tr>
+      <td>
+        <h5>Phase 1</h5>
+        <div class="attribute">
+          <h6 class="title inline">Attribute</h6>
+          <p class="inline">Value</p>
+        </div>
+      </td>
+      <td>
+        <h5>Phase 2</h5>
+        <div class="attribute">
+          <h6 class="title inline">Attribute</h6>
+          <p class="inline">Value</p>
+        </div>
+      </td>
+      <td>
+        <h5>Phase 3</h5>
+        <div class="attribute">
+          <h6 class="title inline">Attribute</h6>
+          <p class="inline">Value</p>
+        </div>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+<!--  <h4 class="current">Current request</h4>-->
+<!--  <p>Status</p>-->
+<!--  <p>Unavailable reason (if exists)</p>-->
+<!--  <div class="d-flex p-2">-->
+<!--    <div class="p-2">-->
+<!--      <h5>Phase 1</h5>-->
+<!--      <div class="attribute">-->
+<!--        <h5 class="title inline">Attribute</h5>-->
+<!--        <p class="inline">Value</p>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--    <div class="p-2">-->
+<!--      <h5>Phase 2</h5>-->
+<!--      <div class="attribute">-->
+<!--        <h5 class="title inline">Attribute</h5>-->
+<!--        <p class="inline">Value</p>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  </div>-->
+</div>

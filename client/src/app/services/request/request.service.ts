@@ -50,16 +50,16 @@ export class RequestService {
     });
 
     if (parameters.progress[0]) {
-      parameterString += `min_progress=${parameters.progress[0]}&`;
+      parameterString += `minProgress=${parameters.progress[0]}&`;
     }
     if (parameters.progress[1]) {
-      parameterString += `max_progress=${parameters.progress[1]}&`;
+      parameterString += `maxProgress=${parameters.progress[1]}&`;
     }
     if (parameters.quantity[0]) {
-      parameterString += `min_quantity=${parameters.quantity[0]}&`;
+      parameterString += `minQuantity=${parameters.quantity[0]}&`;
     }
     if (parameters.quantity[1]) {
-      parameterString += `max_quantity=${parameters.quantity[1]}&`;
+      parameterString += `maxQuantity=${parameters.quantity[1]}&`;
     }
     parameterString = parameterString.slice(0, -1);
     return this.http.get<RequestsDao>(`${this.baseUrl}/requests?${parameterString}`, httpOptions)
