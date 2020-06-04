@@ -60,50 +60,10 @@ module.exports = (requestDb, candidateDb, userDb, roleDb) => {
         return {
             id: request.id
         }
-        /*
-    } catch (e) {
-        // Optimista
-
-        // error occurred -> lets see what the error was and throw it
-
-
-        if (!await skillDao.getSkill({skill}))
-            throw new AppError(errors.notFound, "Skill Not Found", `Skill ${skill} does not exist`)
-
-        if (!await projectDao.getProject({project}))
-            throw new AppError(errors.notFound, "Project Not Found", `Project ${project} does not exist`)
-
-        if (!await profileDao.getProfile({project}))
-            throw new AppError(errors.notFound, "Profile Not Found", `Profile ${project} does not exist`)
-
-        if (!await workflowDao.getWorkflow({workflow}))
-            throw new AppError(errors.notFound, "Workflow Not Found", `Workflow ${workflow} does not exist`)
-
-
-
-        throw new AppError(errors.databaseDown, "Service Unavailable", "Database is currently down. Please try again later")
-    }
-    */
 
     }
 
     async function getRequestsByUserAndRole({userId, roleId}) {
-        /*
-        if (!parseInt(userId))
-            throw new AppError(errors.invalidInput, "Invalid User ID", "User ID must be of integer type")
-
-        if (parseInt(role))
-            throw new AppError(errors.invalidInput, "Invalid Role", "Role must be of string type")
-         */
-
-        /*
-        if (!await userDb.getUserById({userId}))
-            throw new AppError(errors.notFound, "User Not Found", `User with id ${userId} does not exist`)
-
-        if (!await roleDb.getRole({role}))
-            throw new AppError(errors.notFound, "Role Not Found", `Role ${role} does not exist`)
-         */
-
         const requests = await requestDb.getRequestsByUserAndRole({userId, roleId})
         return {requests: requests}
     }

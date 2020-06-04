@@ -43,6 +43,7 @@ module.exports = (requestDb, candidateDb, processDb, phaseDb) => {
      * @returns {Promise<{unavailableReason: (*|null), phases: *, infos: [], status: (*|null)}>}
      */
     async function getProcessDetail({requestId, candidateId}) {
+        /*
         if (!parseInt(requestId))
             throw new AppError(errors.invalidInput, "Invalid Request ID", "Request ID must be of integer type")
 
@@ -54,6 +55,9 @@ module.exports = (requestDb, candidateDb, processDb, phaseDb) => {
 
         if (!await candidateDb.getCandidateById({id: candidateId}))
             throw new AppError(errors.notFound, "Candidate Not Found", `Candidate with id ${candidateId} does not exist`)
+        */
+
+        const currentPhase = await processDb.getProcessCurrentPhase({requestId, candidateId})
 
         const status = await processDb.getProcessStatus({requestId, candidateId})
 
@@ -66,6 +70,7 @@ module.exports = (requestDb, candidateDb, processDb, phaseDb) => {
         return {
             status: status ? status.status : null,
             unavailableReason: reason ? reason.unavailabilityReason : null,
+            currentPhase: currentPhase,
             phases: phases,
             infos: infos.map(info => ({name: info.name, value: info.value.value}))
         }
