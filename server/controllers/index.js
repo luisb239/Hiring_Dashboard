@@ -4,15 +4,7 @@ module.exports = (service) => {
 
     const request = require('./request-controller.js')(service.request)
 
-    // request-properties
-    const state = require('./request-props-controllers/state-controller.js')(service.state)
-    const skill = require('./request-props-controllers/skill-controller.js')(service.skill)
-    const stateCsl = require('./request-props-controllers/state-csl-controller.js')(service.stateCsl)
-    const project = require('./request-props-controllers/project-controller.js')(service.project)
-    const profile = require('./request-props-controllers/profile-controller.js')(service.profile)
-    const language = require('./request-props-controllers/language-controller.js')(service.language)
-    const workflow = require('./request-props-controllers/workflow-controller.js')(service.workflow)
-    const months = require('./request-props-controllers/months-controller.js')(service.months)
+    const requestProps = require('./request-props-controller.js')(service.requestProps)
 
     const phase = require('./phase-controller.js')(service.phase)
 
@@ -20,6 +12,7 @@ module.exports = (service) => {
 
     const process = require('./process-controller.js')(service.process)
 
-    return {request, candidate, state, skill, stateCsl, project, profile, language, workflow, phase, months, process}
+    const authorization = require('./auth-controller.js')(service.auth)
 
+    return {request, candidate, requestProps, phase, process, authorization}
 }

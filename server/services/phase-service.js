@@ -17,15 +17,15 @@ module.exports = (phaseDb, infoDb) => {
     }
 
     async function getPhase({phase}) {
-        const _phase = await phaseDb.getPhase({phase})
+        const phaseFound = await phaseDb.getPhase({phase})
 
-        if (!_phase)
+        if (!phaseFound)
             throw new AppError(errors.notFound, "Phase Not Found", `Phase ${phase} does not exist`)
 
         const infos = await infoDb.getInfosByPhase({phase})
 
         return {
-            phase: _phase.phase,
+            phase: phaseFound.phase,
             infos: infos.map(info => ({
                 name: info.name,
                 type: info.value.type

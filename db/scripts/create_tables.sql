@@ -1,14 +1,20 @@
+
+
+/*
+RETIRAR OS DEFAULTS.
+APP INICIALIZA OS DADOS E FAZ AS VERIFICACOES
+
+*/
+
 CREATE TABLE user_profile(
-user_id INT GENERATED ALWAYS AS IDENTITY,
-username VARCHAR UNIQUE NOT NULL,
-password_hash VARCHAR NOT NULL,
-created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL,
-is_active BOOLEAN NOT NULL DEFAULT TRUE,
+user_id INT,		
+is_active BOOLEAN NOT NULL /* DEFAULT TRUE */,
 PRIMARY KEY (user_id)
 );
 
+
 CREATE TABLE role(
-role VARCHAR PRIMARY KEY
+role_id INT PRIMARY KEY
 );
 
 CREATE TABLE role_type(
@@ -17,13 +23,15 @@ role_type VARCHAR PRIMARY KEY
 
 CREATE TABLE user_role(
 user_id INT,
-role VARCHAR,
+role_id INT,
 role_type VARCHAR,
 FOREIGN KEY (user_id) REFERENCES user_profile(user_id),
-FOREIGN KEY (role) REFERENCES role(role),
+FOREIGN KEY (role_id) REFERENCES role(role_id),
 FOREIGN KEY (role_type) REFERENCES role_type(role_type),
-PRIMARY KEY (user_id, role)
+PRIMARY KEY (user_id, role_id)
 );
+
+/* Request Properties */
 
 CREATE TABLE request_state(
 request_state VARCHAR PRIMARY KEY
@@ -57,11 +65,9 @@ CREATE TABLE months(
 month_name VARCHAR PRIMARY KEY
 );
 
--- checks e defaults passam a ficar na aplicação e nao na db !!
-
 CREATE TABLE request(
 request_id INT GENERATED ALWAYS AS IDENTITY,
-quantity INT NOT NULL CHECK(quantity > 0),
+quantity INT NOT NULL /* CHECK(quantity > 0) */,
 description VARCHAR NOT NULL,
 request_date DATE NOT NULL DEFAULT CURRENT_DATE,
 target_date VARCHAR NOT NULL,
@@ -72,7 +78,7 @@ request_project VARCHAR NOT NULL,
 request_profile VARCHAR NOT NULL,
 workflow VARCHAR NOT NULL,
 date_to_send_profile DATE NULL DEFAULT NULL,
-progress INT NOT NULL DEFAULT 0 CHECK(progress >= 0 AND progress <= 100),
+progress INT NOT NULL DEFAULT 0 /*  CHECK(progress >= 0 AND progress <= 100) */,
 FOREIGN KEY (target_date) REFERENCES months(month_name),
 FOREIGN KEY (request_state) REFERENCES request_state(request_state),
 FOREIGN KEY (request_skill) REFERENCES request_skill(request_skill),
@@ -85,11 +91,11 @@ PRIMARY KEY (request_id)
 
 CREATE TABLE user_role_request(
 user_id INT,
-role VARCHAR,
+role_id INT,
 request_id INT,
-FOREIGN KEY (user_id, role) REFERENCES user_role(user_id, role),
+FOREIGN KEY (user_id, role_id) REFERENCES user_role(user_id, role_id),
 FOREIGN KEY (request_id) REFERENCES request(request_id),	
-PRIMARY KEY (user_id, role, request_id)
+PRIMARY KEY (user_id, role_id, request_id)
 );
 
 
@@ -104,15 +110,12 @@ PRIMARY KEY (request_id, language)
 
 CREATE TABLE phase(
 phase VARCHAR PRIMARY KEY
-/*phase_attributes JSONB NULL*/
 );
 
--- Outra opção: phase_number DEFAULT NULL, criar trigger(INSTEAD OF INSERT) 
--- que calcula o numero da fase e insere os valores
 CREATE TABLE workflow_phase(
 workflow VARCHAR,
 phase VARCHAR,
-phase_number INT NOT NULL check(phase_number > 0),
+phase_number INT NOT NULL /* check(phase_number > 0) */,
 FOREIGN KEY (workflow) REFERENCES workflow(workflow),
 FOREIGN KEY (phase) REFERENCES phase(phase),
 PRIMARY KEY (workflow, phase)
@@ -160,13 +163,22 @@ candidate_id INT,
 phase VARCHAR,
 start_date DATE NOT NULL DEFAULT CURRENT_DATE,
 update_date DATE NULL DEFAULT CURRENT_DATE,
-notes VARCHAR NULL DEFAULT NULL,
-process_current_phase BOOLEAN DEFAULT TRUE,
+notes VARCHAR NULL,
 FOREIGN KEY (request_id, candidate_id) REFERENCES process(request_id, candidate_id),
 FOREIGN KEY (phase) REFERENCES phase(phase),
 PRIMARY KEY (request_id, candidate_id, phase)
 );
 
+CREATE TABLE process_current_phase(
+request_id INT,
+candidate_id INT,
+current_phase VARCHAR,
+FOREIGN KEY (request_id, candidate_id) REFERENCES process(request_id, candidate_id),
+FOREIGN KEY (current_phase) REFERENCES phase(phase),
+PRIMARY KEY (request_id, candidate_id)
+);
+
+/* Change table name */
 CREATE TABLE dynamic_info(
 info_name VARCHAR,
 json_info JSONB NOT NULL,

@@ -24,23 +24,21 @@ const role = require('./role-dal.js')(query)
 const info = require('./info-dal.js')(query)
 const requestLanguage = require('./request-language-dal.js')(query)
 
-module.exports = () => {
-    return {
-        request,
-        candidate,
-        skill,
-        state,
-        stateCsl,
-        project,
-        profile,
-        language,
-        workflow,
-        phase,
+module.exports = {
+    request,
+    candidate,
+    skill,
+    state,
+    stateCsl,
+    project,
+    profile,
+    language,
+    workflow,
+    phase,
         months,
         process,
         user,
         role,
         info,
         requestLanguage
-    }
 }

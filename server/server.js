@@ -10,9 +10,19 @@ const app = express()
 app.use(express.json())
 // app.use(express.static('dist'))
 
-const db = require('./dals')();
+const db = require('./dals');
 
-const services = require('./services')(db)
+// Authentication Module
+const authModule = require('../../authentication-authorization-project-integration/authization-module/authization')(app);
+
+
+const dbConfigs = authModule.configurations
+
+dbConfigs.changeDatabaseOptions({
+    sgbd: 'PG'
+})
+
+const services = require('./services')(db, authModule)
 
 const controllers = require('./controllers')(services)
 

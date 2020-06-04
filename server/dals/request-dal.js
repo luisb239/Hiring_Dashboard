@@ -74,9 +74,13 @@ module.exports = (query) => {
                 stateCsl, project, profile, workflow, dateToSendProfile, requestDate, progress]
         }
 
+        // try catch -> mapear o erro do node pg -> mandar um erro que faça sentido para o service..
+        // log do erro original -> causa do erro
+
         const result = await query(statement)
         return result.rows.map(row => extractRequest(row))[0]
     }
+
 
     // TODO -> CREATE USER-ROLE-DAL AND MOVE THIS METHOD
     async function getUserRolesInRequest({requestId}) {

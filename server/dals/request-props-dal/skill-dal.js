@@ -23,4 +23,6 @@ module.exports = (query) => {
             skill : obj[schema.skill]
         }
     }
+
+
 }

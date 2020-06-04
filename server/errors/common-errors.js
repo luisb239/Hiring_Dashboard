@@ -5,4 +5,5 @@ module.exports = {
     alreadyExists: "Resource Already Exists",
     missingInput: "Missing Input",
     invalidInput: "Invalid Input",
+    databaseDown: "Database Unavailable"
 }

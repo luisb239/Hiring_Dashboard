@@ -13,14 +13,14 @@ module.exports = (service) => {
         const requests = await service.getRequests({
             skill: req.query.skill,
             state: req.query.state,
-            stateCsl: req.query.state_csl,
+            stateCsl: req.query.stateCsl,
             profile: req.query.profile,
             project: req.query.project,
             workflow: req.query.workflow,
-            minQuantity: req.query.min_quantity,
-            maxQuantity: req.query.max_quantity,
-            minProgress: req.query.min_progress,
-            maxProgress: req.query.max_progress
+            minQuantity: req.query.minQuantity,
+            maxQuantity: req.query.maxQuantity,
+            minProgress: req.query.minProgress,
+            maxProgress: req.query.maxProgress
         })
         res.status(200).send(requests)
     }
@@ -33,7 +33,7 @@ module.exports = (service) => {
     }
 
     async function postRequest(req, res) {
-        const request = await service.createRequest({
+        const {id} = await service.createRequest({
             quantity: req.body.quantity,
             description: req.body.description,
             targetDate: req.body.targetDate,
@@ -44,10 +44,18 @@ module.exports = (service) => {
             profile: req.body.profile,
             workflow: req.body.workflow,
             dateToSendProfile: req.body.dateToSendProfile,
+        })
+
+        // add languages tor request
+        /*
             mandatoryLanguages: req.body.mandatoryLanguages,
             valuedLanguages: req.body.valuedLanguages,
+         */
+
+        res.status(201).send({
+            message: 'Request created successfully',
+            id: id
         })
-        res.status(201).send(request)
     }
 
 

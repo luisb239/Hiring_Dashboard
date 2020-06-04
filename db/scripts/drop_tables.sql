@@ -2,6 +2,7 @@ DROP TABLE process_info;
 DROP TABLE phase_info;
 DROP TABLE dynamic_info;
 DROP TABLE candidate_request_profile;
+DROP TABLE process_current_phase;
 DROP TABLE process_phase;
 DROP TABLE process_unavailable_reason;
 DROP TABLE unavailable_reason;

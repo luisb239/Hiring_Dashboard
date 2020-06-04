@@ -58,7 +58,6 @@ module.exports = (query) => {
         return result.rows.map(row => extract(row))
     }
 
-
     function extract(obj) {
         return {
             phase: obj[workflowPhase.phase],

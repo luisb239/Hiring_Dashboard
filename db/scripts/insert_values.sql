@@ -1,22 +1,22 @@
-INSERT INTO user_profile(username, password_hash)
+INSERT INTO user_profile(user_id, is_active)
 	VALUES 
-	('John Malkovich', 'zxhjcor0a98ra'),
-	('Nick Cave', 'zxhjcor0a98ra'),
-	('Joanna Newsom', 'zxhjcor0a98ra');
+	(1, TRUE),
+	(2, TRUE),
+	(3, TRUE);
 	
-INSERT INTO role(role)
+INSERT INTO role(role_id)
 	VALUES	
-	('Opportunity Owner'),
-	('Recruiter');
+	(1),
+	(2);
 	
-INSERT INTO role_type(role_type)
+INSERT INTO role_type(role_type) 
 	VALUES
 	('Team Worker'),
 	('Team Leader');
 	
-INSERT INTO user_role(user_id, role, role_type)
+INSERT INTO user_role(user_id, role_id, role_type)
 	VALUES	
-	(1, 'Recruiter', 'Team Leader');
+	(1, 1, 'Team Leader');
 	
 INSERT INTO request_state
 	VALUES
@@ -97,12 +97,12 @@ INSERT INTO request(quantity, description, target_date,
 	(1, 'Swat 1 Person', 'December', 'Open', 'SWAT', 'Asked', 'XPO', 'Tester', 'Consulting'),
 	(2, 'Swat 2 People', 'December', 'Open', 'SWAT', 'Asked', 'XPO', 'Tester', 'Software Testing');
 	
-INSERT INTO user_role_request(user_id, role, request_id)
+INSERT INTO user_role_request(user_id, role_id, request_id)
 	VALUES 
-	(1, 'Recruiter', 1),
-	(1, 'Recruiter', 2),
-	(1, 'Recruiter', 3),
-	(1, 'Recruiter', 4);
+	(1, 1, 1),
+	(1, 1, 2),
+	(1, 1, 3),
+	(1, 1, 4);
 
 INSERT INTO request_language_requirements(request_id, language, mandatory)
 	VALUES
@@ -177,19 +177,26 @@ INSERT INTO process_unavailable_reason(request_id, candidate_id, reason)
 	VALUES
 	(1, 4, 'Candidate withdrawned from proposal');
 	
-INSERT INTO process_phase(request_id, candidate_id, phase, notes, process_current_phase)
+INSERT INTO process_phase(request_id, candidate_id, phase, notes)
 	VALUES
-	(1, 1, 'First Interview', 'First Interview went well. Profile Info added!', FALSE),
-	(1, 1, 'Technicall Interview', 'Good Technical Interview', FALSE),
-	(1, 1, 'Job Offer', NULL, FALSE),
-	(1, 1, 'Offer Accepted', 'Candidate accepted offer.', TRUE),
+	(1, 1, 'First Interview', 'First Interview went well. Profile Info added!'),
+	(1, 1, 'Technicall Interview', 'Good Technical Interview'),
+	(1, 1, 'Job Offer', NULL),
+	(1, 1, 'Offer Accepted', 'Candidate accepted offer.'),
 	
-	(1, 2, 'First Interview', NULL, TRUE),
+	(1, 2, 'First Interview', NULL),
 	
-	(1, 3, 'First Interview', NULL, FALSE),
-	(1, 3, 'Technicall Interview', NULL, TRUE),
+	(1, 3, 'First Interview', NULL),
+	(1, 3, 'Technicall Interview', NULL),
 	
-	(1, 4, 'First Interview', NULL, TRUE);
+	(1, 4, 'First Interview', NULL);
+	
+INSERT INTO process_current_phase(request_id, candidate_id, current_phase)
+	VALUES 
+	(1, 1, 'Offer Accepted'),
+	(1, 2, 'First Interview'),
+	(1, 3, 'Technicall Interview'),
+	(1, 4, 'First Interview');
 	
 INSERT INTO dynamic_info(info_name, json_info)
 	VALUES

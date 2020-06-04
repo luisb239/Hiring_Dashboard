@@ -7,6 +7,5 @@ module.exports = {
     phase: 'phase',
     startDate: 'start_date',
     updateDate: 'update_date',
-    notes: 'notes',
-    isCurrentPhase: 'process_current_phase'
+    notes: 'notes'
 }
