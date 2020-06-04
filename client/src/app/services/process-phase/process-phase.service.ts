@@ -20,11 +20,13 @@ export class ProcessPhaseService {
 
   baseUrl = `http://localhost:8080/hd`;
 
-  getProcessPhaseById(requestId: number, candidateId: number, phaseName: string) {
-    // return this.http.get<ProcessPhaseDao>(`${this.baseUrl}/requests/${requestId}/phases/${phaseName}/candidates`, httpOptions)
-    //   .pipe(data => {
-    //       return data;
-    //     },
-    //     catchError(this.errorHandler.handleError));
+  updateProcessPhase(requestId: number, candidateId: number, newPhase: string) {
+    return this.http.put(`${this.baseUrl}/requests/${requestId}/candidates/${candidateId}/requests`,
+      {newPhase},
+      httpOptions)
+      .pipe(data => {
+          return data;
+        },
+        catchError(this.errorHandler.handleError));
   }
 }

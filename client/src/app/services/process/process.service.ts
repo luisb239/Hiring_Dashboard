@@ -21,12 +21,11 @@ export class ProcessService {
 
   baseUrl = `http://localhost:8080/hd`;
 
-  getProcessesByRequest(requestId: number, currentPhase: boolean) {
+  getProcessesByRequest(requestId: number) {
     return this.http.get<RequestProcessesDao>(`${this.baseUrl}/requests/${requestId}/processes`, {
       headers: new HttpHeaders({
         'Content-Type': 'application/json'
-      }),
-      params: new HttpParams().set('current_phase', String(currentPhase))
+      })
     })
       .pipe(data => {
           return data;

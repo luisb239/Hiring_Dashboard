@@ -94,9 +94,16 @@ export class BoardComponent implements OnInit {
       }, error => {
       });
     this.phaseService.getPhase(phaseName)
-      .subscribe(dao => {
-        modalRef.componentInstance.attributeTemplates = dao
-          .infos.map(pi => new PhaseAttribute(pi.name, pi.type));
+      .subscribe(phaseDao => {
+        modalRef.componentInstance.attributeTemplates = phaseDao
+          .infos.map(pi => new PhaseAttribute(pi.name, pi.value.name, pi.value.type));
+        this.processService.getProcess(requestId, candidateId)
+          .subscribe(processDao => {
+            modalRef.componentInstance.attributeTemplates
+              .forEach(at => at.value = processDao.phases
+                .find(phase => phase.phase === phaseName).infos
+                .find(i => i.name === at.name).value);
+          }, error => {});
       }, error => {
       });
   }
