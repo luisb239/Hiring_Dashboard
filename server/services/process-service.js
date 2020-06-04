@@ -57,9 +57,11 @@ module.exports = (requestDb, candidateDb, processDb, phaseDb, infoDb) => {
             const phaseInfos = await infoDb.getInfosByPhase({phase: procPhase.phase})
             const infos = []
             phaseInfos.forEach(phaseInfo => {
+                let value = processInfos.find(procInfo => procInfo.name === phaseInfo.name);
+                value = value ? value.value.value : null
                 infos.push({
                     name: phaseInfo.name,
-                    value: processInfos.find(procInfo => procInfo.name === phaseInfo.name).value.value
+                    value: value
                 })
             })
             procPhase.infos = infos
