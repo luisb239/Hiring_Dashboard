@@ -1,9 +1,8 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {NgbActiveModal, NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {Candidate} from '../../model/candidate';
 import {ProcessPhase} from '../../model/process-phase';
 import {PhaseAttribute} from '../../model/phase-attribute';
-import {CandidateDetailsComponent} from '../candidate-details/candidate-details.component';
 
 @Component({
   selector: 'app-popup',
@@ -21,20 +20,11 @@ export class PopupComponent implements OnInit {
   @Input()
   requestId: number;
 
-  // @Input() attributeValues: PhaseAttributeFilled[]; TODO ???
-  constructor(public activeModal: NgbActiveModal,
-              private modalService: NgbModal
+  constructor(public activeModal: NgbActiveModal
   ) {
   }
 
   ngOnInit(): void {
-  }
-
-  seeCandidateDetails() {
-    this.activeModal.close('Close click');
-    const modalRef = this.modalService.open(CandidateDetailsComponent);
-    modalRef.componentInstance.candidateId = this.candidate.id;
-    modalRef.componentInstance.requestId = this.requestId;
   }
 
 }

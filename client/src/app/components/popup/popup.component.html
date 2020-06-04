@@ -1,5 +1,5 @@
 <div class="modal-header">
-  <h4 class="modal-title" *ngIf="candidate">{{candidate.name}}</h4>
+  <h4 class="modal-title">{{candidate.name}}</h4>
   <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
     <span aria-hidden="true">&times;</span>
   </button>
@@ -8,17 +8,17 @@
   <div>
     <div class="property">
       <h5 style="display: inline">CV:</h5>
-      <p *ngIf="candidate" style="display: inline">{{candidate.cv}} TEST TEST TEST</p>
+      <p style="display: inline">{{candidate.cv}} TEST TEST TEST</p>
     </div>
     <div class="property">
       <h5>Available?</h5>
-      <div *ngIf="candidate && candidate.available" class="circle available"></div>
-      <div *ngIf="candidate && !candidate.available" class="circle not_available"></div>
+      <div *ngIf="candidate.available" class="circle available"></div>
+      <div *ngIf="!candidate.available" class="circle not_available"></div>
     </div>
     <div class="property">
       <h5>Phase Notes</h5>
       <label>
-        <textarea *ngIf="phase">{{phase.notes}}</textarea>
+        <textarea>{{phase.notes}}</textarea>
       </label>
     </div>
   </div>
@@ -31,7 +31,7 @@
     </div>
   </div>
   <div>
-    <a *ngIf="candidate" [routerLink]="['/candidate/', candidate.id]"
+    <a [routerLink]="['/candidate/', candidate.id]"
        [state]="{requestId: requestId, candidateId: candidate.id}"
        (click)="activeModal.close('Close click')"
     >

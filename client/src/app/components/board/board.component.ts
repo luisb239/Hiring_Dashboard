@@ -4,7 +4,6 @@ import {Candidate} from '../../model/candidate';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {PopupComponent} from '../popup/popup.component';
 import {RequestService} from '../../services/request/request.service';
-import {Request} from '../../model/request';
 import {CandidateService} from '../../services/candidate/candidate.service';
 import {PhaseService} from '../../services/phase/phase.service';
 import {Workflow} from '../../model/workflow';
@@ -13,6 +12,7 @@ import {WorkflowService} from '../../services/workflow/workflow.service';
 import {ProcessService} from '../../services/process/process.service';
 import {ProcessPhase} from '../../model/process-phase';
 import {PhaseAttribute} from '../../model/phase-attribute';
+import {RequestList} from '../../model/request-list';
 
 @Component({
   selector: 'app-board',
@@ -31,13 +31,13 @@ export class BoardComponent implements OnInit {
   }
 
   workflows: Workflow[] = [];
-  private requests: Request[] = [];
+  private requests: RequestList[] = [];
 
   ngOnInit(): void {
-    this.requestService.getRequestsByUser(1, 'Recruiter')
+    this.requestService.getRequestsByUser(1, 1)
       .subscribe(
         requestsDao => {
-          this.requests = requestsDao.requests.map(r => new Request(r.id, r.workflow, r.progress, r.state, r.description));
+          this.requests = requestsDao.requests.map(r => new RequestList(r.id, r.workflow, r.progress, r.state, r.description));
           this.workflows = [...new Set(this.requests.map(r => r.workflow))].map(w => new Workflow(w));
           this.workflows.forEach(workflow => {
             this.workflowService.getWorkflowByName(workflow.workflow)
@@ -46,11 +46,11 @@ export class BoardComponent implements OnInit {
                 workflow.requests = this.requests.filter(req => req.workflow === workflow.workflow);
                 workflow.requests.forEach(request => {
                   request.phases = workflow.phases;
-                  this.processService.getProcessesByRequest(request.id, true)
+                  this.processService.getProcessesByRequest(request.id)
                     .subscribe(dao => {
                       request.phases.forEach(phase => {
                         phase.candidates = dao.processes
-                          .filter(process => process.phases[0].phase === phase.name)
+                          .filter(process => process.phase === phase.name)
                           .map(process => new Candidate(process.candidate.name, process.candidate.id));
                       });
                     }, error => {
@@ -89,7 +89,7 @@ export class BoardComponent implements OnInit {
       });
     this.processService.getProcess(requestId, candidateId)
       .subscribe(dao => {
-        const phaseDetails = dao.phases.find(p => p.isCurrentPhase);
+        const phaseDetails = dao.phases.find(p => p.phase === dao.currentPhase);
         modalRef.componentInstance.phase = new ProcessPhase(phaseDetails.startDate, phaseDetails.updateDate, phaseDetails.notes);
       }, error => {
       });
