@@ -11,7 +11,7 @@
           <td *ngFor="let phase of workflow.phases"><h3 class="phase">{{phase.name}}</h3></td>
         </tr>
       </table>
-      <table *ngFor="let request of workflow.requests">
+      <table *ngFor="let request of workflow.requests" [width]="tableContainer.offsetWidth">
         <tr class="swim-lane">
           <td [colSpan]=workflow.phases.length>
             <h5>{{request.description}}</h5>
@@ -26,7 +26,7 @@
               (cdkDropListDropped)="drop($event)">
             <div class="task" *ngFor="let candidate of phase.candidates" cdkDrag
                  (click)="onClick(candidate.id, request.id, phase.name)">{{ candidate.name }}</div>
-<!--            <div class="hidden-task"><p class="hidden-text">Add Candidate</p></div>-->
+            <!--            <div class="hidden-task"><p class="hidden-text">Add Candidate</p></div>-->
           </td>
         </tr>
       </table>

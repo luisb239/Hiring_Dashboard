@@ -1,6 +1,8 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {CandidateService} from '../../services/candidate/candidate.service';
 import {Candidate} from '../../model/candidate';
+import { Router } from '@angular/router';
+
 
 @Component({
   selector: 'app-candidate-details',
@@ -13,11 +15,13 @@ export class CandidateDetailsComponent implements OnInit {
   requestId: number;
   candidate: Candidate;
 
-  constructor(private candidateService: CandidateService) {
+  constructor(private candidateService: CandidateService,
+              private router: Router
+              ) {
   }
 
   ngOnInit(): void {
-    this.candidateId = history.state.candidateId;
+    this.candidateId = history.state.candidateId || this.router.url.split('/')[2];
     this.requestId = history.state.requestId;
 
     this.candidateService.getCandidateById(this.candidateId)

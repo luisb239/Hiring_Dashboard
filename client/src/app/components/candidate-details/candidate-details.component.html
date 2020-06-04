@@ -10,7 +10,7 @@
         <div *ngIf="!candidate.available" class="circle not_available"></div>
   </div>
   <p>{{candidate.profileInfo}}</p>
-  <table>
+  <table *ngIf="requestId">
     <tbody>
     <tr>
       <td colspan="3">

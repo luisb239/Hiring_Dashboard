@@ -34,8 +34,8 @@ export class RequestService {
         catchError(this.errorHandler.handleError));
   }
 
-  getRequestsByUser(userId: number, roleName: string) {
-    return this.http.get<RequestsDao>(`${this.baseUrl}/users/${userId}/roles/${roleName}/requests`, httpOptions)
+  getRequestsByUser(userId: number, roleId: number) {
+    return this.http.get<RequestsDao>(`${this.baseUrl}/users/${userId}/roles/${roleId}/requests`, httpOptions)
       .pipe(data => {
         return data;
       },
