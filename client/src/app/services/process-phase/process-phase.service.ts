@@ -1,7 +1,6 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {ErrorHandler} from '../error-handler';
-import {CandidatesDao} from '../../model/dao/candidates-dao';
 import {catchError} from 'rxjs/operators';
 
 const httpOptions = {
@@ -21,7 +20,7 @@ export class ProcessPhaseService {
   baseUrl = `http://localhost:8080/hd`;
 
   updateProcessPhase(requestId: number, candidateId: number, newPhase: string) {
-    return this.http.put(`${this.baseUrl}/requests/${requestId}/candidates/${candidateId}/requests`,
+    return this.http.put(`${this.baseUrl}/requests/${requestId}/candidates/${candidateId}/process`,
       {newPhase},
       httpOptions)
       .pipe(data => {

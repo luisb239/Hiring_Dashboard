@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {CdkDragDrop, moveItemInArray, transferArrayItem} from '@angular/cdk/drag-drop';
+import {CdkDrag, CdkDragDrop, moveItemInArray, transferArrayItem} from '@angular/cdk/drag-drop';
 
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {PopupComponent} from '../popup/popup.component';
@@ -13,8 +13,9 @@ import {ProcessService} from '../../services/process/process.service';
 import {ProcessPhase} from '../../model/process/process-phase';
 import {PhaseAttribute} from '../../model/phase/phase-attribute';
 
-import { Candidate } from 'src/app/model/candidate/candidate';
-import { RequestList } from 'src/app/model/request/request-list';
+import {Candidate} from 'src/app/model/candidate/candidate';
+import {RequestList} from 'src/app/model/request/request-list';
+import {ProcessPhaseService} from '../../services/process-phase/process-phase.service';
 
 @Component({
   selector: 'app-board',
@@ -28,7 +29,8 @@ export class BoardComponent implements OnInit {
               private workflowService: WorkflowService,
               private processService: ProcessService,
               private candidateService: CandidateService,
-              private phaseService: PhaseService
+              private phaseService: PhaseService,
+              private processPhaseService: ProcessPhaseService
   ) {
   }
 
@@ -64,7 +66,7 @@ export class BoardComponent implements OnInit {
         });
   }
 
-  drop(event: CdkDragDrop<Candidate[], any>) {
+  drop(event: CdkDragDrop<Candidate[], any>, requestId: number, newPhase: string) {
     if (event.previousContainer === event.container) {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
     } else {
@@ -72,6 +74,10 @@ export class BoardComponent implements OnInit {
         event.container.data,
         event.previousIndex,
         event.currentIndex);
+      this.processPhaseService.updateProcessPhase(requestId,
+        event.container.data[event.currentIndex].id,
+        newPhase)
+        .subscribe(dao => {}, error => {});
     }
   }
 
@@ -105,7 +111,8 @@ export class BoardComponent implements OnInit {
               .forEach(at => at.value = processDao.phases
                 .find(phase => phase.phase === phaseName).infos
                 .find(i => i.name === at.name).value);
-          }, error => {});
+          }, error => {
+          });
       }, error => {
       });
   }
