@@ -1,59 +1,76 @@
 <div class='Request-Detail'>
-    <h1>Request's Details</h1>
-    <div class='Request'>
-        <ul>
-            <li>
-                <h4>Description: {{requestList.description}}</h4>
-            </li>
-            <li>
-                <h4>Workflow: {{requestList.workflow}}</h4>
-            </li>
-            <li>
-                <h4>State: {{requestList.state}}</h4>
-            </li>
-            <li>
-                <h4>Project: {{requestList.project}}</h4>
-            </li>
-            <li>
-                <h4>Quantity: {{requestList.quantity}}</h4>
-            </li>
-            <li>
-                <h4>Progress: {{requestList.progress}}%</h4>
-            </li>
-            <li>
-                <h4>State CSL: {{requestList.stateCSL}}</h4>
-            </li>
-            <li>
-                <h4>Skill: {{requestList.skill}}</h4>
-            </li>
-            <li>
-                <h4>Profile : {{requestList.profile}}</h4>
-            </li>
-            <li>
-                <h4>Date To Send Profile : {{requestList.dateToSendProfile}}</h4>
-            </li>
-            <li>
-                <h4>Request Date : {{requestList.requestDate}}</h4>
-            </li>
-            <li>
-                <h4>Target Date : {{requestList.targetDate}}</h4>
-            </li>
-        </ul>
-    </div>
-    <div class='UserRoles'>
-        <h2>Stakeholders:</h2>
-        <ul *ngFor="let userRole of userRoles">
-            <li>
-                <h3>{{userRole.userName}}</h3>
-            </li>
-        </ul>
-    </div>
-    <div class='Candidates'>
-        <h2>Candidates: </h2>
-        <ul *ngFor="let candidate of candidates">
-            <li>
-                <h3>{{candidate.name}}</h3>
-            </li>
-        </ul>
+    <div class="container">
+        <div class="row">
+            <div class="col-sm">
+                <div class='Request'>
+                    <h3>Request</h3>
+                    <table class="table table-hover">
+                        <thead>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let name of requestAttrs">
+                                <td>
+                                    <h5>{{name}}: </h5>
+                                </td>
+                                <td>
+                                    <div *ngIf='name === "progress"'>
+                                        {{requestList[name]}}%
+                                    </div>
+                                    <div *ngIf='name !== "progress"'>
+                                        {{requestList[name]}}
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class='col-sm'>
+                <div class='UserRoles'>
+                    <h3>Users</h3>
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Username</th>
+                                <th>Role</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let user of userRoles">
+                                <td>
+                                    {{user.username}}
+                                </td>
+                                <td>
+                                    {{user.role}}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class='col-sm'>
+                <div class='Candidates'>
+                    <h3>Candidates</h3>
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Process Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let process of processes">
+                                <td>
+                                    {{process.candidateName}}
+                                </td>
+                                <td>
+                                    {{process.status}}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
     </div>
 </div>

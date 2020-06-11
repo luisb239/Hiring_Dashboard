@@ -88,8 +88,10 @@
     <tbody>
       <tr *ngFor="let request of requests; index as i">
         <th scope="row">{{ i + 1 }}</th>
-        <button type="button" class="btn btn-primary"
-          [routerLink]="['/request-detail', request.id]" [state]="{requestId: request.id}"> More</button>
+        <td>
+          <button type="button" class="btn btn-primary" [routerLink]="['/request-detail', request.id]"
+            [state]="{requestId: request.id}"> More</button>
+        </td>
         <td>{{request.workflow}}</td>
         <td>{{request.description}}</td>
         <td>

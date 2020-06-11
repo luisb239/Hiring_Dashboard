@@ -1,5 +1,6 @@
 export class UserRoleDao {
-    id: number;
+    userId: number;
     username: string;
+    roleId: number;
     role: string;
 }

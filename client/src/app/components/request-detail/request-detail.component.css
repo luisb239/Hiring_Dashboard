@@ -1,3 +1,15 @@
 .Request-Detail {
-    margin: 20px;
+    margin: 15px;
+}
+
+.Request {
+    margin: 10px;
+}
+
+.UserRoles {
+    margin: 10px
+}
+
+.Candidates {
+    margin: 10px
 }

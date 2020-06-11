@@ -1,18 +1,13 @@
 import { UserRole } from '../user/user-role';
 import { RequestList } from './request-list';
-import { CandidateList } from '../candidate/candidate-list';
+import { ProcessList } from '../process/process-list';
+import { LanguageList } from '../requestProps/language-list';
 
 export class Request {
-    request: RequestList;
-    userRoles: UserRole[];
-    candidates: CandidateList[];
     constructor(
-        request: RequestList,
-        userRoles: UserRole[],
-        candidates: CandidateList[]
-    ) {
-        this.request = request;
-        this.userRoles = userRoles;
-        this.candidates = candidates;
-    }
+        public request: RequestList,
+        public userRoles: UserRole[] = [],
+        public candidates: ProcessList[] = [],
+        public languages: LanguageList[] = []
+    ) { }
 }

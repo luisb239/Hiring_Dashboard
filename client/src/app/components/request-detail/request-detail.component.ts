@@ -3,7 +3,8 @@ import { Router } from '@angular/router';
 import { RequestService } from 'src/app/services/request/request.service';
 import { RequestList } from 'src/app/model/request/request-list';
 import { UserRole } from 'src/app/model/user/user-role';
-import { CandidateList } from 'src/app/model/candidate/candidate-list';
+import { LanguageList } from 'src/app/model/requestProps/language-list';
+import { ProcessList } from 'src/app/model/process/process-list';
 
 @Component({
   selector: 'app-request-detail',
@@ -14,7 +15,9 @@ export class RequestDetailComponent implements OnInit {
   requestId: number;
   requestList: RequestList;
   userRoles: UserRole[];
-  candidates: CandidateList[];
+  languages: LanguageList[];
+  processes: ProcessList[];
+  requestAttrs: string[];
 
   constructor(
     private router: Router,
@@ -39,10 +42,15 @@ export class RequestDetailComponent implements OnInit {
           reqDao.request.targetDate,
           reqDao.request.profile);
         this.userRoles = reqDao.userRoles.map(
-          userRoleDao => new UserRole(userRoleDao.id, userRoleDao.username, userRoleDao.role));
-        this.candidates = reqDao.candidates.map(
-          candidateDao => new CandidateList(
-            candidateDao.id, candidateDao.name));
+          userRoleDao => new UserRole(
+            userRoleDao.userId, userRoleDao.username, userRoleDao.roleId, userRoleDao.role));
+        this.processes = reqDao.processes.map(
+          processDao => new ProcessList(
+            processDao.status, processDao.candidateId, processDao.candidateName));
+        this.languages = reqDao.languages.map(
+          languageDao => new LanguageList(languageDao.language, languageDao.isMandatory));
+        this.requestAttrs = Object.keys(this.requestList).filter(
+          attr => attr !== 'phases' && attr !== 'id');
       }, error => {
       }
     );
