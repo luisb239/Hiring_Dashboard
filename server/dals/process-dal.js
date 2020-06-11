@@ -69,6 +69,7 @@ module.exports = (query) => {
         }
     }
 
+    // TODO -> CREATE PROCESS TEST
     async function createProcess() {
         const statement = {
             name: 'Create Process -> MEANT TO JUST BE A TEST',

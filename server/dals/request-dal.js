@@ -115,7 +115,6 @@ module.exports = (query) => {
     function extractUserRole(obj) {
         return {
             userId: obj[userRoleSchema.userId],
-            userName: 'Zé maria',
             roleId: obj[userRoleSchema.roleId],
 
         }

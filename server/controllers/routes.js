@@ -5,6 +5,7 @@ const {body, param, query} = require('express-validator')
 const handle = require('./express-handler.js')
 
 module.exports = function (global, router, controllers) {
+
     const candidates = 'candidates'
     const requests = 'requests'
     const phases = 'phases'
@@ -29,7 +30,7 @@ module.exports = function (global, router, controllers) {
         body('password').exists().withMessage("Password is required to sign up")
     ], handle(controllers.authorization.signup))
 
-    // Get Requests + Query Filter
+    // Get Requests
     router.get(`/${requests}`, [
         query('skill').optional(),
         query('state').optional(),
@@ -47,9 +48,8 @@ module.exports = function (global, router, controllers) {
 
     // Get Request By Id
     router.get(`/${requests}/:id`, [
-            param('id').isInt().withMessage("Request Id must be of int type")
-        ],
-        handle(controllers.request.getRequestById))
+        param('id').isInt().withMessage("Request Id must be of int type")
+    ], handle(controllers.request.getRequestById))
 
     // Create Request
     router.post(`/${requests}`, [

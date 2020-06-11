@@ -4,7 +4,8 @@ const schema = require('../schemas/request-language-schema.js')
 module.exports = (query) => {
 
     return {
-        createRequestLanguageRequirement
+        createLanguageRequirement,
+        getRequestLanguages
     }
 
     function extract(row) {
@@ -15,7 +16,7 @@ module.exports = (query) => {
         }
     }
 
-    async function createRequestLanguageRequirement({requestId, language, isMandatory}) {
+    async function createLanguageRequirement({requestId, language, isMandatory}) {
         const statement = {
             name: 'Create Language Requirement in Request',
             text:
@@ -27,6 +28,19 @@ module.exports = (query) => {
 
         const result = await query(statement)
         return result.rows.map(row => extract(row))[0]
+    }
+
+    async function getRequestLanguages({requestId}) {
+        const statement = {
+            name: 'Get Request languages',
+            text:
+                `SELECT * FROM ${schema.table} ` +
+                `WHERE ${schema.requestId} = $1;`,
+            values: [requestId]
+        }
+
+        const result = await query(statement)
+        return result.rows.map(row => extract(row))
     }
 
 }

@@ -2,7 +2,7 @@
 
 module.exports = (db, authModule) => {
 
-    const request = require('./request-service.js')(db.request, db.process)
+    const request = require('./request-service.js')(db.request, db.process, db.requestLanguage, authModule)
 
     const requestProps = require('./request-props-service.js')(db.language, db.months, db.profile,
         db.project, db.skill, db.state, db.stateCsl, db.workflow, db.phase)

@@ -3,7 +3,7 @@
 const errors = require('../errors/common-errors.js')
 const AppError = require('../errors/app-error.js')
 
-module.exports = (requestDb, processDb) => {
+module.exports = (requestDb, processDb, languageDb, authModule) => {
 
     return {
         getRequests: getRequests,
@@ -16,7 +16,6 @@ module.exports = (requestDb, processDb) => {
                                    project = null, workflow = null, minQuantity = null, maxQuantity = null,
                                    minProgress = null, maxProgress = null, userId = null, roleId = null
                                }) {
-
         const requests = await requestDb.getRequests({
             skill, state, stateCsl, profile, project,
             workflow, minQuantity, maxQuantity, minProgress,
@@ -35,14 +34,32 @@ module.exports = (requestDb, processDb) => {
 
         // TODO -> CALL user_roles_db instead
         // Get users (and their roles) in current request
-        const userRoles = await requestDb.getUserRolesInRequest({requestId: id})
+        const requestUserRoles = await requestDb.getUserRolesInRequest({requestId: id})
+
+        const userRoles = await Promise.all(requestUserRoles.map(async userRole => {
+            const userInfo = await authModule.user.getById(userRole.userId)
+            const roleInfo = await authModule.role.getSpecificById(userRole.roleId)
+            return {
+                userId: userRole.userId,
+                username: userInfo.username,
+                roleId: userRole.roleId,
+                role: roleInfo.role
+            }
+        }))
 
         const processes = await processDb.getRequestProcesses({requestId: id})
+
+        const languages = (await languageDb.getRequestLanguages({requestId: id}))
+            .map(l => ({
+                language: l.language,
+                isMandatory: l.isMandatory
+            }))
 
         return {
             request: requestFound,
             userRoles: userRoles,
-            processes: processes
+            processes: processes,
+            languages: languages
         }
     }
 
