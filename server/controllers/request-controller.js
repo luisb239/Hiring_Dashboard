@@ -6,7 +6,6 @@ module.exports = (service) => {
         getRequests: getRequests,
         postRequest: postRequest,
         getRequestById: getRequestById,
-        getRequestsByUserAndRole: getRequestsByUserAndRole,
     }
 
     async function getRequests(req, res) {
@@ -20,7 +19,9 @@ module.exports = (service) => {
             minQuantity: req.query.minQuantity,
             maxQuantity: req.query.maxQuantity,
             minProgress: req.query.minProgress,
-            maxProgress: req.query.maxProgress
+            maxProgress: req.query.maxProgress,
+            userId: req.query.userId,
+            roleId: req.query.roleId
         })
         res.status(200).send(requests)
     }
@@ -37,9 +38,7 @@ module.exports = (service) => {
             quantity: req.body.quantity,
             description: req.body.description,
             targetDate: req.body.targetDate,
-            //state: req.body.state,
             skill: req.body.skill,
-            //stateCsl: req.body.state_csl,
             project: req.body.project,
             profile: req.body.profile,
             workflow: req.body.workflow,
@@ -57,14 +56,4 @@ module.exports = (service) => {
             id: id
         })
     }
-
-
-    async function getRequestsByUserAndRole(req, res) {
-        const requests = await service.getRequestsByUserAndRole({
-            userId: req.params.userId,
-            roleId: req.params.roleId,
-        })
-        res.status(200).send(requests)
-    }
-
 }

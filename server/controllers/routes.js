@@ -5,9 +5,6 @@ const {body, param, query} = require('express-validator')
 const handle = require('./express-handler.js')
 
 module.exports = function (global, router, controllers) {
-
-    const users = 'users'
-    const roles = 'roles'
     const candidates = 'candidates'
     const requests = 'requests'
     const phases = 'phases'
@@ -24,11 +21,12 @@ module.exports = function (global, router, controllers) {
     const workflows = 'workflows'
     const months = 'months'
 
-    // todo -> chamar HANDLE !!
+    router.get('/teste', controllers.process.createProcess)
+
 
     router.post(`/signup`, [
-        body('username').exists().withMessage("Username is required to signup"),
-        body('password').exists().withMessage("Password is required to signup")
+        body('username').exists().withMessage("Username is required to sign up"),
+        body('password').exists().withMessage("Password is required to sign up")
     ], handle(controllers.authorization.signup))
 
     // Get Requests + Query Filter
@@ -39,10 +37,12 @@ module.exports = function (global, router, controllers) {
         query('profile').optional(),
         query('project').optional(),
         query('workflow').optional(),
-        query('minQuantity').optional(),
-        query('maxQuantity').optional(),
-        query('minProgress').optional(),
-        query('maxProgress').optional()
+        query('minQuantity').optional().isInt(),
+        query('maxQuantity').optional().isInt(),
+        query('minProgress').optional().isInt(),
+        query('maxProgress').optional().isInt(),
+        query('userId').optional().isInt(),
+        query('roleId').optional().isInt()
     ], handle(controllers.request.getRequests))
 
     // Get Request By Id
@@ -50,12 +50,6 @@ module.exports = function (global, router, controllers) {
             param('id').isInt().withMessage("Request Id must be of int type")
         ],
         handle(controllers.request.getRequestById))
-
-    // Get Request By User And Role
-    router.get(`/${users}/:userId/${roles}/:roleId/${requests}`, [
-        param('userId').isInt().withMessage("User id must be of int type"),
-        param('roleId').isInt().withMessage("Role id must be of int type")
-    ], handle(controllers.request.getRequestsByUserAndRole))
 
     // Create Request
     router.post(`/${requests}`, [
@@ -76,12 +70,17 @@ module.exports = function (global, router, controllers) {
         param('id').isInt().withMessage("Request id must be of int type")
     ], handle(controllers.process.getProcessesByRequestId))
 
-    // Get Process Information
+
+    // Get Process Information ->
+    // Can change to /process?requestId=1 ; /process?candidateId=1;
+    // and even to /process?requestId=1&candidateId=2
     router.get(`/${requests}/:requestId/${candidates}/:candidateId/${process}`,
         handle(controllers.process.getProcessDetail))
 
     router.put(`/${requests}/:requestId/${candidates}/:candidateId/${process}`, [
-        body('newPhase').exists().withMessage("Body must contain newPhase")
+        body('newPhase').optional().isString().withMessage("NewPhase must be of string type"),
+        body('status').optional().isString().withMessage("Status must be of string type"),
+        body('unavailableReasons').optional().isArray().withMessage("Unavailable Reasons must be an array of strings")
     ], handle(controllers.process.updateProcess))
 
     // Get Workflow Info
@@ -120,7 +119,7 @@ module.exports = function (global, router, controllers) {
     router.get(`/${requestAttributes}/${months}`,
         handle(controllers.requestProps.getMonths))
 
-    // TODO
+    // TODO -> Mais filtros
     // Get Candidates + Available Filter + profiles filter
     router.get(`/${candidates}`, handle(controllers.candidate.getCandidates))
 

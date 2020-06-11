@@ -8,8 +8,14 @@ module.exports = (requestDb, candidateDb, processDb, phaseDb, infoDb) => {
     return {
         getProcessDetail: getProcessDetail,
         getProcessesByRequestId: getProcessesByRequestId,
-        updateProcess: updateProcess
+        updateProcess: updateProcess,
+        createProcess
     }
+
+    async function createProcess() {
+        await processDb.createProcess()
+    }
+
 
     /**
      * Returns all processes present in request
@@ -51,20 +57,19 @@ module.exports = (requestDb, candidateDb, processDb, phaseDb, infoDb) => {
 
         const processInfos = await processDb.getProcessInfos({requestId, candidateId})
 
-        let processPhases = await processDb.getPhasesOfProcess({requestId, candidateId})
+        const processPhases = await processDb.getPhasesOfProcess({requestId, candidateId})
 
-        processPhases = await Promise.all(processPhases.map(async (procPhase) => {
+        // TODO -> improve this?
+        const processDetailedPhases = await Promise.all(processPhases.map(async (procPhase) => {
             const phaseInfos = await infoDb.getInfosByPhase({phase: procPhase.phase})
-            const infos = []
-            phaseInfos.forEach(phaseInfo => {
+            procPhase.infos = phaseInfos.map(phaseInfo => {
                 let value = processInfos.find(procInfo => procInfo.name === phaseInfo.name);
-                value = value ? value.value.value : null
-                infos.push({
+                value = value ? value.value : null
+                return {
                     name: phaseInfo.name,
-                    value: value
-                })
+                    value: value ? value.value : null
+                }
             })
-            procPhase.infos = infos
             return procPhase
         }))
 
@@ -72,7 +77,7 @@ module.exports = (requestDb, candidateDb, processDb, phaseDb, infoDb) => {
             status: status.status,
             unavailableReason: reason ? reason.unavailabilityReason : null,
             currentPhase: currentPhase,
-            phases: processPhases
+            phases: processDetailedPhases
         }
     }
 
@@ -128,6 +133,8 @@ module.exports = (requestDb, candidateDb, processDb, phaseDb, infoDb) => {
 
             const currPhase = workflowPhases.find(p => p.phase === currentPhase)
 
+            // TODO -> No need to calculate the difference between both phases...
+
             // Difference between phase suggested number and current phase number is 1 -> Can transition
             if (validPhase.phaseNumber - currPhase.phaseNumber === 1) {
                 await processDb.addPhaseToProcess({requestId, candidateId, phase: newPhase, startDate: new Date()})
@@ -135,14 +142,14 @@ module.exports = (requestDb, candidateDb, processDb, phaseDb, infoDb) => {
                 return {
                     oldPhase: currPhase.phase,
                     newPhase: validPhase.phase,
-                    message: `Process moved from phase ${currPhase.phase} to ${validPhase.phase}`
+                    message: `Process moved from ${currPhase.phase} to ${validPhase.phase}`
                 }
             }
             // Cannot transition from current phase to suggested phase
             else {
                 throw new AppError(errors.invalidInput,
                     "Invalid Phase Transition",
-                    `Cannot transition ${currPhase.phase} to ${newPhase}`)
+                    `Cannot transition from ${currPhase.phase} to ${newPhase}`)
             }
         }
     }

@@ -1,14 +1,15 @@
 'use strict'
 
-module.exports = (service) => {
+module.exports = (processService) => {
     return {
         getProcessDetail: getProcessDetail,
         getProcessesByRequestId: getProcessesByRequestId,
-        updateProcess: updateProcess
+        updateProcess: updateProcess,
+        createProcess
     }
 
     async function getProcessDetail(req, res) {
-        const process = await service.getProcessDetail({
+        const process = await processService.getProcessDetail({
             requestId: req.params.requestId,
             candidateId: req.params.candidateId
         })
@@ -16,18 +17,24 @@ module.exports = (service) => {
     }
 
     async function getProcessesByRequestId(req, res) {
-        const processes = await service.getProcessesByRequestId({
+        const processes = await processService.getProcessesByRequestId({
             requestId: req.params.id
         })
         res.status(200).send(processes)
     }
 
     async function updateProcess(req, res) {
-        const process = await service.updateProcess({
+        const process = await processService.updateProcess({
             requestId: req.params.requestId,
             candidateId: req.params.candidateId,
-            newPhase: req.body.newPhase
+            newPhase: req.body.newPhase,
+
         })
         res.status(200).send(process)
+    }
+
+    async function createProcess(req, res) {
+        //TODO
+        await processService.createProcess()
     }
 }

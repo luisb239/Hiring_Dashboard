@@ -3,14 +3,11 @@
 const requestSchema = require('../schemas/request-schema.js')
 const userRoleReqSchema = require('../schemas/user-roles-schemas/user-role-request-schema.js')
 const userRoleSchema = require('../schemas/user-roles-schemas/user-role-schema.js')
-const userSchema = require('../schemas/user-roles-schemas/user-schema.js')
-const candidateSchema = require('../schemas/candidate-schema.js');
-const processSchema = require('../schemas/process/process-schema.js')
 
 module.exports = (query) => {
 
     return {
-        getRequests, getRequestById, createRequest, getRequestsByUserAndRole,
+        getRequests, getRequestById, createRequest,
         getUserRolesInRequest,
     }
 
@@ -18,21 +15,31 @@ module.exports = (query) => {
                                    skill = null, state = null, stateCsl = null,
                                    profile = null, project = null, workflow = null,
                                    minQuantity = null, maxQuantity = null,
-                                   minProgress = null, maxProgress = null}) {
+                                   minProgress = null, maxProgress = null,
+                                   userId = null, roleId = null
+                               }) {
         const statement = {
             name: 'Get Requests',
             text:
-                `SELECT * FROM ${requestSchema.table} ` +
+                `SELECT R.* FROM ${requestSchema.table} AS R ` +
+                `INNER JOIN ${userRoleReqSchema.table} AS URR ` +
+                `ON R.${requestSchema.id} = URR.${userRoleReqSchema.requestId} ` +
                 `WHERE ` +
-                `(${requestSchema.skill} = $1 OR $1 is null) AND ` +
-                `(${requestSchema.state} = $2 OR $2 is null) AND ` +
-                `(${requestSchema.stateCsl} = $3 OR $3 is null) AND ` +
-                `(${requestSchema.profile} = $4 OR $4 is null) AND ` +
-                `(${requestSchema.project} = $5 OR $5 is null) AND ` +
-                `(${requestSchema.workflow} = $6 OR $6 is null) AND ` +
-                `((${requestSchema.quantity} BETWEEN $7 AND $8) OR ($7 is null) OR ($8 is null)) AND ` +
-                `((${requestSchema.progress} BETWEEN $9 AND $10) OR ($9 is null) OR ($10 is null));`,
-            values: [skill, state, stateCsl, profile, project, workflow, minQuantity, maxQuantity, minProgress, maxProgress]
+                `(R.${requestSchema.skill} = $1 OR $1 is null) AND ` +
+                `(R.${requestSchema.state} = $2 OR $2 is null) AND ` +
+                `(R.${requestSchema.stateCsl} = $3 OR $3 is null) AND ` +
+                `(R.${requestSchema.profile} = $4 OR $4 is null) AND ` +
+                `(R.${requestSchema.project} = $5 OR $5 is null) AND ` +
+                `(R.${requestSchema.workflow} = $6 OR $6 is null) AND ` +
+                `((R.${requestSchema.quantity} BETWEEN $7 AND $8) OR ($7 is null) OR ($8 is null)) AND ` +
+                `((R.${requestSchema.progress} BETWEEN $9 AND $10) OR ($9 is null) OR ($10 is null)) AND ` +
+                `(URR.${userRoleReqSchema.userId} = $11 OR $11 is null) AND ` +
+                `(URR.${userRoleReqSchema.roleId} = $12 OR $12 is null);`,
+            values: [
+                skill, state, stateCsl, profile,
+                project, workflow, minQuantity, maxQuantity,
+                minProgress, maxProgress, userId, roleId
+            ]
         }
 
         const result = await query(statement)
@@ -112,22 +119,6 @@ module.exports = (query) => {
             roleId: obj[userRoleSchema.roleId],
 
         }
-    }
-
-    async function getRequestsByUserAndRole({userId, roleId}) {
-        const statement = {
-            name: 'Get Requests By User And Role',
-            text:
-                `SELECT R.* FROM ${userRoleReqSchema.table} AS URR ` +
-                `INNER JOIN ${requestSchema.table} AS R ` +
-                `ON URR.${userRoleReqSchema.requestId} = R.${requestSchema.id} ` +
-                `WHERE URR.${userRoleReqSchema.userId} = $1 AND ` +
-                `URR.${userRoleReqSchema.roleId} = $2;`,
-            values: [userId, roleId]
-        };
-
-        const result = await query(statement)
-        return result.rows.map(row => extractRequest(row))
     }
 
     function extractRequest(obj) {

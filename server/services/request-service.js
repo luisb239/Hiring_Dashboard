@@ -3,24 +3,24 @@
 const errors = require('../errors/common-errors.js')
 const AppError = require('../errors/app-error.js')
 
-module.exports = (requestDb, candidateDb, userDb, roleDb) => {
+module.exports = (requestDb, processDb) => {
 
     return {
         getRequests: getRequests,
         createRequest: createRequest,
-        getRequestById: getRequestById,
-        getRequestsByUserAndRole: getRequestsByUserAndRole,
+        getRequestById: getRequestById
     }
 
     async function getRequests({
                                    skill = null, state = null, stateCsl = null, profile = null,
                                    project = null, workflow = null, minQuantity = null, maxQuantity = null,
-                                   minProgress = null, maxProgress = null
+                                   minProgress = null, maxProgress = null, userId = null, roleId = null
                                }) {
 
         const requests = await requestDb.getRequests({
             skill, state, stateCsl, profile, project,
-            workflow, minQuantity, maxQuantity, minProgress, maxProgress
+            workflow, minQuantity, maxQuantity, minProgress,
+            maxProgress, userId, roleId
         })
 
         return {
@@ -37,13 +37,12 @@ module.exports = (requestDb, candidateDb, userDb, roleDb) => {
         // Get users (and their roles) in current request
         const userRoles = await requestDb.getUserRolesInRequest({requestId: id})
 
-        // Get candidates in current request
-        const candidates = await candidateDb.getCandidatesByRequestId({requestId: id})
+        const processes = await processDb.getRequestProcesses({requestId: id})
 
         return {
             request: requestFound,
             userRoles: userRoles,
-            candidates: candidates.map(candidate => ({id: candidate.id, name: candidate.name}))
+            processes: processes
         }
     }
 
@@ -62,10 +61,4 @@ module.exports = (requestDb, candidateDb, userDb, roleDb) => {
         }
 
     }
-
-    async function getRequestsByUserAndRole({userId, roleId}) {
-        const requests = await requestDb.getRequestsByUserAndRole({userId, roleId})
-        return {requests: requests}
-    }
-
 }

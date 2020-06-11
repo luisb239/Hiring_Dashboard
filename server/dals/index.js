@@ -3,8 +3,13 @@
 const {Pool} = require('pg')
 const pool = new Pool()
 
-function query(text, params) {
-    return pool.query(text, params)
+async function query(text, params) {
+    try {
+        return await pool.query(text, params)
+    } catch (e) {
+        console.log(e)
+        // map error to service error
+    }
 }
 
 const request = require('./request-dal.js')(query)
@@ -35,10 +40,10 @@ module.exports = {
     language,
     workflow,
     phase,
-        months,
-        process,
-        user,
-        role,
-        info,
-        requestLanguage
+    months,
+    process,
+    user,
+    role,
+    info,
+    requestLanguage
 }

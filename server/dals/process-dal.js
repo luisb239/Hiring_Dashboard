@@ -5,6 +5,7 @@ const processPhase = require('../schemas/process/process-phase-schema.js')
 const processCurrPhase = require('../schemas/process/process-current-phase.js')
 const reason = require('../schemas/process/process-unavailable-reasons-schema.js')
 const info = require('../schemas/process/process-info-schema.js')
+const candidate = require('../schemas/candidate-schema.js')
 
 module.exports = (query) => {
 
@@ -17,7 +18,69 @@ module.exports = (query) => {
         updateProcessCurrentPhase,
         getProcessCurrentPhase,
         setProcessInitialPhase: addProcessInitialPhase,
+        createProcess,
+        getRequestProcesses,
+        getCandidateProcesses
     }
+
+    async function getCandidateProcesses({candidateId}) {
+        const statement = {
+            name: 'Get Candidate Processes',
+            text:
+                `SELECT P.${process.status}, P.${process.requestId} ` +
+                `FROM ${process.table} AS P ` +
+                `WHERE P.${process.candidateId} = $1 ;`,
+            values: [candidateId]
+        }
+
+        const result = await query(statement)
+        return result.rows.map(row => extractProcessAndRequestInfo(row))
+    }
+
+    function extractProcessAndRequestInfo(row) {
+        return {
+            status: row[process.status],
+            requestId: row[process.requestId]
+        }
+    }
+
+
+    async function getRequestProcesses({requestId}) {
+        const statement = {
+            name: 'Get Processes In Request',
+            text:
+                `SELECT P.${process.status}, P.${process.requestId}, P.${process.candidateId}, C.${candidate.name} ` +
+                `FROM ${process.table} AS P ` +
+                `INNER JOIN ${candidate.table} AS C ` +
+                `ON P.${process.candidateId} = C.${candidate.id} ` +
+                `WHERE P.${process.requestId} = $1 ;`,
+            values: [requestId]
+        }
+
+        const result = await query(statement)
+        return result.rows.map(row => extractProcessAndCandidateInfo(row))
+    }
+
+    function extractProcessAndCandidateInfo(row) {
+        return {
+            status: row[process.status],
+            candidateId: row[process.candidateId],
+            candidateName: row[candidate.name]
+        }
+    }
+
+    async function createProcess() {
+        const statement = {
+            name: 'Create Process -> MEANT TO JUST BE A TEST',
+            text:
+                `INSERT INTO ${process.table} (${process.requestId}, ${process.candidateId}, ${process.status}) ` +
+                `VALUES ($1, $2, $3);`,
+            values: ["oi", 1, 2]
+        }
+
+        await query(statement)
+    }
+
 
     async function addPhaseToProcess({requestId, candidateId, phase, startDate, updateDate = null, notes = null}) {
         const statement = {
