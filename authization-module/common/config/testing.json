@@ -1,0 +1,26 @@
+{
+    "google": {
+        "google_client_id": "523982739771-2hkfdqls3uapvlf0c111i6qhnidfgt44.apps.googleusercontent.com",
+        "google_client_secret": "vs0R8tvgMv2w2rhuHtRPT9nK",
+        "callbackURL" : "http://localhost:8082/authentication/google/callback"
+    },
+    "azureAD": {
+        "azure_client_id": "39d62b3c-b736-4e13-b71e-37926569e5dc",
+        "azure_client_secret": "9A5A5C36932AB8F12562DE879A875",
+        "callbackURL" : "http://localhost:8082/authentication/azureAD/callback",
+        "tenant" : "bb367ab9-9da9-455e-b938-fd65cd29f5ae"
+    },
+    "database_opts": {
+        "host": "eporqep6b4b8ql12.chr7pe7iynqr.eu-west-1.rds.amazonaws.com", 
+        "port": 3306,
+        "user":"jvp56pl2nbv1v9pw", 
+        "password": "pv9t6oy23bsv65ri",
+        "connectionLimit": 5,
+        "database": "r15dtqer5c72jvex"
+    },
+    "webAppUri": "http://localhost:4200",
+    "isModuleSetUp": false,
+    "sgbd": "mysql"
+
+
+}
