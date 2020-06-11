@@ -1,11 +1,11 @@
-import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { catchError } from 'rxjs/operators';
-import { ErrorHandler } from '../error-handler';
-import { SuccessPostDao } from '../../model/common/successPost-dao';
-import { RequestDao } from 'src/app/model/request/request-dao';
-import { RequestsDao } from 'src/app/model/request/requests-dao';
-import { RequestListDao } from 'src/app/model/request/request-list-dao';
+import {Injectable} from '@angular/core';
+import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
+import {catchError} from 'rxjs/operators';
+import {ErrorHandler} from '../error-handler';
+import {SuccessPostDao} from '../../model/common/successPost-dao';
+import {RequestDao} from 'src/app/model/request/request-dao';
+import {RequestsDao} from 'src/app/model/request/requests-dao';
+import {RequestListDao} from 'src/app/model/request/request-list-dao';
 
 
 const httpOptions = {
@@ -29,52 +29,63 @@ export class RequestService {
   getRequest(requestId: number) {
     return this.http.get<RequestDao>(`${this.baseUrl}/requests/${requestId}`, httpOptions)
       .pipe(data => {
-        return data;
-      },
+          return data;
+        },
         catchError(this.errorHandler.handleError));
   }
 
   getRequestsByUser(userId: number, roleId: number) {
-    return this.http.get<RequestsDao>(`${this.baseUrl}/users/${userId}/roles/${roleId}/requests`, httpOptions)
+    const params = new HttpParams()
+      .set('userId', String(userId))
+      .set('roleId', String(roleId));
+    return this.http.get<RequestsDao>(`${this.baseUrl}/requests`,
+      {
+        headers: new HttpHeaders({
+          'Content-Type': 'application/json'
+        }), params
+      })
       .pipe(data => {
-        return data;
-      },
+          return data;
+        },
         catchError(this.errorHandler.handleError));
   }
 
   getAllRequests() {
     return this.http.get<RequestsDao>(`${this.baseUrl}/requests`, httpOptions)
       .pipe(data => {
-        return data;
-      },
+          return data;
+        },
         catchError(this.errorHandler.handleError));
   }
 
   getAllRequestsWithQuery(parameters: any) {
-    let parameterString = '';
+    const params = new HttpParams();
     singleParams.forEach(p => {
       if (parameters[p] !== '') {
-        parameterString += `${p}=${parameters[p]}&`;
+        params.set(p, String(parameters[p]));
       }
     });
 
     if (parameters.progress[0]) {
-      parameterString += `minProgress=${parameters.progress[0]}&`;
+      params.set('minProgress', String(parameters.progress[0]));
     }
     if (parameters.progress[1]) {
-      parameterString += `maxProgress=${parameters.progress[1]}&`;
+      params.set('minProgress', String(parameters.progress[1]));
     }
     if (parameters.quantity[0]) {
-      parameterString += `minQuantity=${parameters.quantity[0]}&`;
+      params.set('minProgress', String(parameters.quantity[0]));
     }
     if (parameters.quantity[1]) {
-      parameterString += `maxQuantity=${parameters.quantity[1]}&`;
+      params.set('minProgress', String(parameters.quantity[1]));
     }
-    parameterString = parameterString.slice(0, -1);
-    return this.http.get<RequestsDao>(`${this.baseUrl}/requests?${parameterString}`, httpOptions)
+    return this.http.get<RequestsDao>(`${this.baseUrl}/requests`, {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json'
+      }), params
+    })
       .pipe(data => {
-        return data;
-      },
+          return data;
+        },
         catchError(this.errorHandler.handleError));
   }
 
@@ -93,8 +104,8 @@ export class RequestService {
       requestBody.dateToSendProfile);
     return this.http.post<SuccessPostDao>(`${this.baseUrl}/requests`, body, httpOptions)
       .pipe(data => {
-        return data;
-      },
+          return data;
+        },
         catchError(this.errorHandler.handleError));
   }
 }

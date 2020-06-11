@@ -59,7 +59,8 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr *ngFor="let process of processes">
+                            <tr *ngFor="let process of processes" [routerLink]="['/candidate/', process.candidateId]"
+                                [state]="{requestId: requestId, candidateId: process.candidateId}">
                                 <td>
                                     {{process.candidateName}}
                                 </td>

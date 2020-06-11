@@ -1,8 +1,8 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpHeaders, HttpParams, HttpUrlEncodingCodec} from '@angular/common/http';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {catchError} from 'rxjs/operators';
 import {ErrorHandler} from '../error-handler';
-import { CandidateDao } from 'src/app/model/candidate/candidate-dao';
+import {CandidateDao} from 'src/app/model/candidate/candidate-dao';
 
 const httpOptions = {
   headers: new HttpHeaders({

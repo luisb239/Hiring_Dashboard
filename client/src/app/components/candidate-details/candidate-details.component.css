@@ -5,31 +5,35 @@
 }
 
 .attribute {
+  margin-right: 10px;
+}
+
+.attribute-info {
   display: block;
+}
+
+.value {
+  margin-right: 10px;
+  display: inline;
 }
 
 .inline {
   display: inline;
-}
-
-.title {
   margin-right: 10px;
 }
 
 .current {
+  margin-top: 20px;
   color: black;
 }
 
 .older {
+  margin-top: 20px;
   color: #7b7b7b;
 }
 
 .older:hover {
   color: black;
-}
-
-table, tr, td {
-  border: solid red;
 }
 
 .circle{
@@ -44,4 +48,8 @@ table, tr, td {
 }
 .not_available{
   background-color: darkred;
+}
+
+.end-row {
+  border-bottom: #7b7b7b solid 1px;
 }

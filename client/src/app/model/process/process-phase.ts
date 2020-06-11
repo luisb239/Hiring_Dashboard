@@ -1,6 +1,11 @@
+import {PhaseInfo} from '../phase/phase-info';
+
 export class ProcessPhase {
-  constructor(public startDate: string,
+  constructor(public phase: string,
+              public startDate: string,
               public updateDate: string,
-              public notes: string) {
+              public notes: string,
+              public infos: PhaseInfo[] = []
+  ) {
   }
 }

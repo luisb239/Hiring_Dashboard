@@ -70,7 +70,7 @@
     <thead>
       <tr>
         <th scope="col">#</th>
-        <th scope="col"></th>
+<!--        <th scope="col"></th>-->
         <th scope="col">Workflow</th>
         <th scope="col">Description</th>
         <th scope="col">Progress</th>
@@ -86,12 +86,13 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let request of requests; index as i">
+      <tr *ngFor="let request of requests; index as i"
+          [routerLink]="['/request-detail', request.id]"
+          [state]="{requestId: request.id}">
         <th scope="row">{{ i + 1 }}</th>
-        <td>
-          <button type="button" class="btn btn-primary" [routerLink]="['/request-detail', request.id]"
-            [state]="{requestId: request.id}"> More</button>
-        </td>
+<!--        <td>-->
+<!--          <button type="button" class="btn btn-primary"> More</button>-->
+<!--        </td>-->
         <td>{{request.workflow}}</td>
         <td>{{request.description}}</td>
         <td>

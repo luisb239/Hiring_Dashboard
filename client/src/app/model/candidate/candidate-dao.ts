@@ -1,6 +1,9 @@
 import { CandidateInformationDao } from './candidate-information-dao';
+import {ProfileDao} from '../profile/profile-dao';
+import {CandidateProcessDao} from './candidate-process-dao';
 
 export class CandidateDao {
     candidate: CandidateInformationDao;
-    // TODO ADD PROFILE OBJECT
+    profiles: ProfileDao[];
+    processes: CandidateProcessDao[];
 }

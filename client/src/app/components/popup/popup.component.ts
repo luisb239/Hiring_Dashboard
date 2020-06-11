@@ -3,6 +3,7 @@ import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {ProcessPhase} from '../../model/process/process-phase';
 import {PhaseAttribute} from '../../model/phase/phase-attribute';
 import { Candidate } from 'src/app/model/candidate/candidate';
+import {Process} from '../../model/process/process';
 
 @Component({
   selector: 'app-popup',
@@ -12,6 +13,8 @@ import { Candidate } from 'src/app/model/candidate/candidate';
 export class PopupComponent implements OnInit {
 
   @Input()
+  process: Process;
+  @Input()
   phase: ProcessPhase;
   @Input()
   candidate: Candidate;
@@ -19,6 +22,8 @@ export class PopupComponent implements OnInit {
   attributeTemplates: PhaseAttribute[];
   @Input()
   requestId: number;
+  statusList: string[];
+  reasons: string[];
 
   constructor(public activeModal: NgbActiveModal
   ) {

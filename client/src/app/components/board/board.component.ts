@@ -16,6 +16,7 @@ import {PhaseAttribute} from '../../model/phase/phase-attribute';
 import {Candidate} from 'src/app/model/candidate/candidate';
 import {RequestList} from 'src/app/model/request/request-list';
 import {ProcessPhaseService} from '../../services/process-phase/process-phase.service';
+import {Process} from '../../model/process/process';
 
 @Component({
   selector: 'app-board',
@@ -76,8 +77,7 @@ export class BoardComponent implements OnInit {
         event.currentIndex);
       this.processPhaseService.updateProcessPhase(requestId,
         event.container.data[event.currentIndex].id,
-        newPhase)
-        .subscribe(dao => {}, error => {});
+        newPhase);
     }
   }
 
@@ -97,8 +97,12 @@ export class BoardComponent implements OnInit {
       });
     this.processService.getProcess(requestId, candidateId)
       .subscribe(dao => {
+        modalRef.componentInstance.process = new Process(dao.status, dao.unavailableReasons);
         const phaseDetails = dao.phases.find(p => p.phase === dao.currentPhase);
-        modalRef.componentInstance.phase = new ProcessPhase(phaseDetails.startDate, phaseDetails.updateDate, phaseDetails.notes);
+        modalRef.componentInstance.phase = new ProcessPhase(phaseDetails.phase,
+          phaseDetails.startDate,
+          phaseDetails.updateDate,
+          phaseDetails.notes);
       }, error => {
       });
     this.phaseService.getPhase(phaseName)
