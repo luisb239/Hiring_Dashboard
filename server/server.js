@@ -1,7 +1,9 @@
 'use strict'
 
 const PORT = process.argv[2] || '8080'
-// Should be environment variable -> process.env
+// TODO:
+//  should be environment variable -> process.env
+//  or config file
 
 const express = require('express')
 
@@ -13,9 +15,12 @@ app.use(express.json())
 const db = require('./dals');
 
 // Authentication Module
-const authModule = require('../../authentication-authorization-project-integration/authization-module/authization')(app);
+const authModule = require('../authentication-authorization-project-integration/authization-module/authization')(app);
 
 // TODO -> CHANGE development.json of their module instead
+//  CHANGED development/testing/production to accept port 4200
+
+
 const dbConfigs = authModule.configurations
 
 dbConfigs.changeDatabaseOptions({

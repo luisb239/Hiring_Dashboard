@@ -2,7 +2,6 @@
 
 const candidate = require('../schemas/candidate-schema.js')
 const process = require('../schemas/process/process-schema.js')
-const processPhase = require('../schemas/process/process-phase-schema.js')
 
 module.exports = (query) => {
 
@@ -71,23 +70,6 @@ module.exports = (query) => {
 
         const result = await query(statement)
         return result.rows.map(row => extract(row))[0]
-    }
-
-    // TODO -> MOVE to different module instead of Candidate -> ProcessPhase
-    async function getCandidatesByRequestAndPhase({request, phase, inCurrentPhase = null}) {
-        const statement = {
-            name: 'Get Candidates By Request And Phase',
-            text:
-                `SELECT C.* FROM ${processPhase.table} AS PP ` +
-                `INNER JOIN ${candidate.table} AS C ` +
-                `ON PP.${processPhase.candidateId} = C.${candidate.id} ` +
-                `WHERE PP.${processPhase.requestId} = $1 ` +
-                `AND PP.${processPhase.phase} = $2 ` +
-                `AND ( PP.${processPhase.isCurrentPhase} = $3 OR $3 is null );`,
-            values: [request, phase, inCurrentPhase]
-        }
-        const result = await query(statement)
-        return result.rows.map(row => extract(row))
     }
 
     function extract(obj) {

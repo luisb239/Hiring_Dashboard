@@ -121,7 +121,10 @@ module.exports = function (global, router, controllers) {
 
     // TODO -> Mais filtros
     // Get Candidates + Available Filter + profiles filter
-    router.get(`/${candidates}`, handle(controllers.candidate.getCandidates))
+    router.get(`/${candidates}`, [
+        param('available').optional().isBoolean().withMessage("Param Available must be of boolean type"),
+        param('profiles').optional()
+    ], handle(controllers.candidate.getCandidates))
 
     // Get Candidate by id
     router.get(`/${candidates}/:id`, handle(controllers.candidate.getCandidateById))

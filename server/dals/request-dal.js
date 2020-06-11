@@ -111,7 +111,6 @@ module.exports = (query) => {
         return result.rows.map(row => extractUserRole(row))
     }
 
-    // TODO -> just for now -> name is retrieved from user_authentication_module
     function extractUserRole(obj) {
         return {
             userId: obj[userRoleSchema.userId],
