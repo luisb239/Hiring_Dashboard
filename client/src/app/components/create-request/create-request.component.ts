@@ -25,7 +25,7 @@ export class CreateRequestComponent implements OnInit {
   selectedValuedCheckboxes = [];
 
   inputDescription: string;
-  inputQuantity: string;
+  inputQuantity: number;
   inputSkill: string;
   inputProfile: string;
   inputProject: string;

@@ -22,7 +22,7 @@ module.exports = (query) => {
             name: 'Get Requests',
             text:
                 `SELECT R.* FROM ${requestSchema.table} AS R ` +
-                `INNER JOIN ${userRoleReqSchema.table} AS URR ` +
+                `LEFT JOIN ${userRoleReqSchema.table} AS URR ` +
                 `ON R.${requestSchema.id} = URR.${userRoleReqSchema.requestId} ` +
                 `WHERE ` +
                 `(R.${requestSchema.skill} = $1 OR $1 is null) AND ` +

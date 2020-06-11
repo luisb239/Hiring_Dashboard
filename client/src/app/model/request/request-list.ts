@@ -9,7 +9,7 @@ export class RequestList {
               public phases: Phase[] = [],
               public dateToSendProfile: string = '',
               public project: string = '',
-              public quantity: number = 0,
+              public quantity: number = 1,
               public requestDate: string = '',
               public skill: string = '',
               public stateCSL: string = '',
