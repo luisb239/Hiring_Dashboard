@@ -23,8 +23,10 @@
               [width]="tableContainer.offsetWidth/request.phases.length"
               *ngFor="let phase of request.phases"
               [cdkDropListData]="phase.candidates"
-              (cdkDropListDropped)="drop($event)">
-            <div class="task" *ngFor="let candidate of phase.candidates" cdkDrag
+              (cdkDropListDropped)="drop($event, request.id, phase.name)">
+            <div class="task" *ngFor="let candidate of phase.candidates"
+                 [cdkDragData]="candidate"
+                 cdkDrag
                  (click)="onClick(candidate.id, request.id, phase.name)">{{ candidate.name }}</div>
             <!--            <div class="hidden-task"><p class="hidden-text">Add Candidate</p></div>-->
           </td>

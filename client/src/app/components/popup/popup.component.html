@@ -1,5 +1,5 @@
 <div class="modal-header">
-  <h4 class="modal-title">{{candidate.name}}</h4>
+  <h4 class="modal-title">{{candidate.name || ''}}</h4>
   <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
     <span aria-hidden="true">&times;</span>
   </button>
@@ -8,7 +8,7 @@
   <div>
     <div class="property">
       <h5 style="display: inline">CV:</h5>
-      <p style="display: inline">{{candidate.cv}} TEST TEST TEST</p>
+      <p style="display: inline">{{candidate.cv || ''}}</p>
     </div>
     <div class="property">
       <h5>Available?</h5>
@@ -18,15 +18,15 @@
     <div class="property">
       <h5>Phase Notes</h5>
       <label>
-        <textarea>{{phase.notes}}</textarea>
+        <textarea>{{phase.notes  || ''}}</textarea>
       </label>
     </div>
   </div>
   <div class="property">
     <h5>Phase Attributes</h5>
-    <div *ngFor="let attribute of attributeTemplates" style="display: block">
+    <div *ngFor="let attribute of attributeTemplates;" style="display: block">
       <label>{{attribute.name}}
-        <input [type]="attribute.type" class="attribute">
+        <input [type]="attribute.type" [value]="attribute.value" class="attribute">
       </label>
     </div>
   </div>

@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {catchError} from 'rxjs/operators';
-import {UserDao} from '../../model/dao/user-dao';
+import {UserDao} from '../../model/user/user-dao';
 import {ErrorHandler} from '../error-handler';
 
 const httpOptions = {
@@ -43,7 +43,7 @@ export class AuthService {
   }
 
   login(username: string, password: string) {
-    return this.http.post<UserDao>(this.loginUrl, {username, password},)
+    return this.http.post<UserDao>(this.loginUrl, {username, password}, httpOptions)
       .pipe(data => {
           return data;
         },

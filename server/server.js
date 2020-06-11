@@ -13,16 +13,17 @@ app.use(express.json())
 const db = require('./dals');
 
 // Authentication Module
-const authModule = require('../../authentication-authorization-project-integration/authization-module/authization')(app);
+// const authModule = require('../../authentication-authorization-project-integration/authization-module/authization')(app);
 
 
-const dbConfigs = authModule.configurations
+// const dbConfigs = authModule.configurations
 
-dbConfigs.changeDatabaseOptions({
-    sgbd: 'PG'
-})
+// dbConfigs.changeDatabaseOptions({
+//     sgbd: 'PG'
+// })
 
-const services = require('./services')(db, authModule)
+// const services = require('./services')(db, authModule)
+const services = require('./services')(db)
 
 const controllers = require('./controllers')(services)
 

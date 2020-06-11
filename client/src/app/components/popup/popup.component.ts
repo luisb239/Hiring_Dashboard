@@ -1,8 +1,8 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
-import {Candidate} from '../../model/candidate';
-import {ProcessPhase} from '../../model/process-phase';
-import {PhaseAttribute} from '../../model/phase-attribute';
+import {ProcessPhase} from '../../model/process/process-phase';
+import {PhaseAttribute} from '../../model/phase/phase-attribute';
+import { Candidate } from 'src/app/model/candidate/candidate';
 
 @Component({
   selector: 'app-popup',

@@ -2,8 +2,8 @@ import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 import {catchError} from 'rxjs/operators';
 import {ErrorHandler} from '../error-handler';
-import {RequestProcessesDao} from '../../model/dao/request-processes-dao';
-import {ProcessDao} from '../../model/dao/process-dao';
+import {RequestProcessesDao} from '../../model/request/request-processes-dao';
+import {ProcessDao} from '../../model/process/process-dao';
 
 // const httpOptions = {
 //   headers: new HttpHeaders({
@@ -21,12 +21,11 @@ export class ProcessService {
 
   baseUrl = `http://localhost:8080/hd`;
 
-  getProcessesByRequest(requestId: number, currentPhase: boolean) {
+  getProcessesByRequest(requestId: number) {
     return this.http.get<RequestProcessesDao>(`${this.baseUrl}/requests/${requestId}/processes`, {
       headers: new HttpHeaders({
         'Content-Type': 'application/json'
-      }),
-      params: new HttpParams().set('current_phase', String(currentPhase))
+      })
     })
       .pipe(data => {
           return data;

@@ -1,5 +1,5 @@
 import { Component, OnInit, Output } from '@angular/core';
-import { RequestList } from '../../model/request-list';
+import { RequestList } from '../../model/request/request-list';
 import { RequestService } from '../../services/request/request.service';
 import { RequestPropsService } from '../../services/requestProps/requestProps.service';
 import { WorkflowService } from '../../services/workflow/workflow.service';

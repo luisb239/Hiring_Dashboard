@@ -2,8 +2,8 @@ import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders, HttpUrlEncodingCodec} from '@angular/common/http';
 import {ErrorHandler} from '../error-handler';
 import {catchError} from 'rxjs/operators';
-import {PhaseDao} from '../../model/dao/phase-dao';
-import {PhasesDao} from '../../model/dao/phases-dao';
+import {PhaseDao} from '../../model/phase/phase-dao';
+import {PhasesDao} from '../../model/phase/phases-dao';
 
 const httpOptions = {
   headers: new HttpHeaders({
