@@ -12,23 +12,25 @@
     </div>
     <div class="property">
       <h5>Available?</h5>
-      <div *ngIf="candidate.available" class="circle available"></div>
-      <div *ngIf="!candidate.available" class="circle not_available"></div>
+      <div (click)="candidate.available = !candidate.available">
+        <div *ngIf="candidate.available" class="circle available"></div>
+        <div *ngIf="!candidate.available" class="circle not_available"></div>
+      </div>
     </div>
     <div class="property">
-      <h5 style="display: inline">Status:</h5>
+      <h5 class="inline">Status:</h5>
       <label>
-        <select>
+        <select >
           <option [value]="process.status">{{process.status}}</option>
           <option *ngFor="let status of statusList" [value]="status">{{status}}</option>
         </select>
       </label>
     </div>
     <div class="property">
-      <h5 style="display: inline">Unavailable Reason:</h5>
+      <h5 class="inline">Unavailable Reason:</h5>
       <label>
         <select>
-          <option [value]="process.unavailableReason">{{process.unavailableReason}}</option>
+          <option [value]="process.unavailableReason">{{process.unavailableReason || '    '}}</option>
           <option *ngFor="let reason of reasons" [value]="reason">{{reason}}</option>
         </select>
       </label>
@@ -36,7 +38,7 @@
     <div class="property">
       <h5>Phase Notes</h5>
       <label>
-        <textarea>{{phase.notes  || ''}}</textarea>
+        <textarea>{{phase.notes || ''}}</textarea>
       </label>
     </div>
   </div>

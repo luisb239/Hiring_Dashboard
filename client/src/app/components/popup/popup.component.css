@@ -25,3 +25,8 @@
 .attribute-info {
   margin-left: 50px;
 }
+
+.inline {
+  display: inline;
+  margin-right: 10px;
+}
