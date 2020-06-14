@@ -93,16 +93,16 @@ INSERT INTO request(quantity, description, target_date,
 		request_project, request_profile, workflow)
 	VALUES
 	(2, 'Xamarin', 'October', 'Open', 'IS', 'Asked', 'Not defined yet', '.Net', 'Software Development'),
-	(3, 'Experiência em Testes', 'December', 'Open', 'SWAT', 'Asked', 'XPO', 'Tester', 'Software Testing'),
-	(1, 'Swat 1 Person', 'December', 'Open', 'SWAT', 'Asked', 'XPO', 'Tester', 'Consulting'),
-	(2, 'Swat 2 People', 'December', 'Open', 'SWAT', 'Asked', 'XPO', 'Tester', 'Software Testing');
+	(3, 'Experiência em Testes', 'December', 'Open', 'SWAT', 'Asked', 'XPO', 'Tester', 'Software Testing');
+	--(1, 'Swat 1 Person', 'December', 'Open', 'SWAT', 'Asked', 'XPO', 'Tester', 'Consulting'),
+	--(2, 'Swat 2 People', 'December', 'Open', 'SWAT', 'Asked', 'XPO', 'Tester', 'Software Testing');
 	
 INSERT INTO user_role_request(user_id, role_id, request_id)
 	VALUES 
 	(1, 1, 1),
-	(1, 1, 2),
-	(1, 1, 3),
-	(1, 1, 4);
+	(1, 1, 2);
+	--(1, 1, 3),
+	--(1, 1, 4);
 
 INSERT INTO request_language_requirements(request_id, language, mandatory)
 	VALUES
@@ -110,10 +110,10 @@ INSERT INTO request_language_requirements(request_id, language, mandatory)
 	(1, 'French', FALSE),
 	
 	(2, 'English', TRUE),
-	(2, 'French', TRUE),
+	(2, 'French', TRUE);
 	
-	(3, 'English', TRUE),
-	(4, 'English', TRUE);
+	--(3, 'English', TRUE),
+	--(4, 'English', TRUE);
 	
 	
 INSERT INTO phase
@@ -167,7 +167,11 @@ INSERT INTO process(request_id, candidate_id, status)
 	(1, 1, 'Placed'),
 	(1, 2, 'Onhold'),
 	(1, 3, 'Offer Rejected'),
-	(1, 4, 'Withdrawn');
+	(1, 4, 'Withdrawn'),
+	(2, 1, 'Onhold'),
+	(2, 2, 'Onhold'),
+	(2, 3, 'Onhold'),
+	(2, 4, 'Onhold');
 	
 INSERT INTO unavailable_reason(reason)
 	VALUES
@@ -189,14 +193,27 @@ INSERT INTO process_phase(request_id, candidate_id, phase, notes)
 	(1, 3, 'First Interview', NULL),
 	(1, 3, 'Technicall Interview', NULL),
 	
-	(1, 4, 'First Interview', NULL);
+	(1, 4, 'First Interview', NULL),
+	
+	(2, 1, 'First Interview And Technicall Interview', NULL),
+	
+	(2, 2, 'First Interview And Technicall Interview', NULL),
+	(2, 2, 'Job Offer', NULL),
+	
+	(2, 3, 'First Interview And Technicall Interview', NULL),
+	(2, 3, 'Job Offer', NULL),
+	(2, 3, 'Offer Accepted', NULL);
 	
 INSERT INTO process_current_phase(request_id, candidate_id, current_phase)
 	VALUES 
 	(1, 1, 'Offer Accepted'),
 	(1, 2, 'First Interview'),
 	(1, 3, 'Technicall Interview'),
-	(1, 4, 'First Interview');
+	(1, 4, 'First Interview'),
+	
+	(2, 1, 'First Interview And Technicall Interview'),
+	(2, 2, 'Job Offer'),
+	(2, 3, 'Offer Accepted');
 	
 INSERT INTO dynamic_info(info_name, json_info)
 	VALUES
