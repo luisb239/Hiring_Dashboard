@@ -23,6 +23,10 @@ export class RequestDetailComponent implements OnInit {
     private router: Router,
     private requestService: RequestService) { }
 
+  /**
+   * This function fetches all the attributes inherent to a request. Used for the view Request Details.
+   * @param requestId is used to get a specific request from the database.
+   */
   private getRequest(requestId: number) {
     this.requestService.getRequest(requestId).subscribe(
       reqDao => {
@@ -32,7 +36,6 @@ export class RequestDetailComponent implements OnInit {
           reqDao.request.progress,
           reqDao.request.state,
           reqDao.request.description,
-          [],
           reqDao.request.dateToSendProfile,
           reqDao.request.project,
           reqDao.request.quantity,
@@ -52,9 +55,15 @@ export class RequestDetailComponent implements OnInit {
         this.requestAttrs = Object.keys(this.requestList).filter(
           attr => attr !== 'phases' && attr !== 'id');
       }, error => {
+        console.log(error);
       }
     );
   }
+  /**
+   * This function will fetch the request's id either through the state passed from the component
+   * all-requests or from the url, if the view isn't forwarded by the previous component.
+   * Then it calls the function getRequest with the id obtained.
+   */
   ngOnInit() {
     this.requestId = history.state.requestId || this.router.url.split('/')[2];
     this.getRequest(this.requestId);

@@ -123,7 +123,6 @@ export class AllRequestsComponent implements OnInit {
         r.progress,
         r.state,
         r.description,
-        [],
         r.dateToSendProfile,
         r.project,
         r.quantity,
@@ -133,6 +132,7 @@ export class AllRequestsComponent implements OnInit {
         r.targetDate,
         r.profile
       )), error => {
+        console.log(error);
       }
     );
   }
@@ -145,7 +145,6 @@ export class AllRequestsComponent implements OnInit {
           r.progress,
           r.state,
           r.description,
-          [],
           r.dateToSendProfile,
           r.project,
           r.quantity,
@@ -155,6 +154,7 @@ export class AllRequestsComponent implements OnInit {
           r.targetDate,
           r.profile
         )), error => {
+          console.log(error);
         }
       );
   }

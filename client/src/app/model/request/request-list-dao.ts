@@ -1,44 +1,19 @@
 
 export class RequestListDao {
-  id: number;
-  description: string;
-  progress: number;
-  project: string;
-  quantity: number;
-  requestDate: string;
-  skill: string;
-  stateCsl: string;
-  state: string;
-  targetDate: string;
-  workflow: string;
-  profile: string;
-  mandatoryLanguages: string[];
-  valuedLanguages: string[];
-  dateToSendProfile: string;
   constructor(
-    description: string,
-    project: string,
-    quantity: number,
-    skill: string,
-    stateCsl: string,
-    state: string,
-    targetDate: string,
-    workflow: string,
-    profile: string,
-    mandatoryLanguages: string[],
-    valuedLanguages: string[],
-    dateToSendProfile: string = null) {
-    this.description = description;
-    this.project = project;
-    this.quantity = quantity;
-    this.skill = skill;
-    this.stateCsl = stateCsl;
-    this.state = state;
-    this.targetDate = targetDate;
-    this.workflow = workflow;
-    this.profile = profile;
-    this.mandatoryLanguages = mandatoryLanguages;
-    this.valuedLanguages = valuedLanguages;
-    this.dateToSendProfile = dateToSendProfile;
-  }
+    public description: string,
+    public project: string,
+    public skill: string,
+    public stateCsl: string,
+    public state: string,
+    public targetDate: string,
+    public workflow: string,
+    public profile: string,
+    public quantity: number,
+    public mandatoryLanguages: string[],
+    public valuedLanguages: string[],
+    public id: number = 0,
+    public progress: number = 0,
+    public requestDate: string = null,
+    public dateToSendProfile: string = null) { }
 }

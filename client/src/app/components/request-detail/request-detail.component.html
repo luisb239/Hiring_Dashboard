@@ -1,24 +1,49 @@
 <div class='Request-Detail'>
-    <div class="container">
+    <div class="container-fluid">
         <div class="row">
-            <div class="col-sm">
-                <div class='Request'>
-                    <h3>Request</h3>
+            <div class='Request'>
+                <h3>Request</h3>
+                <table class="table table-hover">
+                    <thead>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td *ngFor="let name of requestAttrs">
+                                <h5>{{name}}</h5>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td *ngFor="let name of requestAttrs">
+                                <div *ngIf='name === "progress"'>
+                                    {{requestList[name]}}%
+                                </div>
+                                <div *ngIf='name !== "progress"'>
+                                    {{requestList[name]}}
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class='row'>
+            <div class='col-sm'>
+                <div class='Languages'>
+                    <h5>Languages</h5>
                     <table class="table table-hover">
                         <thead>
+                            <tr>
+                                <th>Language</th>
+                                <th>Mandatory</th>
+                            </tr>
                         </thead>
                         <tbody>
-                            <tr *ngFor="let name of requestAttrs">
+                            <tr *ngFor="let language of languages">
                                 <td>
-                                    <h5>{{name}}: </h5>
+                                    {{language.language}}
                                 </td>
                                 <td>
-                                    <div *ngIf='name === "progress"'>
-                                        {{requestList[name]}}%
-                                    </div>
-                                    <div *ngIf='name !== "progress"'>
-                                        {{requestList[name]}}
-                                    </div>
+                                    {{language.isMandatory}}
                                 </td>
                             </tr>
                         </tbody>
