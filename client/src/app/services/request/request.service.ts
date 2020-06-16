@@ -59,25 +59,27 @@ export class RequestService {
   }
 
   getAllRequestsWithQuery(parameters: any) {
-    const params = new HttpParams();
+    let params = new HttpParams();
     singleParams.forEach(p => {
       if (parameters[p] !== '') {
-        params.set(p, String(parameters[p]));
+        params = params.set(p, parameters[p]);
       }
     });
 
     if (parameters.progress[0]) {
-      params.set('minProgress', String(parameters.progress[0]));
+      params = params.set('minProgress', String(parameters.progress[0]));
     }
     if (parameters.progress[1]) {
-      params.set('minProgress', String(parameters.progress[1]));
+      params = params.set('minProgress', String(parameters.progress[1]));
     }
     if (parameters.quantity[0]) {
-      params.set('minProgress', String(parameters.quantity[0]));
+      params = params.set('minProgress', String(parameters.quantity[0]));
     }
     if (parameters.quantity[1]) {
-      params.set('minProgress', String(parameters.quantity[1]));
+      params = params.set('minProgress', String(parameters.quantity[1]));
     }
+
+    console.log(params.toString());
     return this.http.get<RequestsDao>(`${this.baseUrl}/requests`, {
       headers: new HttpHeaders({
         'Content-Type': 'application/json'
