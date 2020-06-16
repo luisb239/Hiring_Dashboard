@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {CdkDrag, CdkDragDrop, moveItemInArray, transferArrayItem} from '@angular/cdk/drag-drop';
+import {CdkDragDrop, moveItemInArray, transferArrayItem} from '@angular/cdk/drag-drop';
 
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {PopupComponent} from '../popup/popup.component';
@@ -59,9 +59,11 @@ export class BoardComponent implements OnInit {
                           .map(process => new Candidate(process.candidate.name, process.candidate.id));
                       });
                     }, error => {
+                      console.log(error);
                     });
                 });
               }, error => {
+                console.log(error);
               });
           });
         });
@@ -75,9 +77,8 @@ export class BoardComponent implements OnInit {
         event.container.data,
         event.previousIndex,
         event.currentIndex);
-      this.processPhaseService.updateProcessPhase(requestId,
-        event.container.data[event.currentIndex].id,
-        newPhase);
+      this.processPhaseService.updateProcessPhase(requestId, event.container.data[event.currentIndex].id, newPhase)
+        .subscribe();
     }
   }
 
@@ -94,7 +95,9 @@ export class BoardComponent implements OnInit {
           dao.candidate.available,
           dao.candidate.cv);
       }, error => {
+        console.log(error);
       });
+
     this.processService.getProcess(requestId, candidateId)
       .subscribe(dao => {
         modalRef.componentInstance.process = new Process(dao.status, dao.unavailableReasons);
@@ -104,11 +107,14 @@ export class BoardComponent implements OnInit {
           phaseDetails.updateDate,
           phaseDetails.notes);
       }, error => {
+        console.log(error);
       });
+
     this.phaseService.getPhase(phaseName)
       .subscribe(phaseDao => {
         modalRef.componentInstance.attributeTemplates = phaseDao
           .infos.map(pi => new PhaseAttribute(pi.name, pi.value.name, pi.value.type));
+
         this.processService.getProcess(requestId, candidateId)
           .subscribe(processDao => {
             modalRef.componentInstance.attributeTemplates
@@ -116,8 +122,10 @@ export class BoardComponent implements OnInit {
                 .find(phase => phase.phase === phaseName).infos
                 .find(i => i.name === at.name).value);
           }, error => {
+            console.log(error);
           });
       }, error => {
+        console.log(error);
       });
   }
 }

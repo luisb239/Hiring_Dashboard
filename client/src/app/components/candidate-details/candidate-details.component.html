@@ -65,7 +65,7 @@
     </table>
     <h5 class="older" *ngIf="allProcesses.length === 0">There are no other processes.</h5>
     <div class="older" *ngFor="let process of allProcesses; index as i">
-      <h5>Other Processes</h5>
+      <h3>Other Processes</h3>
       <table>
         <tbody>
         <tr>
@@ -81,7 +81,7 @@
             </div>
           </td>
         </tr>
-        <tr *ngIf="process.unavailableReason !== ''">
+        <tr *ngIf="process.unavailableReason">
           <td [colSpan]="process.phases.length">
             <div>
               <h5 class="inline">Unavailable Reason:</h5>
@@ -94,7 +94,7 @@
             <div class="attribute">
               <h5>{{phase.phase}}</h5>
               <div class="attribute-info" *ngFor="let info of phase.infos">
-                <h6 class="title">{{info.name}}</h6>
+                <h6 class="title">{{info.name}}:</h6>
                 <p class="value">{{info.value}}</p>
               </div>
             </div>
