@@ -1,5 +1,9 @@
 @import '~bootstrap/dist/css/bootstrap.css';
 
+body {
+  width: 100%;
+}
+
 .navbar {
   position: -webkit-sticky; /* Safari */
   position: sticky;
