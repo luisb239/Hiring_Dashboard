@@ -79,6 +79,7 @@ export class RequestService {
    * @param parameters are used to filter the values that are retrieved from the database.
    */
   getAllRequestsWithQuery(parameters: any) {
+    console.log(parameters);
     let params = new HttpParams();
     singleParams.forEach(p => {
       if (parameters[p] !== '') {
@@ -90,13 +91,13 @@ export class RequestService {
       params = params.set('minProgress', String(parameters.progress[0]));
     }
     if (parameters.progress[1]) {
-      params = params.set('minProgress', String(parameters.progress[1]));
+      params = params.set('maxProgress', String(parameters.progress[1]));
     }
     if (parameters.quantity[0]) {
-      params = params.set('minProgress', String(parameters.quantity[0]));
+      params = params.set('minQuantity', String(parameters.quantity[0]));
     }
     if (parameters.quantity[1]) {
-      params = params.set('minProgress', String(parameters.quantity[1]));
+      params = params.set('maxQuantity', String(parameters.quantity[1]));
     }
 
     console.log(params.toString());

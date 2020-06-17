@@ -5,105 +5,108 @@
       <div class="form-group">
         <label for="inputSkill">Skill</label>
         <select class="custom-select" id="inputSkill" name="skill" #skill='ngModel' ngModel>
-          <option selected value="">Choose a Skill</option>
-          <option *ngFor="let skill of properties.skills">{{skill}}</option>
+          <option disabled value=""></option>
+          <option *ngFor="let skill of properties.skills" [value]="skill">{{skill}}</option>
         </select>
       </div>
       <div class="form-group">
         <label for="inputState">State</label>
         <select class="custom-select" id="inputState" name="state" #state='ngModel' ngModel>
-          <option selected value="">Choose a State</option>
+          <option disabled value=""></option>
           <option *ngFor="let state of properties.states">{{state}}</option>
         </select>
       </div>
       <div class="form-group">
         <label for="inputStateCsl">CSL State</label>
         <select class="custom-select" id="inputStateCsl" name="stateCsl" #stateCsl='ngModel' ngModel>
-          <option selected value="">Choose a CSL State</option>
+          <option disabled value=""></option>
           <option *ngFor="let stateCsl of properties.statesCsl">{{stateCsl}}</option>
         </select>
       </div>
       <div class="form-group">
         <label for="inputProject">Project</label>
         <select class="custom-select" id="inputProject" name="project" #project='ngModel' ngModel>
-          <option selected value="">Choose a Project</option>
+          <option disabled value=""></option>
           <option *ngFor="let project of properties.projects">{{project}}</option>
         </select>
       </div>
       <div class="form-group">
         <label for="inputProfile">Profile</label>
         <select class="custom-select" id="inputProfile" name="profile" #profile='ngModel' ngModel>
-          <option selected value="">Choose a Profile</option>
+          <option disabled value=""></option>
           <option *ngFor="let profile of properties.profiles">{{profile}}</option>
         </select>
       </div>
       <div class="form-group">
         <label for="inputWorkflow">Workflow</label>
         <select class="custom-select" id="inputWorkflow" name="workflow" #workflow='ngModel' ngModel>
-          <option selected value="">Choose a Workflow</option>
+          <option disabled value=""></option>
           <option *ngFor="let workflow of properties.workflows">{{workflow}}</option>
         </select>
       </div>
       <div class="form-group">
         <label for="inputTargetDate">Target Month</label>
         <select class="custom-select" id="inputTargetDate" name="targetDate" #targetDate='ngModel' ngModel>
-          <option selected value="">Choose a Target Month</option>
+          <option disabled value=""></option>
           <option *ngFor="let month of properties.targetDates">{{month}}</option>
         </select>
       </div>
       <div class="custom-slider">
         <label for="quantityBar">Quantity</label>
-        <ng5-slider [(value)]="properties.minValueQuantity" [(highValue)]="properties.maxValueQuantity" [options]="properties.optionsQuantity"
-          id="quantityBar" name="quantity" #quantity='ngModel' ngModel></ng5-slider>
+        <ng5-slider [(value)]="properties.minValueQuantity" [(highValue)]="properties.maxValueQuantity"
+                    [options]="properties.optionsQuantity"
+                    id="quantityBar" name="quantity" #quantity='ngModel' ngModel></ng5-slider>
       </div>
       <div class="custom-slider">
         <label for="progressBar">Progress</label>
-        <ng5-slider [(value)]="properties.minValueProgress" [(highValue)]="properties.maxValueProgress" [options]="properties.optionsProgress"
-          id="progressBar" name="progress" #progress='ngModel' ngModel></ng5-slider>
+        <ng5-slider [(value)]="properties.minValueProgress" [(highValue)]="properties.maxValueProgress"
+                    [options]="properties.optionsProgress"
+                    id="progressBar" name="progress" #progress='ngModel' ngModel></ng5-slider>
       </div>
       <button id="createRequestSubmit" class="btn btn-primary" type="submit">Filter</button>
-      <button id="resetRequestTable" class="btn btn-secondary reset-button" (click)="getRequests()">Reset
-        Filter</button>
+      <button id="resetRequestTable" class="btn btn-secondary reset-button" (click)="resetForms(form)">Reset Filter
+      </button>
     </form>
   </div>
   <table class="table table-hover p-2">
     <thead>
-      <tr>
-        <th scope="col">#</th>
-        <th scope="col">Workflow</th>
-        <th scope="col">Description</th>
-        <th scope="col">Progress</th>
-        <th scope="col">Project</th>
-        <th scope="col">Quantity</th>
-        <th scope="col">Request Date</th>
-        <th scope="col">Skill</th>
-        <th scope="col">CSL State</th>
-        <th scope="col">State</th>
-        <th scope="col">Target Date</th>
-        <th scope="col">Profile</th>
-        <th scope="col">Date To Send Profile</th>
-      </tr>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Workflow</th>
+      <th scope="col">Description</th>
+      <th scope="col">Progress</th>
+      <th scope="col">Project</th>
+      <th scope="col">Quantity</th>
+      <th scope="col">Request Date</th>
+      <th scope="col">Skill</th>
+      <th scope="col">CSL State</th>
+      <th scope="col">State</th>
+      <th scope="col">Target Date</th>
+      <th scope="col">Profile</th>
+      <th scope="col">Date To Send Profile</th>
+    </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let request of properties.requests; index as i"
-          [routerLink]="['/request-detail', request.id]"
-          [state]="{requestId: request.id}">
-        <th scope="row">{{ i + 1 }}</th><td>{{request.workflow}}</td>
-        <td>{{request.description}}</td>
-        <td>
-          <ngb-progressbar type=" blue" textType="white" [value]="request.progress" [showValue]="true">
-          </ngb-progressbar>
-        </td>
-        <td>{{request.project}}</td>
-        <td>{{request.quantity}}</td>
-        <td>{{request.requestDate}}</td>
-        <td>{{request.skill}}</td>
-        <td>{{request.stateCSL}}</td>
-        <td>{{request.state}}</td>
-        <td>{{request.targetDate}}</td>
-        <td>{{request.profile}}</td>
-        <td>{{request.dateToSendProfile || 'Not Defined'}}</td>
-      </tr>
+    <tr *ngFor="let request of properties.requests; index as i"
+        [routerLink]="['/request-detail', request.id]"
+        [state]="{requestId: request.id}">
+      <th scope="row">{{ i + 1 }}</th>
+      <td>{{request.workflow}}</td>
+      <td>{{request.description}}</td>
+      <td>
+        <ngb-progressbar type=" blue" textType="white" [value]="request.progress" [showValue]="true">
+        </ngb-progressbar>
+      </td>
+      <td>{{request.project}}</td>
+      <td>{{request.quantity}}</td>
+      <td>{{request.requestDate}}</td>
+      <td>{{request.skill}}</td>
+      <td>{{request.stateCSL}}</td>
+      <td>{{request.state}}</td>
+      <td>{{request.targetDate}}</td>
+      <td>{{request.profile}}</td>
+      <td>{{request.dateToSendProfile || 'Not Defined'}}</td>
+    </tr>
     </tbody>
   </table>
 </div>

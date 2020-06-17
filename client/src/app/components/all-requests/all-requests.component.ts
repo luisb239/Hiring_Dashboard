@@ -104,8 +104,7 @@ export class AllRequestsComponent implements OnInit {
         error => {
           console.log(error);
         }
-      )
-    ;
+      );
   }
 
   private setRequests(requestDao: RequestsDao) {
@@ -122,5 +121,12 @@ export class AllRequestsComponent implements OnInit {
       r.stateCsl,
       r.targetDate,
       r.profile));
+  }
+
+  resetForms(form: NgForm) {
+    form.reset({quantity: [0, 10]});
+    form.reset({progress: [0, 100]});
+    form.resetForm();
+    this.getRequests();
   }
 }
