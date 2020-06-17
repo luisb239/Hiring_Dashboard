@@ -1,4 +1,5 @@
 import {Component, OnInit} from '@angular/core';
+import {Location} from '@angular/common';
 import {CandidateService} from '../../services/candidate/candidate.service';
 import {Router} from '@angular/router';
 import {Candidate} from 'src/app/model/candidate/candidate';
@@ -25,11 +26,15 @@ export class CandidateDetailsComponent implements OnInit {
   constructor(private candidateService: CandidateService,
               private requestService: RequestService,
               private processService: ProcessService,
-              private router: Router
+              private router: Router,
+              private location: Location
   ) {
   }
 
   ngOnInit(): void {
+    this.location.onUrlChange((url, state) => {
+      localStorage.removeItem('requestId');
+    });
     this.properties.candidateId = history.state.candidateId || this.router.url.split('/')[2];
     this.properties.requestId = history.state.requestId || Number(localStorage.getItem('requestId'));
     localStorage.removeItem('requestId');
@@ -43,8 +48,9 @@ export class CandidateDetailsComponent implements OnInit {
           result.profileInfo,
           result.available,
           result.cv,
-          dao.profiles.profiles.map(pi => pi.profile),
+          dao.profiles.map(pi => pi.profile),
           dao.processes.map(proc => new CandidateProcess(proc.status, proc.requestId)));
+
         this.properties.candidate.processes.filter(process => process.requestId !== this.properties.requestId)
           .forEach(process => {
             this.requestService.getRequest(process.requestId)
@@ -58,6 +64,7 @@ export class CandidateDetailsComponent implements OnInit {
                   request.description
                 ), [], []));
               }, error => console.log(error));
+
             this.processService.getProcess(process.requestId, this.properties.candidateId)
               .subscribe(processDao => {
                   this.properties.allProcesses.push(new Process(processDao.status,
@@ -91,6 +98,7 @@ export class CandidateDetailsComponent implements OnInit {
             requestDao.description
           ), [], []);
         }, error => console.log(error));
+
       this.processService.getProcess(this.properties.requestId, this.properties.candidateId)
         .subscribe(dao => {
           this.properties.currentProcess = new Process(dao.status, dao.unavailableReasons,
@@ -103,10 +111,6 @@ export class CandidateDetailsComponent implements OnInit {
           console.log(error);
         });
     }
-  }
-
-  clear() {
-    localStorage.removeItem('requestId');
   }
 
 }

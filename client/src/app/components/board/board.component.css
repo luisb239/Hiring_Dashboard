@@ -2,7 +2,7 @@
   display: flex;
   flex-direction: column;
   height: 100%;
-  background-color: rgb(230, 230, 230);
+  background-color: white;
 }
 
 .app-name {
@@ -36,7 +36,7 @@
 .task {
   display: flex;
   padding: 15px 12px;
-  background: white;
+  background: rgb(255, 243, 222);
   border-bottom: solid 1px #ddd;
   border-radius: 4px;
   margin-bottom: 15px;

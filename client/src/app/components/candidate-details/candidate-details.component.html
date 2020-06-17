@@ -20,9 +20,7 @@
     <p>There are no profiles associated.</p>
   </div>
   <div *ngIf="properties.requestId">
-    <a [routerLink]="['/board']"
-       (click)="clear()"
-    >
+    <a [routerLink]="['/board']">
       <h5>Return to the Board</h5>
     </a>
     <h3 class="current">Current Process</h3>
@@ -64,9 +62,9 @@
       </tbody>
     </table>
     <h5 class="older" *ngIf="properties.allProcesses.length === 0">There are no other processes.</h5>
-    <div class="older" *ngFor="let process of properties.allProcesses; index as i">
+    <div class="older">
       <h3>Other Processes</h3>
-      <table>
+      <table *ngFor="let process of properties.allProcesses; index as i">
         <tbody>
         <tr>
           <td [colSpan]="process.phases.length">

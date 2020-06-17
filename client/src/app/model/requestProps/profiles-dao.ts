@@ -2,6 +2,6 @@ export class ProfilesDao {
   profiles: ProfileDao[];
 }
 
-class ProfileDao {
+export class ProfileDao {
   profile: string;
 }
