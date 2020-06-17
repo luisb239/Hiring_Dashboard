@@ -50,7 +50,7 @@ export class RequestDetailComponent implements OnInit {
         this.processes = reqDao.processes.map(
           processDao => new ProcessList(
             processDao.status, processDao.candidateId, processDao.candidateName));
-        this.languages = reqDao.languages.map(
+        this.languages = reqDao.languages.languages.map(
           languageDao => new LanguageList(languageDao.language, languageDao.isMandatory));
         this.requestAttrs = Object.keys(this.requestList).filter(
           attr => attr !== 'phases' && attr !== 'id');

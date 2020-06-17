@@ -48,7 +48,7 @@ export class CandidateDetailsComponent implements OnInit {
           result.profileInfo,
           result.available,
           result.cv,
-          dao.profiles.map(pi => pi.profile),
+          dao.profiles.profiles.map(pi => pi.profile),
           dao.processes.map(proc => new CandidateProcess(proc.status, proc.requestId)));
         this.candidate.processes.forEach(process => {
           if (process.requestId !== this.requestId) {

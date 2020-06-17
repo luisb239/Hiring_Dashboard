@@ -42,30 +42,30 @@ export class CreateRequestComponent implements OnInit {
   ngOnInit(): void {
 
     this.reqPropsService.getRequestSkills()
-      .subscribe(skill => { this.skills = skill.skills; },
+      .subscribe(dao => { this.skills = dao.skills.map(s => s.skill); },
         error => { console.log(error); });
 
     this.reqPropsService.getRequestProjects()
-      .subscribe(project => { this.projects = project.projects; },
+      .subscribe(dao => { this.projects = dao.projects.map(p => p.project); },
         error => { console.log(error); });
 
     this.reqPropsService.getRequestProfiles()
-      .subscribe(profile => { this.profiles = profile.profiles; },
+      .subscribe(dao => { this.profiles = dao.profiles.map(p => p.profile); },
         error => { console.log(error); });
 
     this.reqPropsService.getRequestLanguages()
-      .subscribe(language => {
-        this.mandatoryCheckboxes = this.getLanguagesCheckboxes(language.languages);
-        this.valuedCheckboxes = this.getLanguagesCheckboxes(language.languages);
+      .subscribe(dao => {
+        this.mandatoryCheckboxes = this.getLanguagesCheckboxes(dao.languages);
+        this.valuedCheckboxes = this.getLanguagesCheckboxes(dao.languages);
       },
         error => { console.log(error); });
 
     this.reqPropsService.getTargetDates()
-      .subscribe(month => { this.targetDates = month.months; },
+      .subscribe(dao => { this.targetDates = dao.months.map(m => m.month); },
         error => { console.log(error); });
 
     this.workflowService.getAllWorkflows()
-      .subscribe(workflow => { this.workflows = workflow.workflows; },
+      .subscribe(dao => { this.workflows = dao.workflows.map(w => w.workflow); },
         error => { console.log(error); });
   }
 
@@ -93,9 +93,9 @@ export class CreateRequestComponent implements OnInit {
   }
 
   private getLanguagesCheckboxes(languages) {
-    return languages.map(language => {
+    return languages.map(dao => {
       return {
-        label: language.language,
+        label: dao.language,
         isChecked: false
       };
     });

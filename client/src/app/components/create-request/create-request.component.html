@@ -18,7 +18,7 @@
         <label for="inputSkill">Skill</label>
         <select name='inputSkill' ngModel required #inputSkill='ngModel' class="custom-select" id="inputSkill">
           <option selected disabled value="">Choose a Skill</option>
-          <option *ngFor="let skill of skills">{{skill.skill}}</option>
+          <option *ngFor="let skill of skills">{{skill}}</option>
         </select>
       </div>
     </div>
@@ -27,27 +27,27 @@
         <label for="inputProject">Project</label>
         <select name='inputProject' ngModel required #inputProject='ngModel' class="custom-select" id="inputProject">
           <option selected disabled value="">Choose a Project</option>
-          <option *ngFor="let project of projects">{{project.project}}</option>
+          <option *ngFor="let project of projects">{{project}}</option>
         </select>
       </div>
       <div class="form-group col-md-4">
         <label for="inputProfile">Profile</label>
         <select name='inputProfile' ngModel required #inputProfile='ngModel' class="custom-select" id="inputProfile">
           <option selected disabled value="">Choose a Profile</option>
-          <option *ngFor="let profile of profiles">{{profile.profile}}</option>
+          <option *ngFor="let profile of profiles">{{profile}}</option>
         </select>
       </div>
       <div class="form-group col-md-4">
         <label for="inputWorkflow">Workflow</label>
         <select name='inputWorkflow' ngModel required #inputWorkflow='ngModel' class="custom-select" id="inputWorkflow">
           <option selected disabled value="">Choose a Workflow</option>
-          <option *ngFor="let workflow of workflows">{{workflow.workflow}}</option>
+          <option *ngFor="let workflow of workflows">{{workflow}}</option>
         </select>
       </div>
     </div>
     <div class="form-row">
       <div class="form-group col-md-4">
-        <label for="inputMandatoryLanguage">Select the Mandatory Languages</label>
+        <label for="inputMandatoryLanguage" id="inputMandatoryLanguage">Select the Mandatory Languages</label>
         <ul class="checkbox-items">
           <li *ngFor="let item of mandatoryCheckboxes">
             <input type="checkbox" name="mandatoryItem" [(ngModel)]="item.isChecked">{{item.label}}
@@ -55,7 +55,7 @@
         </ul>
       </div>
       <div class="form-group col-md-4">
-        <label for="inputValuedLanguages">Select the Valued Languages</label>
+        <label for="inputValuedLanguages" id="inputValuedLanguages">Select the Valued Languages</label>
         <ul class="checkbox-items">
           <li *ngFor="let item of valuedCheckboxes">
             <input type="checkbox" name="valuedItem" [(ngModel)]="item.isChecked">{{item.label}}
@@ -69,12 +69,12 @@
         <select name='inputTargetDate' ngModel required #inputTargetDate='ngModel' class="custom-select"
           id="inputTargetDate">
           <option selected disabled value="">Choose a Target Month</option>
-          <option *ngFor="let month of targetDates">{{month.month}}</option>
+          <option *ngFor="let month of targetDates">{{month}}</option>
         </select>
       </div>
 
       <div class="form-group col-md-4">
-        <label for="inputDateToSendProf">Date to send Profile</label>
+        <label for="inputDateToSendProf" id="inputDateToSendProf">Date to send Profile</label>
         <input name='inputDateToSendProfile' ngModel #inputDateToSendProfile='ngModel' class="form-control" type="date"
           id="inputDateToSendProfile">
       </div>

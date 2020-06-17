@@ -61,54 +61,54 @@ export class AllRequestsComponent implements OnInit {
 
   getFilterParameters() {
     this.reqPropsService.getRequestStates()
-      .subscribe(states => {
-        this.states = states.states;
+      .subscribe(dao => {
+        this.states = dao.states.map(s => s.state);
       },
         error => {
           console.log(error);
         });
     this.reqPropsService.getRequestStatesCsl()
-      .subscribe(stateCsl => {
-        this.statesCsl = stateCsl.statesCsl;
+      .subscribe(dao => {
+        this.statesCsl = dao.statesCsl.map(s => s.stateCsl);
       },
         error => {
           console.log(error);
         });
     this.reqPropsService.getRequestProjects()
-      .subscribe(project => {
-        this.projects = project.projects;
+      .subscribe(dao => {
+        this.projects = dao.projects.map(p => p.project);
       },
         error => {
           console.log(error);
         });
 
     this.reqPropsService.getRequestSkills()
-      .subscribe(skill => {
-        this.skills = skill.skills;
+      .subscribe(dao => {
+        this.skills = dao.skills.map(s => s.skill);
       },
         error => {
           console.log(error);
         });
 
     this.reqPropsService.getRequestProfiles()
-      .subscribe(profile => {
-        this.profiles = profile.profiles;
+      .subscribe(dao => {
+        this.profiles = dao.profiles.map(p => p.profile);
       },
         error => {
           console.log(error);
         });
 
     this.workflowService.getAllWorkflows()
-      .subscribe(workflow => {
-        this.workflows = workflow.workflows;
+      .subscribe(dao => {
+        this.workflows = dao.workflows.map(w => w.workflow);
       },
         error => {
           console.log(error);
         });
 
     this.reqPropsService.getTargetDates()
-      .subscribe(month => {
-        this.targetDates = month.months;
+      .subscribe(dao => {
+        this.targetDates = dao.months.map(m => m.month);
       },
         error => {
           console.log(error);
