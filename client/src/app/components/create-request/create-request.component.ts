@@ -58,7 +58,7 @@ export class CreateRequestComponent implements OnInit {
 
   /**
    * This function starts by fetching all the selected checkboxes. Then it sends a request to the
-   * server with all the values obtained from the form.
+   * server, to create a new request, with all the values obtained from the user.
    * @param form is used to obtain all the input values from the user.
    */
   onSubmit(form: NgForm) {

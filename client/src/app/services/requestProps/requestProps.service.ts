@@ -19,6 +19,10 @@ const httpOptions = {
 @Injectable({
   providedIn: 'root'
 })
+
+/**
+ * This class supplies all the functions needed to manage request's properties.
+ */
 export class RequestPropsService {
 
   constructor(private http: HttpClient, private errorHandler: ErrorHandler) {
@@ -26,6 +30,9 @@ export class RequestPropsService {
 
   baseUrl = `http://localhost:8080/hd/requests-properties`;
 
+  /**
+   * This function queries the server for all the existing states in the system.
+   */
   getRequestStates() {
     return this.http.get<StatesDao>(`${this.baseUrl}/states`, httpOptions)
       .pipe(data => {
@@ -34,6 +41,9 @@ export class RequestPropsService {
         catchError(this.errorHandler.handleError));
   }
 
+  /**
+   * This function queries the server for all the existing statesCsl in the system.
+   */
   getRequestStatesCsl() {
     return this.http.get<StatesCslDao>(`${this.baseUrl}/states-csl`, httpOptions)
       .pipe(data => {
@@ -42,6 +52,9 @@ export class RequestPropsService {
         catchError(this.errorHandler.handleError));
   }
 
+  /**
+   * This function queries the server for all the existing profiles in the system.
+   */
   getRequestProfiles() {
     return this.http.get<ProfilesDao>(`${this.baseUrl}/profiles`, httpOptions)
       .pipe(data => {
@@ -50,6 +63,9 @@ export class RequestPropsService {
         catchError(this.errorHandler.handleError));
   }
 
+  /**
+   * This function queries the server for all the existing projects in the system.
+   */
   getRequestProjects() {
     return this.http.get<ProjectsDao>(`${this.baseUrl}/projects`, httpOptions)
       .pipe(data => {
@@ -58,6 +74,9 @@ export class RequestPropsService {
         catchError(this.errorHandler.handleError));
   }
 
+  /**
+   * This function queries the server for all the existing skills in the system.
+   */
   getRequestSkills() {
     return this.http.get<SkillsDao>(`${this.baseUrl}/skills`, httpOptions)
       .pipe(data => {
@@ -66,6 +85,9 @@ export class RequestPropsService {
         catchError(this.errorHandler.handleError));
   }
 
+  /**
+   * This function queries the server for all the existing languages in the system.
+   */
   getRequestLanguages() {
     return this.http.get<LanguagesDao>(`${this.baseUrl}/languages`, httpOptions)
       .pipe(data => {
@@ -74,6 +96,9 @@ export class RequestPropsService {
         catchError(this.errorHandler.handleError));
   }
 
+  /**
+   * This function queries the server for all the existing targetDates / months.
+   */
   getTargetDates() {
     return this.http.get<TargetDatesDao>(`${this.baseUrl}/months`, httpOptions)
       .pipe(data => {
