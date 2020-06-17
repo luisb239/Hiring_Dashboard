@@ -7,7 +7,7 @@
     "azureAD": {
         "azure_client_id": "39d62b3c-b736-4e13-b71e-37926569e5dc",
         "azure_client_secret": "9A5A5C36932AB8F12562DE879A875",
-        "callbackURL" : "http://localhost:8082/authentication/azureAD/callback",
+        "callbackURL" : "http://localhost:8080/hd/auth/azure/callback",
         "tenant" : "bb367ab9-9da9-455e-b938-fd65cd29f5ae"
     },
     "database_opts": {

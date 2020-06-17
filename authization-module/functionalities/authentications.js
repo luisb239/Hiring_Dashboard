@@ -89,8 +89,6 @@ module.exports = {
      */
     usingOffice365: (req, res, next) => {
         passport.authenticate('azure_ad_oauth2')(req, res, next)
-
-
     },
     /**
      *
