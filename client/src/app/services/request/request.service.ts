@@ -1,11 +1,11 @@
-import {Injectable} from '@angular/core';
-import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
-import {catchError} from 'rxjs/operators';
-import {ErrorHandler} from '../error-handler';
-import {SuccessPostDao} from '../../model/common/successPost-dao';
-import {RequestDao} from 'src/app/model/request/request-dao';
-import {RequestsDao} from 'src/app/model/request/requests-dao';
-import {RequestDetailsDao} from 'src/app/model/request/request-details-dao';
+import { Injectable } from '@angular/core';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { catchError } from 'rxjs/operators';
+import { ErrorHandler } from '../error-handler';
+import { SuccessPostDao } from '../../model/common/successPost-dao';
+import { RequestDao } from 'src/app/model/request/request-dao';
+import { RequestsDao } from 'src/app/model/request/requests-dao';
+import { RequestDetailsDao } from 'src/app/model/request/request-details-dao';
 
 const httpOptions = {
   headers: new HttpHeaders({
@@ -36,8 +36,8 @@ export class RequestService {
   getRequest(requestId: number) {
     return this.http.get<RequestDao>(`${this.baseUrl}/requests/${requestId}`, httpOptions)
       .pipe(data => {
-          return data;
-        },
+        return data;
+      },
         catchError(this.errorHandler.handleError));
   }
 
@@ -57,8 +57,8 @@ export class RequestService {
         }), params
       })
       .pipe(data => {
-          return data;
-        },
+        return data;
+      },
         catchError(this.errorHandler.handleError));
   }
 
@@ -68,8 +68,8 @@ export class RequestService {
   getAllRequests() {
     return this.http.get<RequestsDao>(`${this.baseUrl}/requests`, httpOptions)
       .pipe(data => {
-          return data;
-        },
+        return data;
+      },
         catchError(this.errorHandler.handleError));
   }
 
@@ -107,8 +107,8 @@ export class RequestService {
       }), params
     })
       .pipe(data => {
-          return data;
-        },
+        return data;
+      },
         catchError(this.errorHandler.handleError));
   }
 
@@ -117,22 +117,10 @@ export class RequestService {
    * @param requestBody is used to insert a new request in the database.
    */
   createRequest(requestBody) {
-    const body = new RequestDetailsDao(requestBody.description,
-      requestBody.project,
-      requestBody.quantity,
-      requestBody.skill,
-      requestBody.stateCsl,
-      requestBody.state,
-      requestBody.targetDate,
-      requestBody.workflow,
-      requestBody.profile,
-      requestBody.mandatoryLanguages,
-      requestBody.valuedLanguages,
-      requestBody.dateToSendProfile);
-    return this.http.post<SuccessPostDao>(`${this.baseUrl}/requests`, body, httpOptions)
+    return this.http.post<SuccessPostDao>(`${this.baseUrl}/requests`, requestBody, httpOptions)
       .pipe(data => {
-          return data;
-        },
+        return data;
+      },
         catchError(this.errorHandler.handleError));
   }
 }
