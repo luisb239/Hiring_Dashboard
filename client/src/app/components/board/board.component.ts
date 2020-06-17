@@ -17,6 +17,7 @@ import {Candidate} from 'src/app/model/candidate/candidate';
 import {RequestList} from 'src/app/model/request/request-list';
 import {ProcessPhaseService} from '../../services/process-phase/process-phase.service';
 import {Process} from '../../model/process/process';
+import {BoardProps} from './board-props';
 
 @Component({
   selector: 'app-board',
@@ -35,20 +36,19 @@ export class BoardComponent implements OnInit {
   ) {
   }
 
-  workflows: Workflow[] = [];
-  private requests: RequestList[] = [];
+  properties: BoardProps = new BoardProps();
 
   ngOnInit(): void {
     this.requestService.getRequestsByUser(1, 1)
       .subscribe(
         requestsDao => {
-          this.requests = requestsDao.requests.map(r => new RequestList(r.id, r.workflow, r.progress, r.state, r.description));
-          this.workflows = [...new Set(this.requests.map(r => r.workflow))].map(w => new Workflow(w));
-          this.workflows.forEach(workflow => {
+          this.properties.requests = requestsDao.requests.map(r => new RequestList(r.id, r.workflow, r.progress, r.state, r.description));
+          this.properties.workflows = [...new Set(this.properties.requests.map(r => r.workflow))].map(w => new Workflow(w));
+          this.properties.workflows.forEach(workflow => {
             this.workflowService.getWorkflowByName(workflow.workflow)
               .subscribe(workflowDao => {
                 workflow.phases = workflowDao.phases.map(wp => new Phase(wp.phase));
-                workflow.requests = this.requests.filter(req => req.workflow === workflow.workflow);
+                workflow.requests = this.properties.requests.filter(req => req.workflow === workflow.workflow);
                 workflow.requests.forEach(request => {
                   request.phases = workflow.phases;
                   this.processService.getProcessesByRequest(request.id)
