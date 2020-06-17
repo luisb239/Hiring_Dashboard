@@ -1,8 +1,8 @@
 import {CandidateProcess} from './CandidateProcess';
 
 export class Candidate {
-  constructor(public name: string,
-              public id: number,
+  constructor(public name: string = '',
+              public id: number = 0,
               public profileInfo: string = '',
               public available: boolean = true,
               public cv: string = '',

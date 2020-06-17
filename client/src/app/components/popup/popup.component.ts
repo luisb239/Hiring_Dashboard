@@ -22,6 +22,7 @@ export class PopupComponent implements OnInit {
   attributeTemplates: PhaseAttribute[];
   @Input()
   requestId: number;
+
   statusList: string[];
   reasons: string[];
 

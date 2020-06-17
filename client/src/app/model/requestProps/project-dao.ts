@@ -1,3 +1,7 @@
-export class RequestProjectDao {
-    projects: string[];
-  }
+export class ProjectsDao {
+  projects: ProjectDao[];
+}
+
+class ProjectDao {
+  project: string;
+}

@@ -53,3 +53,7 @@
 .end-row {
   border-bottom: #7b7b7b solid 1px;
 }
+
+table {
+  margin-top: 20px;
+}

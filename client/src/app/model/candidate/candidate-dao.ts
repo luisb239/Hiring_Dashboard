@@ -1,9 +1,9 @@
-import { CandidateInformationDao } from './candidate-information-dao';
-import {ProfileDao} from '../profile/profile-dao';
+import { CandidateDetailsDao } from './candidate-details-dao';
 import {CandidateProcessDao} from './candidate-process-dao';
+import {ProfilesDao} from '../requestProps/profiles-dao';
 
 export class CandidateDao {
-    candidate: CandidateInformationDao;
-    profiles: ProfileDao[];
+    candidate: CandidateDetailsDao;
+    profiles: ProfilesDao;
     processes: CandidateProcessDao[];
 }

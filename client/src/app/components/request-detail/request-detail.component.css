@@ -1,5 +1,5 @@
 .Request-Detail {
-    margin: 15px;
+    margin: 10px;
 }
 
 .Request {
@@ -12,4 +12,12 @@
 
 .Candidates {
     margin: 10px
+}
+
+.Languages {
+    margin: 10px;
+}
+
+.table {
+    width: fit-content;
 }

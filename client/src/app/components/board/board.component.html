@@ -1,6 +1,6 @@
 <div class="root">
   <div class="board table-responsive-xl">
-    <div *ngFor="let workflow of workflows">
+    <div *ngFor="let workflow of properties.workflows">
       <table #tableContainer>
         <tr>
           <th [colSpan]=workflow.phases.length>

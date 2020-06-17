@@ -1,4 +1,4 @@
-export class CandidateInformationDao {
+export class CandidateDetailsDao {
     id: number;
     name: string;
     cv: string;

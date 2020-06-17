@@ -5,7 +5,7 @@ import {ErrorHandler} from '../error-handler';
 import {SuccessPostDao} from '../../model/common/successPost-dao';
 import {RequestDao} from 'src/app/model/request/request-dao';
 import {RequestsDao} from 'src/app/model/request/requests-dao';
-import {RequestListDao} from 'src/app/model/request/request-list-dao';
+import {RequestDetailsDao} from 'src/app/model/request/request-details-dao';
 
 
 const httpOptions = {
@@ -92,7 +92,7 @@ export class RequestService {
   }
 
   createRequest(requestBody) {
-    const body = new RequestListDao(requestBody.description,
+    const body = new RequestDetailsDao(requestBody.description,
       requestBody.project,
       requestBody.quantity,
       requestBody.skill,

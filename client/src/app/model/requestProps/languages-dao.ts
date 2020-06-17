@@ -4,4 +4,5 @@ export class LanguagesDao {
 
 class LanguageDao {
   language: string;
+  isMandatory: boolean;
 }

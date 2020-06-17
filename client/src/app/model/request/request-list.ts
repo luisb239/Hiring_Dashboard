@@ -6,7 +6,6 @@ export class RequestList {
               public progress: number,
               public state: string,
               public description: string,
-              public phases: Phase[] = [],
               public dateToSendProfile: string = '',
               public project: string = '',
               public quantity: number = 1,
@@ -14,7 +13,8 @@ export class RequestList {
               public skill: string = '',
               public stateCSL: string = '',
               public targetDate: string = '',
-              public profile: string = ''
+              public profile: string = '',
+              public phases: Phase[] = []
   ) {
   }
 }

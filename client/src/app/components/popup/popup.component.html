@@ -1,14 +1,14 @@
-<div class="modal-header">
-  <h4 class="modal-title">{{candidate.name || ''}}</h4>
+<div class="modal-header" *ngIf="candidate">
+  <h4 class="modal-title">{{candidate.name}}</h4>
   <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
     <span aria-hidden="true">&times;</span>
   </button>
 </div>
-<div class="modal-body">
+<div class="modal-body" *ngIf="candidate && process">
   <div>
     <div class="property">
       <h5 style="display: inline">CV:</h5>
-      <p style="display: inline">{{candidate.cv || ''}}</p>
+      <p style="display: inline">{{candidate.cv || 'cv.docx'}}</p>
     </div>
     <div class="property">
       <h5>Available?</h5>
@@ -30,7 +30,7 @@
       <h5 class="inline">Unavailable Reason:</h5>
       <label>
         <select>
-          <option [value]="process.unavailableReason">{{process.unavailableReason || '    '}}</option>
+          <option [value]="process.unavailableReason">{{process.unavailableReason}}</option>
           <option *ngFor="let reason of reasons" [value]="reason">{{reason}}</option>
         </select>
       </label>

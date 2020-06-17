@@ -8,9 +8,9 @@ import {ProcessPhase} from '../../model/process/process-phase';
 import {RequestService} from '../../services/request/request.service';
 import {Request} from '../../model/request/request';
 import {RequestList} from '../../model/request/request-list';
-import {PhaseAttribute} from '../../model/phase/phase-attribute';
 import {PhaseInfo} from '../../model/phase/phase-info';
 import {CandidateProcess} from '../../model/candidate/CandidateProcess';
+import {CandidateDetailsProps} from './candidate-details-props';
 
 
 @Component({
@@ -20,13 +20,7 @@ import {CandidateProcess} from '../../model/candidate/CandidateProcess';
 })
 export class CandidateDetailsComponent implements OnInit {
 
-  candidateId: number;
-  requestId: number;
-  candidate: Candidate;
-  currentRequest: Request;
-  currentProcess: Process;
-  allProcesses: Process[] = [];
-  allRequests: Request[] = [];
+  properties: CandidateDetailsProps = new CandidateDetailsProps();
 
   constructor(private candidateService: CandidateService,
               private requestService: RequestService,
@@ -36,27 +30,27 @@ export class CandidateDetailsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.candidateId = history.state.candidateId || this.router.url.split('/')[2];
-    this.requestId = history.state.requestId || Number(localStorage.getItem('requestId'));
+    this.properties.candidateId = history.state.candidateId || this.router.url.split('/')[2];
+    this.properties.requestId = history.state.requestId || Number(localStorage.getItem('requestId'));
     localStorage.removeItem('requestId');
-    localStorage.setItem('requestId', String(this.requestId));
+    localStorage.setItem('requestId', String(this.properties.requestId));
 
-    this.candidateService.getCandidateById(this.candidateId)
+    this.candidateService.getCandidateById(this.properties.candidateId)
       .subscribe(dao => {
         const result = dao.candidate;
-        this.candidate = new Candidate(result.name,
+        this.properties.candidate = new Candidate(result.name,
           result.id,
           result.profileInfo,
           result.available,
           result.cv,
-          dao.profiles.map(pi => pi.profile),
+          dao.profiles.profiles.map(pi => pi.profile),
           dao.processes.map(proc => new CandidateProcess(proc.status, proc.requestId)));
-        this.candidate.processes.forEach(process => {
-          if (process.requestId !== this.requestId) {
+        this.properties.candidate.processes.filter(process => process.requestId !== this.properties.requestId)
+          .forEach(process => {
             this.requestService.getRequest(process.requestId)
               .subscribe(requestDao => {
                 const request = requestDao.request;
-                this.allRequests.push(new Request(new RequestList(
+                this.properties.allRequests.push(new Request(new RequestList(
                   request.id,
                   request.workflow,
                   request.progress,
@@ -64,9 +58,9 @@ export class CandidateDetailsComponent implements OnInit {
                   request.description
                 ), [], []));
               }, error => console.log(error));
-            this.processService.getProcess(process.requestId, this.candidateId)
+            this.processService.getProcess(process.requestId, this.properties.candidateId)
               .subscribe(processDao => {
-                  this.allProcesses.push(new Process(processDao.status,
+                  this.properties.allProcesses.push(new Process(processDao.status,
                     processDao.unavailableReasons,
                     processDao.phases.map(phase => new ProcessPhase(
                       phase.phase,
@@ -80,17 +74,16 @@ export class CandidateDetailsComponent implements OnInit {
                 error => {
                   console.log(error);
                 });
-          }
-        });
+          });
       }, error => {
         console.log(error);
       });
 
-    if (this.requestId) {
-      this.requestService.getRequest(this.requestId)
+    if (this.properties.requestId) {
+      this.requestService.getRequest(this.properties.requestId)
         .subscribe(dao => {
           const requestDao = dao.request;
-          this.currentRequest = new Request(new RequestList(
+          this.properties.currentRequest = new Request(new RequestList(
             requestDao.id,
             requestDao.workflow,
             requestDao.progress,
@@ -98,9 +91,9 @@ export class CandidateDetailsComponent implements OnInit {
             requestDao.description
           ), [], []);
         }, error => console.log(error));
-      this.processService.getProcess(this.requestId, this.candidateId)
+      this.processService.getProcess(this.properties.requestId, this.properties.candidateId)
         .subscribe(dao => {
-          this.currentProcess = new Process(dao.status, dao.unavailableReasons,
+          this.properties.currentProcess = new Process(dao.status, dao.unavailableReasons,
             dao.phases.map(phase => new ProcessPhase(phase.phase,
               phase.startDate,
               phase.updateDate,
