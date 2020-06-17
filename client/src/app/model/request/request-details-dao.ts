@@ -1,5 +1,5 @@
 
-export class RequestListDao {
+export class RequestDetailsDao {
   constructor(
     public description: string,
     public project: string,

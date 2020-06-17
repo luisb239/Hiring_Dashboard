@@ -1,3 +1,3 @@
 export class RequestSkillDao {
-    skills: string[];
-  }
+  skills: string[];
+}

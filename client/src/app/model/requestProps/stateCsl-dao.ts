@@ -1,3 +1,3 @@
 export class RequestStateCslDao {
-    statesCsl: string[];
-  }
+  statesCsl: string[];
+}

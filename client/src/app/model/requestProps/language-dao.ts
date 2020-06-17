@@ -1,3 +1,3 @@
 export class RequestLanguageDao {
-    languages: string[];
-  }
+  languages: string[];
+}

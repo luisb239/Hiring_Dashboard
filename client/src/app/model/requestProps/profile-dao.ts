@@ -1,3 +1,3 @@
 export class RequestProfileDao {
-    profiles: string[];
-  }
+  profiles: string[];
+}

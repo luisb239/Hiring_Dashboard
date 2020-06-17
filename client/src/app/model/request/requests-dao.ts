@@ -1,5 +1,5 @@
-import {RequestListDao} from './request-list-dao';
+import {RequestDetailsDao} from './request-details-dao';
 
 export class RequestsDao {
-  requests: RequestListDao[];
+  requests: RequestDetailsDao[];
 }

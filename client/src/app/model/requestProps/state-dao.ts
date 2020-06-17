@@ -1,3 +1,3 @@
 export class RequestStateDao {
-    states: string[];
-  }
+  states: string[];
+}

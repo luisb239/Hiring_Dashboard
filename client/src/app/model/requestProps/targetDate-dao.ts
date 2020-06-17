@@ -1,3 +1,3 @@
 export class RequestTargetDateDao {
-    months: string[];
-  }
+  months: string[];
+}

@@ -1,8 +1,7 @@
-
 export class LanguageList {
-    constructor(
-        public language: string,
-        public isMandatory: boolean
-    ) {
-    }
+  constructor(
+    public language: string,
+    public isMandatory: boolean
+  ) {
+  }
 }
