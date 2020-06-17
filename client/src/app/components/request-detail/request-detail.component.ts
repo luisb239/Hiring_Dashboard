@@ -5,6 +5,7 @@ import { RequestList } from 'src/app/model/request/request-list';
 import { UserRole } from 'src/app/model/user/user-role';
 import { LanguageList } from 'src/app/model/requestProps/language-list';
 import { ProcessList } from 'src/app/model/process/process-list';
+import { RequestDetailProps } from './request-detail-props';
 
 @Component({
   selector: 'app-request-detail',
@@ -12,12 +13,8 @@ import { ProcessList } from 'src/app/model/process/process-list';
   styleUrls: ['./request-detail.component.css']
 })
 export class RequestDetailComponent implements OnInit {
-  requestId: number;
-  requestList: RequestList;
-  userRoles: UserRole[];
-  languages: LanguageList[];
-  processes: ProcessList[];
-  requestAttrs: string[];
+
+  properties: RequestDetailProps = new RequestDetailProps();
 
   constructor(
     private router: Router,
@@ -30,7 +27,7 @@ export class RequestDetailComponent implements OnInit {
   private getRequest(requestId: number) {
     this.requestService.getRequest(requestId).subscribe(
       reqDao => {
-        this.requestList = new RequestList(
+        this.properties.requestList = new RequestList(
           reqDao.request.id,
           reqDao.request.workflow,
           reqDao.request.progress,
@@ -44,15 +41,15 @@ export class RequestDetailComponent implements OnInit {
           reqDao.request.stateCsl,
           reqDao.request.targetDate,
           reqDao.request.profile);
-        this.userRoles = reqDao.userRoles.map(
+        this.properties.userRoles = reqDao.userRoles.map(
           userRoleDao => new UserRole(
             userRoleDao.userId, userRoleDao.username, userRoleDao.roleId, userRoleDao.role));
-        this.processes = reqDao.processes.map(
+        this.properties.processes = reqDao.processes.map(
           processDao => new ProcessList(
             processDao.status, processDao.candidateId, processDao.candidateName));
-        this.languages = reqDao.languages.languages.map(
+        this.properties.languages = reqDao.languages.map(
           languageDao => new LanguageList(languageDao.language, languageDao.isMandatory));
-        this.requestAttrs = Object.keys(this.requestList).filter(
+        this.properties.requestAttrs = Object.keys(this.properties.requestList).filter(
           attr => attr !== 'phases' && attr !== 'id');
       }, error => {
         console.log(error);
@@ -65,8 +62,8 @@ export class RequestDetailComponent implements OnInit {
    * Then it calls the function getRequest with the id obtained.
    */
   ngOnInit() {
-    this.requestId = history.state.requestId || this.router.url.split('/')[2];
-    this.getRequest(this.requestId);
+    this.properties.requestId = history.state.requestId || this.router.url.split('/')[2];
+    this.getRequest(this.properties.requestId);
   }
 
 }

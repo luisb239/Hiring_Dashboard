@@ -8,17 +8,17 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <td *ngFor="let name of requestAttrs">
+                            <td *ngFor="let name of properties.requestAttrs">
                                 <h5>{{name}}</h5>
                             </td>
                         </tr>
                         <tr>
-                            <td *ngFor="let name of requestAttrs">
+                            <td *ngFor="let name of properties.requestAttrs">
                                 <div *ngIf='name === "progress"'>
-                                    {{requestList[name]}}%
+                                    {{properties.requestList[name]}}%
                                 </div>
                                 <div *ngIf='name !== "progress"'>
-                                    {{requestList[name]}}
+                                    {{properties.requestList[name]}}
                                 </div>
                             </td>
                         </tr>
@@ -38,7 +38,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr *ngFor="let language of languages">
+                            <tr *ngFor="let language of properties.languages">
                                 <td>
                                     {{language.language}}
                                 </td>
@@ -61,7 +61,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr *ngFor="let user of userRoles">
+                            <tr *ngFor="let user of properties.userRoles">
                                 <td>
                                     {{user.username}}
                                 </td>
@@ -84,8 +84,8 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr *ngFor="let process of processes" [routerLink]="['/candidate/', process.candidateId]"
-                                [state]="{requestId: requestId, candidateId: process.candidateId}">
+                            <tr *ngFor="let process of properties.processes" [routerLink]="['/candidate/', process.candidateId]"
+                                [state]="{requestId: properties.requestId, candidateId: process.candidateId}">
                                 <td>
                                     {{process.candidateName}}
                                 </td>
