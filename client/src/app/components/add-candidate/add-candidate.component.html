@@ -16,7 +16,6 @@
     <tr>
       <th scope="col">#</th>
       <th scope="col">Name</th>
-      <th scope="col">Profile</th>
       <th scope="col">Available</th>
     </tr>
     </thead>
@@ -24,7 +23,6 @@
     <tr *ngFor="let candidate of candidates; index as i">
       <th scope="row">{{ i + 1 }}</th>
       <td>{{candidate.name}}</td>
-      <td>{{candidate.profiles}}</td>
       <td>
         <ngb-progressbar *ngIf="candidate.available" type="green" [value]="100" [showValue]="false"></ngb-progressbar>
         <ngb-progressbar *ngIf="!candidate.available" type="red" [value]="100" [showValue]="false"></ngb-progressbar>
