@@ -1,7 +1,7 @@
 'use strict'
 
-const AppError = require('../errors/app-error.js')
-const errors = require('../errors/common-errors.js')
+const AppError = require('./errors/app-error.js')
+const errors = require('./errors/common-errors.js')
 
 module.exports = (candidateDb, profilesDb, processDb) => {
 
@@ -11,12 +11,24 @@ module.exports = (candidateDb, profilesDb, processDb) => {
         createCandidate: createCandidate,
     }
 
-    async function getCandidates({available = null} = {}) {
+    async function getCandidates({available = null, profiles = []}) {
 
-        const candidates = await candidateDb.getCandidates({available})
+        let candidates = await candidateDb.getCandidates({available})
+
+        let candidatesProfiles = await Promise.all(candidates.map(async c => {
+            return {
+                profilesArray: (await profilesDb.getCandidateProfiles({candidateId: c.id})).map(p => p.profile)
+            }
+        }))
+
+        candidatesProfiles = candidatesProfiles.filter(cp => profiles.every(p => cp.profilesArray.includes(p)))
+
+        //TODO
+        console.log(candidatesProfiles)
+
 
         return {
-            candidates: candidates
+            candidates: candidates,
         }
     }
 
@@ -40,7 +52,7 @@ module.exports = (candidateDb, profilesDb, processDb) => {
 
 
     // TODO
-    async function createCandidate({name, cv = null, available = true, profileInfo = null} = {}) {
+    async function createCandidate({name, cv = null, available = true, profileInfo = null}) {
         const candidate = await candidateDb.createCandidate({name, cv, available, profileInfo})
         return {candidate: candidate}
     }

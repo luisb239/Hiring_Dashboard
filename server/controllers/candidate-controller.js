@@ -9,10 +9,9 @@ module.exports = (service) => {
     }
 
     async function getCandidates(req, res) {
-        console.log(req.query.profiles)
         const candidates = await service.getCandidates({
             available: req.query.available,
-            profiles: req.query.profiles
+            profiles: req.query.profiles ? req.query.profiles.split(',') : null
         })
         res.status(200).send(candidates)
     }

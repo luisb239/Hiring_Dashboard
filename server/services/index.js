@@ -11,7 +11,8 @@ module.exports = (db, authModule) => {
 
     const phase = require('./phase-service.js')(db.phase, db.info)
 
-    const process = require('./process-service.js')(db.request, db.candidate, db.process, db.phase, db.info)
+    const process = require('./process-service.js')(db.request, db.candidate,
+        db.process, db.phase, db.info, db.processUnavailableReason, db.processPhases)
 
     const auth = require('./auth-service.js')(db.user, authModule)
 

@@ -8,7 +8,8 @@ APP INICIALIZA OS DADOS E FAZ AS VERIFICACOES
 
 CREATE TABLE user_profile(
 user_id INT,		
-is_active BOOLEAN NOT NULL /* DEFAULT TRUE */,
+user_email text NOT NULL UNIQUE,
+is_active BOOLEAN NOT NULL,
 PRIMARY KEY (user_id)
 );
 

@@ -1,8 +1,8 @@
 INSERT INTO user_profile(user_id, is_active)
 	VALUES 
-	(1, TRUE),
-	(2, TRUE),
-	(3, TRUE);
+	(2, 'A44015@alunos.isel.pt', TRUE),
+	(3, 'A43553@alunos.isel.pt' , TRUE),
+	(4, 'A43520@alunos.isel.pt', TRUE);
 	
 INSERT INTO role(role_id)
 	VALUES	

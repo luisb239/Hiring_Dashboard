@@ -2,16 +2,17 @@
 
 module.exports = (service) => {
     return {
-        signup: signup
+        getUserInfo: getUserInfo,
+        logout: logout
     }
 
-    async function signup(req, res) {
-        // TODO -> RETURN ID for response
-        await service.createUser({
-            username: req.body.username,
-            password: req.body.password
-        })
-        //TODO -> SIGN UP SUCCESSFUL
-        res.status(201)
+    async function getUserInfo(req, res) {
+        const user = await service.getUserInfo({id: req.user.id, email: req.user.username})
+        console.log(user)
     }
+
+    async function logout(req, res) {
+
+    }
+
 }

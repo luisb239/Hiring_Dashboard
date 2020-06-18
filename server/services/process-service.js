@@ -1,17 +1,20 @@
 'use strict'
 
-const errors = require('../errors/common-errors.js')
-const AppError = require('../errors/app-error.js')
+const errors = require('./errors/common-errors.js')
+const AppError = require('./errors/app-error.js')
 
-module.exports = (requestDb, candidateDb, processDb, phaseDb, infoDb) => {
+module.exports = (requestDb, candidateDb, processDb, phaseDb, infoDb, processUnavailableReasonDb, processPhaseDb) => {
 
     return {
         getProcessDetail: getProcessDetail,
         getProcessesByRequestId: getProcessesByRequestId,
-        updateProcess: updateProcess,
-        createProcess
+        updateProcessCurrentPhase: updateProcessCurrentPhase,
+        createProcess,
+        updateStatus,
+        updateUnavailableReason
     }
 
+    //TODO
     async function createProcess() {
         await processDb.createProcess()
     }
@@ -32,7 +35,10 @@ module.exports = (requestDb, candidateDb, processDb, phaseDb, infoDb) => {
                     id: candidate.id,
                     name: candidate.name
                 }),
-                phase: await processDb.getProcessCurrentPhase({requestId, candidateId: candidate.id})
+                phase: (await processPhaseDb.getProcessCurrentPhase({
+                    requestId,
+                    candidateId: candidate.id
+                })).currentPhase
             }
         }))
         return {
@@ -49,15 +55,15 @@ module.exports = (requestDb, candidateDb, processDb, phaseDb, infoDb) => {
      * @returns {Promise<{unavailableReason: (*|null), currentPhase: *, phases: number[], status: string}>}
      */
     async function getProcessDetail({requestId, candidateId}) {
-        const currentPhase = await processDb.getProcessCurrentPhase({requestId, candidateId})
+        const currentPhase = (await processPhaseDb.getProcessCurrentPhase({requestId, candidateId})).currentPhase
 
         const status = await processDb.getProcessStatus({requestId, candidateId})
 
-        const reason = await processDb.getProcessUnavailableReason({requestId, candidateId})
+        const reason = await processUnavailableReasonDb.getProcessUnavailableReason({requestId, candidateId})
 
         const processInfos = await processDb.getProcessInfos({requestId, candidateId})
 
-        const processPhases = await processDb.getPhasesOfProcess({requestId, candidateId})
+        const processPhases = await processPhaseDb.getProcessPhases({requestId, candidateId})
 
         // TODO -> improve this?
         const processDetailedPhases = await Promise.all(processPhases.map(async (procPhase) => {
@@ -81,6 +87,40 @@ module.exports = (requestDb, candidateDb, processDb, phaseDb, infoDb) => {
         }
     }
 
+
+    async function updateStatus({requestId, candidateId, status}) {
+        const success = await processDb.updateProcessStatus({requestId, candidateId, status})
+        if (success) {
+            return {
+                message: `Process status updated with success to ${status}`
+            }
+        }
+        //TODO
+    }
+
+
+    //TODO -> como tratar de todos os possiveis erros??
+    async function updateUnavailableReason({requestId, candidateId, unavailableReason}) {
+        const currentReason = await processUnavailableReasonDb.getProcessUnavailableReason({requestId, candidateId})
+        if (!currentReason) {
+            await processUnavailableReasonDb.setProcessInitialUnavailableReason({
+                requestId,
+                candidateId,
+                reason: unavailableReason
+            })
+            return {message: `Process unavailable reasons set to ${unavailableReason}`}
+        } else {
+            if (currentReason.unavailabilityReason === unavailableReason) {
+                return {message: `Process unavailable reason is already ${unavailableReason}`}
+            }
+            await processUnavailableReasonDb.updateProcessUnavailableReason({
+                requestId,
+                candidateId,
+                reason: unavailableReason
+            })
+        }
+    }
+
     /**
      * Updates process current phase
      * @param requestId : number
@@ -89,10 +129,11 @@ module.exports = (requestDb, candidateDb, processDb, phaseDb, infoDb) => {
      * Represents the candidate id
      * @param newPhase : string
      * Represents the phase to be updated to
-     * @returns {Promise<{oldPhase: string, newPhase: string, message: string}>}
+     * @returns {Promise<{JSON}>}
      */
-    async function updateProcess({requestId, candidateId, newPhase}) {
-        // Get process related workflow and its phases
+    //TODO -> SE O CANDIDATO ESTIVER NA 3 FASE E QUISER VOLTAR à SEGUNDA DÁ ERRO
+    async function updateProcessCurrentPhase({requestId, candidateId, newPhase}) {
+        // Get process related workflow and the workflow's phases
         const {workflow} = await requestDb.getRequestById({id: requestId})
         const workflowPhases = await phaseDb.getPhasesByWorkflow({workflow})
 
@@ -103,53 +144,35 @@ module.exports = (requestDb, candidateDb, processDb, phaseDb, infoDb) => {
                 "Invalid Phase",
                 `Phase ${newPhase} is not valid in the request workflow`)
         }
-
-
         // Get process current phase
-        const currentPhase = await processDb.getProcessCurrentPhase({requestId, candidateId})
+        const currentPhase = await processPhaseDb.getProcessCurrentPhase({requestId, candidateId})
 
-        // Process does not have a phase yet
+        // Process does not have a current phase yet
         if (!currentPhase) {
-            // Check if validPhase is first in workflow
-            if (validPhase.phaseNumber === 1) {
-                await processDb.addPhaseToProcess({requestId, candidateId, phase: newPhase})
-                await processDb.setProcessInitialPhase({requestId, candidateId, initialPhase: newPhase})
-            } else {
-                throw new AppError(errors.invalidInput,
-                    "Invalid Phase Transition",
-                    `Process initial phase cannot be ${newPhase}`)
-            }
+            await processPhaseDb.addPhaseToProcess({requestId, candidateId, phase: newPhase})
+            await processPhaseDb.setProcessInitialPhase({requestId, candidateId, initialPhase: newPhase})
         } else {
             // Process has a current phase
 
-            // Check if currentPhase is equal to validPhase
-            if (currentPhase === validPhase.phase) {
-                throw new AppError(errors.invalidInput,
-                    "Invalid Phase Transition",
-                    `Process is already in phase ${validPhase.phase}`)
-            }
-
-            // Check if process can go from current phase to new phase
-
-            const currPhase = workflowPhases.find(p => p.phase === currentPhase)
-
-            // TODO -> No need to calculate the difference between both phases...
-
-            // Difference between phase suggested number and current phase number is 1 -> Can transition
-            if (validPhase.phaseNumber - currPhase.phaseNumber === 1) {
-                await processDb.addPhaseToProcess({requestId, candidateId, phase: newPhase, startDate: new Date()})
-                await processDb.updateProcessCurrentPhase({requestId, candidateId, phase: newPhase})
+            if (currentPhase.currentPhase === newPhase) {
                 return {
-                    oldPhase: currPhase.phase,
-                    newPhase: validPhase.phase,
-                    message: `Process moved from ${currPhase.phase} to ${validPhase.phase}`
+                    message: `Process current phase is already ${newPhase}`
                 }
             }
-            // Cannot transition from current phase to suggested phase
-            else {
-                throw new AppError(errors.invalidInput,
-                    "Invalid Phase Transition",
-                    `Cannot transition from ${currPhase.phase} to ${newPhase}`)
+
+            const processExistingPhases = await processPhaseDb.getProcessPhases({requestId, candidateId})
+
+            // If phase to transition (newPhase) does not exist in the process list of phases, then
+            // we must insert the newPhase in the list of process phases.
+            if (!processExistingPhases.find(procPhase => procPhase.phase === newPhase)) {
+                await processPhaseDb.addPhaseToProcess({requestId, candidateId, phase: newPhase, startDate: new Date()})
+            }
+            await processPhaseDb.updateProcessCurrentPhase({requestId, candidateId, phase: newPhase})
+
+            return {
+                oldPhase: currentPhase.currentPhase,
+                newPhase: validPhase.phase,
+                message: `Process moved from ${currentPhase.currentPhase} to ${validPhase.phase}`
             }
         }
     }

@@ -42,14 +42,23 @@ module.exports = (service) => {
             project: req.body.project,
             profile: req.body.profile,
             workflow: req.body.workflow,
-            dateToSendProfile: req.body.dateToSendProfile,
+            dateToSendProfile: req.body.dateToSendProfile || null,
         })
 
-        // add languages tor request
-        /*
-            mandatoryLanguages: req.body.mandatoryLanguages,
-            valuedLanguages: req.body.valuedLanguages,
-         */
+        if (req.body.mandatoryLanguages && req.body.mandatoryLanguages.length) {
+            await service.addLanguagesToRequest({
+                requestId: id,
+                languages: req.body.mandatoryLanguages,
+                isMandatory: true
+            })
+        }
+        if (req.body.valuedLanguages && req.body.valuedLanguages.length) {
+            await service.addLanguagesToRequest({
+                requestId: id,
+                languages: req.body.valuedLanguages,
+                isMandatory: false
+            })
+        }
 
         res.status(201).send({
             message: 'Request created successfully',

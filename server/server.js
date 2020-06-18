@@ -26,30 +26,50 @@ const dbOptions = {
 }
 
 const jsonObj = {
-    "roles": ["admin", "DbManager", "Developer", "guest"],
+    "roles": ["admin", "recruiter", "jobOwner", "guest"],
     "permissions": [
-        {"resource": "hd", "action": "GET"},
-        {"resource": "authentications", "action": "GET"},
-        {"resource": "authentications", "action": "POST"},
-        {"resource": "users", "action": "GET"},
-        {"resource": "permissions", "action": "GET"},
-        {"resource": "roles", "action": "GET"},
-        {"resource": "roles", "action": "POST"},
-        {"resource": "lists", "action": "GET"}],
+        {"resource": "auth", "action": "GET"},
+        {"resource": "auth", "action": "POST"},
 
+        {"resource": "requests", "action": "GET"},
+        {"resource": "requests", "action": "POST"},
+        {"resource": "requests", "action": "PUT"},
+
+        {"resource": "workflows", "action": "GET"},
+
+        {"resource": "phases", "action": "GET"},
+
+        {"resource": "requests-properties", "action": "GET"},
+
+        {"resource": "candidates", "action": "GET"},
+        {"resource": "candidates", "action": "POST"},
+
+    ],
     "grants": {
-        "DbManager": [{"resource": "users", "action": "GET"}, {"resource": "roles", "action": "GET"}],
-        "guest": [{"resource": "authentications", "action": "GET"}, {"resource": "authentications", "action": "POST"}],
+        //TODO -> change guest permissions -> only temporary for postman tests
+        "guest": [
+            {"resource": "auth", "action": "GET"},
+            {"resource": "auth", "action": "POST"},
+            {"resource": "requests", "action": "GET"},
+            {"resource": "requests", "action": "POST"},
+            {"resource": "requests", "action": "PUT"},
+            {"resource": "workflows", "action": "GET"},
+            {"resource": "phases", "action": "GET"},
+            {"resource": "requests-properties", "action": "GET"},
+            {"resource": "candidates", "action": "GET"},
+            {"resource": "candidates", "action": "POST"},
+        ],
+        "recruiter": [
+            {"role": "guest"}
+        ],
+        "jobOwner": [
+            {"role": "guest"}
+        ],
         "admin": [
-            {"role": "DbManager"}, {"role": "guest"},
-            {
-                "resource": "permissions",
-                "action": "GET"
-            },
-            {"resource": "lists", "action": "GET"}]
+            {"role": "guest"}
+        ]
     }
 }
-
 
 const authModule = require('../authization-module/authization')
 

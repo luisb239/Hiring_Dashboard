@@ -1,7 +1,7 @@
 'use strict'
 
-const AppError = require('../errors/app-error.js')
-const errors = require('../errors/common-errors.js')
+const AppError = require('./errors/app-error.js')
+const errors = require('./errors/common-errors.js')
 
 module.exports = (phaseDb, infoDb) => {
 
@@ -11,6 +11,7 @@ module.exports = (phaseDb, infoDb) => {
 
     async function getPhases() {
         const phases = await phaseDb.getPhases()
+
         return {
             phases: phases
         }
@@ -22,14 +23,15 @@ module.exports = (phaseDb, infoDb) => {
         if (!phaseFound)
             throw new AppError(errors.notFound, "Phase Not Found", `Phase ${phase} does not exist`)
 
-        const infos = await infoDb.getInfosByPhase({phase})
-
-        return {
-            phase: phaseFound.phase,
-            infos: infos.map(info => ({
+        const infos = (await infoDb.getInfosByPhase({phase}))
+            .map(info => ({
                 name: info.name,
                 value: info.value
             }))
+
+        return {
+            phase: phaseFound.phase,
+            infos: infos
         }
     }
 }

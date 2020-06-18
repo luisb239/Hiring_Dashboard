@@ -1,25 +1,44 @@
 'use strict'
 
-const errors = require('../errors/common-errors.js')
-const AppError = require('../errors/app-error.js')
+const errors = require('./errors/common-errors.js')
+const AppError = require('./errors/app-error.js')
 
-module.exports = (requestDb, processDb, languageDb, authModule) => {
+module.exports = (requestDb, processDb, requestLanguagesDb, authModule) => {
 
     return {
         getRequests: getRequests,
         createRequest: createRequest,
-        getRequestById: getRequestById
+        getRequestById: getRequestById,
+        addLanguagesToRequest: addLanguagesToRequest,
     }
 
+    /**
+     *
+     * @param skill : String
+     * @param state : String
+     * @param stateCsl : String
+     * @param profile : String
+     * @param project : String
+     * @param workflow : String
+     * @param minQuantity : number
+     * @param maxQuantity : number
+     * @param minProgress : number
+     * @param maxProgress : number
+     * @param userId : number
+     * @param roleId : number
+     * @returns all requests
+     */
     async function getRequests({
-                                   skill = null, state = null, stateCsl = null, profile = null,
-                                   project = null, workflow = null, minQuantity = null, maxQuantity = null,
-                                   minProgress = null, maxProgress = null, userId = null, roleId = null
+                                   skill = null, state = null, stateCsl = null,
+                                   profile = null, project = null, workflow = null,
+                                   minQuantity = null, maxQuantity = null,
+                                   minProgress = null, maxProgress = null,
+                                   userId = null, roleId = null
                                }) {
+
         const requests = await requestDb.getRequests({
-            skill, state, stateCsl, profile, project,
-            workflow, minQuantity, maxQuantity, minProgress,
-            maxProgress, userId, roleId
+            skill, state, stateCsl, profile, project, workflow, minQuantity,
+            maxQuantity, minProgress, maxProgress, userId, roleId
         })
 
         return {
@@ -29,8 +48,11 @@ module.exports = (requestDb, processDb, languageDb, authModule) => {
 
     async function getRequestById({id}) {
         const requestFound = await requestDb.getRequestById({id})
+
         if (!requestFound)
-            throw new AppError(errors.notFound, "Request not found", `Request with id ${id} does not exist`)
+            throw new AppError(errors.notFound,
+                "Request not found",
+                `Request with id ${id} does not exist`)
 
         // TODO -> CALL user_roles_db instead
         // Get users (and their roles) in current request
@@ -49,7 +71,7 @@ module.exports = (requestDb, processDb, languageDb, authModule) => {
 
         const processes = await processDb.getRequestProcesses({requestId: id})
 
-        const languages = (await languageDb.getRequestLanguages({requestId: id}))
+        const languages = (await requestLanguagesDb.getRequestLanguages({requestId: id}))
             .map(l => ({
                 language: l.language,
                 isMandatory: l.isMandatory
@@ -73,9 +95,16 @@ module.exports = (requestDb, processDb, languageDb, authModule) => {
             quantity, description, targetDate, state, skill, stateCsl,
             project, profile, workflow, dateToSendProfile, requestDate: new Date().toDateString(), progress: 0
         })
+
         return {
             id: request.id
         }
 
+    }
+
+    //TODO -> TRY CATCH..DUPLICATE, FOREIGN KEY, ...
+    async function addLanguagesToRequest({requestId, languages, isMandatory}) {
+        await Promise.all(languages.map(async (l) =>
+            await requestLanguagesDb.createLanguageRequirement({requestId, language: l, isMandatory})))
     }
 }

@@ -19,8 +19,8 @@ module.exports = {
         const resource = req.path.split("/")[2]
         const action = req.method
 
-        const user=req.user
-        var roles=[]
+        const user = req.user
+        var roles = []
         if(user){
             roles= await usersDal.getUserRoles(user.id)
             roles=roles.map(role=>role["Roles.role"])

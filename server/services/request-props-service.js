@@ -1,7 +1,7 @@
 'use strict'
 
-const AppError = require('../errors/app-error')
-const errors = require('../errors/common-errors')
+const AppError = require('./errors/app-error')
+const errors = require('./errors/common-errors.js')
 
 module.exports = (languagesDao, monthsDao, profilesDao, projectsDao,
                   skillsDao, statesDao, statesCslDao, workflowsDao, phasesDao) => {
@@ -74,6 +74,7 @@ module.exports = (languagesDao, monthsDao, profilesDao, projectsDao,
             throw new AppError(errors.notFound, "Workflow Not Found", `Workflow ${workflow} does not exist`)
 
         const phases = await phasesDao.getPhasesByWorkflow({workflow})
+
         return {
             workflow: _workflow.workflow,
             phases: phases

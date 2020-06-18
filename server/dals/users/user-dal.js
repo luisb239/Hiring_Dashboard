@@ -1,6 +1,6 @@
 'use strict'
 
-const user = require('../schemas/user-roles-schemas/user-schema.js')
+const user = require('../../schemas/user-roles-schemas/user-schema.js')
 
 module.exports = (query) => {
 

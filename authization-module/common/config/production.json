@@ -5,10 +5,10 @@
     "callbackUrl": "http://localhost:8082/api/authentications/google/callback"
   },
   "azureAD": {
-    "azure_client_id": "39d62b3c-b736-4e13-b71e-37926569e5dc",
-    "azure_client_secret": "8i4IoQXtI-UbSc5wz4LtrO:=M:UrkTH=",
-    "callbackUrl": "http://localhost:8082/api/authentications/azureAD/callback",
-    "tenant": "bb367ab9-9da9-455e-b938-fd65cd29f5ae"
+    "azure_client_id": "535114c4-ce91-4a25-9d26-d7700e4f0930",
+    "azure_client_secret": "2W-Rgjb_xvm.jg1Ujy7-EW9_4c5dmd3c2s",
+    "callbackUrl": "http://localhost:8080/hd/auth/azure/callback",
+    "tenant": "e247b35f-287d-4d27-be25-2a6605c11af7"
   },
   "saml": {
     "callbackUrl": "http://localhost:8082/api/authentications/saml/callback",

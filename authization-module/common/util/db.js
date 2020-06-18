@@ -8,7 +8,8 @@ const
 const sequelize = new Sequelize(config.database_opts.database, config.database_opts.user, config.database_opts.password, {
     host: config.database_opts.host,
     dialect: config.database_opts.sgbd,
-    query: { raw: true }
+    query: {raw: true},
+    logging: false
 })
 
 config.sequelize = sequelize
@@ -23,6 +24,7 @@ async function databasesetup(rbac_opts) {
     await sequelize.sync()
 
     console.log('database setup correctly')
+
 
     await User.findOrCreate({where: {username: "superuser", password: "superuser"}})
     await List.findOrCreate({where: {"list": "BLACK"}})
