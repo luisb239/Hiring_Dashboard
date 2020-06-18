@@ -1,0 +1,13 @@
+.profile {
+  max-width: fit-content;
+}
+
+.filter {
+  margin-left: 50px;
+  display: inline;
+}
+
+td {
+  text-align: center;
+  vertical-align: middle;
+}

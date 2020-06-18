@@ -1,9 +1,9 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 import {catchError} from 'rxjs/operators';
 import {ErrorHandler} from '../error-handler';
 import {CandidateDao} from 'src/app/model/candidate/candidate-dao';
-import { CandidatesDao } from 'src/app/model/candidate/candidates-dao';
+import {CandidatesDao} from '../../model/candidate/candidates-dao';
 
 const httpOptions = {
   headers: new HttpHeaders({
@@ -31,6 +31,21 @@ export class CandidateService {
 
   getAllCandidates() {
     return this.http.get<CandidatesDao>(`${this.baseUrl}/candidates`, httpOptions)
+      .pipe(data => {
+          return data;
+        },
+        catchError(this.errorHandler.handleError));
+  }
+
+  getAllCandidatesWithQueries(profiles: string[], available: boolean) {
+    let params = new HttpParams();
+    params = params.append('profiles', profiles.join(', '));
+    params = params.set('available', String(available));
+    return this.http.get<CandidatesDao>(`${this.baseUrl}/candidates`, {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json'
+      }), params
+    })
       .pipe(data => {
           return data;
         },
