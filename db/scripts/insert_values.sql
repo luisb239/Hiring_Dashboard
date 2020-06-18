@@ -34,7 +34,7 @@ INSERT INTO role_type(role_type)
 	
 INSERT INTO user_role(user_id, role_id, role_type)
 	VALUES	
-	(1, 1, 'Team Leader');
+	(2, 1, 'Team Leader');
 	
 INSERT INTO request_state
 	VALUES
