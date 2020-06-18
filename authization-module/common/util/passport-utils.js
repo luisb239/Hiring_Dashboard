@@ -1,13 +1,13 @@
 'use strict'
 
 const
-    users = require('../../functionalities/user-dal'),
-    lists = require('../../functionalities/list-dal'),
-    idps = require('../../functionalities/idp-dal'),
-    userHistories = require('../../functionalities/user-history-dal'),
-    BASE_URL = require('../config/config').BASE_URL,
-    userSession=require('../../functionalities/user-session-dal'),
-    protocol=require('../../functionalities/protocols-dal'),
+    users = require('../../resources/dals/users-dal'),
+    lists = require('../../resources/dals/lists-dal'),
+    userList=require('../../resources/dals/user-list-dal'),
+    idps = require('../../resources/dals/idps-dal'),
+    userHistories = require('../../resources/dals/users-history-dal'),
+    userSession = require('../../resources/dals/user-session-dal'),
+    protocol = require('../../resources/dals/protocols-dal'),
     moment = require('moment')
 
 
@@ -28,7 +28,7 @@ module.exports = {
     findUserByIdp: async (idp) => {
         // needs endpoint
         const user = await users.getByIdp(idp)
-        return user ? { id: user.id, idp: idp, username: user.username } : null
+        return user ? {id: user.id, idp: idp, username: user.username} : null
     },
     /**
      *
@@ -56,10 +56,10 @@ module.exports = {
 
         const userId = await users.create(username, password)
 
-        await idps.create(idpId, idpName, userId.insertId)
+        await idps.create(idpId, idpName, userId.id)
 
         return {
-            id: userId.insertId,
+            id: userId.id,
             idp_id: idpId,
             username: username
         }
@@ -69,7 +69,11 @@ module.exports = {
      * @param userId
      * @returns {Promise<boolean>}
      */
-    isBlackListed: async (userId) => lists.isUserBlackListed(userId).then(result=>result.length>0),
+    isBlackListed: async (userId)=>{
+        let result=await userList.isUserBlackListed(userId)
+        result=result.filter(obj=>obj["Lists.list"]==='BLACK')
+        return result.length > 0
+    },
     /**
      *
      * @param userId
@@ -78,11 +82,14 @@ module.exports = {
     addNotification: async (userId) => {
         await userHistories.create(userId, moment().format("YYYY-MM-DD HH:mm:ss"), "BlackListed User tried to Login")
     },
-    createUserSession : async(userId,sessionId)=>{
-        await userSession.create(userId,sessionId)
+    createUserSession: async (userId, sessionId) => {
+        await userSession.create(userId, sessionId)
     },
-    checkProtocol :async(protocolName)=>{
-        let result=await protocol.get(protocolName)
-        return result.length>0
+    checkProtocol: async (protocolName) => {
+        const result = await protocol.get(protocolName)
+        return result!=null
+    },
+    deleteUserSession : async(userId,sessionId)=>{
+        await userSession.delete(userId,sessionId)
     }
 }

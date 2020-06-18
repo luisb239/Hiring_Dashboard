@@ -36,7 +36,7 @@ export class LogInComponent implements OnInit {
 
     this.loading = true;
 
-    this.authService.register(this.form.username.value, this.form.password.value)
+    this.authService.login(this.form.username.value, this.form.password.value)
       .subscribe(
         user => {
           // alert user
@@ -47,6 +47,7 @@ export class LogInComponent implements OnInit {
         error => {
           // alert user
           // this.alertService.error(error);
+          alert(error);
           this.loading = false;
         });
   }
