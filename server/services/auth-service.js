@@ -6,26 +6,24 @@ const errors = require('./errors/common-errors.js')
 module.exports = (userDb, authModule) => {
 
     return {
-        getUserInfo: getUserInfo
+        createUserIfNotPresent: createUserIfNotPresent,
+        getUserRoles: getUserRoles,
     }
 
-    /* Podiamos receber informação se é login ou signup..*/
-    async function getUserInfo({id, email}) {
-        const roles = await authModule.user.getUserRoles(id)
-
-        //
-
-        console.log(roles)
-        // This might throw error?
-        /*
-        const userCreated = await authModule.user.create(username, password)
-        await userDb.createUser({id: userCreated.insertId})
-        return {
-            id: userCreated.insertId
+    async function createUserIfNotPresent({id, email}) {
+        const userExistsInDb = await userDb.getUserById({userId: id})
+        if (!userExistsInDb) {
+            await userDb.createUser({userId: id, email, isActive: true})
         }
+        return {
+            id: id,
+            email: email
+        }
+    }
 
-         */
-        // Check errors..
+    async function getUserRoles({id}) {
+
+
     }
 
 }

@@ -177,13 +177,15 @@ module.exports = function (router, controllers, authModule) {
     router.get(`/${requestAttributes}/${months}`,
         handle(controllers.requestProps.getMonths))
 
-    // TODO -> Mais filtros
+
     /**
      * Get all candidates + query filter
      */
+    // TODO -> FAZER URGENTE
+    //profiles=...,..,...,...,
     router.get(`/${candidates}`, [
-        param('available').optional().isBoolean().withMessage("Available must be of boolean type"),
-        param('profiles').optional().isString().withMessage("Profiles must be of string type")
+        query('available').optional().isBoolean().withMessage("Available must be of boolean type"),
+        query('profiles').optional().isString().withMessage("Profiles must be of string type")
     ], handle(controllers.candidate.getCandidates))
 
     /**

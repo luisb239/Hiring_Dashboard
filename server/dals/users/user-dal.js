@@ -32,13 +32,13 @@ module.exports = (query) => {
         return null
     }
 
-    async function createUser({userId, isActive = true}) {
+    async function createUser({userId, email, isActive = true}) {
         const statement = {
             name: 'Create User',
             text:
-                `INSERT INTO ${user.table} (${user.id}, ${user.isActive}) VALUES ` +
-                `($1, $2); `,
-            values: [userId, isActive]
+                `INSERT INTO ${user.table} (${user.id}, ${user.email}, ${user.isActive}) VALUES ` +
+                `($1, $2, $3);`,
+            values: [userId, email, isActive]
         }
         await query(statement)
     }

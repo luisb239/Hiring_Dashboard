@@ -74,7 +74,40 @@ const jsonObj = {
 const authModule = require('../authization-module/authization')
 
 authModule.setup(app, dbOptions, jsonObj)
-    .then((authModule) => {
+    .then(async (authModule) => {
+
+        // SETUP DB VALUES
+
+        //Add default users + their roles
+        let user1 = await authModule.user.getByUsername("A44015@alunos.isel.pt")
+        if (!user1) {
+            //id = 1
+            user1 = (await authModule.user.create("A44015@alunos.isel.pt", null)).dataValues
+        }
+
+        let user2 = await authModule.user.getByUsername("A43553@alunos.isel.pt")
+        if (!user2) {
+            //id = 2
+            user2 = (await authModule.user.create("A43553@alunos.isel.pt", null)).dataValues
+        }
+
+        let user3 = await authModule.user.getByUsername("A43520@alunos.isel.pt")
+        if (!user3) {
+            //id = 3
+            user3 = (await authModule.user.create("A43520@alunos.isel.pt", null)).dataValues
+        }
+
+        const recruiter = await authModule.role.getByName("recruiter")
+
+        const userRoles = await authModule.userRole.getAll()
+        if (!userRoles) {
+            await authModule.userRole.create(user1.id, recruiter.id, null, null, null, true)
+            await authModule.userRole.create(user2.id, recruiter.id, null, null, null, true)
+            await authModule.userRole.create(user3.id, recruiter.id, null, null, null, true)
+        }
+
+        // SETUP DB VALUES
+
         const db = require('./dals');
 
         const services = require('./services')(db, authModule)
@@ -96,6 +129,7 @@ authModule.setup(app, dbOptions, jsonObj)
             console.log(err.stack)
             res.status(err.status || 500).send({message: err.message || 'Something unexpected error. Please try again later.'})
         })
+
 
         // Server listening on port
         app.listen(PORT, () => console.log(`Server listening on port ${PORT} @ ${new Date()}`));

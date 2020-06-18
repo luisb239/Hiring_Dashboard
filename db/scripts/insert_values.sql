@@ -1,3 +1,33 @@
+
+
+
+--DROP TABLE public."User_Session";
+--DROP TABLE public."User_History";
+--DROP TABLE public."UserRoles";
+--DROP TABLE public."UserList";
+--DROP TABLE public."RolePermission";
+
+--DROP TABLE public."Protocols";
+--DROP TABLE public."Idp";
+--DROP TABLE public."List";
+--DROP TABLE public."Role";
+--DROP TABLE public."Permission";
+--DROP TABLE public."Session";
+--DROP TABLE public."User";
+
+-- DEFAULT USERS AND THEIR ROLES
+/*
+INSERT INTO public."User" (username, password) 
+	VALUES 
+	('A44015@alunos.isel.pt', NULL), -- id = 2
+	('A43553@alunos.isel.pt', NULL), -- id = 3
+	('A43520@alunos.isel.pt', NULL); -- id = 4
+
+
+*/
+	
+	
+
 INSERT INTO user_profile(user_id, is_active)
 	VALUES 
 	(2, 'A44015@alunos.isel.pt', TRUE),

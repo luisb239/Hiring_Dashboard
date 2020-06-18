@@ -15,6 +15,7 @@ module.exports = (candidateDb, profilesDb, processDb) => {
 
         let candidates = await candidateDb.getCandidates({available})
 
+        /*
         let candidatesProfiles = await Promise.all(candidates.map(async c => {
             return {
                 profilesArray: (await profilesDb.getCandidateProfiles({candidateId: c.id})).map(p => p.profile)
@@ -25,7 +26,7 @@ module.exports = (candidateDb, profilesDb, processDb) => {
 
         //TODO
         console.log(candidatesProfiles)
-
+         */
 
         return {
             candidates: candidates,
