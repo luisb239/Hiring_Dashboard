@@ -24,13 +24,13 @@ async function databasesetup(rbac_opts) {
 
     console.log('database setup correctly')
 
-    await User.findOrCreate({ where:{username: "superuser", password: "superuser" }})
-    await List.findOrCreate({where:{ "list": "BLACK" }})
-    await List.findOrCreate({where:{ "list": "GREY" }})
-    await List.findOrCreate({where:{ "list": "RED" }})
-    await Protocols.findOrCreate({where:{"protocol": "Google", "active": 1 }})
-    await Protocols.findOrCreate({where:{ "protocol": "AzureAD", "active": 1 }})
-    await Protocols.findOrCreate({where:{ "protocol": "Saml", "active": 1}})
+    await User.findOrCreate({where: {username: "superuser", password: "superuser"}})
+    await List.findOrCreate({where: {"list": "BLACK"}})
+    await List.findOrCreate({where: {"list": "GREY"}})
+    await List.findOrCreate({where: {"list": "RED"}})
+    await Protocols.findOrCreate({where: {"protocol": "Google", "active": true}})
+    await Protocols.findOrCreate({where: {"protocol": "AzureAD", "active": true}})
+    await Protocols.findOrCreate({where: {"protocol": "Saml", "active": true}})
 
     return require('../middleware/rbac')(rbac_opts)
 }

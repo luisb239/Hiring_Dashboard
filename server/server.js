@@ -10,39 +10,78 @@ const express = require('express')
 const app = express()
 
 app.use(express.json())
-// app.use(express.static('dist'))
-
-const db = require('./dals');
-
-// Authentication Module
-const authModule = require('../authization-module/authization')(app);
-
-// TODO -> CHANGE development.json of their module instead
-//  CHANGED development/testing/production to accept port 4200
-
-
-const dbConfigs = authModule.configurations
-
-dbConfigs.changeDatabaseOptions({
-     sgbd: 'PG'
-})
-
-const services = require('./services')(db, authModule)
-
-const controllers = require('./controllers')(services)
-
-const routes = require('./controllers/routes.js')(app, express.Router(), controllers)
 
 const cors = require('cors')
+
 app.use(cors())
 
-const root = 'hd'
+const dbOptions = {
+    "host": process.env.PGHOST,
+    "port": process.env.PGPORT,
+    "user": process.env.PGUSER,
+    "password": process.env.PGPASSWORD,
+    "connectionLimit": 5,
+    "database": process.env.PGDATABASE,
+    "sgbd": "postgres"
+}
 
-app.use(`/${root}`, routes)
+const jsonObj = {
+    "roles": ["admin", "DbManager", "Developer", "guest"],
+    "permissions": [
+        {"resource": "hd", "action": "GET"},
+        {"resource": "authentications", "action": "GET"},
+        {"resource": "authentications", "action": "POST"},
+        {"resource": "users", "action": "GET"},
+        {"resource": "permissions", "action": "GET"},
+        {"resource": "roles", "action": "GET"},
+        {"resource": "roles", "action": "POST"},
+        {"resource": "lists", "action": "GET"}],
 
-const notFound = require('./controllers/middlewares/not_found.js')
+    "grants": {
+        "DbManager": [{"resource": "users", "action": "GET"}, {"resource": "roles", "action": "GET"}],
+        "guest": [{"resource": "authentications", "action": "GET"}, {"resource": "authentications", "action": "POST"}],
+        "admin": [
+            {"role": "DbManager"}, {"role": "guest"},
+            {
+                "resource": "permissions",
+                "action": "GET"
+            },
+            {"resource": "lists", "action": "GET"}]
+    }
+}
 
-app.use(notFound)
 
-// Server listening on port
-app.listen(PORT, () => console.log(`Server listening on port ${PORT} @ ${new Date()}`));
+const authModule = require('../authization-module/authization')
+
+authModule.setup(app, dbOptions, jsonObj)
+    .then((authModule) => {
+        const db = require('./dals');
+
+        const services = require('./services')(db, authModule)
+
+        const controllers = require('./controllers')(services)
+
+        const routes = require('./controllers/routes.js')(express.Router(), controllers, authModule)
+
+        const root = 'hd'
+
+        app.use(`/${root}`, routes)
+
+        const notFoundMiddleware = require('./controllers/middlewares/not_found.js')
+
+        app.use(notFoundMiddleware)
+
+        //express error handler
+        app.use(function (err, req, res) {
+            console.log(err.stack)
+            res.status(err.status || 500).send({message: err.message || 'Something unexpected error. Please try again later.'})
+        })
+
+        // Server listening on port
+        app.listen(PORT, () => console.log(`Server listening on port ${PORT} @ ${new Date()}`));
+    })
+
+
+
+
+
