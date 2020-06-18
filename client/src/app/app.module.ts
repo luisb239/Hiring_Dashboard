@@ -15,10 +15,12 @@ import {PopupComponent} from './components/popup/popup.component';
 import {CreateRequestComponent} from './components/create-request/create-request.component';
 import {AllRequestsComponent} from './components/all-requests/all-requests.component';
 import {Ng5SliderModule} from 'ng5-slider';
-import { LogInComponent } from './components/log-in/log-in.component';
-import { CandidateDetailsComponent } from './components/candidate-details/candidate-details.component';
-import {RequestDetailComponent} from './components/request-detail/request-detail.component'
-
+import {LogInComponent} from './components/log-in/log-in.component';
+import {CandidateDetailsComponent} from './components/candidate-details/candidate-details.component';
+import {RequestDetailComponent} from './components/request-detail/request-detail.component';
+import {AddCandidateComponent} from './components/add-candidate/add-candidate.component';
+import {MatOptionModule} from '@angular/material/core';
+import {MatSelectModule} from '@angular/material/select';
 
 @NgModule({
   declarations: [
@@ -31,7 +33,8 @@ import {RequestDetailComponent} from './components/request-detail/request-detail
     AllRequestsComponent,
     LogInComponent,
     CandidateDetailsComponent,
-    RequestDetailComponent
+    RequestDetailComponent,
+    AddCandidateComponent
   ],
   imports: [
     BrowserModule,
@@ -42,7 +45,9 @@ import {RequestDetailComponent} from './components/request-detail/request-detail
     ReactiveFormsModule,
     HttpClientModule,
     Ng5SliderModule,
-    FormsModule
+    FormsModule,
+    MatOptionModule,
+    MatSelectModule
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -27,4 +27,12 @@ export class CandidateService {
         },
         catchError(this.errorHandler.handleError));
   }
+
+  getAllCandidates() {
+    return this.http.get<CandidatesDao>(`${this.baseUrl}/candidates`, httpOptions)
+      .pipe(data => {
+          return data;
+        },
+        catchError(this.errorHandler.handleError));
+  }
 }

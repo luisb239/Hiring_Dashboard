@@ -18,6 +18,7 @@ import {RequestList} from 'src/app/model/request/request-list';
 import {ProcessPhaseService} from '../../services/process-phase/process-phase.service';
 import {Process} from '../../model/process/process';
 import {BoardProps} from './board-props';
+import {AddCandidateComponent} from '../add-candidate/add-candidate.component';
 
 @Component({
   selector: 'app-board',
@@ -127,5 +128,10 @@ export class BoardComponent implements OnInit {
       }, error => {
         console.log(error);
       });
+  }
+
+  addCandidate(requestId: number) {
+    const modalRef = this.modalService.open(AddCandidateComponent);
+    modalRef.componentInstance.requestId = requestId;
   }
 }

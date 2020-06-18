@@ -4,7 +4,7 @@
     <form #form="ngForm" (ngSubmit)="onSubmit(form)" novalidate class="form">
       <div class="form-group">
         <label for="inputSkill">Skill</label>
-        <select class="custom-select" id="inputSkill" name="skill" #skill='ngModel' ngModel>
+        <select class="custom-select" id="inputSkill" name="skill" #skill='ngModel' ngModel multiple>
           <option disabled value=""></option>
           <option *ngFor="let skill of properties.skills" [value]="skill">{{skill}}</option>
         </select>

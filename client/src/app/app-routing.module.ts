@@ -8,6 +8,7 @@ import {AllRequestsComponent} from './components/all-requests/all-requests.compo
 import {LogInComponent} from './components/log-in/log-in.component';
 import {CandidateDetailsComponent} from './components/candidate-details/candidate-details.component';
 import { RequestDetailComponent } from './components/request-detail/request-detail.component';
+import {MatOptionModule} from '@angular/material/core';
 
 
 const routes: Routes = [
@@ -24,7 +25,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forRoot(routes), MatOptionModule],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }

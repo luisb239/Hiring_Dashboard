@@ -74,14 +74,30 @@ td {
   margin-right: 20px;
 }
 
-.hidden-task:hover {
+.hidden-text:hover span {
+  display: none;
+}
+
+.hidden-text:hover:before {
+  content: 'Add Candidate';
+}
+
+.hidden-task {
   visibility: visible;
-  display: flex;
-  padding: 15px 12px;
-  background: rgba(0, 0, 0, 0.19);
+  display: block;
+  background: rgba(213, 203, 188, 0.39);
   border-radius: 4px;
   margin-bottom: 15px;
-  min-width: 200px;
+  box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.05), 0 3px 14px 2px rgba(0, 0, 0, 0.05);
+}
+
+.hidden-task:hover > .hidden-text {
+  visibility: visible;
+  display: block;
+  padding: 15px 12px;
+  background: rgb(213, 203, 188);
+  border-radius: 4px;
+  margin-bottom: 15px;
   box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.05), 0 3px 14px 2px rgba(0, 0, 0, 0.05);
 }
 
