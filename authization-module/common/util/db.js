@@ -18,7 +18,7 @@ config.sequelize = sequelize
 async function databasesetup(rbac_opts) {
 
     // defining the EA model
-    const { User, List, Protocols,Role } = require('../../resources/sequelize-model')
+    const {User, List, Protocols, Role} = require('../../resources/sequelize-model')
 
     // sync present state of the database with our models
     await sequelize.sync()

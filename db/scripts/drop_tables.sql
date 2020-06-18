@@ -1,5 +1,6 @@
 -- Project Integration Tables
 
+/*
 DROP TABLE public."User_Session";
 DROP TABLE public."User_History";
 DROP TABLE public."UserRoles";
@@ -13,6 +14,7 @@ DROP TABLE public."Role";
 DROP TABLE public."Permission";
 DROP TABLE public."Session";
 DROP TABLE public."User";
+*/
 
 
 DROP TABLE process_info;

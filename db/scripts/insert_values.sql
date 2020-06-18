@@ -15,18 +15,6 @@
 --DROP TABLE public."Session";
 --DROP TABLE public."User";
 
--- DEFAULT USERS AND THEIR ROLES
-/*
-INSERT INTO public."User" (username, password) 
-	VALUES 
-	('A44015@alunos.isel.pt', NULL), -- id = 2
-	('A43553@alunos.isel.pt', NULL), -- id = 3
-	('A43520@alunos.isel.pt', NULL); -- id = 4
-
-
-*/
-	
-	
 
 INSERT INTO user_profile(user_id, is_active)
 	VALUES 
@@ -142,9 +130,6 @@ INSERT INTO request_language_requirements(request_id, language, mandatory)
 	(2, 'English', TRUE),
 	(2, 'French', TRUE);
 	
-	--(3, 'English', TRUE),
-	--(4, 'English', TRUE);
-	
 	
 INSERT INTO phase
 	VALUES 
@@ -198,6 +183,7 @@ INSERT INTO process(request_id, candidate_id, status)
 	(1, 2, 'Onhold'),
 	(1, 3, 'Offer Rejected'),
 	(1, 4, 'Withdrawn'),
+	
 	(2, 1, 'Onhold'),
 	(2, 2, 'Onhold'),
 	(2, 3, 'Onhold'),
@@ -232,7 +218,9 @@ INSERT INTO process_phase(request_id, candidate_id, phase, notes)
 	
 	(2, 3, 'First Interview And Technicall Interview', NULL),
 	(2, 3, 'Job Offer', NULL),
-	(2, 3, 'Offer Accepted', NULL);
+	(2, 3, 'Offer Accepted', NULL),
+	
+	(2, 4, 'First Interview And Technicall Interview', NULL);
 	
 INSERT INTO process_current_phase(request_id, candidate_id, current_phase)
 	VALUES 
@@ -243,7 +231,8 @@ INSERT INTO process_current_phase(request_id, candidate_id, current_phase)
 	
 	(2, 1, 'First Interview And Technicall Interview'),
 	(2, 2, 'Job Offer'),
-	(2, 3, 'Offer Accepted');
+	(2, 3, 'Offer Accepted'),
+	(2, 4, 'First Interview And Technicall Interview');
 	
 INSERT INTO dynamic_info(info_name, json_info)
 	VALUES
