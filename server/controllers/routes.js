@@ -4,7 +4,7 @@ const {body, param, query} = require('express-validator')
 
 const handle = require('./express-handler.js')
 
-module.exports = function (global, router, controllers) {
+module.exports = function (router, controllers, authModule) {
 
     const candidates = 'candidates'
     const requests = 'requests'
@@ -22,7 +22,17 @@ module.exports = function (global, router, controllers) {
     const workflows = 'workflows'
     const months = 'months'
 
-    router.get('/teste', controllers.process.createProcess)
+    //router.get('/teste', controllers.process.createProcess)
+
+
+    router.get('/auth/azure', authModule.authenticate.usingOffice365)
+
+    router.get('/auth/azure/callback', authModule.authenticate.usingOffice365Callback, function (req, res) {
+        // Successful authentication, redirect home.
+        res.redirect('/');
+    });
+
+    router.post('/logout', authModule.authenticate.logout)
 
 
     router.post(`/signup`, [
