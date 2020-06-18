@@ -10,7 +10,7 @@ import {RequestService} from '../../services/request/request.service';
 import {Request} from '../../model/request/request';
 import {RequestList} from '../../model/request/request-list';
 import {PhaseInfo} from '../../model/phase/phase-info';
-import {CandidateProcess} from '../../model/candidate/CandidateProcess';
+import {CandidateProcess} from '../../model/candidate/candidate-process';
 import {CandidateDetailsProps} from './candidate-details-props';
 
 

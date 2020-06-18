@@ -3,6 +3,7 @@ import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {catchError} from 'rxjs/operators';
 import {ErrorHandler} from '../error-handler';
 import {CandidateDao} from 'src/app/model/candidate/candidate-dao';
+import { CandidatesDao } from 'src/app/model/candidate/candidates-dao';
 
 const httpOptions = {
   headers: new HttpHeaders({

@@ -1,4 +1,4 @@
-import {CandidateProcess} from './CandidateProcess';
+import {CandidateProcess} from './candidate-process';
 
 export class Candidate {
   constructor(public name: string = '',
