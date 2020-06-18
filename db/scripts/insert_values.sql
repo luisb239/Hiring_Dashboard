@@ -16,7 +16,7 @@
 --DROP TABLE public."User";
 
 
-INSERT INTO user_profile(user_id, is_active)
+INSERT INTO user_profile(user_id, user_email, is_active)
 	VALUES 
 	(2, 'A44015@alunos.isel.pt', TRUE),
 	(3, 'A43553@alunos.isel.pt' , TRUE),
@@ -117,8 +117,8 @@ INSERT INTO request(quantity, description, target_date,
 	
 INSERT INTO user_role_request(user_id, role_id, request_id)
 	VALUES 
-	(1, 1, 1),
-	(1, 1, 2);
+	(2, 1, 1),
+	(2, 1, 2);
 	--(1, 1, 3),
 	--(1, 1, 4);
 
@@ -185,7 +185,7 @@ INSERT INTO process(request_id, candidate_id, status)
 	(1, 4, 'Withdrawn'),
 	
 	(2, 1, 'Onhold'),
-	(2, 2, 'Onhold'),
+	(2, 2, 'Withdrawn'),
 	(2, 3, 'Onhold'),
 	(2, 4, 'Onhold');
 	
