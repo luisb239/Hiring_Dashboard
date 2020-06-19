@@ -12,7 +12,7 @@
         </tr>
       </table>
       <table *ngFor="let request of workflow.requests" [width]="tableContainer.offsetWidth">
-        <tr class="swim-lane">
+        <tr class="swim-lane" [routerLink]="['/request-detail', request.id]">
           <td [colSpan]=workflow.phases.length>
             <h5>{{request.description}}</h5>
           </td>

@@ -12,7 +12,7 @@
     </div>
     <div class="property">
       <h5>Available?</h5>
-      <div (click)="candidate.available = !candidate.available">
+      <div (click)="candidate.available = !candidate.available" class="click-box">
         <div *ngIf="candidate.available" class="circle available"></div>
         <div *ngIf="!candidate.available" class="circle not_available"></div>
       </div>

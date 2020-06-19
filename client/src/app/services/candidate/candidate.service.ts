@@ -39,7 +39,7 @@ export class CandidateService {
 
   getAllCandidatesWithQueries(profiles: string[], available: boolean) {
     let params = new HttpParams();
-    params = params.append('profiles', profiles.join(', '));
+    params = params.append('profiles', profiles.join(','));
     params = params.set('available', String(available));
     return this.http.get<CandidatesDao>(`${this.baseUrl}/candidates`, {
       headers: new HttpHeaders({

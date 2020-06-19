@@ -40,7 +40,7 @@ export class BoardComponent implements OnInit {
   properties: BoardProps = new BoardProps();
 
   ngOnInit(): void {
-    this.requestService.getRequestsByUser(1, 1)
+    this.requestService.getRequestsByUser(2, 1)
       .subscribe(
         requestsDao => {
           this.properties.requests = requestsDao.requests.map(r => new RequestList(r.id, r.workflow, r.progress, r.state, r.description));

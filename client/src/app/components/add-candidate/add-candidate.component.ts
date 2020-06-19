@@ -26,13 +26,7 @@ export class AddCandidateComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.candidateService.getAllCandidates()
-      .subscribe(dao => {
-        this.candidates = dao.candidates.map(c =>
-          new Candidate(c.name, c.id, c.profileInfo, c.available, c.cv));
-      }, error => {
-        console.log(error);
-      });
+    this.getAllCandidates();
     this.requestPropsService.getRequestProfiles()
       .subscribe(dao => {
         this.profiles = dao.profiles.map(p => p.profile);
@@ -46,7 +40,7 @@ export class AddCandidateComponent implements OnInit {
 
     this.filterForm = this.formBuilder.group(
       {
-        profiles: this.formBuilder.array([]),
+        profiles: this.formBuilder.control([]),
         available: this.formBuilder.control(false)
       }
     );
@@ -66,8 +60,31 @@ export class AddCandidateComponent implements OnInit {
   onSubmit() {
     // const values = this.candidateForm.value;
     // values.forEach(idx => {
-    //   this.processService.addCanditateToRequest(this.requestId, this.candidates[idx])
+    //   this.processService.addCandidateToRequest(this.requestId, this.candidates[idx])
     //     .subscribe();
     // });
+  }
+
+  filterCandidates() {
+    // const profiles = this.filterForm.value.profiles;
+    console.log(this.filterForm.value.profiles);
+    console.log(this.filterForm.value.available);
+    this.candidateService.getAllCandidatesWithQueries(this.filterForm.value.profiles, this.filterForm.value.available)
+      .subscribe(dao => {
+        this.candidates = dao.candidates.map(c =>
+          new Candidate(c.name, c.id, c.profileInfo, c.available, c.cv));
+      }, error => {
+        console.log(error);
+      });
+  }
+
+  getAllCandidates() {
+    this.candidateService.getAllCandidates()
+      .subscribe(dao => {
+        this.candidates = dao.candidates.map(c =>
+          new Candidate(c.name, c.id, c.profileInfo, c.available, c.cv));
+      }, error => {
+        console.log(error);
+      });
   }
 }
