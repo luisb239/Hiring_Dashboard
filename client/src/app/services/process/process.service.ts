@@ -39,4 +39,14 @@ export class ProcessService {
       })
       .pipe(data => data, catchError(this.errorHandler.handleError));
   }
+
+  updateProcess(requestId: number, candidateId: number, status: string, unavailableReason: string,
+                phaseNotes: string, infos: any[]) {
+    const body = {status, unavailableReason, phaseNotes, infos};
+    return this.http.put(`${this.baseUrl}/requests/${requestId}/candidates/${candidateId}/process`, body,
+      {
+        headers: new HttpHeaders({'Content-Type': 'application/json'})
+      })
+      .pipe(data => data, catchError(this.errorHandler.handleError));
+  }
 }
