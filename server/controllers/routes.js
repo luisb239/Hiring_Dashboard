@@ -1,6 +1,6 @@
 'use strict'
 
-const {body, param, query, oneOf, check} = require('express-validator')
+const {body, param, query, check} = require('express-validator')
 
 const handle = require('./express-handler.js')
 
@@ -119,7 +119,7 @@ module.exports = function (router, controllers, authModule) {
         ...processValidators,
         body('infos').optional().isArray()
             .custom(infosArray => infosArray.every(info => info.name && info.value))
-            .withMessage('Infos array must contain a name and value property for each array element'),
+            .withMessage('Infos must be an array, with each element containing a name and value property'),
         body('newPhase').optional().isString().withMessage("newPhase must be of string type"),
         body('status').optional().isString().withMessage("status must be of string type"),
         body('unavailableReason').optional().isString().withMessage("unavailableReason must be of string type"),

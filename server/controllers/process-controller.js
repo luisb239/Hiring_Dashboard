@@ -24,30 +24,37 @@ module.exports = (processService) => {
     }
 
     async function updateProcess(req, res) {
+        const requestId = req.params.requestId
+        const candidateId = req.params.candidateId
+
         if (req.body.newPhase) {
             await processService.updateProcessCurrentPhase({
-                requestId: req.params.requestId,
-                candidateId: req.params.candidateId,
+                requestId,
+                candidateId,
                 newPhase: req.body.newPhase
             })
         }
-
         if (req.body.status) {
             await processService.updateStatus({
-                requestId: req.params.requestId,
-                candidateId: req.params.candidateId,
+                requestId,
+                candidateId,
                 status: req.body.status
             })
         }
-
         if (req.body.unavailableReason) {
             await processService.updateUnavailableReason({
-                requestId: req.params.requestId,
-                candidateId: req.params.candidateId,
+                requestId,
+                candidateId,
                 unavailableReason: req.body.unavailableReason
             })
         }
-
+        if (req.body.infos) {
+            await processService.updateProcessInfoValues({
+                requestId,
+                candidateId,
+                infoArray: req.body.infos
+            })
+        }
         res.status(200).send({message: 'Process updated with success'})
     }
 

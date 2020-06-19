@@ -13,7 +13,8 @@ module.exports = (requestDb, candidateDb, processDb, phaseDb, infoDb, processUna
         createProcess,
         updateStatus,
         updateUnavailableReason,
-        moveProcessToFirstPhase
+        moveProcessToFirstPhase,
+        updateProcessInfoValues
     }
 
 
@@ -86,7 +87,6 @@ module.exports = (requestDb, candidateDb, processDb, phaseDb, infoDb, processUna
 
         const processPhases = await processPhaseDb.getProcessPhases({requestId, candidateId})
 
-        // TODO -> improve this?
         const processDetailedPhases = await Promise.all(processPhases.map(async (procPhase) => {
             const phaseInfos = await infoDb.getInfosByPhase({phase: procPhase.phase})
             procPhase.infos = phaseInfos.map(phaseInfo => {
@@ -112,18 +112,24 @@ module.exports = (requestDb, candidateDb, processDb, phaseDb, infoDb, processUna
     async function updateStatus({requestId, candidateId, status}) {
         const success = await processDb.updateProcessStatus({requestId, candidateId, status})
         if (status === 'Placed') {
-            // TODO -> update request progress
+            await updateRequestProgress({requestId})
         }
         if (success) {
             return {
                 message: `Process status updated with success to ${status}`
             }
         }
-        //TODO
+    }
+
+    async function updateRequestProgress({requestId}) {
+        const request = await requestDb.getRequestById({id: requestId})
+        const processesStatus = await processDb.getAllProcessesStatusFromRequest({requestId})
+        const numberOfPlacedCandidates = processesStatus.filter(status => status.status === 'Placed').length
+        const percentage = numberOfPlacedCandidates * 100 / request.quantity
+        await requestDb.updateRequest({id: requestId, progress: percentage})
     }
 
 
-    //TODO -> como tratar de todos os possiveis erros??
     async function updateUnavailableReason({requestId, candidateId, unavailableReason}) {
         const currentReason = await processUnavailableReasonDb.getProcessUnavailableReason({requestId, candidateId})
         if (!currentReason) {
@@ -142,6 +148,7 @@ module.exports = (requestDb, candidateDb, processDb, phaseDb, infoDb, processUna
                 candidateId,
                 reason: unavailableReason
             })
+            return {message: `Process unavailable reasons updated to ${unavailableReason}`}
         }
     }
 
@@ -190,6 +197,35 @@ module.exports = (requestDb, candidateDb, processDb, phaseDb, infoDb, processUna
             newPhase: validPhase.phase,
             message: `Process moved from ${currentPhase.currentPhase} to ${validPhase.phase}`
         }
+    }
+
+    /**
+     *
+     * @param requestId : number
+     * Request id
+     * @param candidateId : number
+     * Candidate id
+     * @param infoArray : Array
+     * Info Array. Each element of the array has a name and a value property
+     * @returns {Promise<void>}
+     */
+    async function updateProcessInfoValues({requestId, candidateId, infoArray}) {
+        const processInfos = await processInfoDb.getProcessInfos({requestId, candidateId})
+
+        await Promise.all(infoArray.map(async info => {
+            const infoFound = processInfos.find(procInfo => procInfo.name === info.name)
+            if (!infoFound) {
+                await processInfos.createProcessInfo({
+                    requestId, candidateId, infoName: info.name, infoValue: `{"value" : "${info.value}"}`
+                })
+            } else {
+                if (infoFound.value.value !== info.value) {
+                    await processInfoDb.updateProcessInfoValue({
+                        requestId, candidateId, infoName: info.name, infoValue: `{"value" : "${info.value}"}`
+                    })
+                }
+            }
+        }))
     }
 
 }

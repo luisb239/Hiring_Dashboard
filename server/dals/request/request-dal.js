@@ -8,7 +8,7 @@ module.exports = (query) => {
 
     return {
         getRequests, getRequestById, createRequest,
-        getUserRolesInRequest,
+        getUserRolesInRequest, updateRequest,
     }
 
     async function getRequests({
@@ -56,10 +56,39 @@ module.exports = (query) => {
         }
         const result = await query(statement)
 
-        if(result.rowCount) {
-            return result.rows.map(row => extractRequest(row))[0]
+        if (result.rowCount) {
+            return extractRequest(result.rows[0])
         }
-        return null
+        return null
+    }
+
+    async function updateRequest({
+                                     id, quantity = null, description = null, targetDate = null,
+                                     state = null, skill = null, stateCsl = null,
+                                     project = null, profile = null, workflow = null,
+                                     dateToSendProfile = null, progress = null
+                                 }) {
+        const statement = {
+            name: 'Update Request',
+            text:
+                `UPDATE ${requestSchema.table} SET ` +
+                `${requestSchema.quantity} = COALESCE($1, ${requestSchema.quantity}), ` +
+                `${requestSchema.description} = COALESCE($2, ${requestSchema.description}), ` +
+                `${requestSchema.targetDate} = COALESCE($3, ${requestSchema.targetDate}), ` +
+                `${requestSchema.state} = COALESCE($4, ${requestSchema.state}), ` +
+                `${requestSchema.skill} = COALESCE($5, ${requestSchema.skill}), ` +
+                `${requestSchema.stateCsl} = COALESCE($6, ${requestSchema.stateCsl}), ` +
+                `${requestSchema.project} = COALESCE($7, ${requestSchema.project}), ` +
+                `${requestSchema.profile} = COALESCE($8, ${requestSchema.profile}), ` +
+                `${requestSchema.workflow} = COALESCE($9, ${requestSchema.workflow}), ` +
+                `${requestSchema.dateToSendProfile} = COALESCE($10, ${requestSchema.dateToSendProfile}), ` +
+                `${requestSchema.progress} = COALESCE($11, ${requestSchema.progress}) ` +
+                `WHERE ${requestSchema.id} = $12;`,
+            values: [quantity, description, targetDate, state, skill, stateCsl,
+                project, profile, workflow, dateToSendProfile, progress, id]
+        }
+
+        await query(statement)
     }
 
     async function createRequest({
@@ -71,7 +100,7 @@ module.exports = (query) => {
             text:
                 `INSERT INTO ${requestSchema.table} ` +
                 `(${requestSchema.quantity}, ${requestSchema.description}, ` +
-                `${requestSchema.target_date}, ${requestSchema.state}, ` +
+                `${requestSchema.targetDate}, ${requestSchema.state}, ` +
                 `${requestSchema.skill}, ${requestSchema.stateCsl}, ` +
                 `${requestSchema.project}, ${requestSchema.profile}, ` +
                 `${requestSchema.workflow}, ${requestSchema.dateToSendProfile}, ` +
@@ -86,7 +115,7 @@ module.exports = (query) => {
         // log do erro original -> causa do erro
 
         const result = await query(statement)
-        return result.rows.map(row => extractRequest(row))[0]
+        return extractRequest(result.rows[0])
     }
 
 
@@ -125,7 +154,7 @@ module.exports = (query) => {
             quantity: obj[requestSchema.quantity],
             description: obj[requestSchema.description],
             requestDate: new Date(obj[requestSchema.request_date]).toLocaleDateString(),
-            targetDate: obj[requestSchema.target_date],
+            targetDate: obj[requestSchema.targetDate],
             state: obj[requestSchema.state],
             skill: obj[requestSchema.skill],
             stateCsl: obj[requestSchema.stateCsl],
