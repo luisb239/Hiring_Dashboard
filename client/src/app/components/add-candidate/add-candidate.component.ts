@@ -4,6 +4,7 @@ import {Candidate} from '../../model/candidate/candidate';
 import {CandidateService} from '../../services/candidate/candidate.service';
 import {RequestPropsService} from 'src/app/services/requestProps/requestProps.service';
 import {FormArray, FormBuilder, FormControl, FormGroup} from '@angular/forms';
+import {ProcessService} from '../../services/process/process.service';
 
 @Component({
   selector: 'app-add-candidate',
@@ -22,6 +23,7 @@ export class AddCandidateComponent implements OnInit {
     public activeModal: NgbActiveModal,
     private candidateService: CandidateService,
     private requestPropsService: RequestPropsService,
+    private processService: ProcessService,
     private formBuilder: FormBuilder) {
   }
 
@@ -58,11 +60,18 @@ export class AddCandidateComponent implements OnInit {
   }
 
   onSubmit() {
-    // const values = this.candidateForm.value;
-    // values.forEach(idx => {
-    //   this.processService.addCandidateToRequest(this.requestId, this.candidates[idx])
-    //     .subscribe();
-    // });
+    const values = this.candidateForm.value.candidatesIdx;
+    console.log(values);
+    values.forEach(idx => {
+      this.processService.createProcess(this.requestId, this.candidates[idx].id)
+        .subscribe(() => {
+          alert('Candidates added to this request successfully!');
+          this.activeModal.close('Close click');
+          location.reload();
+          }, error => { console.log(error);
+          }
+        );
+    });
   }
 
   filterCandidates() {
