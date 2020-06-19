@@ -5,22 +5,33 @@
                 <h3>Request</h3>
                 <table class="table table-hover">
                     <thead>
+                        <th scope="col">Workflow</th>
+                        <th scope="col">Description</th>
+                        <th scope="col">Progress</th>
+                        <th scope="col">Project</th>
+                        <th scope="col">Quantity</th>
+                        <th scope="col">Request Date</th>
+                        <th scope="col">Skill</th>
+                        <th scope="col">CSL State</th>
+                        <th scope="col">State</th>
+                        <th scope="col">Target Date</th>
+                        <th scope="col">Profile</th>
+                        <th scope="col">Date To Send Profile</th>
                     </thead>
                     <tbody>
                         <tr>
-                            <td *ngFor="let name of properties.requestAttrs">
-                                <h5>{{name}}</h5>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td *ngFor="let name of properties.requestAttrs">
-                                <div *ngIf='name === "progress"'>
-                                    {{properties.requestList[name]}}%
-                                </div>
-                                <div *ngIf='name !== "progress"'>
-                                    {{properties.requestList[name]}}
-                                </div>
-                            </td>
+                            <td>{{properties.requestList.workflow}}</td>
+                            <td>{{properties.requestList.description}}</td>
+                            <td>{{properties.requestList.progress}}%</td>
+                            <td>{{properties.requestList.project}}</td>
+                            <td>{{properties.requestList.quantity}}</td>
+                            <td>{{properties.requestList.requestDate}}</td>
+                            <td>{{properties.requestList.skill}}</td>
+                            <td>{{properties.requestList.stateCSL}}</td>
+                            <td>{{properties.requestList.state}}</td>
+                            <td>{{properties.requestList.targetDate}}</td>
+                            <td>{{properties.requestList.profile}}</td>
+                            <td>{{properties.requestList.dateToSendProfile}}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -56,7 +67,7 @@
                     <table class="table table-hover">
                         <thead>
                             <tr>
-                                <th>Username</th>
+                                <th>Email</th>
                                 <th>Role</th>
                             </tr>
                         </thead>
@@ -84,7 +95,8 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr *ngFor="let process of properties.processes" [routerLink]="['/candidate/', process.candidateId]"
+                            <tr *ngFor="let process of properties.processes"
+                                [routerLink]="['/candidate/', process.candidateId]"
                                 [state]="{requestId: properties.requestId, candidateId: process.candidateId}">
                                 <td>
                                     {{process.candidateName}}
