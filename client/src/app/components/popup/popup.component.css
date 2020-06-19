@@ -30,3 +30,7 @@
   display: inline;
   margin-right: 10px;
 }
+
+.click-box {
+  width: fit-content;
+}
