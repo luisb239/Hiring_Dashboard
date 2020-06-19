@@ -6,9 +6,9 @@ export class RequestList {
               public progress: number,
               public state: string,
               public description: string,
+              public quantity: number = 0,
               public dateToSendProfile: string = '',
               public project: string = '',
-              public quantity: number = 1,
               public requestDate: string = '',
               public skill: string = '',
               public stateCSL: string = '',
@@ -17,4 +17,5 @@ export class RequestList {
               public phases: Phase[] = []
   ) {
   }
+  public placedCandidates = 0;
 }
