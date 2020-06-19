@@ -8,9 +8,7 @@ module.exports = (query) => {
 
     return {
         getProcessStatus,
-        getProcessInfos,
         createProcess,
-        getRequestProcesses,
         getCandidateProcesses,
         updateProcessStatus
     }
@@ -47,23 +45,6 @@ module.exports = (query) => {
 
         const result = await query(statement)
         return result.rowCount > 0
-    }
-
-
-    async function getRequestProcesses({requestId}) {
-        const statement = {
-            name: 'Get Processes In Request',
-            text:
-                `SELECT P.${process.status}, P.${process.requestId}, P.${process.candidateId}, C.${candidate.name} ` +
-                `FROM ${process.table} AS P ` +
-                `INNER JOIN ${candidate.table} AS C ` +
-                `ON P.${process.candidateId} = C.${candidate.id} ` +
-                `WHERE P.${process.requestId} = $1;`,
-            values: [requestId]
-        }
-
-        const result = await query(statement)
-        return result.rows.map(row => extractProcessAndCandidateInfo(row))
     }
 
     function extractProcessAndCandidateInfo(row) {
@@ -110,23 +91,4 @@ module.exports = (query) => {
         }
     }
 
-    async function getProcessInfos({requestId, candidateId}) {
-        const statement = {
-            name: 'Get Process Infos',
-            text:
-                `SELECT * FROM ${info.table} AS I ` +
-                `WHERE I.${info.requestId} = $1 AND I.${info.candidateId} = $2;`,
-            values: [requestId, candidateId]
-        }
-
-        const result = await query(statement)
-        return result.rows.map(row => extractProcessInfo(row))
-    }
-
-    function extractProcessInfo(row) {
-        return {
-            name: row[info.name],
-            value: row[info.value]
-        }
-    }
 }

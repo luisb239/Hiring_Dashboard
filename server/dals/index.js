@@ -61,9 +61,10 @@ const info = require('./info-dal.js')(query)
 const requestLanguage = require('./request/request-language-dal.js')(query)
 const processUnavailableReason = require('./process/process-unavailable-reason-dal.js')(query)
 const processPhases = require('./process/process-phases-dal.js')(query)
+const processInfo = require('./process/process-info-dal.js')(query)
 
 module.exports = {
     request, candidate, skill, state, stateCsl, project, profile,
     language, workflow, phase, months, process, user, role, info, requestLanguage,
-    processUnavailableReason, processPhases,
+    processUnavailableReason, processPhases, processInfo
 }

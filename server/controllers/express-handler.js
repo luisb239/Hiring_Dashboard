@@ -10,17 +10,10 @@ module.exports = function handle(controller) {
             let validation = validationResult(req);
             if (!validation.isEmpty()) {
                 const errors = validation.array()
-                if (errors[0].param && errors[0].param === "_error") { // using express-validator oneOf()
-                    res.status(400).send({
-                        title: `Invalid arguments`,
-                        detail: `${errors[0].msg}`
-                    })
-                } else {
-                    res.status(400).send({                                 // everything else
-                        title: `Invalid arguments at ${errors[0].location}`,
-                        detail: `${errors[0].msg} (actual: '${errors[0].value ? errors[0].value : ''}')`
-                    })
-                }
+                res.status(400).send({
+                    title: `Invalid arguments at ${errors[0].location}`,
+                    detail: `${errors[0].msg}`
+                })
             } else {
                 // call controller
                 return await controller(req, res)

@@ -3,7 +3,7 @@
 const errors = require('./errors/common-errors.js')
 const AppError = require('./errors/app-error.js')
 
-module.exports = (requestDb, processDb, requestLanguagesDb, authModule) => {
+module.exports = (requestDb, processDb, requestLanguagesDb, authModule, candidateDb) => {
 
     return {
         getRequests: getRequests,
@@ -63,13 +63,24 @@ module.exports = (requestDb, processDb, requestLanguagesDb, authModule) => {
             const roleInfo = await authModule.role.getSpecificById(userRole.roleId)
             return {
                 userId: userRole.userId,
-                username: userInfo.username,
+                email: userInfo.email,
                 roleId: userRole.roleId,
                 role: roleInfo.role
             }
         }))
 
-        const processes = await processDb.getRequestProcesses({requestId: id})
+        const candidates = await candidateDb.getCandidatesByRequestId({requestId: id});
+
+        const processes = await Promise.all(candidates.map(async (candidate) => {
+            const status = await processDb.getProcessStatus({requestId: id, candidateId: candidate.id})
+            return {
+                candidate: ({
+                    id: candidate.id,
+                    name: candidate.name
+                }),
+                status: status.status
+            }
+        }))
 
         const languages = (await requestLanguagesDb.getRequestLanguages({requestId: id}))
             .map(l => ({

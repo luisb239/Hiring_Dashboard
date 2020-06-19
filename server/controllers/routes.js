@@ -1,6 +1,6 @@
 'use strict'
 
-const {body, param, query, oneOf} = require('express-validator')
+const {body, param, query, oneOf, check} = require('express-validator')
 
 const handle = require('./express-handler.js')
 
@@ -27,13 +27,14 @@ module.exports = function (router, controllers, authModule) {
 
     router.get('/auth/azure/callback',
         authModule.authenticate.usingOffice365Callback, (req, res) => {
+            // TODO -> shouldn´t do this
             res.redirect("http://localhost:4200/all-requests")
         })
 
-    router.post('auth/logout',
-        authModule.authenticate.logout, (req, res) => {
-            res.redirect("http://localhost:4200")
-        })
+    router.post('auth/logout', authModule.authenticate.logout, (req, res) => {
+        // TODO -> shouldn´t do this
+        res.redirect("http://localhost:4200")
+    })
 
     /**
      * Get all requests + query filter
@@ -107,26 +108,26 @@ module.exports = function (router, controllers, authModule) {
      * Create process
      */
     //TODO -> should be -> /process
-    router.post(`/${requests}/:requestId/${candidates}/:candidateId/${process}`, [
+    router.post(`/${requests}/:requestId/${candidates}/:candidateId/${process}`,
         processValidators,
-    ], handle(controllers.process.createProcess))
+        handle(controllers.process.createProcess))
 
     /**
      * Update process
      */
     router.put(`/${requests}/:requestId/${candidates}/:candidateId/${process}`, [
-        param('requestId').isInt().withMessage("Request Id must be of int type"),
-        param('candidateId').isInt().withMessage("Candidate Id must be of int type"),
-        oneOf([
-                body('newPhase').exists().isString().withMessage("newPhase must be of string type"),
-                body('status').exists().isString().withMessage("status must be of string type"),
-                body('unavailableReason').exists().isString().withMessage("unavailableReason must be of string type")],
-            "Missing Arguments. You must pass, at least, one of the following arguments:" +
-            " 'newPhase', 'status' or 'unavailableReason'")
+        ...processValidators,
+        body('infos').optional().isArray()
+            .custom(infosArray => infosArray.every(info => info.name && info.value))
+            .withMessage('Infos array must contain a name and value property for each array element'),
+        body('newPhase').optional().isString().withMessage("newPhase must be of string type"),
+        body('status').optional().isString().withMessage("status must be of string type"),
+        body('unavailableReason').optional().isString().withMessage("unavailableReason must be of string type"),
+        check().exists().custom((_, {req}) => {
+            return (req.body.infos || req.body.newPhase || req.body.status || req.body.unavailableReason)
+        }).withMessage("You must pass, at least, one of the following arguments:" +
+            " 'newPhase', 'status', 'unavailableReason' or 'infos'")
     ], handle(controllers.process.updateProcess))
-
-
-    // TODO -> CREATE PROCESS
 
     /**
      * Get workflow detail

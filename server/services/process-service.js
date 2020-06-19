@@ -3,7 +3,8 @@
 const errors = require('./errors/common-errors.js')
 const AppError = require('./errors/app-error.js')
 
-module.exports = (requestDb, candidateDb, processDb, phaseDb, infoDb, processUnavailableReasonDb, processPhaseDb) => {
+module.exports = (requestDb, candidateDb, processDb, phaseDb, infoDb, processUnavailableReasonDb,
+                  processPhaseDb, processInfoDb) => {
 
     return {
         getProcessDetail,
@@ -51,11 +52,13 @@ module.exports = (requestDb, candidateDb, processDb, phaseDb, infoDb, processUna
                 requestId,
                 candidateId: candidate.id
             })
+            const status = await processDb.getProcessStatus({requestId, candidateId: candidate.id})
             return {
                 candidate: ({
                     id: candidate.id,
                     name: candidate.name
                 }),
+                status: status.status,
                 phase: processCurrentPhase.currentPhase
             }
         }))
@@ -79,7 +82,7 @@ module.exports = (requestDb, candidateDb, processDb, phaseDb, infoDb, processUna
 
         const reason = await processUnavailableReasonDb.getProcessUnavailableReason({requestId, candidateId})
 
-        const processInfos = await processDb.getProcessInfos({requestId, candidateId})
+        const processInfos = await processInfoDb.getProcessInfos({requestId, candidateId})
 
         const processPhases = await processPhaseDb.getProcessPhases({requestId, candidateId})
 
@@ -108,6 +111,9 @@ module.exports = (requestDb, candidateDb, processDb, phaseDb, infoDb, processUna
 
     async function updateStatus({requestId, candidateId, status}) {
         const success = await processDb.updateProcessStatus({requestId, candidateId, status})
+        if (status === 'Placed') {
+            // TODO -> update request progress
+        }
         if (success) {
             return {
                 message: `Process status updated with success to ${status}`

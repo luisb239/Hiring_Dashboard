@@ -2,9 +2,9 @@
 
 module.exports = (processService) => {
     return {
-        getProcessDetail: getProcessDetail,
-        getProcessesByRequestId: getProcessesByRequestId,
-        updateProcess: updateProcess,
+        getProcessDetail,
+        getProcessesByRequestId,
+        updateProcess,
         createProcess
     }
 
