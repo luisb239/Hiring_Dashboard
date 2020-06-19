@@ -39,11 +39,13 @@ export class BoardComponent implements OnInit {
 
   properties: BoardProps = new BoardProps();
 
+
   ngOnInit(): void {
     this.requestService.getRequestsByUser(2, 1)
       .subscribe(
         requestsDao => {
-          this.properties.requests = requestsDao.requests.map(r => new RequestList(r.id, r.workflow, r.progress, r.state, r.description));
+          this.properties.requests = requestsDao.requests.map(r => new RequestList(r.id, r.workflow, r.progress,
+            r.state, r.description, r.quantity));
           this.properties.workflows = [...new Set(this.properties.requests.map(r => r.workflow))].map(w => new Workflow(w));
           this.properties.workflows.forEach(workflow => {
             this.workflowService.getWorkflowByName(workflow.workflow)
@@ -59,6 +61,7 @@ export class BoardComponent implements OnInit {
                           .filter(process => process.phase === phase.name)
                           .map(process => new Candidate(process.candidate.name, process.candidate.id));
                       });
+                      request.placedCandidates = dao.processes.filter(proc => proc.status === 'Placed').length;
                     }, error => {
                       console.log(error);
                     });

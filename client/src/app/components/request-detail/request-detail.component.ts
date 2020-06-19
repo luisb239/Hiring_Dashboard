@@ -33,9 +33,9 @@ export class RequestDetailComponent implements OnInit {
           reqDao.request.progress,
           reqDao.request.state,
           reqDao.request.description,
+          reqDao.request.quantity,
           reqDao.request.dateToSendProfile,
           reqDao.request.project,
-          reqDao.request.quantity,
           reqDao.request.requestDate,
           reqDao.request.skill,
           reqDao.request.stateCsl,
@@ -46,7 +46,7 @@ export class RequestDetailComponent implements OnInit {
             userRoleDao.userId, userRoleDao.username, userRoleDao.roleId, userRoleDao.role));
         this.properties.processes = reqDao.processes.map(
           processDao => new ProcessList(
-            processDao.status, processDao.candidateId, processDao.candidateName));
+            processDao.status, processDao.candidate.id, processDao.candidate.name));
         this.properties.languages = reqDao.languages.map(
           languageDao => new LanguageList(languageDao.language, languageDao.isMandatory));
         this.properties.requestAttrs = Object.keys(this.properties.requestList).filter(
