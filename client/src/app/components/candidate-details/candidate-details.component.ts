@@ -68,7 +68,7 @@ export class CandidateDetailsComponent implements OnInit {
             this.processService.getProcess(process.requestId, this.properties.candidateId)
               .subscribe(processDao => {
                   this.properties.allProcesses.push(new Process(processDao.status,
-                    processDao.unavailableReasons,
+                    processDao.unavailableReason,
                     processDao.phases.map(phase => new ProcessPhase(
                       phase.phase,
                       phase.startDate,
@@ -101,7 +101,7 @@ export class CandidateDetailsComponent implements OnInit {
 
       this.processService.getProcess(this.properties.requestId, this.properties.candidateId)
         .subscribe(dao => {
-          this.properties.currentProcess = new Process(dao.status, dao.unavailableReasons,
+          this.properties.currentProcess = new Process(dao.status, dao.unavailableReason,
             dao.phases.map(phase => new ProcessPhase(phase.phase,
               phase.startDate,
               phase.updateDate,

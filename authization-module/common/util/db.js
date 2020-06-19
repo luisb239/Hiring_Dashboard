@@ -23,7 +23,7 @@ async function databasesetup(rbac_opts) {
     // sync present state of the database with our models
     await sequelize.sync()
 
-    console.log('database setup correctly')
+    console.log('Database setup correctly.')
 
 
     await User.findOrCreate({where: {username: "superuser", password: "superuser"}})

@@ -22,7 +22,7 @@
         <h5 class="inline">Status:</h5>
         <label>
           <select formControlName="status">
-            <option [value]="process.status">{{process.status}}</option>
+            <option [selected]="true" [value]="process.status">{{process.status}}</option>
             <option *ngFor="let status of statusList" [value]="status">{{status}}</option>
           </select>
         </label>
@@ -31,20 +31,20 @@
         <h5 class="inline">Unavailable Reason:</h5>
         <label>
           <select formControlName="unavailableReason">
-            <option [value]="process.unavailableReason">{{process.unavailableReason}}</option>
+            <option [selected]="true" [value]="process.unavailableReason">{{process.unavailableReason}}</option>
             <option *ngFor="let reason of reasons" [value]="reason">{{reason}}</option>
           </select>
         </label>
       </div>
       <div class="property">
-        <h5>Phase Notes</h5>
+        <h5>{{phase.phase}} Notes</h5>
         <label>
           <textarea formControlName="phaseNotes">{{phase.notes || ''}}</textarea>
         </label>
       </div>
     </div>
     <div class="property">
-      <h5>Phase Attributes</h5>
+      <h5>{{phase.phase}} Attributes</h5>
       <div *ngFor="let attribute of attributeTemplates;" style="display: block">
         <label>{{attribute.name}}
           <input [type]="attribute.type" [value]="attribute.value" class="attribute" [formControlName]="attribute.name">

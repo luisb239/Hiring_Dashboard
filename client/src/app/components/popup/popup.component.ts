@@ -39,8 +39,6 @@ export class PopupComponent implements OnInit {
   ) {
     this.updateForm = this.formBuilder.group(
       {
-        status: this.formBuilder.control(''),
-        unavailableReason: this.formBuilder.control(''),
         phaseNotes: this.formBuilder.control('')
       }
     );
@@ -61,7 +59,28 @@ export class PopupComponent implements OnInit {
 
     this.processService.getProcess(this.requestId, this.candidateId)
       .subscribe(dao => {
-        this.process = new Process(dao.status, dao.unavailableReasons);
+        this.updateForm.addControl('status', new FormControl(dao.status));
+        this.updateForm.addControl('unavailableReason', new FormControl(dao.unavailableReason));
+        this.process = new Process(dao.status, dao.unavailableReason);
+
+        this.processService.getReasons()
+          .subscribe(reasonDao => {
+            this.reasons = reasonDao.unavailableReasons
+              .filter(res => res.unavailableReason !== this.process.unavailableReason)
+              .map(res => res.unavailableReason);
+          }, error => {
+            console.log(error);
+          });
+
+        this.processService.getStatus()
+          .subscribe(statusDao => {
+            this.statusList = statusDao.status
+              .filter(stat => stat.status !== this.process.status)
+              .map(stat => stat.status);
+          }, error => {
+            console.log(error);
+          });
+
         const phaseDetails = dao.phases.find(p => p.phase === dao.currentPhase);
         this.phase = new ProcessPhase(phaseDetails.phase,
           phaseDetails.startDate,
@@ -75,7 +94,7 @@ export class PopupComponent implements OnInit {
       .subscribe(phaseDao => {
         phaseDao
           .infos.forEach(pi => {
-            this.updateForm.addControl(pi.name, new FormControl());
+            this.updateForm.addControl(pi.name, new FormControl(pi.value));
             this.attributeTemplates.push(new PhaseAttribute(pi.name, pi.value.name, pi.value.type));
           }
         );
@@ -111,9 +130,14 @@ export class PopupComponent implements OnInit {
       this.updateForm.value.unavailableReason,
       this.updateForm.value.phaseNotes,
       attributeArray
-    ).subscribe();
+    ).subscribe(dao => {
+        alert('Updated Candidate successfully!');
+      }, error => {
+        console.log(error);
+      }
+    );
 
-    this.candidateService.updateCandidate(this.candidate)
-      .subscribe();
+    // this.candidateService.updateCandidate(this.candidate)
+    //   .subscribe();
   }
 }
