@@ -4,7 +4,7 @@ const errors = require('./errors/common-errors.js')
 const AppError = require('./errors/app-error.js')
 
 module.exports = (requestDb, candidateDb, processDb, phaseDb, infoDb, processUnavailableReasonDb,
-                  processPhaseDb, processInfoDb) => {
+                  processPhaseDb, processInfoDb, reasonsDb, statusDb) => {
 
     return {
         getProcessDetail,
@@ -20,16 +20,16 @@ module.exports = (requestDb, candidateDb, processDb, phaseDb, infoDb, processUna
     }
 
     async function getAllStatus() {
-        const status = await processDb.getAllStatus()
+        const status = await statusDb.getAllStatus()
         return {
             status: status
         }
     }
 
     async function getUnavailableReasons() {
-        const reasons = await processUnavailableReasonDb.getAllUnavailableReasons()
+        const reasons = await reasonsDb.getAllUnavailableReasons()
         return {
-            reasons: reasons
+            unavailableReasons: reasons
         }
     }
 
@@ -117,7 +117,7 @@ module.exports = (requestDb, candidateDb, processDb, phaseDb, infoDb, processUna
 
         return {
             status: status.status,
-            unavailableReason: reason ? reason.unavailabilityReason : null,
+            unavailableReason: reason ? reason.unavailableReason : null,
             currentPhase: currentPhase,
             phases: processDetailedPhases
         }
@@ -155,7 +155,7 @@ module.exports = (requestDb, candidateDb, processDb, phaseDb, infoDb, processUna
             })
             return {message: `Process unavailable reasons set to ${unavailableReason}`}
         } else {
-            if (currentReason.unavailabilityReason === unavailableReason) {
+            if (currentReason.unavailableReason === unavailableReason) {
                 return {message: `Process unavailable reason is already ${unavailableReason}`}
             }
             await processUnavailableReasonDb.updateProcessUnavailableReason({

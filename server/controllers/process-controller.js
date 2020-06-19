@@ -1,6 +1,7 @@
 'use strict'
 
 module.exports = (processService) => {
+
     return {
         getProcessDetail,
         getProcessesByRequestId,
@@ -11,8 +12,8 @@ module.exports = (processService) => {
     }
 
     async function getAllStatus(req, res) {
-        const processesStatus = await processService.getAllStatus()
-        res.status(200).send(processesStatus)
+        const status = await processService.getAllStatus()
+        res.status(200).send(status)
     }
 
     async function getUnavailableReasons(req, res) {

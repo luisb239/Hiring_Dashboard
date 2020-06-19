@@ -9,8 +9,7 @@ module.exports = (query) => {
         createProcess,
         getCandidateProcesses,
         updateProcessStatus,
-        getAllProcessesStatusFromRequest,
-        getAllStatus
+        getAllProcessesStatusFromRequest
     }
 
     async function getCandidateProcesses({candidateId}) {
@@ -50,7 +49,7 @@ module.exports = (query) => {
 
     async function getAllProcessesStatusFromRequest({requestId}) {
         const statement = {
-            name: 'Get Processes Status',
+            name: 'Get All Processes Status From Request',
             text:
                 `SELECT P.${process.status} ` +
                 `FROM ${process.table} as P ` +
@@ -77,7 +76,7 @@ module.exports = (query) => {
 
     async function getProcessStatus({requestId, candidateId}) {
         const statement = {
-            name: 'Get Process Info',
+            name: 'Get Process Status',
             text:
                 `SELECT * FROM ${process.table} AS P ` +
                 `WHERE P.${process.requestId} = $1 AND P.${process.candidateId} = $2;`,
@@ -91,18 +90,6 @@ module.exports = (query) => {
         }
 
         return null
-    }
-
-    async function getAllStatus() {
-        const statement = {
-            name: 'Get Process Info',
-            text:
-                `SELECT * FROM ${process.table};`,
-            values: []
-        }
-
-        const result = await query(statement)
-        return result.rows.map(row => extractProcessStatus(row))
     }
 
     function extractProcessStatus(row) {

@@ -119,15 +119,27 @@ module.exports = function (router, controllers, authModule) {
         ...processValidators,
         body('infos').optional().isArray()
             .custom(infosArray => infosArray.every(info => info.name && info.value))
-            .withMessage('Infos must be an array, with each element containing a name and value property'),
+            .withMessage('Infos must be an array, with each element containing a name and a value property'),
         body('newPhase').optional().isString().withMessage("newPhase must be of string type"),
         body('status').optional().isString().withMessage("status must be of string type"),
         body('unavailableReason').optional().isString().withMessage("unavailableReason must be of string type"),
         check().exists().custom((_, {req}) => {
             return (req.body.infos || req.body.newPhase || req.body.status || req.body.unavailableReason)
-        }).withMessage("You must pass, at least, one of the following arguments:" +
-            " 'newPhase', 'status', 'unavailableReason' or 'infos'")
+        })
+            .withMessage("You must pass, at least, one of the following arguments:" +
+                " 'newPhase', 'status', 'unavailableReason' or 'infos'")
     ], handle(controllers.process.updateProcess))
+
+    /**
+     * Update phase information of process
+     */
+    /*
+    router.put(`/${requests}/:requestId/${candidates}/:candidateId/${process}/`, [
+        ...processValidators,
+    ], handle())
+
+
+     */
 
     /**
      * Get workflow detail
@@ -219,6 +231,7 @@ module.exports = function (router, controllers, authModule) {
     router.post(`/${candidates}`, handle(controllers.candidate.postCandidate))
 
     //TODO -> CHANGE ROUTES
+
     router.get(`/process/reasons`, handle(controllers.process.getUnavailableReasons))
 
     router.get(`/process/status`, handle(controllers.process.getAllStatus))

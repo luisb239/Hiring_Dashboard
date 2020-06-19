@@ -7,21 +7,7 @@ module.exports = (query) => {
     return {
         getProcessUnavailableReason,
         setProcessInitialUnavailableReason,
-        updateProcessUnavailableReason,
-        getAllUnavailableReasons
-    }
-
-    async function getAllUnavailableReasons() {
-        const statement = {
-            name: 'Get All Unavailable Reasons',
-            text:
-                `SELECT * FROM ${schema.table};`,
-            values: []
-        }
-
-        const result = await query(statement)
-
-        return result.rows.map(row => extractProcessUnavailableReason(row))
+        updateProcessUnavailableReason
     }
 
     async function getProcessUnavailableReason({requestId, candidateId}) {
@@ -43,7 +29,7 @@ module.exports = (query) => {
 
     function extractProcessUnavailableReason(row) {
         return {
-            unavailabilityReason: row[schema.reason]
+            unavailableReason: row[schema.reason]
         }
     }
 
