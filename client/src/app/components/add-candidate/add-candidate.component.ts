@@ -75,9 +75,6 @@ export class AddCandidateComponent implements OnInit {
   }
 
   filterCandidates() {
-    // const profiles = this.filterForm.value.profiles;
-    console.log(this.filterForm.value.profiles);
-    console.log(this.filterForm.value.available);
     this.candidateService.getAllCandidatesWithQueries(this.filterForm.value.profiles, this.filterForm.value.available)
       .subscribe(dao => {
         this.candidates = dao.candidates.map(c =>

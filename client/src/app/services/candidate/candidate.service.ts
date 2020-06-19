@@ -4,6 +4,7 @@ import {catchError} from 'rxjs/operators';
 import {ErrorHandler} from '../error-handler';
 import {CandidateDao} from 'src/app/model/candidate/candidate-dao';
 import {CandidatesDao} from '../../model/candidate/candidates-dao';
+import {Candidate} from '../../model/candidate/candidate';
 
 const httpOptions = {
   headers: new HttpHeaders({
@@ -46,6 +47,20 @@ export class CandidateService {
         'Content-Type': 'application/json'
       }), params
     })
+      .pipe(data => {
+          return data;
+        },
+        catchError(this.errorHandler.handleError));
+  }
+
+  updateCandidate(candidate: Candidate) {
+    return this.http.put<CandidatesDao>(`${this.baseUrl}/candidates/${candidate.id}`,
+      {available: candidate.available},
+      {
+        headers: new HttpHeaders({
+          'Content-Type': 'application/json'
+        })
+      })
       .pipe(data => {
           return data;
         },

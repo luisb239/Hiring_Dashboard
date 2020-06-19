@@ -90,47 +90,8 @@ export class BoardComponent implements OnInit {
     const modalRef = this.modalService.open(PopupComponent);
 
     modalRef.componentInstance.requestId = requestId;
-
-    this.candidateService.getCandidateById(candidateId)
-      .subscribe(dao => {
-        modalRef.componentInstance.candidate = new Candidate(dao.candidate.name,
-          dao.candidate.id,
-          dao.candidate.profileInfo,
-          dao.candidate.available,
-          dao.candidate.cv);
-      }, error => {
-        console.log(error);
-      });
-
-    this.processService.getProcess(requestId, candidateId)
-      .subscribe(dao => {
-        modalRef.componentInstance.process = new Process(dao.status, dao.unavailableReasons);
-        const phaseDetails = dao.phases.find(p => p.phase === dao.currentPhase);
-        modalRef.componentInstance.phase = new ProcessPhase(phaseDetails.phase,
-          phaseDetails.startDate,
-          phaseDetails.updateDate,
-          phaseDetails.notes);
-      }, error => {
-        console.log(error);
-      });
-
-    this.phaseService.getPhase(phaseName)
-      .subscribe(phaseDao => {
-        modalRef.componentInstance.attributeTemplates = phaseDao
-          .infos.map(pi => new PhaseAttribute(pi.name, pi.value.name, pi.value.type));
-
-        this.processService.getProcess(requestId, candidateId)
-          .subscribe(processDao => {
-            modalRef.componentInstance.attributeTemplates
-              .forEach(at => at.value = processDao.phases
-                .find(phase => phase.phase === phaseName).infos
-                .find(i => i.name === at.name).value);
-          }, error => {
-            console.log(error);
-          });
-      }, error => {
-        console.log(error);
-      });
+    modalRef.componentInstance.candidateId = candidateId;
+    modalRef.componentInstance.phaseName = phaseName;
   }
 
   addCandidate(requestId: number) {
