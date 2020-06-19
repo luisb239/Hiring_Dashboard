@@ -14,9 +14,24 @@ module.exports = (requestDb, candidateDb, processDb, phaseDb, infoDb, processUna
         updateStatus,
         updateUnavailableReason,
         moveProcessToFirstPhase,
-        updateProcessInfoValues
+        updateProcessInfoValues,
+        getUnavailableReasons,
+        getAllStatus
     }
 
+    async function getAllStatus() {
+        const status = await processDb.getAllStatus()
+        return {
+            status: status
+        }
+    }
+
+    async function getUnavailableReasons() {
+        const reasons = await processUnavailableReasonDb.getAllUnavailableReasons()
+        return {
+            reasons: reasons
+        }
+    }
 
     async function createProcess({requestId, candidateId}) {
         await processDb.createProcess({requestId, candidateId, status: "Onhold"})
@@ -215,7 +230,7 @@ module.exports = (requestDb, candidateDb, processDb, phaseDb, infoDb, processUna
         await Promise.all(infoArray.map(async info => {
             const infoFound = processInfos.find(procInfo => procInfo.name === info.name)
             if (!infoFound) {
-                await processInfos.createProcessInfo({
+                await processInfoDb.createProcessInfo({
                     requestId, candidateId, infoName: info.name, infoValue: `{"value" : "${info.value}"}`
                 })
             } else {

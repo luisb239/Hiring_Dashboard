@@ -211,12 +211,17 @@ module.exports = function (router, controllers, authModule) {
     router.get(`/${candidates}/:id`, handle(controllers.candidate.getCandidateById))
 
     // Update Candidate
-    // router.put(`/${candidates}/:id`, controllers.candidate.updateCandidate)
+    //  router.put(`/${candidates}/:id`, controllers.candidate.updateCandidate)
 
     /**
      * Create candidate
      */
     router.post(`/${candidates}`, handle(controllers.candidate.postCandidate))
+
+    //TODO -> CHANGE ROUTES
+    router.get(`/process/reasons`, handle(controllers.process.getUnavailableReasons))
+
+    router.get(`/process/status`, handle(controllers.process.getAllStatus))
 
     return router
 }

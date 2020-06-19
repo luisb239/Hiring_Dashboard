@@ -5,7 +5,19 @@ module.exports = (processService) => {
         getProcessDetail,
         getProcessesByRequestId,
         updateProcess,
-        createProcess
+        createProcess,
+        getUnavailableReasons,
+        getAllStatus
+    }
+
+    async function getAllStatus(req, res) {
+        const processesStatus = await processService.getAllStatus()
+        res.status(200).send(processesStatus)
+    }
+
+    async function getUnavailableReasons(req, res) {
+        const reasons = await processService.getUnavailableReasons()
+        res.status(200).send(reasons)
     }
 
     async function getProcessDetail(req, res) {

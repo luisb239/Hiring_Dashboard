@@ -6,7 +6,7 @@ module.exports = (db, authModule) => {
         db.requestLanguage, authModule, db.candidate)
 
     const requestProps = require('./request-props-service.js')(db.language, db.months, db.profile,
-        db.project, db.skill, db.state, db.stateCsl, db.workflow, db.phase)
+        db.project, db.skill, db.state, db.stateCsl, db.workflow, db.processUnavailableReason)
 
     const candidate = require('./candidate-service.js')(db.candidate, db.profile, db.process)
 
@@ -14,7 +14,7 @@ module.exports = (db, authModule) => {
 
     const process = require('./process-service.js')(db.request, db.candidate,
         db.process, db.phase, db.info, db.processUnavailableReason, db.processPhases,
-        db.processInfo)
+        db.processInfo, db.reasons)
 
     const auth = require('./auth-service.js')(db.user, authModule)
 

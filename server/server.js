@@ -40,10 +40,13 @@ const jsonObj = {
 
         {"resource": "candidates", "action": "GET"},
         {"resource": "candidates", "action": "POST"},
+        {"resource": "candidates", "action": "PUT"},
+
+        {"resource": "process", "action": "GET"}
 
     ],
     "grants": {
-        //TODO -> change guest permissions -> only temporary
+        //TODO -> guest permissions
         "guest": [
             {"resource": "auth", "action": "GET"},
             {"resource": "auth", "action": "POST"},
@@ -57,6 +60,8 @@ const jsonObj = {
             {"resource": "requests-properties", "action": "GET"},
             {"resource": "candidates", "action": "GET"},
             {"resource": "candidates", "action": "POST"},
+            {"resource": "candidates", "action": "PUT"},
+            {"resource": "process", "action": "GET"}
         ],
         "recruiter": [
             {"role": "guest"}

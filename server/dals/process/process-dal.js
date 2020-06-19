@@ -1,8 +1,6 @@
 'use strict'
 
 const process = require('../../schemas/process/process-schema.js')
-const info = require('../../schemas/process/process-info-schema.js')
-const candidate = require('../../schemas/candidate-schema.js')
 
 module.exports = (query) => {
 
@@ -11,7 +9,8 @@ module.exports = (query) => {
         createProcess,
         getCandidateProcesses,
         updateProcessStatus,
-        getAllProcessesStatusFromRequest
+        getAllProcessesStatusFromRequest,
+        getAllStatus
     }
 
     async function getCandidateProcesses({candidateId}) {
@@ -75,6 +74,7 @@ module.exports = (query) => {
         await query(statement)
     }
 
+
     async function getProcessStatus({requestId, candidateId}) {
         const statement = {
             name: 'Get Process Info',
@@ -91,6 +91,18 @@ module.exports = (query) => {
         }
 
         return null
+    }
+
+    async function getAllStatus() {
+        const statement = {
+            name: 'Get Process Info',
+            text:
+                `SELECT * FROM ${process.table};`,
+            values: []
+        }
+
+        const result = await query(statement)
+        return result.rows.map(row => extractProcessStatus(row))
     }
 
     function extractProcessStatus(row) {
