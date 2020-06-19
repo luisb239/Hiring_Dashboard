@@ -17,7 +17,7 @@
   },
   "database_opts": {},
   "rbac": {},
-  "webAppUri": "http://localhost:3000",
+  "webAppUri": "http://localhost:4200",
   "isModuleSetUp": false,
   "cookieSecret": "justasecretstring"
 }

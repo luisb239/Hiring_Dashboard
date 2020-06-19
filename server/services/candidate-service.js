@@ -11,29 +11,15 @@ module.exports = (candidateDb, profilesDb, processDb) => {
         createCandidate: createCandidate,
     }
 
-    async function getCandidates({available = null, profiles = []}) {
-
-        let candidates = await candidateDb.getCandidates({available})
-
-        /*
-        let candidatesProfiles = await Promise.all(candidates.map(async c => {
-            return {
-                profilesArray: (await profilesDb.getCandidateProfiles({candidateId: c.id})).map(p => p.profile)
-            }
-        }))
-
-        candidatesProfiles = candidatesProfiles.filter(cp => profiles.every(p => cp.profilesArray.includes(p)))
-
-        //TODO
-        console.log(candidatesProfiles)
-         */
+    async function getCandidates({available = null, profiles = null}) {
+        const candidates = await candidateDb.getCandidates({available, profiles})
 
         return {
             candidates: candidates,
         }
     }
 
-    async function getCandidateById({ id }) {
+    async function getCandidateById({id}) {
 
         const candidateFound = await candidateDb.getCandidateById({id})
 

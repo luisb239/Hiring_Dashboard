@@ -24,7 +24,6 @@ module.exports = (processService) => {
     }
 
     async function updateProcess(req, res) {
-
         if (req.body.newPhase) {
             await processService.updateProcessCurrentPhase({
                 requestId: req.params.requestId,
@@ -53,7 +52,17 @@ module.exports = (processService) => {
     }
 
     async function createProcess(req, res) {
-        //TODO
-        await processService.createProcess()
+
+        await processService.createProcess({
+            requestId: req.params.requestId,
+            candidateId: req.params.candidateId
+        })
+
+        await processService.moveProcessToFirstPhase({
+            requestId: req.params.requestId,
+            candidateId: req.params.candidateId
+        })
+
+        res.status(201).send({message: "Process created with success"})
     }
 }

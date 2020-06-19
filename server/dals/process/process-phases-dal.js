@@ -14,7 +14,7 @@ module.exports = (query) => {
         getProcessPhases
     }
 
-    async function addPhaseToProcess({requestId, candidateId, phase, startDate, updateDate = null, notes = null}) {
+    async function addPhaseToProcess({requestId, candidateId, phase, startDate}) {
         const statement = {
             name: 'Add Phase To Process',
             text:
@@ -22,7 +22,7 @@ module.exports = (query) => {
                 `(${processPhase.requestId}, ${processPhase.candidateId}, ` +
                 `${processPhase.phase}, ${processPhase.startDate}, ${processPhase.updateDate}, ${processPhase.notes}) ` +
                 `VALUES ($1, $2, $3, $4, $5, $6);`,
-            values: [requestId, candidateId, phase, startDate, updateDate, notes]
+            values: [requestId, candidateId, phase, startDate, null, null]
         }
         await query(statement)
     }

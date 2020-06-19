@@ -18,7 +18,7 @@
     "connectionLimit": 5,
     "database": "r15dtqer5c72jvex"
   },
-  "webAppUri": "http://localhost:3000",
+  "webAppUri": "http://localhost:4200",
   "isModuleSetUp": false,
   "sgbd": "mysql"
 }

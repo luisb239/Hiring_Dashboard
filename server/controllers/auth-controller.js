@@ -9,8 +9,7 @@ module.exports = (service) => {
     async function getUserInfo(req, res) {
         const user = await service.createUserIfNotPresent({id: req.user.id, email: req.user.username})
         const roles = await service.getUserRoles({id: req.user.id})
-
-        res.status(200).send({
+        res.send({
             user: user,
             roles: roles
         })

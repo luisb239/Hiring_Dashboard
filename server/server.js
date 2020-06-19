@@ -1,9 +1,6 @@
 'use strict'
 
 const PORT = process.argv[2] || '8080'
-// TODO:
-//  should be environment variable -> process.env
-//  or config file
 
 const express = require('express')
 
@@ -46,13 +43,15 @@ const jsonObj = {
 
     ],
     "grants": {
-        //TODO -> change guest permissions -> only temporary for postman tests
+        //TODO -> change guest permissions -> only temporary
         "guest": [
             {"resource": "auth", "action": "GET"},
             {"resource": "auth", "action": "POST"},
+
             {"resource": "requests", "action": "GET"},
             {"resource": "requests", "action": "POST"},
             {"resource": "requests", "action": "PUT"},
+
             {"resource": "workflows", "action": "GET"},
             {"resource": "phases", "action": "GET"},
             {"resource": "requests-properties", "action": "GET"},
@@ -77,6 +76,10 @@ authModule.setup(app, dbOptions, jsonObj)
     .then(async (authModule) => {
 
         // SETUP DB VALUES
+        //TODO CRIAR AS TABELAS DELES ANTES..
+        // VER O CREATE TABLES ANTIGO DELES E COPIAR PARA O NOSSO
+
+        // CRIAR UM
 
         //Add default users + their roles
         let user1 = await authModule.user.getByUsername("A44015@alunos.isel.pt")
@@ -100,7 +103,7 @@ authModule.setup(app, dbOptions, jsonObj)
         const recruiter = await authModule.role.getByName("recruiter")
 
         const userRoles = await authModule.userRole.getAll()
-        if (!userRoles) {
+        if (!userRoles.length) {
             await authModule.userRole.create(user1.id, recruiter.id, null, null, null, true)
             await authModule.userRole.create(user2.id, recruiter.id, null, null, null, true)
             await authModule.userRole.create(user3.id, recruiter.id, null, null, null, true)
@@ -127,7 +130,7 @@ authModule.setup(app, dbOptions, jsonObj)
         //express error handler
         app.use(function (err, req, res) {
             console.log(err.stack)
-            res.status(err.status || 500).send({message: err.message || 'Something unexpected error. Please try again later.'})
+            res.status(err.status || 500).send({message: err.message || 'Something went wrong. Please try again later.'})
         })
 
 

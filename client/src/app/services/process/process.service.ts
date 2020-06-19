@@ -27,10 +27,7 @@ export class ProcessService {
         'Content-Type': 'application/json'
       })
     })
-      .pipe(data => {
-          return data;
-        },
-        catchError(this.errorHandler.handleError));
+      .pipe(data => data, catchError(this.errorHandler.handleError));
   }
 
   getProcess(requestId: number, candidateId: number) {
@@ -38,9 +35,6 @@ export class ProcessService {
       {
         headers: new HttpHeaders({'Content-Type': 'application/json'})
       })
-      .pipe(data => {
-          return data;
-        },
-        catchError(this.errorHandler.handleError));
+      .pipe(data => data, catchError(this.errorHandler.handleError));
   }
 }

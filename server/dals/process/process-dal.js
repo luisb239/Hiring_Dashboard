@@ -74,14 +74,13 @@ module.exports = (query) => {
         }
     }
 
-    // TODO -> CREATE PROCESS TEST
-    async function createProcess() {
+    async function createProcess({requestId, candidateId, status}) {
         const statement = {
-            name: 'Create Process -> MEANT TO JUST BE A TEST',
+            name: 'Create Process',
             text:
                 `INSERT INTO ${process.table} (${process.requestId}, ${process.candidateId}, ${process.status}) ` +
                 `VALUES ($1, $2, $3);`,
-            values: ["oi", 1, 2]
+            values: [requestId, candidateId, status]
         }
 
         await query(statement)

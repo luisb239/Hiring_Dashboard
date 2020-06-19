@@ -23,10 +23,10 @@ export class AuthService {
 
   authUrl = `http://localhost:8080/hd/auth`;
 
-  registerUrl = `${this.authUrl}/sign_up`;
-  loginUrl = `${this.authUrl}/login`;
+  azureAuthenticationUrl = `${this.authUrl}/azure`;
   logoutUrl = `${this.authUrl}/logout`;
 
+  registerUrl = 'test';
 
   // We can call also call GET '/session' api endpoint
   isAuthenticated(): boolean {
@@ -42,13 +42,17 @@ export class AuthService {
     localStorage.setItem('userInfo', JSON.stringify(user));
   }
 
-  login(username: string, password: string) {
-    return this.http.post<UserDao>(this.loginUrl, {username, password}, httpOptions)
+  authenticate() {
+    /*
+    return this.http.get<any>(this.azureAuthenticationUrl, httpOptions)
       .pipe(data => {
           return data;
         },
         catchError(this.errorHandler.handleError));
+
+     */
   }
+
 
   register(username: string, password: string) {
     return this.http.post<UserDao>(this.registerUrl, {username, password}, httpOptions)

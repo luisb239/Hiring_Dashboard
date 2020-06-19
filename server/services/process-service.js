@@ -6,17 +6,34 @@ const AppError = require('./errors/app-error.js')
 module.exports = (requestDb, candidateDb, processDb, phaseDb, infoDb, processUnavailableReasonDb, processPhaseDb) => {
 
     return {
-        getProcessDetail: getProcessDetail,
-        getProcessesByRequestId: getProcessesByRequestId,
-        updateProcessCurrentPhase: updateProcessCurrentPhase,
+        getProcessDetail,
+        getProcessesByRequestId,
+        updateProcessCurrentPhase,
         createProcess,
         updateStatus,
-        updateUnavailableReason
+        updateUnavailableReason,
+        moveProcessToFirstPhase
     }
 
-    //TODO
-    async function createProcess() {
-        await processDb.createProcess()
+
+    async function createProcess({requestId, candidateId}) {
+        await processDb.createProcess({requestId, candidateId, status: "Onhold"})
+    }
+
+    async function moveProcessToFirstPhase({requestId, candidateId}) {
+        const {workflow} = await requestDb.getRequestById({id: requestId})
+
+        const workflowPhases = await phaseDb.getPhasesByWorkflow({workflow})
+
+        const firstPhase = workflowPhases.find(phase => phase.phaseNumber === 1)
+
+        await processPhaseDb.addPhaseToProcess({
+            requestId, candidateId, phase: firstPhase.phase, startDate: new Date()
+        })
+
+        await processPhaseDb.setProcessInitialPhase({
+            requestId, candidateId, initialPhase: firstPhase.phase
+        })
     }
 
 
@@ -24,21 +41,22 @@ module.exports = (requestDb, candidateDb, processDb, phaseDb, infoDb, processUna
      * Returns all processes present in request
      * @param requestId : number
      * Request id
-     * @returns {Promise<{processes: JSON[]}>}
+     * @returns {Promise<{JSON}>}
      */
     async function getProcessesByRequestId({requestId}) {
         const candidates = await candidateDb.getCandidatesByRequestId({requestId});
 
         const processes = await Promise.all(candidates.map(async (candidate) => {
+            const processCurrentPhase = await processPhaseDb.getProcessCurrentPhase({
+                requestId,
+                candidateId: candidate.id
+            })
             return {
                 candidate: ({
                     id: candidate.id,
                     name: candidate.name
                 }),
-                phase: (await processPhaseDb.getProcessCurrentPhase({
-                    requestId,
-                    candidateId: candidate.id
-                })).currentPhase
+                phase: processCurrentPhase.currentPhase
             }
         }))
         return {
@@ -131,7 +149,6 @@ module.exports = (requestDb, candidateDb, processDb, phaseDb, infoDb, processUna
      * Represents the phase to be updated to
      * @returns {Promise<{JSON}>}
      */
-    //TODO -> SE O CANDIDATO ESTIVER NA 3 FASE E QUISER VOLTAR à SEGUNDA DÁ ERRO
     async function updateProcessCurrentPhase({requestId, candidateId, newPhase}) {
         // Get process related workflow and the workflow's phases
         const {workflow} = await requestDb.getRequestById({id: requestId})
@@ -142,38 +159,30 @@ module.exports = (requestDb, candidateDb, processDb, phaseDb, infoDb, processUna
         if (!validPhase) {
             throw new AppError(errors.invalidInput,
                 "Invalid Phase",
-                `Phase ${newPhase} is not valid in the request workflow`)
+                `Phase ${newPhase} is not valid in the request workflow(${workflow})`)
         }
+
         // Get process current phase
         const currentPhase = await processPhaseDb.getProcessCurrentPhase({requestId, candidateId})
 
-        // Process does not have a current phase yet
-        if (!currentPhase) {
-            await processPhaseDb.addPhaseToProcess({requestId, candidateId, phase: newPhase})
-            await processPhaseDb.setProcessInitialPhase({requestId, candidateId, initialPhase: newPhase})
-        } else {
-            // Process has a current phase
+        // Check process current phase
+        if (currentPhase.currentPhase === newPhase) {
+            return {message: `Process current phase is already ${newPhase}`}
+        }
 
-            if (currentPhase.currentPhase === newPhase) {
-                return {
-                    message: `Process current phase is already ${newPhase}`
-                }
-            }
+        const processExistingPhases = await processPhaseDb.getProcessPhases({requestId, candidateId})
 
-            const processExistingPhases = await processPhaseDb.getProcessPhases({requestId, candidateId})
+        // If phase to transition (newPhase) does not exist in the process list of phases, then
+        // we must insert the newPhase in the list of process phases.
+        if (!processExistingPhases.find(procPhase => procPhase.phase === newPhase)) {
+            await processPhaseDb.addPhaseToProcess({requestId, candidateId, phase: newPhase, startDate: new Date()})
+        }
+        await processPhaseDb.updateProcessCurrentPhase({requestId, candidateId, phase: newPhase})
 
-            // If phase to transition (newPhase) does not exist in the process list of phases, then
-            // we must insert the newPhase in the list of process phases.
-            if (!processExistingPhases.find(procPhase => procPhase.phase === newPhase)) {
-                await processPhaseDb.addPhaseToProcess({requestId, candidateId, phase: newPhase, startDate: new Date()})
-            }
-            await processPhaseDb.updateProcessCurrentPhase({requestId, candidateId, phase: newPhase})
-
-            return {
-                oldPhase: currentPhase.currentPhase,
-                newPhase: validPhase.phase,
-                message: `Process moved from ${currentPhase.currentPhase} to ${validPhase.phase}`
-            }
+        return {
+            oldPhase: currentPhase.currentPhase,
+            newPhase: validPhase.phase,
+            message: `Process moved from ${currentPhase.currentPhase} to ${validPhase.phase}`
         }
     }
 

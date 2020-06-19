@@ -17,6 +17,7 @@ module.exports = {
      */
     check: async (req, resp, next) => {
         const resource = req.path.split("/")[2]
+        if (!resource) return next()
         const action = req.method
 
         const user = req.user

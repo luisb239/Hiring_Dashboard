@@ -166,7 +166,12 @@ INSERT INTO candidate_request_profile(candidate_id, profile)
 	VALUES
 	(4, '.Net'),
 	(4, '.Net 3 anos'),
-	(4, '.Net Júnior');	
+	(4, '.Net Júnior'),
+	(1, '.Net'),
+	(1, 'Tester'),
+	(2, 'Dev. Java'),
+	(2, 'Tester');
+	
 	
 INSERT INTO process_status(status)
 	VALUES

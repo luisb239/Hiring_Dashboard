@@ -26,15 +26,14 @@ module.exports = function (router, controllers, authModule) {
     router.get('/auth/azure', authModule.authenticate.usingOffice365)
 
     router.get('/auth/azure/callback',
-        authModule.authenticate.usingOffice365Callback,
-        handle(controllers.authorization.getUserInfo));
+        authModule.authenticate.usingOffice365Callback, (req, res) => {
+            res.redirect("http://localhost:4200/all-requests")
+        })
 
     router.post('auth/logout',
-        authModule.authenticate.logout,
-        handle(controllers.authorization.logout))
-
-    // TODO
-    //  router.get('/teste', controllers.process.createProcess)
+        authModule.authenticate.logout, (req, res) => {
+            res.redirect("http://localhost:4200")
+        })
 
     /**
      * Get all requests + query filter
@@ -77,6 +76,18 @@ module.exports = function (router, controllers, authModule) {
         body('valuedLanguages').optional().isArray().withMessage("Valued Languages  must be an array of languages"),
     ], handle(controllers.request.postRequest))
 
+
+    // Get Process Information ->
+    // Can change to /process?requestId=1 ; /process?candidateId=1;
+    // and even to /process?requestId=1&candidateId=2
+    /**
+     * Process endpoints common validators
+     */
+    const processValidators = [
+        param('requestId').isInt().withMessage("Request Id must be of int type"),
+        param('candidateId').isInt().withMessage("Candidate Id must be of int type")
+    ]
+
     /**
      * Get all request processes
      */
@@ -85,16 +96,20 @@ module.exports = function (router, controllers, authModule) {
     ], handle(controllers.process.getProcessesByRequestId))
 
 
-    // Get Process Information ->
-    // Can change to /process?requestId=1 ; /process?candidateId=1;
-    // and even to /process?requestId=1&candidateId=2
     /**
      * Get process detail
      */
-    router.get(`/${requests}/:requestId/${candidates}/:candidateId/${process}`, [
-        param('requestId').isInt().withMessage("Request Id must be of int type"),
-        param('candidateId').isInt().withMessage("Candidate Id must be of int type")
-    ], handle(controllers.process.getProcessDetail))
+    router.get(`/${requests}/:requestId/${candidates}/:candidateId/${process}`,
+        processValidators,
+        handle(controllers.process.getProcessDetail))
+
+    /**
+     * Create process
+     */
+    //TODO -> should be -> /process
+    router.post(`/${requests}/:requestId/${candidates}/:candidateId/${process}`, [
+        processValidators,
+    ], handle(controllers.process.createProcess))
 
     /**
      * Update process
@@ -103,12 +118,15 @@ module.exports = function (router, controllers, authModule) {
         param('requestId').isInt().withMessage("Request Id must be of int type"),
         param('candidateId').isInt().withMessage("Candidate Id must be of int type"),
         oneOf([
-                body('newPhase').exists().isString().withMessage("NewPhase must be of string type"),
-                body('status').exists().isString().withMessage("Status must be of string type"),
-                body('unavailableReason').exists().isString().withMessage("Unavailable Reason must be of string type")],
+                body('newPhase').exists().isString().withMessage("newPhase must be of string type"),
+                body('status').exists().isString().withMessage("status must be of string type"),
+                body('unavailableReason').exists().isString().withMessage("unavailableReason must be of string type")],
             "Missing Arguments. You must pass, at least, one of the following arguments:" +
             " 'newPhase', 'status' or 'unavailableReason'")
     ], handle(controllers.process.updateProcess))
+
+
+    // TODO -> CREATE PROCESS
 
     /**
      * Get workflow detail
@@ -179,13 +197,11 @@ module.exports = function (router, controllers, authModule) {
 
 
     /**
-     * Get all candidates + query filter
+     * Get all candidates
      */
-    // TODO -> FAZER URGENTE
-    //profiles=...,..,...,...,
     router.get(`/${candidates}`, [
         query('available').optional().isBoolean().withMessage("Available must be of boolean type"),
-        query('profiles').optional().isString().withMessage("Profiles must be of string type")
+        query('profiles').optional().isString().withMessage("Profiles must be of string type separated by ','")
     ], handle(controllers.candidate.getCandidates))
 
     /**
@@ -194,7 +210,7 @@ module.exports = function (router, controllers, authModule) {
     router.get(`/${candidates}/:id`, handle(controllers.candidate.getCandidateById))
 
     // Update Candidate
-    // router.put(`/${candidates}/:id`, controllers.candidate.putCandidate)
+    // router.put(`/${candidates}/:id`, controllers.candidate.updateCandidate)
 
     /**
      * Create candidate

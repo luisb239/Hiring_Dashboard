@@ -2,6 +2,7 @@
 
 const candidate = require('../schemas/candidate-schema.js')
 const process = require('../schemas/process/process-schema.js')
+const candidateProfiles = require('../schemas/candidate-profile-schema.js')
 
 module.exports = (query) => {
 
@@ -12,13 +13,16 @@ module.exports = (query) => {
         createCandidate,
     }
 
-    async function getCandidates({available = null}) {
+    async function getCandidates({available = null, profiles = null}) {
         const statement = {
             name: 'Get Candidates',
             text:
-                `SELECT * FROM ${candidate.table} ` +
-                `WHERE (${candidate.available} = $1 OR $1 is null);`,
-            values: [available]
+                `SELECT DISTINCT C.* FROM ${candidate.table} AS C ` +
+                `LEFT JOIN ${candidateProfiles.table} AS CP ` +
+                `ON C.${candidate.id} = CP.${candidateProfiles.candidateId} ` +
+                `WHERE (C.${candidate.available} = $1 OR $1 is null) AND ` +
+                `(CP.${candidateProfiles.profile} = ANY($2) OR $2 is null);`,
+            values: [available, profiles]
         }
 
         const result = await query(statement)
