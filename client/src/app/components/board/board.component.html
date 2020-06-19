@@ -13,8 +13,11 @@
       </table>
       <table *ngFor="let request of workflow.requests" [width]="tableContainer.offsetWidth">
         <tr class="swim-lane" [routerLink]="['/request-detail', request.id]">
-          <td [colSpan]=workflow.phases.length>
+          <td>
             <h5>{{request.description}}</h5>
+          </td>
+          <td [colSpan]=workflow.phases.length-1 class="fraction-row">
+            <h5 class="fraction">Placed: {{properties.placedCandidates}}/{{request.quantity}}</h5>
           </td>
         </tr>
         <tr cdkDropListGroup>
@@ -29,7 +32,6 @@
                  cdkDrag
                  (click)="onClick(candidate.id, request.id, phase.name)">{{ candidate.name }}</div>
             <div class="hidden-task" *ngIf="i==0" (click)="addCandidate(request.id)">
-              <!--                          <p class="hidden-text">Add Candidate</p>-->
               <div class="hidden-text"><span>...</span></div>
             </div>
           </td>

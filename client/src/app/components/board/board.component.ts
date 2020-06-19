@@ -39,6 +39,7 @@ export class BoardComponent implements OnInit {
 
   properties: BoardProps = new BoardProps();
 
+
   ngOnInit(): void {
     this.requestService.getRequestsByUser(2, 1)
       .subscribe(
@@ -59,6 +60,7 @@ export class BoardComponent implements OnInit {
                           .filter(process => process.phase === phase.name)
                           .map(process => new Candidate(process.candidate.name, process.candidate.id));
                       });
+                      this.properties.placedCandidates = dao.processes.filter(proc => proc.status === 'Placed').length;
                     }, error => {
                       console.log(error);
                     });
