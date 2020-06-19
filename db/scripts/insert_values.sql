@@ -160,7 +160,9 @@ INSERT INTO candidate(name)
 	('Michael Corleone'),
 	('Travis Bickle'),
 	('Randle McMurphy'),
-	('Ellen Ripley');
+	('Ellen Ripley'),
+	('Bob Belcher'),
+	('Troy Barnes');
 	
 INSERT INTO candidate_request_profile(candidate_id, profile)
 	VALUES

@@ -5,12 +5,6 @@ import {ErrorHandler} from '../error-handler';
 import {RequestProcessesDao} from '../../model/request/request-processes-dao';
 import {ProcessDao} from '../../model/process/process-dao';
 
-// const httpOptions = {
-//   headers: new HttpHeaders({
-//     'Content-Type': 'application/json'
-//   })
-// };
-
 @Injectable({
   providedIn: 'root'
 })
@@ -32,6 +26,14 @@ export class ProcessService {
 
   getProcess(requestId: number, candidateId: number) {
     return this.http.get<ProcessDao>(`${this.baseUrl}/requests/${requestId}/candidates/${candidateId}/process`,
+      {
+        headers: new HttpHeaders({'Content-Type': 'application/json'})
+      })
+      .pipe(data => data, catchError(this.errorHandler.handleError));
+  }
+
+  createProcess(requestId: number, candidateId: number) {
+    return this.http.post(`${this.baseUrl}/requests/${requestId}/candidates/${candidateId}/process`,
       {
         headers: new HttpHeaders({'Content-Type': 'application/json'})
       })
