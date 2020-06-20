@@ -28,4 +28,14 @@ export class ProcessPhaseService {
         },
         catchError(this.errorHandler.handleError));
   }
+
+  updateProcessPhaseNotes(requestId: number, candidateId: number, phase: string, notes: string) {
+    return this.http.put(`${this.baseUrl}/requests/${requestId}/candidates/${candidateId}/process/phases/${phase}`,
+      {notes},
+      httpOptions)
+      .pipe(data => {
+          return data;
+        },
+        catchError(this.errorHandler.handleError));
+  }
 }

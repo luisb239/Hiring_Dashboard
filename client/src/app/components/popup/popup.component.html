@@ -39,7 +39,7 @@
       <div class="property">
         <h5>{{phase.phase}} Notes</h5>
         <label>
-          <textarea formControlName="phaseNotes">{{phase.notes || ''}}</textarea>
+          <textarea formControlName="phaseNotes" name="phaseNotes" [(ngModel)]="phase.notes"></textarea>
         </label>
       </div>
     </div>

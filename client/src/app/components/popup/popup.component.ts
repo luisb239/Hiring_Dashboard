@@ -8,6 +8,7 @@ import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
 import {ProcessService} from '../../services/process/process.service';
 import {CandidateService} from '../../services/candidate/candidate.service';
 import {PhaseService} from '../../services/phase/phase.service';
+import {ProcessPhaseService} from '../../services/process-phase/process-phase.service';
 
 @Component({
   selector: 'app-popup',
@@ -35,7 +36,8 @@ export class PopupComponent implements OnInit {
               private formBuilder: FormBuilder,
               private processService: ProcessService,
               private candidateService: CandidateService,
-              private phaseService: PhaseService
+              private phaseService: PhaseService,
+              private processPhaseService: ProcessPhaseService
   ) {
     this.updateForm = this.formBuilder.group(
       {
@@ -85,7 +87,7 @@ export class PopupComponent implements OnInit {
         this.phase = new ProcessPhase(phaseDetails.phase,
           phaseDetails.startDate,
           phaseDetails.updateDate,
-          phaseDetails.notes);
+          phaseDetails.notes === null ? '' : phaseDetails.notes);
       }, error => {
         console.log(error);
       });
@@ -94,7 +96,7 @@ export class PopupComponent implements OnInit {
       .subscribe(phaseDao => {
         phaseDao
           .infos.forEach(pi => {
-            this.updateForm.addControl(pi.name, new FormControl(pi.value));
+            this.updateForm.addControl(pi.name, new FormControl());
             this.attributeTemplates.push(new PhaseAttribute(pi.name, pi.value.name, pi.value.type));
           }
         );
@@ -116,28 +118,54 @@ export class PopupComponent implements OnInit {
   updateCandidate() {
     const attributeArray = [];
     this.attributeTemplates.forEach(att => {
-        const value = this.updateForm.value[att.name];
-        if (value !== null) {
-          attributeArray.push({name: att.name, value});
+        const res = this.updateForm.value[att.name];
+        if (res !== null && res !== att.value) {
+          attributeArray.push({name: att.name, value: res});
         }
       }
     );
+    const body: { status?: string, unavailableReason?: string, infos?: any[] } = {};
 
-    this.processService.updateProcess(
-      this.requestId,
-      this.candidateId,
-      this.updateForm.value.status,
-      this.updateForm.value.unavailableReason,
-      this.updateForm.value.phaseNotes,
-      attributeArray
-    ).subscribe(dao => {
+    if (this.process.status !== this.updateForm.value.status) {
+      body.status = this.updateForm.value.status;
+    }
+
+    if (this.process.unavailableReason !== this.updateForm.value.unavailableReason) {
+      body.unavailableReason = this.updateForm.value.unavailableReason;
+    }
+
+    if (attributeArray.length > 0) {
+      body.infos = attributeArray;
+    }
+
+    if (body !== {}) {
+      this.processService.updateProcess(
+        this.requestId,
+        this.candidateId,
+        body
+      ).subscribe(dao => {
+        }, error => {
+          console.log(error);
+        }
+      );
+    }
+    if (this.phase.notes !== this.updateForm.value.phaseNotes) {
+      this.processPhaseService.updateProcessPhaseNotes(
+        this.requestId,
+        this.candidateId,
+        this.phase.phase,
+        this.updateForm.value.phaseNotes
+      ).subscribe(dao => {
+      }, error => {
+        console.log(error);
+      });
+    }
+
+    this.candidateService.updateCandidate(this.candidate)
+      .subscribe(dao => {
         alert('Updated Candidate successfully!');
       }, error => {
         console.log(error);
-      }
-    );
-
-    // this.candidateService.updateCandidate(this.candidate)
-    //   .subscribe();
+      });
   }
 }

@@ -57,3 +57,7 @@
 table {
   margin-top: 20px;
 }
+
+td {
+  vertical-align: text-top;
+}
