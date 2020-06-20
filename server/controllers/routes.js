@@ -4,6 +4,8 @@ const {body, param, query} = require('express-validator')
 
 const handle = require('./express-handler.js')
 
+const verifyIfAuthenticated = require('./middlewares/verify_authenticated')
+
 module.exports = function (router, controllers, authModule) {
 
     const candidates = 'candidates'
@@ -23,11 +25,13 @@ module.exports = function (router, controllers, authModule) {
     const months = 'months'
 
 
+    router.get('/auth/session', verifyIfAuthenticated, handle(controllers.auth.getSessionInfo))
+
     router.get('/auth/azure', authModule.authenticate.usingOffice365)
 
     router.get('/auth/azure/callback',
         authModule.authenticate.usingOffice365Callback, (req, res) => {
-            res.redirect("http://localhost:4200/all-requests")
+            res.redirect("http://localhost:4200")
         })
 
     router.post('auth/logout', authModule.authenticate.logout, (req, res) => {

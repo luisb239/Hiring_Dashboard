@@ -12,7 +12,7 @@ module.exports = (service) => {
 
     const process = require('./process-controller.js')(service.process)
 
-    const authorization = require('./auth-controller.js')(service.auth)
+    const auth = require('./auth-controller.js')(service.auth)
 
-    return {request, candidate, requestProps, phase, process, authorization}
+    return {request, candidate, requestProps, phase, process, auth}
 }

@@ -10,6 +10,7 @@ module.exports = (userDb, authModule) => {
         getUserRoles: getUserRoles,
     }
 
+    //TODO -> HOW TO DO THIS? when to create user??
     async function createUserIfNotPresent({id, email}) {
         const userExistsInDb = await userDb.getUserById({userId: id})
         if (!userExistsInDb) {

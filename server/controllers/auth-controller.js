@@ -2,11 +2,11 @@
 
 module.exports = (service) => {
     return {
-        getUserInfo: getUserInfo,
-        logout: logout
+        getSessionInfo,
+        logout
     }
 
-    async function getUserInfo(req, res) {
+    async function getSessionInfo(req, res) {
         const user = await service.createUserIfNotPresent({id: req.user.id, email: req.user.username})
         const roles = await service.getUserRoles({id: req.user.id})
         res.send({
@@ -16,7 +16,6 @@ module.exports = (service) => {
     }
 
     async function logout(req, res) {
-
     }
 
 }

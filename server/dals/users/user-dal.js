@@ -12,6 +12,7 @@ module.exports = (query) => {
     function extractUser(row) {
         return {
             id: row[user.id],
+            email: row[user.email],
             isActive: row[user.isActive]
         }
     }
@@ -27,7 +28,7 @@ module.exports = (query) => {
         const result = await query(statement)
 
         if (result.rowCount) {
-            return result.rows.map(row => extractUser(row))[0]
+            return extractUser(result.rows[0])
         }
         return null
     }
