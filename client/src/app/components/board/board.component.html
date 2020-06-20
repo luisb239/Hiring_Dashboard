@@ -1,23 +1,27 @@
 <div class="root">
   <div class="board table-responsive-xl">
-    <div *ngFor="let workflow of properties.workflows">
+    <div *ngFor="let workflow of properties.workflows" class="full-table">
       <table #tableContainer>
         <tr>
           <th [colSpan]=workflow.phases.length>
-            <div><h2>{{workflow.workflow}}</h2></div>
+            <div class="workflow-header"><h3>{{workflow.workflow}}</h3></div>
           </th>
         </tr>
         <tr>
-          <td *ngFor="let phase of workflow.phases"><h3 class="phase">{{phase.name}}</h3></td>
+          <td *ngFor="let phase of workflow.phases">
+            <div>
+              <h4 class="phase">{{phase.name}}</h4>
+            </div>
+          </td>
         </tr>
       </table>
       <table *ngFor="let request of workflow.requests" [width]="tableContainer.offsetWidth">
-        <tr class="swim-lane" [routerLink]="['/request-detail', request.id]">
-          <td>
-            <h5>{{request.description}}</h5>
+        <tr [routerLink]="['/request-detail', request.id]">
+          <td class="title-data swim-lane">
+            <h5 class="swim-lane-title">{{request.description}}</h5>
           </td>
-          <td [colSpan]=workflow.phases.length-1 class="fraction-row">
-            <h5 class="fraction">Placed: {{request.placedCandidates}}/{{request.quantity}}</h5>
+          <td [colSpan]=workflow.phases.length-1 class="fraction-data swim-lane">
+            <h5 class="swim-lane-fraction">Placed: {{request.placedCandidates}}/{{request.quantity}}</h5>
           </td>
         </tr>
         <tr cdkDropListGroup>
@@ -30,15 +34,14 @@
             <div class="task" *ngFor="let candidate of phase.candidates"
                  [cdkDragData]="candidate"
                  cdkDrag
-                 (click)="onClick(candidate.id, request.id, phase.name)">{{ candidate.name }}</div>
+                 (click)="onClick(candidate.id, request.id, phase.name)"><h6>{{ candidate.name }}</h6></div>
             <div class="hidden-task" *ngIf="i==0" (click)="addCandidate(request.id)">
-              <div class="hidden-text"><span>...</span></div>
+              <div class="hidden-text"><h6><span>...</span></h6></div>
             </div>
           </td>
         </tr>
       </table>
     </div>
   </div>
-
 </div>
 
