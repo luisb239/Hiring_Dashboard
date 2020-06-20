@@ -31,7 +31,7 @@ module.exports = function (router, controllers, authModule) {
 
     router.get('/auth/azure/callback',
         authModule.authenticate.usingOffice365Callback, (req, res) => {
-            res.redirect("http://localhost:4200")
+            res.redirect("http://localhost:4200/callback")
         })
 
     router.post('auth/logout', authModule.authenticate.logout, (req, res) => {
