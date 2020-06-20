@@ -51,6 +51,10 @@
         <td *ngFor="let phase of properties.currentProcess.phases">
           <div class="attribute">
             <h5>{{phase.phase}}</h5>
+            <div class="attribute-info">
+              <h6 class="inline">Notes:</h6>
+              <p class="inline">{{phase.notes}}</p>
+            </div>
             <div class="attribute-info" *ngFor="let info of phase.infos">
               <h6 class="inline">{{info.name}}:</h6>
               <p class="inline">{{info.value}}</p>
@@ -91,6 +95,10 @@
           <td *ngFor="let phase of process.phases">
             <div class="attribute">
               <h5>{{phase.phase}}</h5>
+              <div class="attribute-info">
+                <h6 class="inline">Notes:</h6>
+                <p class="inline">{{phase.notes}}</p>
+              </div>
               <div class="attribute-info" *ngFor="let info of phase.infos">
                 <h6 class="title">{{info.name}}:</h6>
                 <p class="value">{{info.value}}</p>
@@ -132,6 +140,10 @@
         <td *ngFor="let phase of process.phases">
           <div class="attribute">
             <h5>{{phase.phase}}</h5>
+            <div class="attribute-info">
+              <h6 class="inline">Notes:</h6>
+              <p class="inline">{{phase.notes}}</p>
+            </div>
             <div class="attribute-info" *ngFor="let info of phase.infos">
               <h6 class="inline">{{info.name}}:</h6>
               <p class="inline">{{info.value}}</p>
