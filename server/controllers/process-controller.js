@@ -8,7 +8,8 @@ module.exports = (processService) => {
         updateProcess,
         createProcess,
         getUnavailableReasons,
-        getAllStatus
+        getAllStatus,
+        updateProcessPhaseNotes
     }
 
     async function getAllStatus(req, res) {
@@ -72,7 +73,6 @@ module.exports = (processService) => {
     }
 
     async function createProcess(req, res) {
-
         await processService.createProcess({
             requestId: req.params.requestId,
             candidateId: req.params.candidateId
@@ -84,5 +84,15 @@ module.exports = (processService) => {
         })
 
         res.status(201).send({message: "Process created with success"})
+    }
+
+    async function updateProcessPhaseNotes(req, res) {
+        await processService.updateProcessPhaseNotes({
+            requestId: req.params.requestId,
+            candidateId: req.params.candidateId,
+            phase: req.params.phase,
+            notes: req.body.notes
+        })
+        res.status(200).send({message: `Phase ${req.params.phase} notes of process updated with success`})
     }
 }

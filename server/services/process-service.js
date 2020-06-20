@@ -16,7 +16,8 @@ module.exports = (requestDb, candidateDb, processDb, phaseDb, infoDb, processUna
         moveProcessToFirstPhase,
         updateProcessInfoValues,
         getUnavailableReasons,
-        getAllStatus
+        getAllStatus,
+        updateProcessPhaseNotes
     }
 
     async function getAllStatus() {
@@ -241,6 +242,12 @@ module.exports = (requestDb, candidateDb, processDb, phaseDb, infoDb, processUna
                 }
             }
         }))
+    }
+
+    async function updateProcessPhaseNotes({requestId, candidateId, phase, notes}) {
+        await processPhaseDb.updatePhaseOfProcess({
+            requestId, candidateId, phase, notes
+        })
     }
 
 }

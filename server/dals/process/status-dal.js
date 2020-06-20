@@ -8,7 +8,6 @@ module.exports = (query) => {
         getAllStatus
     }
 
-
     async function getAllStatus() {
         const statement = {
             name: 'Get All Status',

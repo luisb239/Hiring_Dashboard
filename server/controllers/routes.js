@@ -1,6 +1,6 @@
 'use strict'
 
-const {body, param, query, check} = require('express-validator')
+const {body, param, query} = require('express-validator')
 
 const handle = require('./express-handler.js')
 
@@ -27,12 +27,10 @@ module.exports = function (router, controllers, authModule) {
 
     router.get('/auth/azure/callback',
         authModule.authenticate.usingOffice365Callback, (req, res) => {
-            // TODO -> shouldn´t do this
             res.redirect("http://localhost:4200/all-requests")
         })
 
     router.post('auth/logout', authModule.authenticate.logout, (req, res) => {
-        // TODO -> shouldn´t do this
         res.redirect("http://localhost:4200")
     })
 
@@ -72,15 +70,11 @@ module.exports = function (router, controllers, authModule) {
         body('project').exists().withMessage("Request must have a project"),
         body('profile').exists().withMessage("Request must have a profile"),
         body('workflow').exists().withMessage("Request must have a workflow"),
-        body('dateToSendProfile').optional().isAfter().toDate().withMessage("Date to send profile must be after today"),
+        body('dateToSendProfile').optional().isAfter().toDate().withMessage("Date to send profile a date be after today"),
         body('mandatoryLanguages').optional().isArray().withMessage("Mandatory Languages must be an array of languages"),
         body('valuedLanguages').optional().isArray().withMessage("Valued Languages  must be an array of languages"),
     ], handle(controllers.request.postRequest))
 
-
-    // Get Process Information ->
-    // Can change to /process?requestId=1 ; /process?candidateId=1;
-    // and even to /process?requestId=1&candidateId=2
     /**
      * Process endpoints common validators
      */
@@ -115,36 +109,33 @@ module.exports = function (router, controllers, authModule) {
     /**
      * Update process
      */
+    //TODO -> maybe change
     router.put(`/${requests}/:requestId/${candidates}/:candidateId/${process}`, [
         ...processValidators,
         body('infos').optional().isArray()
+            .notEmpty()
             .custom(infosArray => infosArray.every(info => info.name && info.value))
             .withMessage('Infos must be an array, with each element containing a name and a value property'),
         body('newPhase').optional().isString().withMessage("newPhase must be of string type"),
         body('status').optional().isString().withMessage("status must be of string type"),
-        body('unavailableReason').optional().isString().withMessage("unavailableReason must be of string type"),
-        check().exists().custom((_, {req}) => {
-            return (req.body.infos || req.body.newPhase || req.body.status || req.body.unavailableReason)
-        })
-            .withMessage("You must pass, at least, one of the following arguments:" +
-                " 'newPhase', 'status', 'unavailableReason' or 'infos'")
+        body('unavailableReason').optional().isString().withMessage("unavailableReason must be of string type")
     ], handle(controllers.process.updateProcess))
 
     /**
-     * Update phase information of process
+     * Update process phase notes
      */
-    /*
-    router.put(`/${requests}/:requestId/${candidates}/:candidateId/${process}/`, [
+    router.put(`/${requests}/:requestId/${candidates}/:candidateId/${process}/${phases}/:phase`, [
         ...processValidators,
-    ], handle())
-
-
-     */
+        param('phase').isString().withMessage("phase must be of string type"),
+        body('notes').isString().withMessage("Phase notes must be of string type")
+    ], handle(controllers.process.updateProcessPhaseNotes))
 
     /**
      * Get workflow detail
      */
-    router.get(`/${workflows}/:workflow`, handle(controllers.requestProps.getWorkflow))
+    router.get(`/${workflows}/:workflow`, [
+        param('workflow').isString().withMessage("Workflow must be of string type")
+    ], handle(controllers.requestProps.getWorkflow))
 
     /**
      * Get all phases
@@ -154,7 +145,9 @@ module.exports = function (router, controllers, authModule) {
     /**
      * Get phase detail
      */
-    router.get(`/${phases}/:phase`, handle(controllers.phase.getPhase))
+    router.get(`/${phases}/:phase`, [
+        param('phase').isString().withMessage("Phase must be of string type")
+    ], handle(controllers.phase.getPhase))
 
     // Update Request TODO
     // router.put(`/${requests}/:id`, )
