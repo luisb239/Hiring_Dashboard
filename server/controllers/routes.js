@@ -113,7 +113,6 @@ module.exports = function (router, controllers, authModule) {
     router.put(`/${requests}/:requestId/${candidates}/:candidateId/${process}`, [
         ...processValidators,
         body('infos').optional().isArray()
-            .notEmpty()
             .custom(infosArray => infosArray.every(info => info.name && info.value))
             .withMessage('Infos must be an array, with each element containing a name and a value property'),
         body('newPhase').optional().isString().withMessage("newPhase must be of string type"),
@@ -215,8 +214,14 @@ module.exports = function (router, controllers, authModule) {
      */
     router.get(`/${candidates}/:id`, handle(controllers.candidate.getCandidateById))
 
-    // Update Candidate
-    //  router.put(`/${candidates}/:id`, controllers.candidate.updateCandidate)
+    /**
+     * Update Candidate Info
+     */
+
+    //TODO -> MISSING OTHER FIELDS
+    router.put(`/${candidates}/:id`, [
+        body('available').exists().isBoolean().withMessage("available must be of string type")
+    ], controllers.candidate.updateCandidate)
 
     /**
      * Create candidate

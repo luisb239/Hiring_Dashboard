@@ -9,6 +9,7 @@ module.exports = (candidateDb, profilesDb, processDb) => {
         getCandidates: getCandidates,
         getCandidateById: getCandidateById,
         createCandidate: createCandidate,
+        updateCandidate: updateCandidate
     }
 
     async function getCandidates({available = null, profiles = null}) {
@@ -37,6 +38,10 @@ module.exports = (candidateDb, profilesDb, processDb) => {
         }
     }
 
+    //TODO
+    async function updateCandidate({id, available}) {
+        await candidateDb.updateCandidate({id, available})
+    }
 
     // TODO
     async function createCandidate({name, cv = null, available = true, profileInfo = null}) {

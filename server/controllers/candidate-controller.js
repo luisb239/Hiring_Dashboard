@@ -6,6 +6,7 @@ module.exports = (service) => {
         getCandidates: getCandidates,
         getCandidateById: getCandidateById,
         postCandidate: postCandidate,
+        updateCandidate: updateCandidate
     }
 
     async function getCandidates(req, res) {
@@ -22,6 +23,14 @@ module.exports = (service) => {
             id: req.params.id
         })
         res.status(200).send(candidate)
+    }
+
+    async function updateCandidate(req, res) {
+        await service.updateCandidate({
+            id: req.params.id,
+            available: req.body.available
+        })
+        res.status(200).send({message: 'Candidate updated successfully'})
     }
 
     async function postCandidate(req, res) {

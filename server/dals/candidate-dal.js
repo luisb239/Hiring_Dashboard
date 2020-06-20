@@ -11,6 +11,7 @@ module.exports = (query) => {
         getCandidateById,
         getCandidatesByRequestId,
         createCandidate,
+        updateCandidate
     }
 
     async function getCandidates({available = null, profiles = null}) {
@@ -74,6 +75,20 @@ module.exports = (query) => {
 
         const result = await query(statement)
         return result.rows.map(row => extract(row))[0]
+    }
+
+    //TODO
+    async function updateCandidate({id, available}) {
+        const statement = {
+            name: 'Update Candidate',
+            text:
+                `UPDATE ${candidate.table} ` +
+                `SET ${candidate.available} = $1 ` +
+                `WHERE ${candidate.id} = $2;`,
+            values: [available, id]
+        }
+
+        await query(statement)
     }
 
     function extract(obj) {
