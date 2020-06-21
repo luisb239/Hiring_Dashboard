@@ -16,13 +16,15 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
       <div class="navbar-nav">
-        <a class="nav-item nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-        <a class="nav-item nav-link" routerLink="/board" routerLinkActive="active-link">Board</a>
-        <a class="nav-item nav-link" routerLink="/create-request" routerLinkActive="active-link">Create Request</a>
-        <a class="nav-item nav-link" routerLink="/all-requests" routerLinkActive="active-link">All Requests</a>
-        <a class="nav-item nav-link" routerLink="/sign-up" routerLinkActive="active-link">Sign Up</a>
-        <a class="nav-item nav-link" routerLink="/log-in" routerLinkActive="active-link">Log In</a>
-        <a class="nav-item nav-link" href="#">Log Out</a>
+        <a [routerLinkActive]="['is-active']" [routerLink]="['']" class="nav-item nav-link">Home</a>
+        <a [routerLinkActive]="['is-active']" [routerLink]="['/board']" class="nav-item nav-link">Board</a>
+        <a [routerLinkActive]="['is-active']" [routerLink]="['/create-request']" class="nav-item nav-link">Create
+          Request</a>
+        <a [routerLinkActive]="['is-active']" [routerLink]="['/all-requests']" class="nav-item nav-link">All
+          Requests</a>
+        <a [routerLinkActive]="['is-active']" [routerLink]="['/sign-up']" class="nav-item nav-link">Sign Up</a>
+        <a [routerLinkActive]="['is-active']" [routerLink]="['/log-in']" class="nav-item nav-link">Log In</a>
+        <a [routerLinkActive]="['is-active']" [routerLink]="['/logout']" class="nav-item nav-link">Log Out</a>
       </div>
     </div>
   </nav>
