@@ -43,7 +43,7 @@ export class RequestDetailComponent implements OnInit {
           reqDao.request.profile);
         this.properties.userRoles = reqDao.userRoles.map(
           userRoleDao => new UserRole(
-            userRoleDao.userId, userRoleDao.username, userRoleDao.roleId, userRoleDao.role));
+            userRoleDao.userId, userRoleDao.email, userRoleDao.roleId, userRoleDao.role));
         this.properties.processes = reqDao.processes.map(
           processDao => new ProcessList(
             processDao.status, processDao.candidate.id, processDao.candidate.name));
