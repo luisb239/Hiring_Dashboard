@@ -82,7 +82,7 @@ export class RequestService {
     console.log(parameters);
     let params = new HttpParams();
     singleParams.forEach(p => {
-      if (parameters[p] !== '') {
+      if (parameters[p] !== null && parameters[p] !== '') {
         params = params.set(p, parameters[p]);
       }
     });

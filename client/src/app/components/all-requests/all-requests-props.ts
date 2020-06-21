@@ -25,13 +25,4 @@ export class AllRequestsProps {
   };
 
   requestId: number;
-  state: string;
-  stateCsl: string;
-  skill: string;
-  profile: string;
-  project: string;
-  workflow: string;
-  targetDate: string;
-  quantity: number;
-  progress: number;
 }

@@ -124,9 +124,8 @@ export class AllRequestsComponent implements OnInit {
   }
 
   resetForms(form: NgForm) {
-    form.reset({quantity: [0, 10]});
+    form.reset({quantity: [1, 10]});
     form.reset({progress: [0, 100]});
-    form.resetForm();
     this.getRequests();
   }
 }
