@@ -19,7 +19,7 @@ export class PhaseService {
   constructor(private http: HttpClient, private errorHandler: ErrorHandler) {
   }
 
-  baseUrl = `http://localhost:8080/hd`;
+  baseUrl = `/hd`;
 
   getPhasesByWorkflow(workflowName: string) {
     const url = new HttpUrlEncodingCodec().encodeValue(workflowName);

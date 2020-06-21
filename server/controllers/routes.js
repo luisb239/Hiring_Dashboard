@@ -24,18 +24,20 @@ module.exports = function (router, controllers, authModule) {
     const workflows = 'workflows'
     const months = 'months'
 
-
     router.get('/auth/session', verifyIfAuthenticated, handle(controllers.auth.getSessionInfo))
 
     router.get('/auth/azure', authModule.authenticate.usingOffice365)
 
     router.get('/auth/azure/callback',
         authModule.authenticate.usingOffice365Callback, (req, res) => {
-            res.redirect("http://localhost:4200/callback")
+            res.redirect("http://localhost:4200/all-requests")
         })
 
-    router.post('auth/logout', authModule.authenticate.logout, (req, res) => {
-        res.redirect("http://localhost:4200")
+    // TODO -> TEMPORARY
+    //  REDIRECT TO CLIENT SIDE
+
+    router.get('/auth/logout', authModule.authenticate.logout, (req, res) => {
+        res.redirect("http://localhost:4200/home")
     })
 
     /**

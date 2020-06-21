@@ -20,7 +20,7 @@ export class CandidateService {
   constructor(private http: HttpClient, private errorHandler: ErrorHandler) {
   }
 
-  baseUrl = `http://localhost:8080/hd`;
+  baseUrl = `/hd`;
 
   getCandidateById(candidateId: number) {
     return this.http.get<CandidateDao>(`${this.baseUrl}/candidates/${candidateId}`, httpOptions)

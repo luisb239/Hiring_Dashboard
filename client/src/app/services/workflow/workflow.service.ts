@@ -22,7 +22,7 @@ export class WorkflowService {
 
   constructor(private http: HttpClient, private errorHandler: ErrorHandler) { }
 
-  baseUrl = `http://localhost:8080/hd`;
+  baseUrl = `/hd`;
 
   /**
    * This function queries the server for all the existing workflows.

@@ -8,10 +8,6 @@ const app = express()
 
 app.use(express.json())
 
-const cors = require('cors')
-
-app.use(cors())
-
 const dbOptions = {
     "host": process.env.PGHOST,
     "port": process.env.PGPORT,

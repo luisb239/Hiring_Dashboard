@@ -63,7 +63,7 @@ module.exports = (requestDb, processDb, requestLanguagesDb, authModule, candidat
             const roleInfo = await authModule.role.getSpecificById(userRole.roleId)
             return {
                 userId: userRole.userId,
-                email: userInfo.email,
+                email: userInfo.username,
                 roleId: userRole.roleId,
                 role: roleInfo.role
             }

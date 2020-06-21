@@ -15,7 +15,7 @@ export class ProcessService {
   constructor(private http: HttpClient, private errorHandler: ErrorHandler) {
   }
 
-  baseUrl = `http://localhost:8080/hd`;
+  baseUrl = `/hd`;
 
   getProcessesByRequest(requestId: number) {
     return this.http.get<RequestProcessesDao>(`${this.baseUrl}/requests/${requestId}/processes`, {

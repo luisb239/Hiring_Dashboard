@@ -3,11 +3,11 @@ import {RequestList} from '../../model/request/request-list';
 import {RequestService} from '../../services/request/request.service';
 import {RequestPropsService} from '../../services/requestProps/requestProps.service';
 import {WorkflowService} from '../../services/workflow/workflow.service';
-import {Options} from 'ng5-slider';
 import {NgForm, NgModel} from '@angular/forms';
 import {Router} from '@angular/router';
 import {AllRequestsProps} from './all-requests-props';
 import {RequestsDao} from '../../model/request/requests-dao';
+import {AuthService} from '../../services/auth/auth.service';
 
 @Component({
   selector: 'app-all-requests',
@@ -22,10 +22,16 @@ export class AllRequestsComponent implements OnInit {
     private router: Router,
     private requestService: RequestService,
     private reqPropsService: RequestPropsService,
-    private workflowService: WorkflowService) {
+    private workflowService: WorkflowService,
+    private authService: AuthService) {
   }
 
   ngOnInit(): void {
+    if (!this.authService.isAuthenticated()) {
+      this.authService.getUserSession().subscribe(data => {
+        this.authService.setUserInfo(data);
+      });
+    }
     this.getFilterParameters();
     this.getRequests();
   }

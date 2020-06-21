@@ -1,14 +1,12 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {catchError} from 'rxjs/operators';
-import {UserDao} from '../../model/user/user-dao';
 import {ErrorHandler} from '../error-handler';
 
 const httpOptions = {
   headers: new HttpHeaders({
     'Content-Type': 'application/json'
-  }),
-  // mode: 'no-cors'
+  })
 };
 
 @Injectable({
@@ -21,16 +19,17 @@ export class AuthService {
   constructor(private http: HttpClient, private errorHandler: ErrorHandler) {
   }
 
-  authUrl = `http://localhost:8080/hd/auth`;
+  authUrl = `/hd/auth`;
 
   azureAuthenticationUrl = `${this.authUrl}/azure`;
+  authSession = `${this.authUrl}/session`;
   logoutUrl = `${this.authUrl}/logout`;
 
   registerUrl = 'test';
 
   // We can call also call GET '/session' api endpoint
   isAuthenticated(): boolean {
-    return (this.getUserInfo());
+    return (this.getUserInfo() != null);
   }
 
 
@@ -42,25 +41,19 @@ export class AuthService {
     localStorage.setItem('userInfo', JSON.stringify(user));
   }
 
+  getUserSession() {
+    return this.http.get(this.authSession, httpOptions)
+      .pipe(data => {
+          return data;
+        },
+        catchError(this.errorHandler.handleError));
+  }
+
   authenticate() {
-    /*
-    return this.http.get<any>(this.azureAuthenticationUrl, httpOptions)
-      .pipe(data => {
-          return data;
-        },
-        catchError(this.errorHandler.handleError));
-
-     */
+    return this.http.get(this.azureAuthenticationUrl, httpOptions)
+      .pipe(data => data, catchError(this.errorHandler.handleError));
   }
 
-
-  register(username: string, password: string) {
-    return this.http.post<UserDao>(this.registerUrl, {username, password}, httpOptions)
-      .pipe(data => {
-          return data;
-        },
-        catchError(this.errorHandler.handleError));
-  }
 
 }
 

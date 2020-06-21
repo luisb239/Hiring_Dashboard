@@ -27,7 +27,7 @@ export class RequestService {
   constructor(private http: HttpClient, private errorHandler: ErrorHandler) {
   }
 
-  baseUrl = `http://localhost:8080/hd`;
+  baseUrl = `/hd`;
 
   /**
    * This function queries the server for a specific request's details.

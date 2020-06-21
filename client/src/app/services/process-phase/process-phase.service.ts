@@ -17,7 +17,7 @@ export class ProcessPhaseService {
   constructor(private http: HttpClient, private errorHandler: ErrorHandler) {
   }
 
-  baseUrl = `http://localhost:8080/hd`;
+  baseUrl = `/hd`;
 
   updateProcessPhase(requestId: number, candidateId: number, newPhase: string) {
     return this.http.put(`${this.baseUrl}/requests/${requestId}/candidates/${candidateId}/process`,

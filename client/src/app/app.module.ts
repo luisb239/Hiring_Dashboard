@@ -1,9 +1,7 @@
 import {BrowserModule} from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
-
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
-import {SignUpComponent} from './components/sign-up/sign-up.component';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {BoardComponent} from './components/board/board.component';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
@@ -21,11 +19,11 @@ import {RequestDetailComponent} from './components/request-detail/request-detail
 import {AddCandidateComponent} from './components/add-candidate/add-candidate.component';
 import {MatOptionModule} from '@angular/material/core';
 import {MatSelectModule} from '@angular/material/select';
+import {LogoutComponent} from './components/logout/logout.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    SignUpComponent,
     BoardComponent,
     HomeComponent,
     PopupComponent,
@@ -34,7 +32,8 @@ import {MatSelectModule} from '@angular/material/select';
     LogInComponent,
     CandidateDetailsComponent,
     RequestDetailComponent,
-    AddCandidateComponent
+    AddCandidateComponent,
+    LogoutComponent
   ],
   imports: [
     BrowserModule,

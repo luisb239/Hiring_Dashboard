@@ -16,6 +16,7 @@ module.exports = (service) => {
     }
 
     async function logout(req, res) {
+
     }
 
 }

@@ -28,7 +28,7 @@ export class RequestPropsService {
   constructor(private http: HttpClient, private errorHandler: ErrorHandler) {
   }
 
-  baseUrl = `http://localhost:8080/hd/requests-properties`;
+  baseUrl = `/hd/requests-properties`;
 
   /**
    * This function queries the server for all the existing states in the system.

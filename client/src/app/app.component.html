@@ -8,26 +8,29 @@
 <!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
 
 <body>
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <a class="navbar-brand">Gfi</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup"
-      aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-      <div class="navbar-nav">
-        <a [routerLinkActive]="['active']" [routerLink]="['/home']" class="nav-item nav-link">Home</a>
-        <a [routerLinkActive]="['active']" [routerLink]="['/board']" class="nav-item nav-link">Board</a>
-        <a [routerLinkActive]="['active']" [routerLink]="['/create-request']" class="nav-item nav-link">Create
-          Request</a>
-        <a [routerLinkActive]="['active']" [routerLink]="['/all-requests']" class="nav-item nav-link">All
-          Requests</a>
-        <a [routerLinkActive]="['active']" [routerLink]="['/log-in']" class="nav-item nav-link">Log In</a>
-        <a [routerLinkActive]="['active']" [routerLink]="['/logout']" class="nav-item nav-link">Log Out</a>
-      </div>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <a class="navbar-brand">Gfi</a>
+  <button aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler"
+          data-target="#navbarNavAltMarkup" data-toggle="collapse" type="button">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+    <div class="navbar-nav">
+      <a [routerLinkActive]="['active']" [routerLink]="['/home']" class="nav-item nav-link">Home</a>
+      <a *ngIf="authService.isAuthenticated()" [routerLinkActive]="['active']" [routerLink]="['/board']"
+         class="nav-item nav-link">Board</a>
+      <a *ngIf="authService.isAuthenticated()" [routerLinkActive]="['active']" [routerLink]="['/create-request']"
+         class="nav-item nav-link">Create Request</a>
+      <a *ngIf="authService.isAuthenticated()" [routerLinkActive]="['active']" [routerLink]="['/all-requests']"
+         class="nav-item nav-link">All Requests</a>
+      <a *ngIf="!authService.isAuthenticated()" [routerLinkActive]="['active']" [routerLink]="['/log-in']"
+         class="nav-item nav-link">Login</a>
+      <a *ngIf="authService.isAuthenticated()" [routerLinkActive]="['active']" [routerLink]="['/logout']"
+         class="nav-item nav-link">Logout</a>
     </div>
-  </nav>
-  <router-outlet></router-outlet>
+  </div>
+</nav>
+<router-outlet></router-outlet>
 </body>
 <!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
 <!-- * * * * * * * * * * * The content above * * * * * * * * * * * -->
