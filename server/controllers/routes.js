@@ -119,7 +119,7 @@ module.exports = function (router, controllers, authModule) {
     router.put(`/${requests}/:requestId/${candidates}/:candidateId/${process}`, [
         ...processValidators,
         body('infos').optional().isArray()
-            .custom(infosArray => infosArray.every(info => info.name && info.value))
+            .custom(infosArray => infosArray.every(info => info.name && info.value != null))
             .withMessage('Infos must be an array, with each element containing a name and a value property'),
         body('newPhase').optional().isString().withMessage("newPhase must be of string type"),
         body('status').optional().isString().withMessage("status must be of string type"),
