@@ -39,7 +39,7 @@
       <div class="property">
         <h5>{{phase.phase}} Notes</h5>
         <label>
-          <textarea formControlName="phaseNotes" name="phaseNotes" [(ngModel)]="phase.notes"></textarea>
+          <textarea formControlName="phaseNotes" name="phaseNotes" [ngModel]="phase.notes"></textarea>
         </label>
       </div>
     </div>
@@ -47,7 +47,10 @@
       <h5>{{phase.phase}} Attributes</h5>
       <div *ngFor="let attribute of attributeTemplates;" style="display: block">
         <label>{{attribute.name}}
-          <input [type]="attribute.type" [value]="attribute.value" class="attribute" [formControlName]="attribute.name">
+          <input *ngIf="attribute.type !== 'number'" [type]="attribute.type" [value]="attribute.value" class="attribute"
+                 [formControlName]="attribute.name">
+          <input *ngIf="attribute.type === 'number'" [type]="attribute.type" [value]="attribute.value" class="attribute"
+                 [formControlName]="attribute.name" min="0">
         </label>
       </div>
     </div>

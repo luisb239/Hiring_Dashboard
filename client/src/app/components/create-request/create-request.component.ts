@@ -1,10 +1,10 @@
-import { Component, OnInit } from '@angular/core';
-import { NgForm } from '@angular/forms';
-import { RequestPropsService } from 'src/app/services/requestProps/requestProps.service';
-import { WorkflowService } from 'src/app/services/workflow/workflow.service';
-import { RequestService } from 'src/app/services/request/request.service';
-import { Router } from '@angular/router';
-import { CreateRequestProps } from './create-request-props';
+import {Component, OnInit} from '@angular/core';
+import {NgForm} from '@angular/forms';
+import {RequestPropsService} from 'src/app/services/requestProps/requestProps.service';
+import {WorkflowService} from 'src/app/services/workflow/workflow.service';
+import {RequestService} from 'src/app/services/request/request.service';
+import {Router} from '@angular/router';
+import {CreateRequestProps} from './create-request-props';
 
 
 @Component({
@@ -18,7 +18,8 @@ export class CreateRequestComponent implements OnInit {
     private router: Router,
     private reqPropsService: RequestPropsService,
     private workflowService: WorkflowService,
-    private requestService: RequestService) { }
+    private requestService: RequestService) {
+  }
 
   properties: CreateRequestProps = new CreateRequestProps();
 
@@ -29,31 +30,53 @@ export class CreateRequestComponent implements OnInit {
   ngOnInit(): void {
 
     this.reqPropsService.getRequestSkills()
-      .subscribe(dao => { this.properties.skills = dao.skills.map(s => s.skill); },
-        error => { console.log(error); });
+      .subscribe(dao => {
+          this.properties.skills = dao.skills.map(s => s.skill);
+        },
+        error => {
+          console.log(error);
+        });
 
     this.reqPropsService.getRequestProjects()
-      .subscribe(dao => { this.properties.projects = dao.projects.map(p => p.project); },
-        error => { console.log(error); });
+      .subscribe(dao => {
+          this.properties.projects = dao.projects.map(p => p.project);
+        },
+        error => {
+          console.log(error);
+        });
 
     this.reqPropsService.getRequestProfiles()
-      .subscribe(dao => { this.properties.profiles = dao.profiles.map(p => p.profile); },
-        error => { console.log(error); });
+      .subscribe(dao => {
+          this.properties.profiles = dao.profiles.map(p => p.profile);
+        },
+        error => {
+          console.log(error);
+        });
 
     this.reqPropsService.getRequestLanguages()
       .subscribe(dao => {
-        this.properties.mandatoryCheckboxes = this.getLanguagesCheckboxes(dao.languages);
-        this.properties.valuedCheckboxes = this.getLanguagesCheckboxes(dao.languages);
-      },
-        error => { console.log(error); });
+          this.properties.mandatoryCheckboxes = this.getLanguagesCheckboxes(dao.languages);
+          this.properties.valuedCheckboxes = this.getLanguagesCheckboxes(dao.languages);
+        },
+        error => {
+          console.log(error);
+        });
 
     this.reqPropsService.getTargetDates()
-      .subscribe(dao => { this.properties.targetDates = dao.months.map(m => m.month); },
-        error => { console.log(error); });
+      .subscribe(dao => {
+          this.properties.targetDates = dao.months.map(m => m.month);
+        },
+        error => {
+          console.log(error);
+        });
 
     this.workflowService.getAllWorkflows()
-      .subscribe(dao => { this.properties.workflows = dao.workflows.map(w => w.workflow); },
-        error => { console.log(error); });
+      .subscribe(dao => {
+          this.properties.workflows = dao.workflows.map(w => w.workflow);
+        },
+        error => {
+          console.log(error);
+        });
   }
 
   /**
@@ -78,10 +101,12 @@ export class CreateRequestComponent implements OnInit {
     };
     this.requestService.createRequest(body)
       .subscribe(success => {
-        alert('Request with id ' + success.id + ' created');
-        this.router.navigate(['/all-requests']);
-      },
-        error => { console.log(error); });
+          alert('Request with id ' + success.id + ' created');
+          this.router.navigate(['/all-requests']);
+        },
+        error => {
+          console.log(error);
+        });
   }
 
   /**

@@ -144,6 +144,7 @@ export class PopupComponent implements OnInit {
         this.candidateId,
         body
       ).subscribe(dao => {
+        location.reload();
         }, error => {
           console.log(error);
         }
