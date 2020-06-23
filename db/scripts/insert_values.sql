@@ -1,19 +1,35 @@
-
-
-
---DROP TABLE public."User_Session";
---DROP TABLE public."User_History";
---DROP TABLE public."UserRoles";
---DROP TABLE public."UserList";
---DROP TABLE public."RolePermission";
-
---DROP TABLE public."Protocols";
---DROP TABLE public."Idp";
---DROP TABLE public."List";
---DROP TABLE public."Role";
---DROP TABLE public."Permission";
---DROP TABLE public."Session";
---DROP TABLE public."User";
+INSERT INTO "List" (list) 
+VALUES 
+	('BLACK'),
+	('GREY'),
+	('RED');
+	
+INSERT INTO "Protocols" (protocol, active)
+VALUES
+	('Google', TRUE),
+	('AzureAD', TRUE),
+	('Saml', TRUE);
+	
+INSERT INTO "User" (username, password) 
+VALUES 
+	('superuser', 'superuser'),
+	('A44015@alunos.isel.pt', NULL),
+	('A43553@alunos.isel.pt', NULL),
+	('A43520@alunos.isel.pt', NULL);
+	
+	
+INSERT INTO "Role" (role, parent_role)
+VALUES 
+	('admin', NULL),
+	('recruiter', NULL),
+	('jobOwner', NULL),
+	('guest', NULL);
+	
+INSERT INTO "UserRoles" ("UserId", "RoleId", active) 
+VALUES	
+	(2, 1, true),
+	(3, 1, true),
+	(4, 1, true);	
 
 
 INSERT INTO user_profile(user_id, user_email, is_active)
@@ -25,7 +41,9 @@ INSERT INTO user_profile(user_id, user_email, is_active)
 INSERT INTO role(role_id)
 	VALUES	
 	(1),
-	(2);
+	(2),
+	(3),
+	(4);
 	
 INSERT INTO role_type(role_type) 
 	VALUES
@@ -34,7 +52,9 @@ INSERT INTO role_type(role_type)
 	
 INSERT INTO user_role(user_id, role_id, role_type)
 	VALUES	
-	(2, 1, 'Team Leader');
+	(2, 1, 'Team Leader'),
+	(3, 1, 'Team Leader'),
+	(4, 1, 'Team Leader');
 	
 INSERT INTO request_state
 	VALUES
@@ -118,7 +138,11 @@ INSERT INTO request(quantity, description, target_date,
 INSERT INTO user_role_request(user_id, role_id, request_id)
 	VALUES 
 	(2, 1, 1),
-	(2, 1, 2);
+	(2, 1, 2),
+	(3, 1, 1),
+	(3, 1, 2),
+	(4, 1, 1),
+	(4, 1, 2);
 	--(1, 1, 3),
 	--(1, 1, 4);
 

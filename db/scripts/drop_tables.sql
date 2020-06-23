@@ -1,22 +1,3 @@
--- Project Integration Tables
-
-/*
-DROP TABLE public."User_Session";
-DROP TABLE public."User_History";
-DROP TABLE public."UserRoles";
-DROP TABLE public."UserList";
-DROP TABLE public."RolePermission";
-
-DROP TABLE public."Protocols";
-DROP TABLE public."Idp";
-DROP TABLE public."List";
-DROP TABLE public."Role";
-DROP TABLE public."Permission";
-DROP TABLE public."Session";
-DROP TABLE public."User";
-*/
-
-
 DROP TABLE process_info;
 DROP TABLE phase_info;
 DROP TABLE dynamic_info;
@@ -45,3 +26,18 @@ DROP TABLE user_role;
 DROP TABLE role_type;
 DROP TABLE role;
 DROP TABLE user_profile;
+
+DROP TABLE public."User_Session";
+DROP TABLE public."User_History";
+DROP TABLE public."UserRoles";
+DROP TABLE public."UserList";
+DROP TABLE public."RolePermission";
+
+DROP TABLE public."Protocols";
+DROP TABLE public."Idp";
+DROP TABLE public."List";
+DROP TABLE public."Role";
+DROP TABLE public."Permission";
+DROP TABLE public."Session";
+DROP TABLE public."User";
+
