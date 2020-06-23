@@ -10,15 +10,14 @@ import {Workflow} from '../../model/workflow/workflow';
 import {Phase} from '../../model/phase/phase';
 import {WorkflowService} from '../../services/workflow/workflow.service';
 import {ProcessService} from '../../services/process/process.service';
-import {ProcessPhase} from '../../model/process/process-phase';
-import {PhaseAttribute} from '../../model/phase/phase-attribute';
 
 import {Candidate} from 'src/app/model/candidate/candidate';
 import {RequestList} from 'src/app/model/request/request-list';
 import {ProcessPhaseService} from '../../services/process-phase/process-phase.service';
-import {Process} from '../../model/process/process';
 import {BoardProps} from './board-props';
 import {AddCandidateComponent} from '../add-candidate/add-candidate.component';
+import {AuthService} from '../../services/auth/auth.service';
+import {User} from '../../model/user/user';
 
 @Component({
   selector: 'app-board',
@@ -33,7 +32,8 @@ export class BoardComponent implements OnInit {
               private processService: ProcessService,
               private candidateService: CandidateService,
               private phaseService: PhaseService,
-              private processPhaseService: ProcessPhaseService
+              private processPhaseService: ProcessPhaseService,
+              private authService: AuthService
   ) {
   }
 
@@ -41,7 +41,8 @@ export class BoardComponent implements OnInit {
 
 
   ngOnInit(): void {
-    this.requestService.getRequestsByUser(2, 1)
+    const user: User = this.authService.getUserInfo();
+    this.requestService.getRequestsByUser(user.userId, user.roles[0].roleId)
       .subscribe(
         requestsDao => {
           this.properties.requests = requestsDao.requests.map(r => new RequestList(r.id, r.workflow, r.progress,

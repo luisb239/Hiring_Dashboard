@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {catchError} from 'rxjs/operators';
 import {ErrorHandler} from '../error-handler';
+import {Role, User} from '../../model/user/user';
 
 const httpOptions = {
   headers: new HttpHeaders({
@@ -33,8 +34,10 @@ export class AuthService {
   }
 
 
-  getUserInfo() {
-    return JSON.parse(localStorage.getItem('userInfo'));
+  getUserInfo(): User {
+    const local = JSON.parse(localStorage.getItem('userInfo'));
+    return local === null ? null :
+      new User(local.user.id, local.user.email, local.roles.map(role => new Role(role.roleId, role.role)));
   }
 
   setUserInfo(user) {
