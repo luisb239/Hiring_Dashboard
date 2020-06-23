@@ -126,13 +126,16 @@ module.exports = (requestDb, candidateDb, processDb, phaseDb, infoDb, processUna
 
 
     async function updateStatus({requestId, candidateId, status}) {
-        const success = await processDb.updateProcessStatus({requestId, candidateId, status})
-        if (status === 'Placed') {
-            await updateRequestProgress({requestId})
-        }
-        if (success) {
-            return {
-                message: `Process status updated with success to ${status}`
+        const oldStatus = await processDb.getProcessStatus({requestId, candidateId})
+        if (oldStatus.status !== status) {
+            const success = await processDb.updateProcessStatus({requestId, candidateId, status})
+            if (oldStatus === 'Placed' || status === 'Placed') {
+                await updateRequestProgress({requestId})
+            }
+            if (success) {
+                return {
+                    message: `Process status updated with success to ${status}`
+                }
             }
         }
     }

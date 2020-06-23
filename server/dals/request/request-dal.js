@@ -21,7 +21,7 @@ module.exports = (query) => {
         const statement = {
             name: 'Get Requests',
             text:
-                `SELECT R.* FROM ${requestSchema.table} AS R ` +
+                `SELECT DISTINCT R.* FROM ${requestSchema.table} AS R ` +
                 `LEFT JOIN ${userRoleReqSchema.table} AS URR ` +
                 `ON R.${requestSchema.id} = URR.${userRoleReqSchema.requestId} ` +
                 `WHERE ` +
