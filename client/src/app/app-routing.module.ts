@@ -18,7 +18,7 @@ const routes: Routes = [
   {path: 'board', component: BoardComponent, canActivate: [AuthGuardService]},
   {path: 'create-request', component: CreateRequestComponent, canActivate: [AuthGuardService]},
   {path: 'all-requests', component: AllRequestsComponent, /* canActivate: [AuthGuardService] */},
-  {path: 'candidate/:id', component: CandidateDetailsComponent, canActivate: [AuthGuardService]},
+  {path: 'candidates/:id', component: CandidateDetailsComponent, canActivate: [AuthGuardService]},
   {path: 'request-detail/:requestId ', component: RequestDetailComponent, canActivate: [AuthGuardService]},
   {path: 'logout', component: LogoutComponent, canActivate: [AuthGuardService]},
   // otherwise redirect to home

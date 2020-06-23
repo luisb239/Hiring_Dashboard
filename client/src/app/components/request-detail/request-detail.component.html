@@ -96,7 +96,7 @@
                         </thead>
                         <tbody>
                             <tr *ngFor="let process of properties.processes"
-                                [routerLink]="['/candidate/', process.candidateId]"
+                                [routerLink]="['/candidates/', process.candidateId]"
                                 [state]="{requestId: properties.requestId, candidateId: process.candidateId}">
                                 <td>
                                     {{process.candidateName}}

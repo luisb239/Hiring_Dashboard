@@ -57,7 +57,7 @@
     <button type="submit" class="btn btn-primary add">Update Candidate</button>
   </form>
   <div>
-    <a [routerLink]="['/candidate/', candidate.id]"
+    <a [routerLink]="['/candidates/', candidate.id]"
        [state]="{requestId: requestId, candidateId: candidate.id}"
        (click)="activeModal.close('Close click')"
     >

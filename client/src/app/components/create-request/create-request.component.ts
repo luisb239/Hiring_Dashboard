@@ -101,7 +101,7 @@ export class CreateRequestComponent implements OnInit {
     };
     this.requestService.createRequest(body)
       .subscribe(success => {
-          alert('Request with id ' + success.id + ' created');
+          alert('Request created');
           this.router.navigate(['/all-requests']);
         },
         error => {
