@@ -32,7 +32,8 @@ export class PopupComponent implements OnInit {
   attributeTemplates: PhaseAttribute[] = [];
   updateForm: FormGroup;
 
-  constructor(public activeModal: NgbActiveModal,
+  constructor(
+    public activeModal: NgbActiveModal,
     private formBuilder: FormBuilder,
     private processService: ProcessService,
     private candidateService: CandidateService,
