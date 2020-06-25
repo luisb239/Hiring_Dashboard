@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {NgForm} from '@angular/forms';
+import {FormArray, FormBuilder, FormControl, NgForm} from '@angular/forms';
 import {RequestPropsService} from 'src/app/services/requestProps/requestProps.service';
 import {WorkflowService} from 'src/app/services/workflow/workflow.service';
 import {RequestService} from 'src/app/services/request/request.service';
@@ -18,7 +18,9 @@ export class CreateRequestComponent implements OnInit {
     private router: Router,
     private reqPropsService: RequestPropsService,
     private workflowService: WorkflowService,
-    private requestService: RequestService) {
+    private requestService: RequestService,
+    private formBuilder: FormBuilder
+  ) {
   }
 
   properties: CreateRequestProps = new CreateRequestProps();
@@ -55,8 +57,7 @@ export class CreateRequestComponent implements OnInit {
 
     this.reqPropsService.getRequestLanguages()
       .subscribe(dao => {
-          this.properties.mandatoryCheckboxes = this.getLanguagesCheckboxes(dao.languages);
-          this.properties.valuedCheckboxes = this.getLanguagesCheckboxes(dao.languages);
+          this.properties.languages = dao.languages.map(l => l.language);
         },
         error => {
           console.log(error);
@@ -77,6 +78,18 @@ export class CreateRequestComponent implements OnInit {
         error => {
           console.log(error);
         });
+    this.properties.form = this.formBuilder.group({
+      description: this.formBuilder.control(''),
+      quantity: this.formBuilder.control(1),
+      skill: this.formBuilder.control(''),
+      profile: this.formBuilder.control(''),
+      project: this.formBuilder.control(''),
+      mandatoryLanguages: this.formBuilder.array([]),
+      valuedLanguages: this.formBuilder.array([]),
+      workflow: this.formBuilder.control(''),
+      targetDate: this.formBuilder.control(''),
+      dateToSendProfile: this.formBuilder.control('')
+    });
   }
 
   /**
@@ -84,24 +97,23 @@ export class CreateRequestComponent implements OnInit {
    * server, to create a new request, with all the values obtained from the user.
    * @param form is used to obtain all the input values from the user.
    */
-  onSubmit(form: NgForm) {
-    this.fetchSelectedItems();
-    const value = form.value;
+  onSubmit() {
+    const value = this.properties.form.value;
     const body = {
-      description: value.inputDescription,
-      quantity: value.inputQuantity,
-      skill: value.inputSkill,
-      profile: value.inputProfile,
-      project: value.inputProject,
-      mandatoryLanguages: this.properties.selectedMandatoryCheckboxes.map(item => item.label),
-      valuedLanguages: this.properties.selectedValuedCheckboxes.map(item => item.label),
-      workflow: value.inputWorkflow,
-      targetDate: value.inputTargetDate,
-      dateToSendProfile: value.inputDateToSendProfile
+      description: value.description,
+      quantity: value.quantity,
+      skill: value.skill,
+      profile: value.profile,
+      project: value.project,
+      mandatoryLanguages: value.mandatoryLanguages.map(idx => this.properties.languages[idx]),
+      valuedLanguages: value.valuedLanguages.map(idx => this.properties.languages[idx]),
+      workflow: value.workflow,
+      targetDate: value.targetDate,
+      dateToSendProfile: value.dateToSendProfile
     };
     this.requestService.createRequest(body)
       .subscribe(success => {
-          alert('Request created');
+          alert('Request Created Successfully!');
           this.router.navigate(['/all-requests']);
         },
         error => {
@@ -109,31 +121,15 @@ export class CreateRequestComponent implements OnInit {
         });
   }
 
-  /**
-   * This function maps request's languages into objects useful for later implementing checkboxes.
-   * @param languages used to map the request's languages into checkboxes.
-   */
-  private getLanguagesCheckboxes(languages) {
-    return languages.map(dao => {
-      return {
-        label: dao.language,
-        isChecked: false
-      };
-    });
-  }
-
-  /**
-   * This function filters all the checkboxes selected by the user.
-   */
-  private fetchSelectedItems() {
-    this.properties.selectedMandatoryCheckboxes = this.properties.mandatoryCheckboxes.filter(
-      (value, index) => {
-        return value.isChecked;
-      });
-    this.properties.selectedValuedCheckboxes = this.properties.valuedCheckboxes.filter(
-      (value, index) => {
-        return value.isChecked;
-      });
+  onChange(isMandatory: boolean, idx: number, event: any) {
+    const array = isMandatory ? this.properties.form.controls.mandatoryLanguages as FormArray :
+      this.properties.form.controls.valuedLanguages as FormArray;
+    if (event.target.checked) {
+      array.push(new FormControl(idx));
+    } else {
+      const index = array.controls.findIndex(x => x.value === idx);
+      array.removeAt(index);
+    }
   }
 }
 

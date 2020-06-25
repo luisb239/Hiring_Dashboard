@@ -1,22 +1,22 @@
 <div class='CreateRequest'>
   <h1>Create Request</h1>
-  <form #form="ngForm" (ngSubmit)="onSubmit(form)">
+  <form [formGroup]="properties.form" (ngSubmit)="onSubmit()">
     <div class="form-row">
       <div class="form-group col-md-4">
         <label for="inputDescription">Description</label>
-        <input name='inputDescription' ngModel required #inputDescription='ngModel' class="form-control"
+        <input required formControlName="description" class="form-control"
           id="inputDescription" placeholder="Request's Description" type="text">
       </div>
       <div class="form-group col-md-4">
         <label for="inputQuantity">Quantity</label>
         <div>
-          <input name='inputQuantity' ngModel required #inputQuantity='ngModel' class="form-control" type="number"
+          <input required formControlName="quantity" type="number" class="form-control"
             value="1" min="1" id="inputQuantity" placeholder="Request's Quantity">
         </div>
       </div>
       <div class="form-group col-md-4">
         <label for="inputSkill">Skill</label>
-        <select name='inputSkill' ngModel required #inputSkill='ngModel' class="custom-select" id="inputSkill">
+        <select required formControlName="skill" class="custom-select" id="inputSkill">
           <option selected disabled value="">Choose a Skill</option>
           <option *ngFor="let skill of properties.skills">{{skill}}</option>
         </select>
@@ -25,21 +25,21 @@
     <div class="form-row">
       <div class="form-group col-md-4">
         <label for="inputProject">Project</label>
-        <select name='inputProject' ngModel required #inputProject='ngModel' class="custom-select" id="inputProject">
+        <select required formControlName="project" class="custom-select" id="inputProject">
           <option selected disabled value="">Choose a Project</option>
           <option *ngFor="let project of properties.projects">{{project}}</option>
         </select>
       </div>
       <div class="form-group col-md-4">
         <label for="inputProfile">Profile</label>
-        <select name='inputProfile' ngModel required #inputProfile='ngModel' class="custom-select" id="inputProfile">
+        <select required formControlName="profile" class="custom-select" id="inputProfile">
           <option selected disabled value="">Choose a Profile</option>
           <option *ngFor="let profile of properties.profiles">{{profile}}</option>
         </select>
       </div>
       <div class="form-group col-md-4">
         <label for="inputWorkflow">Workflow</label>
-        <select name='inputWorkflow' ngModel required #inputWorkflow='ngModel' class="custom-select" id="inputWorkflow">
+        <select required formControlName="workflow" class="custom-select" id="inputWorkflow">
           <option selected disabled value="">Choose a Workflow</option>
           <option *ngFor="let workflow of properties.workflows">{{workflow}}</option>
         </select>
@@ -49,16 +49,16 @@
       <div class="form-group col-md-4">
         <label for="inputMandatoryLanguage" id="inputMandatoryLanguage">Select the Mandatory Languages</label>
         <ul class="checkbox-items">
-          <li *ngFor="let item of properties.mandatoryCheckboxes">
-            <input type="checkbox" name="mandatoryItem" [(ngModel)]="item.isChecked">{{item.label}}
+          <li *ngFor="let language of properties.languages; index as idx">
+            <input type="checkbox" name="mandatoryItem" (change)="onChange(true, idx, $event)">{{language}}
           </li>
         </ul>
       </div>
       <div class="form-group col-md-4">
         <label for="inputValuedLanguages" id="inputValuedLanguages">Select the Valued Languages</label>
         <ul class="checkbox-items">
-          <li *ngFor="let item of properties.valuedCheckboxes">
-            <input type="checkbox" name="valuedItem" [(ngModel)]="item.isChecked">{{item.label}}
+          <li *ngFor="let language of properties.languages; index as idx">
+            <input type="checkbox" name="valuedItem" (change)="onChange(false, idx, $event)">{{language}}
           </li>
         </ul>
       </div>
@@ -66,7 +66,7 @@
     <div class="form-row">
       <div class="form-group col-md-4">
         <label for="inputTargetDate">Target Month</label>
-        <select name='inputTargetDate' ngModel required #inputTargetDate='ngModel' class="custom-select"
+        <select required formControlName="targetDate" class="custom-select"
           id="inputTargetDate">
           <option selected disabled value="">Choose a Target Month</option>
           <option *ngFor="let month of properties.targetDates">{{month}}</option>
@@ -75,7 +75,7 @@
 
       <div class="form-group col-md-4">
         <label for="inputDateToSendProf" id="inputDateToSendProf">Date to send Profile</label>
-        <input name='inputDateToSendProfile' ngModel #inputDateToSendProfile='ngModel' class="form-control" type="date"
+        <input formControlName="dateToSendProfile" class="form-control" type="date"
           id="inputDateToSendProfile">
       </div>
     </div>
