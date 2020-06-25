@@ -4,14 +4,14 @@
 
 .Request ul{
     margin: 10px;
-    background-color: rgba(255, 255, 255, 0.3);
+    background-color: rgb(235, 235, 235);
     border-radius: 15px;
     padding: 10px;
     width: 100%;
 }
 
 .Request li{
-    background-color: rgba(255, 255, 255, 0.3);
+    background-color: rgb(235, 235, 235);
     border-color: white;
     width: 100%;
 }
@@ -19,7 +19,7 @@
 .Request-Detail h3 {
     margin: 10px;
     text-align: center;
-    background: rgba(255, 255, 255, 0.3);
+    background-color: rgb(235, 235, 235);
     border-radius: 15px;
     padding: 10px;
     width: 100%;
@@ -31,7 +31,7 @@
 
 .Request-Detail table {
     margin: 10px;
-    background: rgb(223, 223, 223);
+    background-color: rgb(235, 235, 235);
     border-radius: 15px;
     border: hidden;
     padding: 10px;

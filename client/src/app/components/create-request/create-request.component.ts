@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {FormArray, FormBuilder, FormControl, NgForm} from '@angular/forms';
+import {FormArray, FormBuilder, FormControl} from '@angular/forms';
 import {RequestPropsService} from 'src/app/services/requestProps/requestProps.service';
 import {WorkflowService} from 'src/app/services/workflow/workflow.service';
 import {RequestService} from 'src/app/services/request/request.service';
@@ -95,7 +95,6 @@ export class CreateRequestComponent implements OnInit {
   /**
    * This function starts by fetching all the selected checkboxes. Then it sends a request to the
    * server, to create a new request, with all the values obtained from the user.
-   * @param form is used to obtain all the input values from the user.
    */
   onSubmit() {
     const value = this.properties.form.value;

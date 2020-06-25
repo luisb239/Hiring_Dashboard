@@ -8,5 +8,5 @@ export class CreateRequestProps {
   projects: string[];
   workflows: string[];
   targetDates: string[];
-  languages = [];
+  languages: string[];
 }
