@@ -4,5 +4,4 @@ import {RequestList} from '../../model/request/request-list';
 export class BoardProps {
   workflows: Workflow[] = [];
   requests: RequestList[] = [];
-  placedCandidates: number;
 }

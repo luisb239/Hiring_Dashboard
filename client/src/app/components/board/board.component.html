@@ -16,7 +16,7 @@
         </tr>
       </table>
       <table *ngFor="let request of workflow.requests" [width]="tableContainer.offsetWidth">
-        <tr [routerLink]="['/request-detail', request.id]">
+        <tr [routerLink]="['/request-detail', request.id]" (contextmenu)="hide($event, request)">
           <td class="title-data swim-lane">
             <h5 class="swim-lane-title">{{request.description}}</h5>
           </td>
@@ -24,7 +24,7 @@
             <h5 class="swim-lane-fraction">Placed: {{request.placedCandidates}}/{{request.quantity}}</h5>
           </td>
         </tr>
-        <tr cdkDropListGroup>
+        <tr cdkDropListGroup [hidden]=request.hidden>
           <td class="tasks-container"
               cdkDropList
               [width]="tableContainer.offsetWidth/request.phases.length"

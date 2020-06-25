@@ -4,6 +4,15 @@
   background-color: #ffffff;
 }
 
+.props, .procs {
+  background-color: rgb(235, 235, 235);
+  border-radius: 15px;
+  padding: 10px;
+  width: fit-content;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
 .attribute {
   margin-right: 10px;
 }
@@ -12,18 +21,12 @@
   display: block;
 }
 
-.value {
-  margin-right: 10px;
-  display: inline;
-}
-
 .inline {
   display: inline;
   margin-right: 10px;
 }
 
 .current {
-  margin-top: 20px;
   color: black;
 }
 
