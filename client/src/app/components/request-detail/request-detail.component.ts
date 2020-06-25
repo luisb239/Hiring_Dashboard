@@ -12,6 +12,7 @@ import { RequestDetailProps } from './request-detail-props';
   templateUrl: './request-detail.component.html',
   styleUrls: ['./request-detail.component.css']
 })
+
 export class RequestDetailComponent implements OnInit {
 
   properties: RequestDetailProps = new RequestDetailProps();
@@ -47,8 +48,14 @@ export class RequestDetailComponent implements OnInit {
         this.properties.processes = reqDao.processes.map(
           processDao => new ProcessList(
             processDao.status, processDao.candidate.id, processDao.candidate.name));
-        this.properties.languages = reqDao.languages.map(
-          languageDao => new LanguageList(languageDao.language, languageDao.isMandatory));
+        this.properties.mandatoryLanguages = reqDao.languages
+          .filter(languageDao => languageDao.isMandatory)
+          .map(languageDao => languageDao.language)
+          .join(', ');
+        this.properties.valuedLanguages = reqDao.languages
+          .filter(languageDao => !languageDao.isMandatory)
+          .map(languagesDao => languagesDao.language)
+          .join(', ');
         this.properties.requestAttrs = Object.keys(this.properties.requestList).filter(
           attr => attr !== 'phases' && attr !== 'id');
       }, error => {
