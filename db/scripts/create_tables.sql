@@ -200,7 +200,7 @@ PRIMARY KEY (workflow, phase)
 CREATE TABLE candidate(
 candidate_id INT GENERATED ALWAYS AS IDENTITY,	
 name VARCHAR NOT NULL,
-cv VARCHAR NULL DEFAULT NULL, -- blop
+cv BYTEA NULL, -- blop
 available BOOLEAN NOT NULL DEFAULT TRUE,
 profile_info VARCHAR NULL DEFAULT NULL,
 PRIMARY KEY (candidate_id)	

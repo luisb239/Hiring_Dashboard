@@ -23,6 +23,9 @@ module.exports = (service) => {
             id: req.params.id
         })
         res.status(200).send(candidate)
+        //res.write(candidate.candidate.cv)
+        //res.status(200).send(candidate)
+        //res.status(200).send(candidate)
     }
 
     async function updateCandidate(req, res) {
@@ -34,12 +37,12 @@ module.exports = (service) => {
     }
 
     async function postCandidate(req, res) {
-        const candidate = await service.createCandidate({
-            name: req.body.name,
-            cv: req.body.cv,
-            available: req.body.available,
-            profileInfo: req.body.profile_info
+        // TODO -> CHECKS MISSING
+        const candidateCv = req.files.fileKey
+        const candidate = await service.createCandidate({name: req.body.name, file: candidateCv})
+        res.status(201).send({
+            id: `${candidate.id}`,
+            message: `Candidate added successfully`
         })
-        res.status(201).send(candidate)
     }
 }

@@ -4,9 +4,19 @@ const PORT = process.argv[2] || '8080'
 
 const express = require('express')
 
+const fileUpload = require('express-fileupload');
+
 const app = express()
 
-app.use(express.json())
+// enable files upload
+app.use(fileUpload({
+    createParentPath: true
+}));
+
+const bodyParser = require('body-parser')
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: true}));
 
 const dbOptions = {
     "host": process.env.PGHOST,

@@ -20,6 +20,7 @@ import {AddCandidateComponent} from './components/add-candidate/add-candidate.co
 import {MatOptionModule} from '@angular/material/core';
 import {MatSelectModule} from '@angular/material/select';
 import {LogoutComponent} from './components/logout/logout.component';
+import {CreateCandidateComponent} from './components/create-candidate/create-candidate.component';
 
 @NgModule({
   declarations: [
@@ -33,7 +34,8 @@ import {LogoutComponent} from './components/logout/logout.component';
     CandidateDetailsComponent,
     RequestDetailComponent,
     AddCandidateComponent,
-    LogoutComponent
+    LogoutComponent,
+    CreateCandidateComponent
   ],
   imports: [
     BrowserModule,

@@ -42,7 +42,7 @@ module.exports = (query) => {
         const result = await query(statement)
 
         if (result.rowCount) {
-            return result.rows.map(row => extract(row))[0]
+            return extract(result.rows[0])
         }
         return null
     }
@@ -62,19 +62,19 @@ module.exports = (query) => {
         return result.rows.map(row => extract(row))
     }
 
-    async function createCandidate({name, cv = null, available = true, profileInfo = null}) {
+    async function createCandidate({name, cvBuffer, available}) {
         const statement = {
             name: 'Create Candidate',
             text:
                 `INSERT INTO ${candidate.table}` +
                 `(${candidate.name}, ${candidate.cv}, ` +
-                `${candidate.available}, ${candidate.profileInfo}) ` +
-                `VALUES ($1, $2, $3, $4) RETURNING *;`,
-            values: [name, cv, available, profileInfo]
+                `${candidate.available}) ` +
+                `VALUES ($1, $2, $3) RETURNING *;`,
+            values: [name, cvBuffer, available]
         }
 
         const result = await query(statement)
-        return result.rows.map(row => extract(row))[0]
+        return extract(result.rows[0])
     }
 
     //TODO

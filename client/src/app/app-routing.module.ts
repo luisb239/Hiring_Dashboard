@@ -10,6 +10,7 @@ import {RequestDetailComponent} from './components/request-detail/request-detail
 import {MatOptionModule} from '@angular/material/core';
 import {AuthGuardService} from './services/auth-guard/auth-guard.service';
 import {LogoutComponent} from './components/logout/logout.component';
+import {CreateCandidateComponent} from './components/create-candidate/create-candidate.component';
 
 
 const routes: Routes = [
@@ -21,6 +22,7 @@ const routes: Routes = [
   {path: 'candidates/:id', component: CandidateDetailsComponent, canActivate: [AuthGuardService]},
   {path: 'request-detail/:requestId ', component: RequestDetailComponent, canActivate: [AuthGuardService]},
   {path: 'logout', component: LogoutComponent, canActivate: [AuthGuardService]},
+  {path: 'create-candidate', component: CreateCandidateComponent, canActivate: [AuthGuardService]},
   // otherwise redirect to home
   {path: '**', redirectTo: 'home'}
 ];

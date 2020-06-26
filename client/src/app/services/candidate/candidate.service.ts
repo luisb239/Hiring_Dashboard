@@ -8,7 +8,7 @@ import {Candidate} from '../../model/candidate/candidate';
 
 const httpOptions = {
   headers: new HttpHeaders({
-    'Content-Type': 'application/json'
+    'Content-Type': 'application/json',
   })
 };
 
@@ -21,6 +21,11 @@ export class CandidateService {
   }
 
   baseUrl = `/hd`;
+
+  getCvAsUrl(cv: Uint8Array[]) {
+    const blob = new Blob(cv, {type: 'application/pdf}'});
+    return URL.createObjectURL(blob);
+  }
 
   getCandidateById(candidateId: number) {
     return this.http.get<CandidateDao>(`${this.baseUrl}/candidates/${candidateId}`, httpOptions)
@@ -47,7 +52,7 @@ export class CandidateService {
     }
     return this.http.get<CandidatesDao>(`${this.baseUrl}/candidates`, {
       headers: new HttpHeaders({
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
       }), params
     })
       .pipe(data => {
@@ -56,14 +61,21 @@ export class CandidateService {
         catchError(this.errorHandler.handleError));
   }
 
+  addCandidate(name: string, candidateCv: File) {
+    const formData: FormData = new FormData();
+    formData.append('fileKey', candidateCv, candidateCv.name);
+    formData.append('name', name);
+    console.log(formData);
+    return this.http
+      .post(`${this.baseUrl}/candidates`, formData, {
+        headers: new HttpHeaders({enctype: 'multipart/form-data'}),
+      })
+      .pipe(data => data, catchError(this.errorHandler.handleError));
+  }
+
   updateCandidate(candidate: Candidate) {
     return this.http.put<CandidatesDao>(`${this.baseUrl}/candidates/${candidate.id}`,
-      {available: candidate.available},
-      {
-        headers: new HttpHeaders({
-          'Content-Type': 'application/json'
-        })
-      })
+      {available: candidate.available}, httpOptions)
       .pipe(data => {
           return data;
         },

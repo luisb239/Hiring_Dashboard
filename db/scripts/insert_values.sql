@@ -179,14 +179,14 @@ INSERT INTO workflow_phase(workflow, phase, phase_number)
 	('Consulting', 'Job Offer', 3),
 	('Consulting', 'Offer Accepted', 4);
 
-INSERT INTO candidate(name)
+INSERT INTO candidate(name, available, cv)
 	VALUES
-	('Michael Corleone'),
-	('Travis Bickle'),
-	('Randle McMurphy'),
-	('Ellen Ripley'),
-	('Bob Belcher'),
-	('Troy Barnes');
+	('Michael Corleone', TRUE, NULL),
+	('Travis Bickle', TRUE, NULL),
+	('Randle McMurphy', TRUE, NULL),
+	('Ellen Ripley', TRUE, NULL),
+	('Bob Belcher', TRUE, NULL),
+	('Troy Barnes', FALSE, NULL);
 	
 INSERT INTO candidate_request_profile(candidate_id, profile)
 	VALUES
@@ -196,7 +196,8 @@ INSERT INTO candidate_request_profile(candidate_id, profile)
 	(1, '.Net'),
 	(1, 'Tester'),
 	(2, 'Dev. Java'),
-	(2, 'Tester');
+	(2, 'Tester'),
+	(5, 'Analista Funcional');
 	
 	
 INSERT INTO process_status(status)
@@ -222,7 +223,8 @@ INSERT INTO process(request_id, candidate_id, status)
 	
 INSERT INTO unavailable_reason(reason)
 	VALUES
-	('Candidate withdrawned from proposal');
+	('Candidate withdrawned from proposal'),
+	('Candidate rejected');
 	
 INSERT INTO process_unavailable_reason(request_id, candidate_id, reason)
 	VALUES

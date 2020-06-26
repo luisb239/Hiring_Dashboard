@@ -44,8 +44,8 @@ module.exports = (candidateDb, profilesDb, processDb) => {
     }
 
     // TODO
-    async function createCandidate({name, cv = null, available = true, profileInfo = null}) {
-        const candidate = await candidateDb.createCandidate({name, cv, available, profileInfo})
-        return {candidate: candidate}
+    async function createCandidate({name, file, available = true}) {
+        const candidate = await candidateDb.createCandidate({name, cvBuffer: file.data, available})
+        return {id: candidate.id}
     }
 }

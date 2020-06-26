@@ -93,7 +93,7 @@ module.exports = (requestDb, candidateDb, processDb, phaseDb, infoDb, processUna
      * @returns {Promise<{unavailableReason: (*|null), currentPhase: *, phases: number[], status: string}>}
      */
     async function getProcessDetail({requestId, candidateId}) {
-        const currentPhase = (await processPhaseDb.getProcessCurrentPhase({requestId, candidateId})).currentPhase
+        const currentPhase = await processPhaseDb.getProcessCurrentPhase({requestId, candidateId})
 
         const status = await processDb.getProcessStatus({requestId, candidateId})
 
@@ -117,9 +117,9 @@ module.exports = (requestDb, candidateDb, processDb, phaseDb, infoDb, processUna
         }))
 
         return {
-            status: status.status,
+            status: status ? status.status : null,
             unavailableReason: reason ? reason.unavailableReason : null,
-            currentPhase: currentPhase,
+            currentPhase: currentPhase ? currentPhase.currentPhase : null,
             phases: processDetailedPhases
         }
     }

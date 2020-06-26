@@ -6,6 +6,7 @@ const handle = require('./express-handler.js')
 
 const verifyIfAuthenticated = require('./middlewares/verify_authenticated')
 
+
 module.exports = function (router, controllers, authModule) {
 
     const candidates = 'candidates'
