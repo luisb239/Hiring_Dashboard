@@ -1,0 +1,6 @@
+<div class='Statistics'>
+    <h1>Statistics Overview</h1>
+    <app-wbr-pivot #pivot1 [toolbar]="true" [customizeCell]="onCustomizeCell" (ready)="onPivotReady($event)"
+        (reportcomplete)="onReportComplete()" (beforetoolbarcreated)='customizeToolbar($event)'>
+    </app-wbr-pivot>
+</div>

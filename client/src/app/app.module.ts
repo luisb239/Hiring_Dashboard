@@ -17,10 +17,12 @@ import {LogInComponent} from './components/log-in/log-in.component';
 import {CandidateDetailsComponent} from './components/candidate-details/candidate-details.component';
 import {RequestDetailComponent} from './components/request-detail/request-detail.component';
 import {AddCandidateComponent} from './components/add-candidate/add-candidate.component';
+import {StatisticsComponent} from './components/statistics/statistics.component';
 import {MatOptionModule} from '@angular/material/core';
 import {MatSelectModule} from '@angular/material/select';
 import {LogoutComponent} from './components/logout/logout.component';
 import {CreateCandidateComponent} from './components/create-candidate/create-candidate.component';
+import {WebDataRocksPivotComponent} from './webdatarocks/webdatarocks.angular4';
 
 @NgModule({
   declarations: [
@@ -34,8 +36,10 @@ import {CreateCandidateComponent} from './components/create-candidate/create-can
     CandidateDetailsComponent,
     RequestDetailComponent,
     AddCandidateComponent,
+    StatisticsComponent,
     LogoutComponent,
-    CreateCandidateComponent
+    CreateCandidateComponent,
+    WebDataRocksPivotComponent
   ],
   imports: [
     BrowserModule,
