@@ -8,25 +8,25 @@
 <!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
 
 <body>
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-  <a class="navbar-brand">Gfi</a>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+  <img class="navbar-icon" src="assets/img/navbar.png" alt="">
   <button aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler"
           data-target="#navbarNavAltMarkup" data-toggle="collapse" type="button">
     <span class="navbar-toggler-icon"></span>
   </button>
   <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
     <div class="navbar-nav">
-      <a [routerLinkActive]="['active']" [routerLink]="['/home']" class="nav-item nav-link">Home</a>
-      <a *ngIf="authService.isAuthenticated()" [routerLinkActive]="['active']" [routerLink]="['/board']"
-         class="nav-item nav-link">Board</a>
-      <a *ngIf="authService.isAuthenticated()" [routerLinkActive]="['active']" [routerLink]="['/create-request']"
-         class="nav-item nav-link">Create Request</a>
-      <a *ngIf="authService.isAuthenticated()" [routerLinkActive]="['active']" [routerLink]="['/all-requests']"
-         class="nav-item nav-link">All Requests</a>
+      <a *ngIf="!authService.isAuthenticated()" [routerLinkActive]="['active']" [routerLink]="['/home']" class="nav-item nav-link"><h6>Home</h6></a>
       <a *ngIf="!authService.isAuthenticated()" [routerLinkActive]="['active']" [routerLink]="['/log-in']"
-         class="nav-item nav-link">Login</a>
+         class="nav-item nav-link"><h6>Log In</h6></a>
+      <a *ngIf="authService.isAuthenticated()" [routerLinkActive]="['active']" [routerLink]="['/all-requests']"
+      class="nav-item nav-link"><h6>All Requests</h6></a>
+      <a *ngIf="authService.isAuthenticated()" [routerLinkActive]="['active']" [routerLink]="['/board']"
+      class="nav-item nav-link"><h6>Board</h6></a>
+      <a *ngIf="authService.isAuthenticated()" [routerLinkActive]="['active']" [routerLink]="['/create-request']"
+      class="nav-item nav-link"><h6>Create Request</h6></a>
       <a *ngIf="authService.isAuthenticated()" [routerLinkActive]="['active']" [routerLink]="['/logout']"
-         class="nav-item nav-link">Logout</a>
+         class="nav-item nav-link"><h6>Logout</h6></a>
     </div>
   </div>
 </nav>

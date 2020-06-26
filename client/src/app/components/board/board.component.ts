@@ -18,6 +18,7 @@ import {BoardProps} from './board-props';
 import {AddCandidateComponent} from '../add-candidate/add-candidate.component';
 import {AuthService} from '../../services/auth/auth.service';
 import {User} from '../../model/user/user';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-board',
@@ -33,7 +34,8 @@ export class BoardComponent implements OnInit {
               private candidateService: CandidateService,
               private phaseService: PhaseService,
               private processPhaseService: ProcessPhaseService,
-              private authService: AuthService
+              private authService: AuthService,
+              private router: Router
   ) {
   }
 
@@ -98,5 +100,10 @@ export class BoardComponent implements OnInit {
   addCandidate(requestId: number) {
     const modalRef = this.modalService.open(AddCandidateComponent);
     modalRef.componentInstance.requestId = requestId;
+  }
+
+  hide(event: any, request: RequestList) {
+    event.preventDefault();
+    request.hidden = !request.hidden;
   }
 }

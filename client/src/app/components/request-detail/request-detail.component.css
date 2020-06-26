@@ -2,22 +2,38 @@
     margin: 10px;
 }
 
-.Request {
+.Request ul{
+    margin: 10px;
+    background-color: rgb(235, 235, 235);
+    border-radius: 15px;
+    padding: 10px;
+    width: 100%;
+}
+
+.Request li{
+    background-color: rgb(235, 235, 235);
+    border-color: white;
+    width: 100%;
+}
+
+.Request-Detail h3 {
+    margin: 10px;
+    text-align: center;
+    background-color: rgb(235, 235, 235);
+    border-radius: 15px;
+    padding: 10px;
+    width: 100%;
+}
+
+.Request-Detail h2 {
     margin: 10px;
 }
 
-.UserRoles {
-    margin: 10px
-}
-
-.Candidates {
-    margin: 10px
-}
-
-.Languages {
+.Request-Detail table {
     margin: 10px;
-}
-
-.table {
-    width: fit-content;
+    background-color: rgb(235, 235, 235);
+    border-radius: 15px;
+    border: hidden;
+    padding: 10px;
+    width: 100%;
 }

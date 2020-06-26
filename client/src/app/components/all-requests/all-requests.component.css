@@ -13,11 +13,8 @@
 .filter-drawer {
   margin-right: 20px;
   margin-left: 10px;
-  /*border-right: #888888;*/
-  /*border-right-style: solid;*/
-  /*border-width: 1px;*/
-  min-height: fit-content;
-  min-width: fit-content;
+  height: fit-content;
+  width: fit-content;
 }
 
 ::ng-deep .custom-slider .ng5-slider .ng5-slider-bar {
