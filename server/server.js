@@ -4,9 +4,11 @@ const PORT = process.argv[2] || '8080'
 
 const express = require('express')
 
-const fileUpload = require('express-fileupload');
+const fileUpload = require('express-fileupload')
 
 const app = express()
+
+const nodemailer = require("nodemailer")
 
 // enable files upload
 app.use(fileUpload({
@@ -16,7 +18,7 @@ app.use(fileUpload({
 const bodyParser = require('body-parser')
 
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.urlencoded({extended: true}))
 
 const dbOptions = {
     "host": process.env.PGHOST,
@@ -81,6 +83,23 @@ const jsonObj = {
     }
 }
 
+nodemailer.createTransport({
+    pool: true,
+    host: "smtp-relay.sendinblue.com",
+    port: 587,
+    secure: false, // use TLS
+    auth: {
+        user: "hiring.dashboard.isel@gmail.com",
+        pass: "9TzNmdZc6IAxhKOL"
+    }
+}).verify(function(error, success) {
+    if (error) {
+        console.log(error);
+    } else {
+        console.log("Server is ready to take our messages");
+    }
+});
+
 const authModule = require('../authization-module/authization')
 
 authModule.setup(app, dbOptions, jsonObj)
@@ -109,7 +128,7 @@ authModule.setup(app, dbOptions, jsonObj)
         })
 
         // Server listening on port
-        app.listen(PORT, () => console.log(`Server listening on port ${PORT} @ ${new Date()}`));
+        app.listen(PORT, () => console.log(`Server listening on port ${PORT} @ ${new Date()}`))
     })
 
 

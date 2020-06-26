@@ -1,4 +1,4 @@
-.root {
+.container {
   display: flex;
   flex-direction: column;
   height: auto;
@@ -48,7 +48,7 @@
   vertical-align: middle;
 }
 
-.swim-lane-fraction {
+.swim-lane-minus {
   float: right;
   margin-right: 10px;
 }
@@ -70,6 +70,7 @@
   margin-top: 15px;
   margin-right: 15px;
   box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.05), 0 3px 14px 2px rgba(0, 0, 0, 0.05);
+  cursor: grab;
 }
 
 .cdk-drag-preview {
