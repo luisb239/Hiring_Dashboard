@@ -36,7 +36,7 @@
       <tbody>
       <tr *ngFor="let candidate of candidates; index as i">
         <th scope="row">{{ i + 1 }}</th>
-        <td [routerLink]="['/candidate/', candidate.id]"
+        <td [routerLink]="['/candidates/', candidate.id]"
             [state]="{candidateId:  candidate.id}"
             (click)="activeModal.close('Close click')"
         >

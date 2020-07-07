@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Location} from '@angular/common';
 import {CandidateService} from '../../services/candidate/candidate.service';
 import {Router} from '@angular/router';
@@ -32,13 +32,8 @@ export class CandidateDetailsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.location.onUrlChange((url, state) => {
-      localStorage.removeItem('requestId');
-    });
     this.properties.candidateId = history.state.candidateId || this.router.url.split('/')[2];
-    this.properties.requestId = history.state.requestId || Number(localStorage.getItem('requestId'));
-    localStorage.removeItem('requestId');
-    localStorage.setItem('requestId', String(this.properties.requestId));
+    this.properties.requestId = history.state.requestId;
 
     this.candidateService.getCandidateById(this.properties.candidateId)
       .subscribe(dao => {
