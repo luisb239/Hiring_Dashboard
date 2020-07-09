@@ -1,6 +1,6 @@
 'use strict'
 
-const handle = require('./controllers/express-handler.js')
+const handle = require('./express-handler.js')
 
 const verifyIfAuthenticated = require('./controllers/middlewares/verify_authenticated')
 

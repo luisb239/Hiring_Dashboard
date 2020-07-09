@@ -117,6 +117,7 @@ module.exports = (query) => {
             name: obj[candidate.name],
             available: obj[candidate.available],
             profileInfo: obj[candidate.profileInfo],
+            cvFileName: obj[candidate.cvFileName]
         }
     }
 

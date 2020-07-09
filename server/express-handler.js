@@ -1,6 +1,6 @@
 'use strict'
 
-const commonErrors = require('../services/errors/common-errors.js')
+const commonErrors = require('./services/errors/common-errors.js')
 
 const {validationResult} = require('express-validator');
 
