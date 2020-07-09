@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ViewChild } from '@angular/core';
 import { WebDataRocksPivotComponent } from '../../webdatarocks/webdatarocks.angular4';
 import * as WebDataRocks from 'webdatarocks';
+import {AuthService} from '../../services/auth/auth.service';
 
 @Component({
   selector: 'app-statistics',
@@ -63,6 +64,8 @@ export class StatisticsComponent implements OnInit {
   }
 
 
+  constructor(public authService: AuthService) {
+  }
 
   customizeToolbar(toolbar) {
     let tabs = toolbar.getTabs(); // get all tabs from the toolbar
@@ -70,14 +73,13 @@ export class StatisticsComponent implements OnInit {
     toolbar.getTabs = () => {
       tabs = tabs.slice(2);
       tabs[0].handler = () => {
-        this.child.webDataRocks.save('configs.json', 'server', null, 'http://localhost:8080/hd/statistics/configs', false);
+        this.child.webDataRocks.save('configs', 'server', null,
+          'http://localhost:8080/hd/statistics/configs?userId=' + this.authService.getUserInfo().userId,
+          false);
       };
       // tabs[0].title = 'Save Configs';
       return tabs;
     };
-  }
-
-  constructor() {
   }
   ngOnInit(): void { }
 

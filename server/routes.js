@@ -91,7 +91,9 @@ module.exports = function (router, controllers, authModule, upload, validator) {
     /**
      * Save statistics configs
      */
-    router.post(`/${statistics}/configs`, handle(controllers.statistics.saveConfigs))
+    router.post(`/${statistics}/configs`, [
+        query('userId').exists()
+    ], handle(controllers.statistics.saveConfigs))
 
     /**
      * Get statistics configs

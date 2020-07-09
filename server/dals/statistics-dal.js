@@ -7,10 +7,12 @@ const candidateSchema = require('../schemas/candidate-schema')
 const currentPhaseSchema = require('../schemas/process/process-current-phase.js')
 const reqLanguagesSchema = require('../schemas/request-language-schema')
 
+const statisticsConfigs = require('../schemas/statistics-configs-schema')
+
 module.exports = (query) => {
 
     return {
-        getStatistics,
+        getStatistics, saveConfigs, getConfigs
     }
 
     async function getStatistics() {
@@ -88,4 +90,42 @@ module.exports = (query) => {
             isMandatory: row[reqLanguagesSchema.isMandatory]
         }
     }
+
+    async function getConfigs({userId}) {
+        const statement = {
+            name: 'Get User Statistics Configuration',
+            text:
+                `SELECT * FROM ${statisticsConfigs.table} ` +
+                `WHERE ${statisticsConfigs.userId} = $1;`,
+            values: [userId]
+        }
+
+        const result = await query(statement)
+        if (result.rowCount) {
+            return extractConfigs(result.rows[0])
+        }
+        return null
+    }
+
+    function extractConfigs(row) {
+        return {
+            configs: row[statisticsConfigs.configs]
+        }
+    }
+
+
+    async function saveConfigs({userId, configs}) {
+        const statement = {
+            name: 'Save User Statistics Configuration',
+            text:
+                `INSERT INTO ${statisticsConfigs.table} ` +
+                `(${statisticsConfigs.userId}, ${statisticsConfigs.configs}) ` +
+                `VALUES ($1, $2);`,
+            values: [userId, configs]
+        }
+
+        await query(statement)
+    }
+
+
 }

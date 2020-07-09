@@ -88,6 +88,11 @@ is_active BOOLEAN NOT NULL,
 PRIMARY KEY (user_id)
 );
 
+CREATE TABLE statistics_configs(
+user_id INT,
+configs JSONB NOT NULL,
+PRIMARY KEY (user_id, configs)
+);
 
 CREATE TABLE role(
 role_id INT PRIMARY KEY
