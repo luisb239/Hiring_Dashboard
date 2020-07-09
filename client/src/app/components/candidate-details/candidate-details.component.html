@@ -3,12 +3,14 @@
     <h1>{{properties.candidate.name}}</h1>
     <div class="property">
       <h5 class="inline">CV:</h5>
-      <p class="inline">{{properties.candidate.cv}} cv.docx</p>
+      <h6 class="inline cv" (click)="downloadCv()">{{properties.candidate.cv}}</h6>
     </div>
-    <div>
+    <div class="property">
       <h5>Available?</h5>
-      <div *ngIf="properties.candidate.available" class="circle available"></div>
-      <div *ngIf="!properties.candidate.available" class="circle not_available"></div>
+      <div (click)="properties.candidate.available = !properties.candidate.available" class="click-box">
+        <div *ngIf="properties.candidate.available" class="circle available"></div>
+        <div *ngIf="!properties.candidate.available" class="circle not_available"></div>
+      </div>
     </div>
     <p>{{properties.candidate.profileInfo}}</p>
     <h5>Profiles</h5>
@@ -160,6 +162,6 @@
     </table>
   </div>
   <div class="procs" *ngIf="!properties.requestId && properties.allProcesses.length === 0">
-  <h3>There is no processes.</h3>
+    <h3>There is no processes.</h3>
   </div>
 </div>

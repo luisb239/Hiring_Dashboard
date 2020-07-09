@@ -1,7 +1,7 @@
 export class CandidateDetailsDao {
     id: number;
     name: string;
-    cv: string;
+    cvFileName: string;
     available: boolean;
     profileInfo: string;
 }

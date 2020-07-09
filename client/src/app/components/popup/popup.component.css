@@ -34,3 +34,9 @@
 .click-box {
   width: fit-content;
 }
+
+.cv {
+  color: dodgerblue;
+  text-decoration: underline;
+  cursor: pointer;
+}

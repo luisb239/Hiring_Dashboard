@@ -55,7 +55,7 @@ export class PopupComponent implements OnInit {
         dao.candidate.id,
         dao.candidate.profileInfo,
         dao.candidate.available,
-        dao.candidate.cv)))
+        dao.candidate.cvFileName)))
       .subscribe(result => {
         this.candidate = result;
       }, error => {
@@ -172,6 +172,24 @@ export class PopupComponent implements OnInit {
         alert('Updated Candidate successfully!');
       }, error => {
         console.log(error);
+      });
+  }
+
+  downloadCv() {
+    this.candidateService.downloadCandidateCv(this.candidateId)
+      .subscribe(data => {
+        const blob = new Blob([data], {type: 'application/pdf'});
+        const downloadURL = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = downloadURL;
+        link.download = this.candidate.cv;
+        link.click();
+        /*
+        let pwa = window.open(url);
+        if (!pwa || pwa.closed || typeof pwa.closed == 'undefined') {
+            alert( 'Please disable your Pop-up blocker and try again.');
+        }
+         */
       });
   }
 }

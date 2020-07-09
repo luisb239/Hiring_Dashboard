@@ -42,7 +42,7 @@ export class CandidateDetailsComponent implements OnInit {
           result.id,
           result.profileInfo,
           result.available,
-          result.cv,
+          result.cvFileName,
           dao.profiles.map(pi => pi.profile),
           dao.processes.map(proc => new CandidateProcess(proc.status, proc.requestId)));
 
@@ -106,6 +106,24 @@ export class CandidateDetailsComponent implements OnInit {
           console.log(error);
         });
     }
+  }
+
+  downloadCv() {
+    this.candidateService.downloadCandidateCv(this.properties.candidateId)
+      .subscribe(data => {
+        const blob = new Blob([data], {type: 'application/pdf'});
+        const downloadURL = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = downloadURL;
+        link.download = this.properties.candidate.cv;
+        link.click();
+        /*
+        let pwa = window.open(url);
+        if (!pwa || pwa.closed || typeof pwa.closed == 'undefined') {
+            alert( 'Please disable your Pop-up blocker and try again.');
+        }
+         */
+      });
   }
 
 }

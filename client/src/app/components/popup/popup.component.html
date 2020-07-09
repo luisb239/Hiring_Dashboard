@@ -6,8 +6,8 @@
 </div>
 <div class="modal-body" *ngIf="candidate && process">
   <div class="property">
-    <h5 style="display: inline">CV:</h5>
-    <p style="display: inline">{{candidate.cv || 'cv.docx'}}</p>
+    <h5 class="inline">CV:</h5>
+    <h6 class="inline cv" (click)="downloadCv()">{{candidate.cv}}</h6>
   </div>
   <form [formGroup]="updateForm" (submit)="updateCandidate()">
     <div>

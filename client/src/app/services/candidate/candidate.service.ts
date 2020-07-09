@@ -63,9 +63,8 @@ export class CandidateService {
 
   addCandidate(name: string, candidateCv: File) {
     const formData: FormData = new FormData();
-    formData.append('fileKey', candidateCv, candidateCv.name);
+    formData.append('cv', candidateCv, candidateCv.name);
     formData.append('name', name);
-    console.log(formData);
     return this.http
       .post(`${this.baseUrl}/candidates`, formData, {
         headers: new HttpHeaders({enctype: 'multipart/form-data'}),
@@ -80,5 +79,12 @@ export class CandidateService {
           return data;
         },
         catchError(this.errorHandler.handleError));
+  }
+
+  downloadCandidateCv(candidateId: number): any {
+    const options = {
+      responseType: 'blob' as 'json'
+    };
+    return this.http.get(`${this.baseUrl}/candidates/${candidateId}/download-cv`, options);
   }
 }
