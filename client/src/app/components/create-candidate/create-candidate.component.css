@@ -3,3 +3,16 @@
   margin-top: 10px;
   background-color: #ffffff;
 }
+
+input {
+  max-width: fit-content;
+}
+
+textarea {
+  max-width: 400px;
+}
+
+#file-label {
+  margin-right: 10px;
+  font-style: italic;
+}
