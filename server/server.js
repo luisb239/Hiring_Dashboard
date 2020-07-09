@@ -3,7 +3,10 @@ const PORT = process.argv[2] || '8080'
 
 const express = require('express')
 const app = express()
+app.use(express.json())
+
 const config = require('./config.js')(app)
+
 const authModule = require('../authization-module/authization')
 
 authModule.setup(config.app, config.dbOptions, config.jsonObj)
@@ -11,7 +14,7 @@ authModule.setup(config.app, config.dbOptions, config.jsonObj)
         const db = require('./dals');
         const services = require('./services')(db, authModule)
         const controllers = require('./controllers')(services)
-        const routes = require('./controllers/routes.js')(express.Router(), controllers, authModule)
+        const routes = require('./routes.js')(express.Router(), controllers, authModule, config.upload, config.validator)
 
         const root = 'hd'
         app.use(`/${root}`, routes)

@@ -11,7 +11,8 @@ module.exports = (query) => {
         getCandidateById,
         getCandidatesByRequestId,
         createCandidate,
-        updateCandidate
+        updateCandidate,
+        getCandidateCvInfo
     }
 
     async function getCandidates({available = null, profiles = null}) {
@@ -62,15 +63,16 @@ module.exports = (query) => {
         return result.rows.map(row => extract(row))
     }
 
-    async function createCandidate({name, cvBuffer, available}) {
+    async function createCandidate({name, cvBuffer, cvMimeType, cvFileName, available = true, profileInfo = null}) {
         const statement = {
             name: 'Create Candidate',
             text:
                 `INSERT INTO ${candidate.table}` +
-                `(${candidate.name}, ${candidate.cv}, ` +
-                `${candidate.available}) ` +
-                `VALUES ($1, $2, $3) RETURNING *;`,
-            values: [name, cvBuffer, available]
+                `(${candidate.name}, ${candidate.cv}, ${candidate.cvMimeType}, ${candidate.cvFileName}, ` +
+                `${candidate.available}, ${candidate.profileInfo}) ` +
+                `VALUES ($1, $2, $3, $4, $5, $6) ` +
+                `RETURNING ${candidate.id}, ${candidate.name}, ${candidate.available}, ${candidate.profileInfo};`,
+            values: [name, cvBuffer, cvMimeType, cvFileName, available, profileInfo]
         }
 
         const result = await query(statement)
@@ -91,14 +93,40 @@ module.exports = (query) => {
         await query(statement)
     }
 
+    async function getCandidateCvInfo({id}) {
+        const statement = {
+            name: 'Get Candidate Cv Info',
+            text:
+                `SELECT ${candidate.cv}, ${candidate.cvFileName}, ${candidate.cvMimeType} ` +
+                `FROM ${candidate.table} ` +
+                `WHERE ${candidate.id} = $1;`,
+            values: [id]
+        }
+
+        const result = await query(statement)
+
+        if (result.rowCount) {
+            return extractCvInfo(result.rows[0])
+        }
+        return null
+    }
+
     function extract(obj) {
         return {
             id: obj[candidate.id],
             name: obj[candidate.name],
-            cv: obj[candidate.cv],
             available: obj[candidate.available],
             profileInfo: obj[candidate.profileInfo],
         }
+    }
+
+    function extractCvInfo(row) {
+        return {
+            cvBuffer: row[candidate.cv],
+            cvFileName: row[candidate.cvFileName],
+            cvMimeType: row[candidate.cvMimeType]
+        }
+
     }
 
 }

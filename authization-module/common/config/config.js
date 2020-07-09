@@ -35,7 +35,7 @@ try {
 }
 
 /**
- * set config.env to be equal to node_env
+ * set config..env to be equal to node_env
  * @type {string}
  */
 config.env = process.env.NODE_ENV

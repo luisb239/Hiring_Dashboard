@@ -9,7 +9,8 @@ module.exports = (candidateDb, profilesDb, processDb) => {
         getCandidates: getCandidates,
         getCandidateById: getCandidateById,
         createCandidate: createCandidate,
-        updateCandidate: updateCandidate
+        updateCandidate: updateCandidate,
+        getCandidateCv: getCandidateCv
     }
 
     async function getCandidates({available = null, profiles = null}) {
@@ -43,9 +44,29 @@ module.exports = (candidateDb, profilesDb, processDb) => {
         await candidateDb.updateCandidate({id, available})
     }
 
-    // TODO
-    async function createCandidate({name, file, available = true}) {
-        const candidate = await candidateDb.createCandidate({name, cvBuffer: file.data, available})
-        return {id: candidate.id}
+    async function createCandidate({name, cvFileName, cvMimeType, cvFileBuffer}) {
+        const candidate = await candidateDb.createCandidate({
+            name: name,
+            cvBuffer: cvFileBuffer,
+            cvMimeType: cvMimeType,
+            cvFileName: cvFileName,
+        })
+        return {
+            id: candidate.id
+        }
+    }
+
+    async function getCandidateCv({id}) {
+        const cvFileInfo = await candidateDb.getCandidateCvInfo({
+            id
+        })
+
+        if (!cvFileInfo)
+            throw new AppError(errors.notFound, "Candidate Cv Not Found", "Candidate does not exist, or doesnt have a cv")
+        return {
+            cv: cvFileInfo.cvBuffer,
+            mimeType: cvFileInfo.cvMimeType,
+            fileName: cvFileInfo.cvFileName
+        }
     }
 }

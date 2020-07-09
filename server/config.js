@@ -1,16 +1,12 @@
 require("dotenv").config();
 
 module.exports = (app) => {
-
-    const fileUpload = require('express-fileupload')
-
     const nodemailer = require("nodemailer")
 
-    const bodyParser = require('body-parser')
+    const multer = require('multer')
+    const upload = multer({storage: multer.memoryStorage()})
 
-    app.use(fileUpload({createParentPath: true}));
-    app.use(bodyParser.json());
-    app.use(bodyParser.urlencoded({extended: true}))
+    const validator = require('express-validator')
 
     const transporter = nodemailer.createTransport(
         {
@@ -96,5 +92,5 @@ module.exports = (app) => {
             ]
         }
     }
-    return {app, transporter, dbOptions, jsonObj}
+    return {app, transporter, dbOptions, jsonObj, upload, validator}
 }

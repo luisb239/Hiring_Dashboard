@@ -38,8 +38,6 @@ function checkAndThrowError(e) {
         throw new DbError(errors.typeErrors.insufficientResources)
     } else if (errorCode === 'P0') {
         throw new DbError(errors.typeErrors.pgSqlError)
-    } else if (errorCode === 'XX') {
-        throw new DbError(errors.typeErrors.internalError)
     } else throw new DbError(errors.typeErrors.internalError)
 }
 
@@ -64,9 +62,10 @@ const processPhases = require('./process/process-phases-dal.js')(query)
 const processInfo = require('./process/process-info-dal.js')(query)
 const reasons = require('./process/unavailable-reasons-dal.js')(query)
 const status = require('./process/status-dal.js')(query)
+const statistics = require('./statistics-dal.js')(query)
 
 module.exports = {
     request, candidate, skill, state, stateCsl, project, profile,
     language, workflow, phase, months, process, user, role, info, requestLanguage,
-    processUnavailableReason, processPhases, processInfo, reasons, status
+    processUnavailableReason, processPhases, processInfo, reasons, status, statistics
 }

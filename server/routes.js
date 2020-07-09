@@ -1,18 +1,18 @@
 'use strict'
 
-const {body, param, query} = require('express-validator')
+const handle = require('./controllers/express-handler.js')
 
-const handle = require('./express-handler.js')
+const verifyIfAuthenticated = require('./controllers/middlewares/verify_authenticated')
 
-const verifyIfAuthenticated = require('./middlewares/verify_authenticated')
+module.exports = function (router, controllers, authModule, upload, validator) {
 
-
-module.exports = function (router, controllers, authModule) {
+    const {body, param, query} = validator
 
     const candidates = 'candidates'
     const requests = 'requests'
     const phases = 'phases'
     const process = 'process'
+    const statistics = 'statistics'
 
     // request attributes
     const requestAttributes = 'requests-properties'
@@ -34,9 +34,7 @@ module.exports = function (router, controllers, authModule) {
             res.redirect("http://localhost:4200/all-requests")
         })
 
-    // TODO -> TEMPORARY
-    //  REDIRECT TO CLIENT SIDE
-
+    // TODO -> TEMPORARY REDIRECT TO CLIENT SIDE
     router.get('/auth/logout', authModule.authenticate.logout, (req, res) => {
         res.redirect("http://localhost:4200/home")
     })
@@ -81,6 +79,24 @@ module.exports = function (router, controllers, authModule) {
         body('mandatoryLanguages').optional().isArray().withMessage("Mandatory Languages must be an array of languages"),
         body('valuedLanguages').optional().isArray().withMessage("Valued Languages  must be an array of languages"),
     ], handle(controllers.request.postRequest))
+
+    // Update Request
+    // router.put(`/${requests}/:id`, )
+
+    /**
+     * Get statistics of all requests
+     */
+    router.get(`/${statistics}`, handle(controllers.statistics.getStatistics))
+
+    /**
+     * Save statistics configs
+     */
+    router.post(`/${statistics}/configs`, handle(controllers))
+
+    /**
+     * Get statistics configs
+     */
+    router.get(`/${statistics}/configs`)
 
     /**
      * Process endpoints common validators
@@ -155,8 +171,6 @@ module.exports = function (router, controllers, authModule) {
         param('phase').isString().withMessage("Phase must be of string type")
     ], handle(controllers.phase.getPhase))
 
-    // Update Request TODO
-    // router.put(`/${requests}/:id`, )
 
     /**
      * Get all skills
@@ -207,7 +221,6 @@ module.exports = function (router, controllers, authModule) {
     router.get(`/${requestAttributes}/${months}`,
         handle(controllers.requestProps.getMonths))
 
-
     /**
      * Get all candidates
      */
@@ -222,21 +235,30 @@ module.exports = function (router, controllers, authModule) {
     router.get(`/${candidates}/:id`, handle(controllers.candidate.getCandidateById))
 
     /**
+     * Download candidate's CV
+     */
+    router.get(`/${candidates}/:id/download-cv`, handle(controllers.candidate.downloadCandidateCv))
+
+    /**
      * Update Candidate Info
      */
 
     //TODO -> MISSING OTHER FIELDS
     router.put(`/${candidates}/:id`, [
-        body('available').exists().isBoolean().withMessage("available must be of string type")
-    ], controllers.candidate.updateCandidate)
+        body('available').exists().isBoolean().withMessage("available must be of string type"),
+    ], handle(controllers.candidate.updateCandidate))
 
     /**
      * Create candidate
      */
-    router.post(`/${candidates}`, handle(controllers.candidate.postCandidate))
+
+    /*
+    TODO -> Validators missing -> name and cv need to exist
+     */
+    router.post(`/${candidates}`, upload.single('cv'), handle(controllers.candidate.postCandidate))
+
 
     //TODO -> CHANGE ROUTES
-
     router.get(`/process/reasons`, handle(controllers.process.getUnavailableReasons))
 
     router.get(`/process/status`, handle(controllers.process.getAllStatus))

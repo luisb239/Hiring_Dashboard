@@ -13,20 +13,19 @@ module.exports = (requestDb, processDb, requestLanguagesDb, authModule, candidat
     }
 
     /**
-     *
+     * Get requests info based on filters passed
      * @param skill : String
      * @param state : String
      * @param stateCsl : String
      * @param profile : String
      * @param project : String
      * @param workflow : String
-     * @param minQuantity : number
-     * @param maxQuantity : number
-     * @param minProgress : number
-     * @param maxProgress : number
-     * @param userId : number
-     * @param roleId : number
-     * @returns all requests
+     * @param minQuantity : ?number
+     * @param maxQuantity : ?number
+     * @param minProgress : ?number
+     * @param maxProgress : ?number
+     * @param userId : ?number
+     * @param roleId : ?number
      */
     async function getRequests({
                                    skill = null, state = null, stateCsl = null,
@@ -35,17 +34,18 @@ module.exports = (requestDb, processDb, requestLanguagesDb, authModule, candidat
                                    minProgress = null, maxProgress = null,
                                    userId = null, roleId = null
                                }) {
-
-        const requests = await requestDb.getRequests({
-            skill, state, stateCsl, profile, project, workflow, minQuantity,
-            maxQuantity, minProgress, maxProgress, userId, roleId
-        })
-
         return {
-            requests: requests
+            requests: await requestDb.getRequests({
+                skill, state, stateCsl, profile, project, workflow, minQuantity,
+                maxQuantity, minProgress, maxProgress, userId, roleId
+            })
         }
     }
 
+    /**
+     * Get Info of Request with id
+     * @param id : number - Request ID
+     */
     async function getRequestById({id}) {
         const requestFound = await requestDb.getRequestById({id})
 
@@ -118,4 +118,5 @@ module.exports = (requestDb, processDb, requestLanguagesDb, authModule, candidat
         await Promise.all(languages.map(async (l) =>
             await requestLanguagesDb.createLanguageRequirement({requestId, language: l, isMandatory})))
     }
+
 }

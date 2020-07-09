@@ -18,7 +18,9 @@ module.exports = (db, authModule) => {
 
     const auth = require('./auth-service.js')(db.user, authModule)
 
+    const statistics = require('./statistics-service.js')(db.statistics, authModule)
+
     return {
-        requestProps, request, candidate, phase, process, auth
+        requestProps, request, candidate, phase, process, auth, statistics
     }
 }

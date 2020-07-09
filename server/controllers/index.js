@@ -14,5 +14,7 @@ module.exports = (service) => {
 
     const auth = require('./auth-controller.js')(service.auth)
 
-    return {request, candidate, requestProps, phase, process, auth}
+    const statistics = require('./statistics-controller.js')(service.statistics)
+
+    return {request, candidate, requestProps, phase, process, auth, statistics}
 }

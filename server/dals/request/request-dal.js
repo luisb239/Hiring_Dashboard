@@ -8,7 +8,7 @@ module.exports = (query) => {
 
     return {
         getRequests, getRequestById, createRequest,
-        getUserRolesInRequest, updateRequest,
+        getUserRolesInRequest, updateRequest
     }
 
     async function getRequests({
@@ -144,7 +144,6 @@ module.exports = (query) => {
         return {
             userId: obj[userRoleSchema.userId],
             roleId: obj[userRoleSchema.roleId],
-
         }
     }
 
@@ -161,9 +160,9 @@ module.exports = (query) => {
             project: obj[requestSchema.project],
             profile: obj[requestSchema.profile],
             workflow: obj[requestSchema.workflow],
-            dateToSendProfile: new Date(obj[requestSchema.dateToSendProfile]).toLocaleDateString(),
+            dateToSendProfile: obj[requestSchema.workflow] ?
+                new Date(obj[requestSchema.dateToSendProfile]).toLocaleDateString() : null,
             progress: obj[requestSchema.progress]
         }
     }
-
 }
