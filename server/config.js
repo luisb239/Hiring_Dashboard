@@ -12,7 +12,7 @@ module.exports = (app) => {
     app.use(bodyParser.json());
     app.use(bodyParser.urlencoded({extended: true}))
 
-    nodemailer.createTransport(
+    const transporter = nodemailer.createTransport(
         {
             pool: true,
             host: process.env.NODEMAILER_HOST,
@@ -26,13 +26,14 @@ module.exports = (app) => {
                 rejectUnauthorized: false
             }
         }
-    ).verify(function (error) {
-            if (error) {
-                console.log(error);
-            } else {
-                console.log("SMTP Server setup was successful.");
-            }
-        });
+    )
+    transporter.verify(function (error) {
+        if (error) {
+            console.log(error);
+        } else {
+            console.log("SMTP Server setup was successful.");
+        }
+    });
     const dbOptions = {
         "host": process.env.PGHOST,
         "port": process.env.PGPORT,
@@ -95,5 +96,5 @@ module.exports = (app) => {
             ]
         }
     }
-    return {app, nodemailer, dbOptions, jsonObj}
+    return {app, transporter, dbOptions, jsonObj}
 }
