@@ -179,14 +179,14 @@ INSERT INTO workflow_phase(workflow, phase, phase_number)
 	('Consulting', 'Job Offer', 3),
 	('Consulting', 'Offer Accepted', 4);
 
-INSERT INTO candidate(name, available, cv)
+INSERT INTO candidate(name, available, cv, cv_mime_type, cv_filename, profile_info)
 	VALUES
-	('Michael Corleone', TRUE, NULL),
-	('Travis Bickle', TRUE, NULL),
-	('Randle McMurphy', TRUE, NULL),
-	('Ellen Ripley', TRUE, NULL),
-	('Bob Belcher', TRUE, NULL),
-	('Troy Barnes', FALSE, NULL);
+	('Michael Corleone', TRUE, NULL, NULL, NULL, NULL),
+	('Travis Bickle', TRUE, NULL, NULL, NULL, NULL),
+	('Randle McMurphy', TRUE, NULL, NULL, NULL, NULL),
+	('Ellen Ripley', TRUE, NULL, NULL, NULL, NULL),
+	('Bob Belcher', TRUE, NULL, NULL, NULL, NULL),
+	('Troy Barnes', FALSE, NULL, NULL, NULL, NULL);
 	
 INSERT INTO candidate_request_profile(candidate_id, profile)
 	VALUES
