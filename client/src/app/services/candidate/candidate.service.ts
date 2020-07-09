@@ -22,11 +22,6 @@ export class CandidateService {
 
   baseUrl = `/hd`;
 
-  getCvAsUrl(cv: Uint8Array[]) {
-    const blob = new Blob(cv, {type: 'application/pdf}'});
-    return URL.createObjectURL(blob);
-  }
-
   getCandidateById(candidateId: number) {
     return this.http.get<CandidateDao>(`${this.baseUrl}/candidates/${candidateId}`, httpOptions)
       .pipe(data => {

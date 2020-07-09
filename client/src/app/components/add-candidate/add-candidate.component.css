@@ -27,6 +27,10 @@ table {
   border-spacing: 10px 10px;
 }
 
+.candidate_name{
+  cursor: pointer;
+}
+
 ​​​​​​​​​​​
 td {
   vertical-align: middle;
