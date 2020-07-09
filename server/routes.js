@@ -91,12 +91,12 @@ module.exports = function (router, controllers, authModule, upload, validator) {
     /**
      * Save statistics configs
      */
-    router.post(`/${statistics}/configs`, handle(controllers))
+    router.post(`/${statistics}/configs`, handle(controllers.statistics.saveConfigs))
 
     /**
      * Get statistics configs
      */
-    router.get(`/${statistics}/configs`)
+    router.get(`/${statistics}/configs`, handle(controllers.statistics.getConfigs))
 
     /**
      * Process endpoints common validators

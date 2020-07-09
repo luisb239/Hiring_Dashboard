@@ -4,6 +4,8 @@ module.exports = (service) => {
 
     return {
         getStatistics,
+        saveConfigs,
+        getConfigs
     }
 
     async function getStatistics(req, res) {
@@ -11,5 +13,13 @@ module.exports = (service) => {
         res.status(200).send(statistics)
     }
 
+    async function saveConfigs(req, res) {
+        console.log(req.body)
+        console.log("testing arguments")
+    }
+
+    async function getConfigs(req, res) {
+
+    }
 
 }
