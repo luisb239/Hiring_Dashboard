@@ -5,6 +5,7 @@ import {CandidateService} from '../../services/candidate/candidate.service';
 import {RequestPropsService} from 'src/app/services/requestProps/requestProps.service';
 import {FormArray, FormBuilder, FormControl, FormGroup} from '@angular/forms';
 import {ProcessService} from '../../services/process/process.service';
+import {map} from 'rxjs/operators';
 
 @Component({
   selector: 'app-add-candidate',
@@ -30,8 +31,9 @@ export class AddCandidateComponent implements OnInit {
   ngOnInit(): void {
     this.getAllCandidates();
     this.requestPropsService.getRequestProfiles()
-      .subscribe(dao => {
-        this.profiles = dao.profiles.map(p => p.profile);
+      .pipe(map(dao => dao.profiles.map(p => p.profile)))
+      .subscribe(result => {
+        this.profiles = result;
       }, error => {
         console.log(error);
       });
@@ -65,10 +67,11 @@ export class AddCandidateComponent implements OnInit {
     values.forEach(idx => {
       this.processService.createProcess(this.requestId, this.candidates[idx].id)
         .subscribe(() => {
-          alert('Candidates added to this request successfully!');
-          this.activeModal.close('Close click');
-          location.reload();
-          }, error => { console.log(error);
+            alert('Candidates added to this request successfully!');
+            this.activeModal.close('Close click');
+            location.reload();
+          }, error => {
+            console.log(error);
           }
         );
     });
@@ -76,9 +79,10 @@ export class AddCandidateComponent implements OnInit {
 
   filterCandidates() {
     this.candidateService.getAllCandidatesWithQueries(this.filterForm.value.profiles, this.filterForm.value.available)
-      .subscribe(dao => {
-        this.candidates = dao.candidates.map(c =>
-          new Candidate(c.name, c.id, c.profileInfo, c.available, c.cv));
+      .pipe(map(dao => dao.candidates.map(c =>
+        new Candidate(c.name, c.id, c.profileInfo, c.available, c.cv))))
+      .subscribe(result => {
+        this.candidates = result;
       }, error => {
         console.log(error);
       });
@@ -86,9 +90,10 @@ export class AddCandidateComponent implements OnInit {
 
   getAllCandidates() {
     this.candidateService.getAllCandidates()
-      .subscribe(dao => {
-        this.candidates = dao.candidates.map(c =>
-          new Candidate(c.name, c.id, c.profileInfo, c.available, c.cv));
+      .pipe(map(dao => dao.candidates.map(c =>
+        new Candidate(c.name, c.id, c.profileInfo, c.available, c.cv))))
+      .subscribe(result => {
+        this.candidates = result;
       }, error => {
         console.log(error);
       });

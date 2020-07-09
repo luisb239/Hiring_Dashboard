@@ -7,7 +7,6 @@ export class RequestDetailProps {
     requestId: number;
     requestList: RequestList;
     userRoles: UserRole[];
-    // languages: LanguageList[];
     mandatoryLanguages: string;
     valuedLanguages: string;
     processes: ProcessList[];

@@ -1,13 +1,14 @@
-import {Component, OnInit, Output} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {RequestList} from '../../model/request/request-list';
 import {RequestService} from '../../services/request/request.service';
 import {RequestPropsService} from '../../services/requestProps/requestProps.service';
 import {WorkflowService} from '../../services/workflow/workflow.service';
-import {NgForm, NgModel} from '@angular/forms';
+import {NgForm} from '@angular/forms';
 import {Router} from '@angular/router';
 import {AllRequestsProps} from './all-requests-props';
 import {RequestsDao} from '../../model/request/requests-dao';
 import {AuthService} from '../../services/auth/auth.service';
+import {map} from 'rxjs/operators';
 
 @Component({
   selector: 'app-all-requests',
@@ -38,54 +39,61 @@ export class AllRequestsComponent implements OnInit {
 
   getFilterParameters() {
     this.reqPropsService.getRequestStates()
-      .subscribe(dao => {
-          this.properties.states = dao.states.map(s => s.state);
+      .pipe(map(dao => dao.states.map(s => s.state)))
+      .subscribe(result => {
+          this.properties.states = result;
         },
         error => {
           console.log(error);
         });
     this.reqPropsService.getRequestStatesCsl()
-      .subscribe(dao => {
-          this.properties.statesCsl = dao.statesCsl.map(s => s.stateCsl);
+      .pipe(map(dao => dao.statesCsl.map(s => s.stateCsl)))
+      .subscribe(result => {
+          this.properties.statesCsl = result;
         },
         error => {
           console.log(error);
         });
     this.reqPropsService.getRequestProjects()
-      .subscribe(dao => {
-          this.properties.projects = dao.projects.map(p => p.project);
+      .pipe(map(dao => dao.projects.map(p => p.project)))
+      .subscribe(result => {
+          this.properties.projects = result;
         },
         error => {
           console.log(error);
         });
 
     this.reqPropsService.getRequestSkills()
-      .subscribe(dao => {
-          this.properties.skills = dao.skills.map(s => s.skill);
+      .pipe(map(dao => dao.skills.map(s => s.skill)))
+      .subscribe(result => {
+          this.properties.skills = result;
         },
         error => {
           console.log(error);
         });
 
     this.reqPropsService.getRequestProfiles()
-      .subscribe(dao => {
-          this.properties.profiles = dao.profiles.map(p => p.profile);
+      .pipe(map(dao => dao.profiles.map(p => p.profile)))
+      .subscribe(result => {
+          this.properties.profiles = result;
         },
         error => {
           console.log(error);
         });
 
     this.workflowService.getAllWorkflows()
-      .subscribe(dao => {
-          this.properties.workflows = dao.workflows.map(w => w.workflow);
+      .pipe(map(dao => dao.workflows.map(w => w.workflow)))
+      .subscribe(result => {
+          this.properties.workflows = result;
         },
         error => {
           console.log(error);
         });
 
     this.reqPropsService.getTargetDates()
-      .subscribe(dao => {
-          this.properties.targetDates = dao.months.map(m => m.month);
+      .pipe(map(dao => dao.months.map(m => m.month)))
+      .subscribe(result => {
+          this.properties.targetDates = result;
         },
         error => {
           console.log(error);
@@ -93,19 +101,10 @@ export class AllRequestsComponent implements OnInit {
   }
 
   getRequests() {
-    this.requestService.getAllRequests().subscribe(requestDao => {
-        this.setRequests(requestDao);
-      }
-      , error => {
-        console.log(error);
-      }
-    );
-  }
-
-  onSubmit(form: NgForm) {
-    this.requestService.getAllRequestsWithQuery(form.value)
-      .subscribe(requestListDao => {
-          this.setRequests(requestListDao);
+    this.requestService.getAllRequests()
+      .pipe(map(dao => this.mapRequestsDao(dao)))
+      .subscribe(result => {
+          this.properties.requests = result;
         },
         error => {
           console.log(error);
@@ -113,8 +112,20 @@ export class AllRequestsComponent implements OnInit {
       );
   }
 
-  private setRequests(requestDao: RequestsDao) {
-    this.properties.requests = requestDao.requests.map(r => new RequestList(r.id,
+  onSubmit(form: NgForm) {
+    this.requestService.getAllRequestsWithQuery(form.value)
+      .pipe(map(dao => this.mapRequestsDao(dao)))
+      .subscribe(result => {
+          this.properties.requests = result;
+        },
+        error => {
+          console.log(error);
+        }
+      );
+  }
+
+  private mapRequestsDao(requestDao: RequestsDao) {
+    return requestDao.requests.map(r => new RequestList(r.id,
       r.workflow,
       r.progress,
       r.state,

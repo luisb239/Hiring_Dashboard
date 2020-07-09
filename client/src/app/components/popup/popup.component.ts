@@ -1,14 +1,15 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { ProcessPhase } from '../../model/process/process-phase';
-import { PhaseAttribute } from '../../model/phase/phase-attribute';
-import { Candidate } from 'src/app/model/candidate/candidate';
-import { Process } from '../../model/process/process';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
-import { ProcessService } from '../../services/process/process.service';
-import { CandidateService } from '../../services/candidate/candidate.service';
-import { PhaseService } from '../../services/phase/phase.service';
-import { ProcessPhaseService } from '../../services/process-phase/process-phase.service';
+import {Component, Input, OnInit} from '@angular/core';
+import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
+import {ProcessPhase} from '../../model/process/process-phase';
+import {PhaseAttribute} from '../../model/phase/phase-attribute';
+import {Candidate} from 'src/app/model/candidate/candidate';
+import {Process} from '../../model/process/process';
+import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
+import {ProcessService} from '../../services/process/process.service';
+import {CandidateService} from '../../services/candidate/candidate.service';
+import {PhaseService} from '../../services/phase/phase.service';
+import {ProcessPhaseService} from '../../services/process-phase/process-phase.service';
+import {map} from 'rxjs/operators';
 
 @Component({
   selector: 'app-popup',
@@ -50,12 +51,13 @@ export class PopupComponent implements OnInit {
   ngOnInit(): void {
 
     this.candidateService.getCandidateById(this.candidateId)
-      .subscribe(dao => {
-        this.candidate = new Candidate(dao.candidate.name,
-          dao.candidate.id,
-          dao.candidate.profileInfo,
-          dao.candidate.available,
-          dao.candidate.cv);
+      .pipe(map(dao => new Candidate(dao.candidate.name,
+        dao.candidate.id,
+        dao.candidate.profileInfo,
+        dao.candidate.available,
+        dao.candidate.cv)))
+      .subscribe(result => {
+        this.candidate = result;
       }, error => {
         console.log(error);
       });
@@ -100,7 +102,7 @@ export class PopupComponent implements OnInit {
             this.updateForm.addControl(pi.name, new FormControl());
             this.attributeTemplates.push(new PhaseAttribute(pi.name, pi.value.name, pi.value.type));
           }
-          );
+        );
 
         this.processService.getProcess(this.requestId, this.candidateId)
           .subscribe(processDao => {
@@ -119,11 +121,11 @@ export class PopupComponent implements OnInit {
   updateCandidate() {
     const attributeArray = [];
     this.attributeTemplates.forEach(att => {
-      const res = this.updateForm.value[att.name];
-      if (res !== null && res !== att.value) {
-        attributeArray.push({ name: att.name, value: res });
+        const res = this.updateForm.value[att.name];
+        if (res !== null && res !== att.value) {
+          attributeArray.push({name: att.name, value: res});
+        }
       }
-    }
     );
     const body: { status?: string, unavailableReason?: string, infos?: any[] } = {};
 
@@ -145,12 +147,12 @@ export class PopupComponent implements OnInit {
         this.candidateId,
         body
       ).subscribe(dao => {
-        if (body.status) {
-          location.reload();
+          if (body.status) {
+            location.reload();
+          }
+        }, error => {
+          console.log(error);
         }
-      }, error => {
-        console.log(error);
-      }
       );
     }
     if (this.phase.notes !== this.updateForm.value.phaseNotes) {

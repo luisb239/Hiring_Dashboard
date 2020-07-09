@@ -16,17 +16,18 @@
   </button>
   <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
     <div class="navbar-nav">
-      <a *ngIf="!authService.isAuthenticated()" [routerLinkActive]="['active']" [routerLink]="['/home']" class="nav-item nav-link"><h6>Home</h6></a>
+      <a *ngIf="!authService.isAuthenticated()" [routerLinkActive]="['active']" [routerLink]="['/home']"
+         class="nav-item nav-link"><h6>Home</h6></a>
       <a *ngIf="!authService.isAuthenticated()" [routerLinkActive]="['active']" [routerLink]="['/log-in']"
          class="nav-item nav-link"><h6>Log In</h6></a>
       <a *ngIf="authService.isAuthenticated()" [routerLinkActive]="['active']" [routerLink]="['/all-requests']"
-      class="nav-item nav-link"><h6>All Requests</h6></a>
+         class="nav-item nav-link"><h6>All Requests</h6></a>
       <a *ngIf="authService.isAuthenticated()" [routerLinkActive]="['active']" [routerLink]="['/board']"
-      class="nav-item nav-link"><h6>Board</h6></a>
+         class="nav-item nav-link"><h6>Board</h6></a>
       <a *ngIf="authService.isAuthenticated()" [routerLinkActive]="['active']" [routerLink]="['/create-request']"
-      class="nav-item nav-link"><h6>Create Request</h6></a>
+         class="nav-item nav-link"><h6>Create Request</h6></a>
       <a *ngIf="authService.isAuthenticated()" [routerLinkActive]="['active']" [routerLink]="['/statistics']"
-      class="nav-item nav-link"><h6>Statistics</h6></a>
+         class="nav-item nav-link"><h6>Statistics</h6></a>
       <a *ngIf="authService.isAuthenticated()" [routerLinkActive]="['active']" [routerLink]="['/logout']"
          class="nav-item nav-link"><h6>Logout</h6></a>
     </div>
