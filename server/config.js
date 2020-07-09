@@ -4,7 +4,7 @@ module.exports = (app) => {
     const nodemailer = require("nodemailer")
 
     const multer = require('multer')
-    const upload = multer({storage: multer.memoryStorage()})
+    const upload = multer({ storage: multer.memoryStorage() })
 
     const validator = require('express-validator')
 
@@ -43,54 +43,59 @@ module.exports = (app) => {
     const jsonObj = {
         "roles": ["admin", "recruiter", "jobOwner", "guest"],
         "permissions": [
-            {"resource": "auth", "action": "GET"},
-            {"resource": "auth", "action": "POST"},
+            { "resource": "auth", "action": "GET" },
+            { "resource": "auth", "action": "POST" },
 
-            {"resource": "requests", "action": "GET"},
-            {"resource": "requests", "action": "POST"},
-            {"resource": "requests", "action": "PUT"},
+            { "resource": "requests", "action": "GET" },
+            { "resource": "requests", "action": "POST" },
+            { "resource": "requests", "action": "PUT" },
 
-            {"resource": "workflows", "action": "GET"},
+            { "resource": "workflows", "action": "GET" },
 
-            {"resource": "phases", "action": "GET"},
+            { "resource": "phases", "action": "GET" },
 
-            {"resource": "requests-properties", "action": "GET"},
+            { "resource": "requests-properties", "action": "GET" },
 
-            {"resource": "candidates", "action": "GET"},
-            {"resource": "candidates", "action": "POST"},
-            {"resource": "candidates", "action": "PUT"},
+            { "resource": "candidates", "action": "GET" },
+            { "resource": "candidates", "action": "POST" },
+            { "resource": "candidates", "action": "PUT" },
 
-            {"resource": "process", "action": "GET"}
+            { "resource": "process", "action": "GET" },
+
+            { "resource": "statistics", "action": "GET" },
+            { "resource": "statistics", "action": "POST" }
 
         ],
         "grants": {
             //TODO -> guest permissions
             "guest": [
-                {"resource": "auth", "action": "GET"},
-                {"resource": "auth", "action": "POST"},
+                { "resource": "auth", "action": "GET" },
+                { "resource": "auth", "action": "POST" },
 
-                {"resource": "requests", "action": "GET"},
-                {"resource": "requests", "action": "POST"},
-                {"resource": "requests", "action": "PUT"},
+                { "resource": "requests", "action": "GET" },
+                { "resource": "requests", "action": "POST" },
+                { "resource": "requests", "action": "PUT" },
 
-                {"resource": "workflows", "action": "GET"},
-                {"resource": "phases", "action": "GET"},
-                {"resource": "requests-properties", "action": "GET"},
-                {"resource": "candidates", "action": "GET"},
-                {"resource": "candidates", "action": "POST"},
-                {"resource": "candidates", "action": "PUT"},
-                {"resource": "process", "action": "GET"},
+                { "resource": "workflows", "action": "GET" },
+                { "resource": "phases", "action": "GET" },
+                { "resource": "requests-properties", "action": "GET" },
+                { "resource": "candidates", "action": "GET" },
+                { "resource": "candidates", "action": "POST" },
+                { "resource": "candidates", "action": "PUT" },
+                { "resource": "process", "action": "GET" },
+                { "resource": "statistics", "action": "GET" },
+                { "resource": "statistics", "action": "POST" }
             ],
             "recruiter": [
-                {"role": "guest"}
+                { "role": "guest" }
             ],
             "jobOwner": [
-                {"role": "guest"}
+                { "role": "guest" }
             ],
             "admin": [
-                {"role": "guest"}
+                { "role": "guest" }
             ]
         }
     }
-    return {app, transporter, dbOptions, jsonObj, upload, validator}
+    return { app, transporter, dbOptions, jsonObj, upload, validator }
 }

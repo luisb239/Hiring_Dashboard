@@ -16,30 +16,67 @@ export class StatisticsComponent implements OnInit {
   }
 
   onCustomizeCell(cell: WebDataRocks.CellBuilder, data: WebDataRocks.CellData): void {
-    //console.log('[customizeCell] WebDataRocksPivot');
-    if (data.isClassicTotalRow) cell.addClass('fm-total-classic-r');
-    if (data.isGrandTotalRow) cell.addClass('fm-grand-total-r');
-    if (data.isGrandTotalColumn) cell.addClass('fm-grand-total-c');
+    if (data.isClassicTotalRow) {
+      cell.addClass('fm-total-classic-r');
+    }
+    if (data.isGrandTotalRow) {
+      cell.addClass('fm-grand-total-r');
+    }
+    if (data.isGrandTotalColumn) {
+      cell.addClass('fm-grand-total-c');
+    }
   }
 
   onReportComplete(): void {
     this.child.webDataRocks.off('reportcomplete');
     this.child.webDataRocks.setReport({
       dataSource: {
-        filename: 'https://cdn.webdatarocks.com/data/data.json'
+        dataSourceType: 'json',
+        // filename: '../../../assets/estatisticas.json'
+        filename: 'http://localhost:8080/hd/statistics'
+      },
+      options: {
+        grid: {
+          type: 'compact',
+          showTotals: 'off',
+          showGrandTotals: 'on'
+        }
+      },
+      slice: {
+        rows: [
+          { uniqueName: 'project' }, { uniqueName: 'profile' }
+        ],
+        columns: [
+          {
+            uniqueName: 'status'
+          },
+          {
+            uniqueName: 'Measures'
+          }
+        ],
+        measures: [{
+          uniqueName: 'candidateName',
+          aggregation: 'distinctcount'
+        }]
       }
     });
   }
 
+
+
   customizeToolbar(toolbar) {
-    const tabs = toolbar.getTabs(); // get all tabs from the toolbar
-    console.log(tabs);
+    let tabs = toolbar.getTabs(); // get all tabs from the toolbar
+    // toolbar.Labels.save = 'Save Configs';
     toolbar.getTabs = () => {
-      delete tabs[0]; // delete the first tab
-      delete tabs[1]; // delete the second tab
+      tabs = tabs.slice(2);
+      tabs[0].handler = () => {
+        this.child.webDataRocks.save('configs.json', 'server', null, 'http://localhost:8080/hd/statistics/configs', false);
+      };
+      // tabs[0].title = 'Save Configs';
       return tabs;
     };
   }
+
   constructor() {
   }
   ngOnInit(): void { }
