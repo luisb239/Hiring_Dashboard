@@ -6,6 +6,7 @@ import {RequestPropsService} from 'src/app/services/requestProps/requestProps.se
 import {FormArray, FormBuilder, FormControl, FormGroup} from '@angular/forms';
 import {ProcessService} from '../../services/process/process.service';
 import {map} from 'rxjs/operators';
+import {RequestService} from '../../services/request/request.service';
 
 @Component({
   selector: 'app-add-candidate',
@@ -19,17 +20,28 @@ export class AddCandidateComponent implements OnInit {
   profiles: string[];
   candidateForm: FormGroup;
   filterForm: FormGroup;
+  existingCandidates: number[];
 
   constructor(
     public activeModal: NgbActiveModal,
     private candidateService: CandidateService,
     private requestPropsService: RequestPropsService,
     private processService: ProcessService,
+    private requestService: RequestService,
     private formBuilder: FormBuilder) {
   }
 
   ngOnInit(): void {
-    this.getAllCandidates();
+    this.requestService.getRequest(this.requestId)
+      .pipe(map(dao => {
+        return dao.processes
+          .map(processDao => processDao.candidate.id);
+      }))
+      .subscribe(result => {
+        this.existingCandidates = result;
+        this.getAllCandidates();
+      }, error => console.log(error));
+
     this.requestPropsService.getRequestProfiles()
       .pipe(map(dao => dao.profiles.map(p => p.profile)))
       .subscribe(result => {
@@ -79,7 +91,9 @@ export class AddCandidateComponent implements OnInit {
 
   filterCandidates() {
     this.candidateService.getAllCandidatesWithQueries(this.filterForm.value.profiles, this.filterForm.value.available)
-      .pipe(map(dao => dao.candidates.map(c =>
+      .pipe(map(dao => dao.candidates.filter(
+        candidate => !this.existingCandidates.includes(candidate.id)
+      ).map(c =>
         new Candidate(c.name, c.id, c.profileInfo, c.available, c.cvFileName))))
       .subscribe(result => {
         this.candidates = result;
@@ -90,8 +104,14 @@ export class AddCandidateComponent implements OnInit {
 
   getAllCandidates() {
     this.candidateService.getAllCandidates()
-      .pipe(map(dao => dao.candidates.map(c =>
-        new Candidate(c.name, c.id, c.profileInfo, c.available, c.cvFileName))))
+      .pipe(
+        map(dao => dao.candidates.filter(
+          candidate => !this.existingCandidates.includes(candidate.id))
+          .map(c =>
+            new Candidate(c.name, c.id, c.profileInfo, c.available, c.cvFileName)
+          )
+        )
+      )
       .subscribe(result => {
         this.candidates = result;
       }, error => {

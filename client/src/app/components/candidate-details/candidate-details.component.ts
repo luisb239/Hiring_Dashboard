@@ -12,6 +12,9 @@ import {RequestList} from '../../model/request/request-list';
 import {PhaseInfo} from '../../model/phase/phase-info';
 import {CandidateProcess} from '../../model/candidate/candidate-process';
 import {CandidateDetailsProps} from './candidate-details-props';
+import {FormBuilder} from '@angular/forms';
+import {map} from 'rxjs/operators';
+import {RequestPropsService} from '../../services/requestProps/requestProps.service';
 
 
 @Component({
@@ -26,8 +29,9 @@ export class CandidateDetailsComponent implements OnInit {
   constructor(private candidateService: CandidateService,
               private requestService: RequestService,
               private processService: ProcessService,
+              private requestPropsService: RequestPropsService,
               private router: Router,
-              private location: Location
+              // private formBuilder: FormBuilder
   ) {
   }
 
@@ -81,6 +85,20 @@ export class CandidateDetailsComponent implements OnInit {
         console.log(error);
       });
 
+    this.requestPropsService.getRequestProfiles()
+      .pipe(map(dao => dao.profiles.map(p => p.profile)))
+      .subscribe(result => {
+        this.properties.profiles = result;
+      }, error => {
+        console.log(error);
+      });
+
+    // this.properties.updateForm = this.formBuilder.group({
+    //   cv: this.formBuilder.control(''),
+    //   profiles: this.formBuilder.control([]),
+    //   info: this.formBuilder.control('')
+    // });
+
     if (this.properties.requestId) {
       this.requestService.getRequest(this.properties.requestId)
         .subscribe(dao => {
@@ -125,5 +143,10 @@ export class CandidateDetailsComponent implements OnInit {
          */
       });
   }
+
+  // handleFileInput(files: FileList) {
+  //   // Check if filesList size == 1
+  //   this.properties.updateForm.value.cv = files.item(0);
+  // }
 
 }

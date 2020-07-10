@@ -56,12 +56,18 @@ export class CandidateService {
         catchError(this.errorHandler.handleError));
   }
 
-  addCandidate(name: string, candidateCv: File) {
+  addCandidate(body: any) {
     const formData: FormData = new FormData();
-    formData.append('cv', candidateCv, candidateCv.name);
-    formData.append('name', name);
+    formData.append('cv', body.cv, body.cv.name);
+    formData.append('name', body.name);
+    if (body.info) {
+      formData.append('profileInfo', body.info);
+    }
+    if (body.profiles) {
+      body.profiles.forEach(profile => formData.append('profiles', profile));
+    }
     return this.http
-      .post(`${this.baseUrl}/candidates`, formData, {
+      .post<any>(`${this.baseUrl}/candidates`, formData, {
         headers: new HttpHeaders({enctype: 'multipart/form-data'}),
       })
       .pipe(data => data, catchError(this.errorHandler.handleError));

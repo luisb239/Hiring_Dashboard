@@ -43,7 +43,6 @@ export class ProcessService {
   }
 
   updateProcess(requestId: number, candidateId: number, body: any) {
-    // const body = {status, unavailableReason, infos};
     return this.http.put(`${this.baseUrl}/requests/${requestId}/candidates/${candidateId}/process`, body,
       {
         headers: new HttpHeaders({'Content-Type': 'application/json'})
