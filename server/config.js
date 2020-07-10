@@ -63,7 +63,8 @@ module.exports = (app) => {
             { "resource": "process", "action": "GET" },
 
             { "resource": "statistics", "action": "GET" },
-            { "resource": "statistics", "action": "POST" }
+            { "resource": "users", "action": "GET" },
+            { "resource": "users", "action": "POST" }
 
         ],
         "grants": {
@@ -84,7 +85,8 @@ module.exports = (app) => {
                 { "resource": "candidates", "action": "PUT" },
                 { "resource": "process", "action": "GET" },
                 { "resource": "statistics", "action": "GET" },
-                { "resource": "statistics", "action": "POST" }
+                { "resource": "users", "action": "GET" },
+                { "resource": "users", "action": "POST" }
             ],
             "recruiter": [
                 { "role": "guest" }

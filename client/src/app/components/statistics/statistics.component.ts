@@ -2,7 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { ViewChild } from '@angular/core';
 import { WebDataRocksPivotComponent } from '../../webdatarocks/webdatarocks.angular4';
 import * as WebDataRocks from 'webdatarocks';
-import {AuthService} from '../../services/auth/auth.service';
+import { AuthService } from '../../services/auth/auth.service';
+import { StatisticsProps } from './statistics-props';
 
 @Component({
   selector: 'app-statistics',
@@ -11,6 +12,7 @@ import {AuthService} from '../../services/auth/auth.service';
 })
 export class StatisticsComponent implements OnInit {
   @ViewChild('pivot1') child: WebDataRocksPivotComponent;
+  properties: StatisticsProps = new StatisticsProps();
 
   onPivotReady(pivot: WebDataRocks.Pivot): void {
     console.log('[ready] WebDataRocksPivot', this.child);
@@ -33,7 +35,6 @@ export class StatisticsComponent implements OnInit {
     this.child.webDataRocks.setReport({
       dataSource: {
         dataSourceType: 'json',
-        // filename: '../../../assets/estatisticas.json'
         filename: 'http://localhost:8080/hd/statistics'
       },
       options: {
@@ -63,21 +64,30 @@ export class StatisticsComponent implements OnInit {
     });
   }
 
-
   constructor(public authService: AuthService) {
   }
 
   customizeToolbar(toolbar) {
-    let tabs = toolbar.getTabs(); // get all tabs from the toolbar
-    // toolbar.Labels.save = 'Save Configs';
+    // get all tabs from the toolbar
+    let tabs = toolbar.getTabs();
     toolbar.getTabs = () => {
-      tabs = tabs.slice(2);
-      tabs[0].handler = () => {
-        this.child.webDataRocks.save('configs', 'server', null,
-          'http://localhost:8080/hd/statistics/configs?userId=' + this.authService.getUserInfo().userId,
-          false);
-      };
-      // tabs[0].title = 'Save Configs';
+      // removes unecessary tabs and adds custom ones
+      tabs = tabs.slice(3);
+      tabs.unshift({
+        title: 'Load', id: 'wdr-tab-load',
+        handler: () => this.child.webDataRocks.load(
+          `http://localhost:8080/hd/users/${this.authService.getUserInfo().userId}/statistics/configs`),
+        mobile: false, icon: this.properties.loadIcon
+      });
+      tabs.unshift({
+        title: 'Save', id: 'wdr-tab-save',
+        handler: () => {
+          this.child.webDataRocks.save('configs', 'server', null,
+            `http://localhost:8080/hd/users/${this.authService.getUserInfo().userId}/statistics/configs`,
+            false);
+        },
+        mobile: false, icon: this.properties.saveIcon
+      });
       return tabs;
     };
   }
