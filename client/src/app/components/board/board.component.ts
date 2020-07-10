@@ -41,7 +41,6 @@ export class BoardComponent implements OnInit {
 
   properties: BoardProps = new BoardProps();
 
-
   ngOnInit(): void {
     const user: User = this.authService.getUserInfo();
     this.requestService.getRequestsByUser(user.userId, user.roles[0].roleId)
@@ -57,23 +56,27 @@ export class BoardComponent implements OnInit {
                 workflow.requests = this.properties.requests.filter(req => req.workflow === workflow.workflow);
                 workflow.requests.forEach(request => {
                   request.phases = workflow.phases;
-                  this.processService.getProcessesByRequest(request.id)
-                    .subscribe(dao => {
-                      request.phases.forEach(phase => {
-                        phase.candidates = dao.processes
-                          .filter(process => process.phase === phase.name)
-                          .map(process => new Candidate(process.candidate.name, process.candidate.id));
-                      });
-                      request.placedCandidates = dao.processes.filter(proc => proc.status === 'Placed').length;
-                    }, error => {
-                      console.log(error);
-                    });
+                  this.fetchProcessesInRequest(request);
                 });
               }, error => {
                 console.log(error);
               });
           });
         });
+  }
+
+  fetchProcessesInRequest(request: RequestList) {
+    this.processService.getProcessesByRequest(request.id)
+      .subscribe(dao => {
+        request.phases.forEach(phase => {
+          phase.candidates = dao.processes
+            .filter(process => process.phase === phase.name)
+            .map(process => new Candidate(process.candidate.name, process.candidate.id));
+        });
+        request.placedCandidates = dao.processes.filter(proc => proc.status === 'Placed').length;
+      }, error => {
+        console.log(error);
+      });
   }
 
   drop(event: CdkDragDrop<Candidate[], any>, requestId: number, newPhase: string) {
@@ -97,9 +100,12 @@ export class BoardComponent implements OnInit {
     modalRef.componentInstance.phaseName = phaseName;
   }
 
-  addCandidate(requestId: number) {
+  addCandidate(request: RequestList) {
     const modalRef = this.modalService.open(AddCandidateComponent);
-    modalRef.componentInstance.requestId = requestId;
+    modalRef.componentInstance.request = request;
+    modalRef.componentInstance.candidateAdded.subscribe(() => {
+      this.fetchProcessesInRequest(request);
+    });
   }
 
   hide(event: any, request: RequestList) {

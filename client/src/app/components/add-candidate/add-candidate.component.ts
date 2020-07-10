@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {Candidate} from '../../model/candidate/candidate';
 import {CandidateService} from '../../services/candidate/candidate.service';
@@ -7,6 +7,7 @@ import {FormArray, FormBuilder, FormControl, FormGroup} from '@angular/forms';
 import {ProcessService} from '../../services/process/process.service';
 import {map} from 'rxjs/operators';
 import {RequestService} from '../../services/request/request.service';
+import {RequestList} from '../../model/request/request-list';
 
 @Component({
   selector: 'app-add-candidate',
@@ -15,7 +16,8 @@ import {RequestService} from '../../services/request/request.service';
 })
 export class AddCandidateComponent implements OnInit {
 
-  @Input() requestId: number;
+  @Input() request: RequestList;
+  @Output() candidateAdded = new EventEmitter();
   candidates: Candidate[];
   profiles: string[];
   candidateForm: FormGroup;
@@ -32,7 +34,7 @@ export class AddCandidateComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.requestService.getRequest(this.requestId)
+    this.requestService.getRequest(this.request.id)
       .pipe(map(dao => {
         return dao.processes
           .map(processDao => processDao.candidate.id);
@@ -77,11 +79,11 @@ export class AddCandidateComponent implements OnInit {
     const values = this.candidateForm.value.candidatesIdx;
     console.log(values);
     values.forEach(idx => {
-      this.processService.createProcess(this.requestId, this.candidates[idx].id)
+      this.processService.createProcess(this.request.id, this.candidates[idx].id)
         .subscribe(() => {
             alert('Candidates added to this request successfully!');
-            this.activeModal.close('Close click');
-            location.reload();
+          this.activeModal.close('Close click');
+          this.candidateAdded.emit();
           }, error => {
             console.log(error);
           }

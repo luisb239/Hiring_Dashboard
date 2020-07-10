@@ -36,7 +36,7 @@
                  [cdkDragData]="candidate"
                  cdkDrag
                  (click)="onClick(candidate.id, request.id, phase.name)"><h6>{{ candidate.name }}</h6></div>
-            <div class="hidden-task" *ngIf="i==0" (click)="addCandidate(request.id)">
+            <div (click)="addCandidate(request)" *ngIf="i==0" class="hidden-task">
               <div class="hidden-text"><h6><span>...</span></h6></div>
             </div>
           </td>
