@@ -63,16 +63,19 @@ module.exports = (query) => {
         return result.rows.map(row => extract(row))
     }
 
-    async function createCandidate({name, cvBuffer, cvMimeType, cvFileName, available = true, profileInfo = null}) {
+    async function createCandidate({
+                                       name, available = true, profileInfo = null,
+                                       cvBuffer, cvMimeType, cvFileName, cvEncoding
+                                   }) {
         const statement = {
             name: 'Create Candidate',
             text:
                 `INSERT INTO ${candidate.table}` +
                 `(${candidate.name}, ${candidate.cv}, ${candidate.cvMimeType}, ${candidate.cvFileName}, ` +
-                `${candidate.available}, ${candidate.profileInfo}) ` +
-                `VALUES ($1, $2, $3, $4, $5, $6) ` +
+                `${candidate.cvEncoding}, ${candidate.available}, ${candidate.profileInfo}) ` +
+                `VALUES ($1, $2, $3, $4, $5, $6, $7) ` +
                 `RETURNING ${candidate.id}, ${candidate.name}, ${candidate.available}, ${candidate.profileInfo};`,
-            values: [name, cvBuffer, cvMimeType, cvFileName, available, profileInfo]
+            values: [name, cvBuffer, cvMimeType, cvFileName, cvEncoding, available, profileInfo]
         }
 
         const result = await query(statement)
@@ -125,7 +128,8 @@ module.exports = (query) => {
         return {
             cvBuffer: row[candidate.cv],
             cvFileName: row[candidate.cvFileName],
-            cvMimeType: row[candidate.cvMimeType]
+            cvMimeType: row[candidate.cvMimeType],
+            cvEncoding: row[candidate.cvEncoding]
         }
 
     }

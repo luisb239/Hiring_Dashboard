@@ -7,6 +7,7 @@ module.exports = {
     cv: 'cv',
     cvMimeType: 'cv_mime_type',
     cvFileName: 'cv_filename',
+    cvEncoding: 'cv_encoding',
     available: 'available',
     profileInfo: 'profile_info',
 }

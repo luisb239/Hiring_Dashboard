@@ -5,7 +5,7 @@ const candidateProfileSchema = require('../../schemas/candidate-profile-schema.j
 
 module.exports = (query) => {
 
-    return {getProfiles, getCandidateProfiles}
+    return {getProfiles, getCandidateProfiles, addProfileToCandidate}
 
     async function getProfiles() {
         const statement = {
@@ -38,5 +38,18 @@ module.exports = (query) => {
         return {
             profile: obj[schema.profile]
         }
+    }
+
+    async function addProfileToCandidate({candidateId, profile}) {
+        const statement = {
+            name: 'Add Profile To Candidate',
+            text:
+                `INSERT INTO ${candidateProfileSchema.table} ` +
+                `(${candidateProfileSchema.candidateId}, ${candidateProfileSchema.profile}) ` +
+                `VALUES ($1, $2);`,
+            values: [candidateId, profile]
+        }
+
+        await query(statement)
     }
 }

@@ -10,7 +10,8 @@ module.exports = (candidateDb, profilesDb, processDb) => {
         getCandidateById: getCandidateById,
         createCandidate: createCandidate,
         updateCandidate: updateCandidate,
-        getCandidateCv: getCandidateCv
+        getCandidateCv: getCandidateCv,
+        addCandidateProfiles: addCandidateProfiles
     }
 
     async function getCandidates({available = null, profiles = null}) {
@@ -44,16 +45,33 @@ module.exports = (candidateDb, profilesDb, processDb) => {
         await candidateDb.updateCandidate({id, available})
     }
 
-    async function createCandidate({name, cvFileName, cvMimeType, cvFileBuffer}) {
+    async function createCandidate({name, profileInfo = null, cvFileName, cvMimeType, cvFileBuffer, cvEncoding}) {
         const candidate = await candidateDb.createCandidate({
             name: name,
+            profileInfo: profileInfo,
             cvBuffer: cvFileBuffer,
             cvMimeType: cvMimeType,
             cvFileName: cvFileName,
+            cvEncoding: cvEncoding
         })
         return {
             id: candidate.id
         }
+    }
+
+    /**
+     * Add profiles to candidate info
+     * @param id : number
+     * @param profiles : [String]
+     * @returns {Promise<void>}
+     */
+    async function addCandidateProfiles({id, profiles}) {
+        await Promise.all(profiles.map(async prof => {
+            await profilesDb.addProfileToCandidate({
+                candidateId: id,
+                profile: prof
+            })
+        }))
     }
 
     async function getCandidateCv({id}) {
@@ -66,7 +84,8 @@ module.exports = (candidateDb, profilesDb, processDb) => {
         return {
             cv: cvFileInfo.cvBuffer,
             mimeType: cvFileInfo.cvMimeType,
-            fileName: cvFileInfo.cvFileName
+            fileName: cvFileInfo.cvFileName,
+            encoding: cvFileInfo.cvEncoding
         }
     }
 }

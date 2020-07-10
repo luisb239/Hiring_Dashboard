@@ -35,16 +35,25 @@ module.exports = (service) => {
     }
 
     async function postCandidate(req, res) {
-        // TODO -> Check if user send file
         const fileInfo = req.file
         const candidate = await service.createCandidate({
             name: req.body.name,
+            profileInfo: req.body.profileInfo,
             cvFileName: fileInfo.originalname,
             cvMimeType: fileInfo.mimetype,
-            cvFileBuffer: fileInfo.buffer
+            cvFileBuffer: fileInfo.buffer,
+            cvEncoding: fileInfo.encoding
         })
+
+        if (req.body.profiles) {
+            await service.addCandidateProfiles({
+                id: candidate.id,
+                profiles: req.body.profiles
+            })
+        }
+
         res.status(201).send({
-            id: `${candidate.id}`,
+            id: candidate.id,
             message: `Candidate added successfully`
         })
     }
@@ -53,14 +62,8 @@ module.exports = (service) => {
         const cvInfo = await service.getCandidateCv({
             id: req.params.id
         })
-
         res.setHeader('Content-disposition', 'attachment; filename=' + cvInfo.fileName);
         res.setHeader('Content-type', cvInfo.mimeType);
-        //"7bit"
-        // TODO -> Save encoding in database also?
-        res.status(200).end(cvInfo.cv, "7bit")
-        /*
-        Send file to response
-         */
+        res.status(200).end(cvInfo.cv, cvInfo.encoding)
     }
 }

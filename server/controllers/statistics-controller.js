@@ -6,8 +6,8 @@ module.exports = (service) => {
 
     return {
         getStatistics,
-        saveConfigs,
-        getConfigs
+        saveUserStatisticsConfigs,
+        getUserStatisticsConfigs
     }
 
 
@@ -16,7 +16,7 @@ module.exports = (service) => {
         res.status(200).send(statistics)
     }
 
-    async function saveConfigs(req, res) {
+    async function saveUserStatisticsConfigs(req, res) {
         await service.saveUserStatisticsConfigs({
             userId: req.query.userId,
             configs: JSON.parse(req.body.report)
@@ -24,7 +24,7 @@ module.exports = (service) => {
         res.status(200).send({})
     }
 
-    async function getConfigs(req, res) {
+    async function getUserStatisticsConfigs(req, res) {
 
     }
 

@@ -6,8 +6,9 @@ const verifyIfAuthenticated = require('./controllers/middlewares/verify_authenti
 
 module.exports = function (router, controllers, authModule, upload, validator) {
 
-    const {body, param, query} = validator
+    const {body, param, query, checkSchema} = validator
 
+    const users = 'users'
     const candidates = 'candidates'
     const requests = 'requests'
     const phases = 'phases'
@@ -89,16 +90,18 @@ module.exports = function (router, controllers, authModule, upload, validator) {
     router.get(`/${statistics}`, handle(controllers.statistics.getStatistics))
 
     /**
-     * Save statistics configs
+     * Save user's statistics configs
      */
-    router.post(`/${statistics}/configs`, [
-        query('userId').exists()
-    ], handle(controllers.statistics.saveConfigs))
+    router.post(`${users}/:id/${statistics}/configs`, [
+        param('id').isInt().withMessage("User Id must be of int type")
+    ], handle(controllers.statistics.saveUserStatisticsConfigs))
 
     /**
-     * Get statistics configs
+     * Get user's statistics configs
      */
-    router.get(`/${statistics}/configs`, handle(controllers.statistics.getConfigs))
+    router.get(`${users}/:id/${statistics}/configs`, [
+        param('id').isInt().withMessage("User Id must be of int type")
+    ], handle(controllers.statistics.getUserStatisticsConfigs))
 
     /**
      * Process endpoints common validators
@@ -257,7 +260,20 @@ module.exports = function (router, controllers, authModule, upload, validator) {
     /*
     TODO -> Validators missing -> name and cv need to exist
      */
-    router.post(`/${candidates}`, upload.single('cv'), handle(controllers.candidate.postCandidate))
+    router.post(`/${candidates}`, [
+        upload.single('cv'),
+        body('name').exists().isString().withMessage("Candidate Name must exist and be of string type"),
+        body('profileInfo').optional().isString().withMessage("Candidate profile info must be of string type"),
+        body('profiles').optional().isArray().withMessage("Candidates profiles must be an array of profiles"),
+        checkSchema({
+            'cv': {
+                custom: {
+                    options: (value, {req}) => !!req.file,
+                    errorMessage: 'Cv file needs to be uploaded',
+                }
+            }
+        })
+    ], handle(controllers.candidate.postCandidate))
 
 
     //TODO -> CHANGE ROUTES
