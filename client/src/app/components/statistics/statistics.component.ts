@@ -72,22 +72,37 @@ export class StatisticsComponent implements OnInit {
     let tabs = toolbar.getTabs();
     toolbar.getTabs = () => {
       // removes unecessary tabs and adds custom ones
-      tabs = tabs.slice(3);
-      tabs.unshift({
-        title: 'Load', id: 'wdr-tab-load',
-        handler: () => this.child.webDataRocks.load(
-          `http://localhost:8080/hd/users/${this.authService.getUserInfo().userId}/statistics/configs`),
-        mobile: false, icon: this.properties.loadIcon
-      });
-      tabs.unshift({
-        title: 'Save', id: 'wdr-tab-save',
-        handler: () => {
-          this.child.webDataRocks.save('configs', 'server', null,
-            `http://localhost:8080/hd/users/${this.authService.getUserInfo().userId}/statistics/configs`,
-            false);
+      tabs = tabs.slice(1);
+      tabs[0].menu[1].handler = () => this.child.webDataRocks.load(
+        `http://localhost:8080/hd/users/${this.authService.getUserInfo().userId}/statistics/configs`);
+      tabs[1].menu = [
+        {
+          title: 'Save locally', id: 'wdr-tab-save-local',
+          handler: tabs[1].handler, mobile: false, icon: this.properties.save_local
         },
-        mobile: false, icon: this.properties.saveIcon
-      });
+        {
+          title: 'Save remotelly', id: 'wdr-tab-save-remote',
+          handler: () => this.child.webDataRocks.save('configs', 'server', null,
+            `http://localhost:8080/hd/users/${this.authService.getUserInfo().userId}/statistics/configs`, false),
+          icon: this.properties.save_remote
+        },
+      ];
+      tabs[1].handler = () => { };
+      // tabs.unshift({
+      //   title: 'Load', id: 'wdr-tab-load',
+      //   handler: () => this.child.webDataRocks.load(
+      //     `http://localhost:8080/hd/users/${this.authService.getUserInfo().userId}/statistics/configs`),
+      //   mobile: false, icon: this.properties.loadIcon
+      // });
+      // tabs.unshift({
+      //   title: 'Save', id: 'wdr-tab-save',
+      //   handler: () => {
+      //     this.child.webDataRocks.save('configs', 'server', null,
+      //       `http://localhost:8080/hd/users/${this.authService.getUserInfo().userId}/statistics/configs`,
+      //       false);
+      //   },
+      //   mobile: false, icon: this.properties.saveIcon
+      // });
       return tabs;
     };
   }
