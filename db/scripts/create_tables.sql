@@ -91,6 +91,7 @@ PRIMARY KEY (user_id)
 CREATE TABLE statistics_configs(
 user_id INT,
 configs JSONB NOT NULL,
+FOREIGN KEY (user_id) REFERENCES user_profile(user_id),
 PRIMARY KEY (user_id, configs)
 );
 

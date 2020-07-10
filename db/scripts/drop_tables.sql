@@ -1,3 +1,4 @@
+DROP TABLE statistics_configs;
 DROP TABLE process_info;
 DROP TABLE phase_info;
 DROP TABLE dynamic_info;

@@ -12,7 +12,7 @@ const statisticsConfigs = require('../schemas/statistics-configs-schema')
 module.exports = (query) => {
 
     return {
-        getStatistics, saveConfigs, getConfigs
+        getStatistics, saveConfigs, getConfigs, updateConfigs
     }
 
     async function getStatistics() {
@@ -109,6 +109,7 @@ module.exports = (query) => {
 
     function extractConfigs(row) {
         return {
+            userId: row[statisticsConfigs.userId],
             configs: row[statisticsConfigs.configs]
         }
     }
@@ -124,6 +125,18 @@ module.exports = (query) => {
             values: [userId, configs]
         }
 
+        await query(statement)
+    }
+
+    async function updateConfigs({userId, configs}) {
+        const statement = {
+            name: 'Update User Statistics Configuration',
+            text:
+                `UPDATE ${statisticsConfigs.table} SET ` +
+                `${statisticsConfigs.configs} = $1 ` +
+                `WHERE ${statisticsConfigs.userId} = $2;`,
+            values: [configs, userId]
+        }
         await query(statement)
     }
 

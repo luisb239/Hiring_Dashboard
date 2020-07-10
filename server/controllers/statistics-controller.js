@@ -18,14 +18,18 @@ module.exports = (service) => {
 
     async function saveUserStatisticsConfigs(req, res) {
         await service.saveUserStatisticsConfigs({
-            userId: req.query.userId,
+            userId: req.params.id,
             configs: JSON.parse(req.body.report)
         })
-        res.status(200).send({})
+        res.status(200).send()
     }
 
     async function getUserStatisticsConfigs(req, res) {
+        const userConfigs = await service.getUserStatisticsConfigs({
+            userId: req.params.id
+        })
 
+        res.status(200).send(userConfigs.configs)
     }
 
 }

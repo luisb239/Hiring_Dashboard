@@ -33,13 +33,26 @@ module.exports = (statisticsDb, authModule) => {
                 "Configs Not Found",
                 `User ${userId} does not have any statistics configs saved`)
         }
+        return {
+            userId: userConfigs.userId,
+            configs: userConfigs.configs
+        }
     }
 
     async function saveUserStatisticsConfigs({userId, configs}) {
-        // TODO -> If already exists -> update, else insert..
-        await statisticsDb.saveConfigs({
-            userId: userId,
-            configs: configs
-        })
+        const userConfigsExists = await statisticsDb.getConfigs({userId})
+
+        if (!userConfigsExists) {
+            await statisticsDb.saveConfigs({
+                userId: userId,
+                configs: configs
+            })
+        } else {
+            await statisticsDb.updateConfigs({
+                userId: userId,
+                configs: configs
+            })
+        }
+
     }
 }

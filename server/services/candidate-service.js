@@ -75,12 +75,14 @@ module.exports = (candidateDb, profilesDb, processDb) => {
     }
 
     async function getCandidateCv({id}) {
-        const cvFileInfo = await candidateDb.getCandidateCvInfo({
-            id
-        })
+        const cvFileInfo = await candidateDb.getCandidateCvInfo({id})
 
-        if (!cvFileInfo)
-            throw new AppError(errors.notFound, "Candidate Cv Not Found", "Candidate does not exist, or doesnt have a cv")
+        if (!cvFileInfo) {
+            throw new AppError(errors.notFound,
+                "Candidate Cv Not Found",
+                "Candidate does not exist, or doesnt have a cv")
+        }
+
         return {
             cv: cvFileInfo.cvBuffer,
             mimeType: cvFileInfo.cvMimeType,

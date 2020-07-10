@@ -92,14 +92,14 @@ module.exports = function (router, controllers, authModule, upload, validator) {
     /**
      * Save user's statistics configs
      */
-    router.post(`${users}/:id/${statistics}/configs`, [
+    router.post(`/${users}/:id/${statistics}/configs`, [
         param('id').isInt().withMessage("User Id must be of int type")
     ], handle(controllers.statistics.saveUserStatisticsConfigs))
 
     /**
      * Get user's statistics configs
      */
-    router.get(`${users}/:id/${statistics}/configs`, [
+    router.get(`/${users}/:id/${statistics}/configs`, [
         param('id').isInt().withMessage("User Id must be of int type")
     ], handle(controllers.statistics.getUserStatisticsConfigs))
 
@@ -275,6 +275,15 @@ module.exports = function (router, controllers, authModule, upload, validator) {
         })
     ], handle(controllers.candidate.postCandidate))
 
+    /*
+    router.post(`/${candidates}/:id/profiles`, [
+        body('profileToAdd').exists().isString().withMessage("Profile to add to candidate")
+    ], handle(controllers.candidate.addProfileToCandidate))
+
+    router.delete(`/${candidates}/:id/profiles/:profile`,
+        handle(controllers.candidate.removeCandidateProfile))
+
+     */
 
     //TODO -> CHANGE ROUTES
     router.get(`/process/reasons`, handle(controllers.process.getUnavailableReasons))
