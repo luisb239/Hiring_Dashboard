@@ -40,11 +40,19 @@ module.exports = (statisticsDb, authModule) => {
     }
 
     async function saveUserStatisticsConfigs({userId, configs}) {
-        // TODO -> If already exists -> update, else insert..
+        const userConfigsExists = await statisticsDb.getConfigs({userId})
 
-        await statisticsDb.saveConfigs({
-            userId: userId,
-            configs: configs
-        })
+        if (!userConfigsExists) {
+            await statisticsDb.saveConfigs({
+                userId: userId,
+                configs: configs
+            })
+        } else {
+            await statisticsDb.updateConfigs({
+                userId: userId,
+                configs: configs
+            })
+        }
+
     }
 }
