@@ -109,6 +109,7 @@ module.exports = (query) => {
 
     function extractConfigs(row) {
         return {
+            userId: row[statisticsConfigs.userId],
             configs: row[statisticsConfigs.configs]
         }
     }

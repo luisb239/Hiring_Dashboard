@@ -92,14 +92,14 @@ module.exports = function (router, controllers, authModule, upload, validator) {
     /**
      * Save user's statistics configs
      */
-    router.post(`${users}/:id/${statistics}/configs`, [
+    router.post(`/${users}/:id/${statistics}/configs`, [
         param('id').isInt().withMessage("User Id must be of int type")
     ], handle(controllers.statistics.saveUserStatisticsConfigs))
 
     /**
      * Get user's statistics configs
      */
-    router.get(`${users}/:id/${statistics}/configs`, [
+    router.get(`/${users}/:id/${statistics}/configs`, [
         param('id').isInt().withMessage("User Id must be of int type")
     ], handle(controllers.statistics.getUserStatisticsConfigs))
 
@@ -264,7 +264,7 @@ module.exports = function (router, controllers, authModule, upload, validator) {
         upload.single('cv'),
         body('name').exists().isString().withMessage("Candidate Name must exist and be of string type"),
         body('profileInfo').optional().isString().withMessage("Candidate profile info must be of string type"),
-        body('profiles').optional().isArray().withMessage("Candidates profiles must be an array of profiles"),
+        //body('profiles').optional().isArray().withMessage("Candidates profiles must be an array of profiles"),
         checkSchema({
             'cv': {
                 custom: {
@@ -274,6 +274,13 @@ module.exports = function (router, controllers, authModule, upload, validator) {
             }
         })
     ], handle(controllers.candidate.postCandidate))
+
+    router.post(`/${candidates}/:id/profiles`, [
+        body('profileToAdd').exists().isString().withMessage("Profile to add to candidate")
+    ])
+
+    router.delete(`/${candidates}/:id/profiles/:profile`,
+        handle(controllers.candidate.removeCandidateProfile))
 
 
     //TODO -> CHANGE ROUTES
