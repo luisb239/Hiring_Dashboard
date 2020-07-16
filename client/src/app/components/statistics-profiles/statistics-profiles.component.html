@@ -1,0 +1,43 @@
+<div class="modal-header">
+    <h4 class="modal-title">Config Profiles</h4>
+    <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body">
+    <form [formGroup]="properties.form">
+        <div *ngIf="this.isSave">
+            <div class="property">
+                <h5 class="inline">New config profile name:</h5>
+                <div class="form-group">
+                    <input required formControlName="createProfileForm" class="form-control" id="profileName"
+                        placeholder="Profile's name" type="text">
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary add" (click)="createProfile()">Create Profile</button>
+        </div>
+        <div *ngIf="!this.isSave">
+            <div class="property">
+                <h5 class="inline">Profiles:</h5>
+                <label>
+                    <select formControlName="getProfileForm" class="custom-select">
+                        <option *ngIf="properties.currentProfile" [selected]="true"
+                            [value]="properties.currentProfile.profileName">
+                            {{properties.currentProfile.profileName}}
+                        </option>
+                        <option *ngIf="!properties.currentProfile" [selected]="true" value="Default">
+                            Default
+                        </option>
+                        <option *ngFor="let profile of properties.configProfiles" [value]="profile.profileName">
+                            {{profile.profileName}}
+                        </option>
+                    </select>
+                </label>
+            </div>
+            <button type="submit" class="btn btn-primary add" (click)="chooseProfile()">Choose Profile</button>
+        </div>
+    </form>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-outline-dark" (click)="activeModal.close('Close click')">Close</button>
+</div>

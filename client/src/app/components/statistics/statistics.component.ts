@@ -4,6 +4,10 @@ import { WebDataRocksPivotComponent } from '../../webdatarocks/webdatarocks.angu
 import * as WebDataRocks from 'webdatarocks';
 import { AuthService } from '../../services/auth/auth.service';
 import { StatisticsProps } from './statistics-props';
+import { StatisticsProfilesComponent } from '../statistics-profiles/statistics-profiles.component';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { StatisticsService } from 'src/app/services/statistics/statistics.service';
+import { saveAs } from 'file-saver';
 
 @Component({
   selector: 'app-statistics',
@@ -64,48 +68,73 @@ export class StatisticsComponent implements OnInit {
     });
   }
 
-  constructor(public authService: AuthService) {
+  constructor(
+    public authService: AuthService,
+    public statisticsService: StatisticsService,
+    private modalService: NgbModal) {
   }
 
+  // TODO improve open UI (maybe delete and customize it)
   customizeToolbar(toolbar) {
     // get all tabs from the toolbar
     let tabs = toolbar.getTabs();
     toolbar.getTabs = () => {
-      // removes unecessary tabs and adds custom ones
+      // removes unecessary tabs and customizes others
       tabs = tabs.slice(1);
-      tabs[0].menu[1].handler = () => this.child.webDataRocks.load(
-        `http://localhost:8080/hd/users/${this.authService.getUserInfo().userId}/statistics/configs`);
+      tabs[0].menu[1].handler = () => this.openRemotelyHandler();
+      tabs[0].menu[0].title = 'Load report';
+      tabs[0].menu[1].title = 'Load configs';
       tabs[1].menu = [
         {
-          title: 'Save locally', id: 'wdr-tab-save-local',
-          handler: tabs[1].handler, mobile: false, icon: this.properties.save_local
+          title: 'Save report', id: 'wdr-tab-save-local',
+          // handler: () => this.child.webDataRocks.save('TestingConfigs.json', 'file', null, null, true),
+          handler: () => this.saveLocallyHandler(),
+          mobile: false, icon: this.properties.save_local
         },
         {
-          title: 'Save remotelly', id: 'wdr-tab-save-remote',
-          handler: () => this.child.webDataRocks.save('configs', 'server', null,
-            `http://localhost:8080/hd/users/${this.authService.getUserInfo().userId}/statistics/configs`, false),
+          title: 'Save configs', id: 'wdr-tab-save-remote',
+          handler: () => this.saveRemotelyHandler(),
           icon: this.properties.save_remote
         },
       ];
       tabs[1].handler = () => { };
-      // tabs.unshift({
-      //   title: 'Load', id: 'wdr-tab-load',
-      //   handler: () => this.child.webDataRocks.load(
-      //     `http://localhost:8080/hd/users/${this.authService.getUserInfo().userId}/statistics/configs`),
-      //   mobile: false, icon: this.properties.loadIcon
-      // });
-      // tabs.unshift({
-      //   title: 'Save', id: 'wdr-tab-save',
-      //   handler: () => {
-      //     this.child.webDataRocks.save('configs', 'server', null,
-      //       `http://localhost:8080/hd/users/${this.authService.getUserInfo().userId}/statistics/configs`,
-      //       false);
-      //   },
-      //   mobile: false, icon: this.properties.saveIcon
-      // });
       return tabs;
     };
   }
-  ngOnInit(): void { }
+  ngOnInit(): void {
+    this.properties.userId = this.authService.getUserInfo().userId;
+  }
+
+  saveLocallyHandler() {
+    this.statisticsService.getStatistics()
+      .subscribe(statistics => {
+        Object.assign(this.properties.myReport, this.child.webDataRocks.getReport());
+        this.properties.myReport.dataSource.data = statistics;
+        // delete this.properties.myReport.dataSource.filename;
+        const st = JSON.stringify(this.properties.myReport);
+        const blob = new Blob([st], { type: 'application/json' });
+        saveAs(blob, `My_configs.json`);
+      }, (error) => {
+        console.log(error);
+      });
+
+  }
+
+  saveRemotelyHandler() {
+    const modalRef = this.modalService.open(StatisticsProfilesComponent);
+    modalRef.componentInstance.userId = this.properties.userId;
+    modalRef.componentInstance.isSave = true;
+    modalRef.componentInstance.inputReport = this.child.webDataRocks.getReport();
+  }
+
+  openRemotelyHandler() {
+    const modalRef = this.modalService.open(StatisticsProfilesComponent);
+    modalRef.componentInstance.userId = this.properties.userId;
+    modalRef.componentInstance.isSave = false;
+    modalRef.componentInstance.profileChosen.subscribe(
+      (profile) => {
+        this.child.webDataRocks.setReport(profile.configs);
+      });
+  }
 
 }

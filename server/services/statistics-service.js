@@ -8,7 +8,8 @@ module.exports = (statisticsDb, authModule) => {
     return {
         getStatistics,
         saveUserStatisticsConfigs,
-        getUserStatisticsConfigs
+        getUserStatisticsConfigs,
+        getUserStatisticsConfigsDetails
     }
 
     async function getStatistics() {
@@ -26,33 +27,18 @@ module.exports = (statisticsDb, authModule) => {
         })
     }
 
-    async function getUserStatisticsConfigs({userId}) {
-        const userConfigs = await statisticsDb.getConfigs({userId})
-        if (!userConfigs) {
-            throw new AppError(errors.notFound,
-                "Configs Not Found",
-                `User ${userId} does not have any statistics configs saved`)
-        }
+    async function getUserStatisticsConfigs({ userId }) {
+        const configs = await statisticsDb.getConfigs({ userId })
         return {
-            userId: userConfigs.userId,
-            configs: userConfigs.configs
+            configs: configs
         }
     }
 
-    async function saveUserStatisticsConfigs({userId, configs}) {
-        const userConfigsExists = await statisticsDb.getConfigs({userId})
+    async function getUserStatisticsConfigsDetails({ userId, profileName }) {
+        return await statisticsDb.getConfigsDetails({ userId, profileName })
+    }
 
-        if (!userConfigsExists) {
-            await statisticsDb.saveConfigs({
-                userId: userId,
-                configs: configs
-            })
-        } else {
-            await statisticsDb.updateConfigs({
-                userId: userId,
-                configs: configs
-            })
-        }
-
+    async function saveUserStatisticsConfigs({ userId, name, configs }) {
+        return await statisticsDb.saveConfigs({ userId: userId, profileName: name, configs })
     }
 }

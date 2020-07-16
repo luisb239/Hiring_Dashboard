@@ -23,6 +23,7 @@ import {MatSelectModule} from '@angular/material/select';
 import {LogoutComponent} from './components/logout/logout.component';
 import {CreateCandidateComponent} from './components/create-candidate/create-candidate.component';
 import {WebDataRocksPivotComponent} from './webdatarocks/webdatarocks.angular4';
+import { StatisticsProfilesComponent } from './components/statistics-profiles/statistics-profiles.component';
 
 @NgModule({
   declarations: [
@@ -39,7 +40,8 @@ import {WebDataRocksPivotComponent} from './webdatarocks/webdatarocks.angular4';
     StatisticsComponent,
     LogoutComponent,
     CreateCandidateComponent,
-    WebDataRocksPivotComponent
+    WebDataRocksPivotComponent,
+    StatisticsProfilesComponent
   ],
   imports: [
     BrowserModule,

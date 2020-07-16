@@ -90,9 +90,10 @@ PRIMARY KEY (user_id)
 
 CREATE TABLE statistics_configs(
 user_id INT,
+profile_name text NOT NULL UNIQUE,
 configs JSONB NOT NULL,
 FOREIGN KEY (user_id) REFERENCES user_profile(user_id),
-PRIMARY KEY (user_id, configs)
+PRIMARY KEY (user_id, profile_name)
 );
 
 CREATE TABLE role(

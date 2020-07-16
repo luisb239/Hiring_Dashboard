@@ -6,7 +6,7 @@ const verifyIfAuthenticated = require('./controllers/middlewares/verify_authenti
 
 module.exports = function (router, controllers, authModule, upload, validator) {
 
-    const {body, param, query, checkSchema} = validator
+    const { body, param, query, checkSchema } = validator
 
     const users = 'users'
     const candidates = 'candidates'
@@ -102,6 +102,14 @@ module.exports = function (router, controllers, authModule, upload, validator) {
     router.get(`/${users}/:id/${statistics}/configs`, [
         param('id').isInt().withMessage("User Id must be of int type")
     ], handle(controllers.statistics.getUserStatisticsConfigs))
+
+    /**
+     * Get user's statistics configs details
+     */
+    router.get(`/${users}/:id/${statistics}/configs/:name`, [
+        param('id').isInt().withMessage("User Id must be of int type"),
+        param('name').isString().withMessage("Profiel Name must be of string type")
+    ], handle(controllers.statistics.getUserStatisticsConfigsDetails))
 
     /**
      * Process endpoints common validators
@@ -268,7 +276,7 @@ module.exports = function (router, controllers, authModule, upload, validator) {
         checkSchema({
             'cv': {
                 custom: {
-                    options: (value, {req}) => !!req.file,
+                    options: (value, { req }) => !!req.file,
                     errorMessage: 'Cv file needs to be uploaded',
                 }
             }

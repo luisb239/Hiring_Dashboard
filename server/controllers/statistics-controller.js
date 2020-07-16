@@ -7,7 +7,8 @@ module.exports = (service) => {
     return {
         getStatistics,
         saveUserStatisticsConfigs,
-        getUserStatisticsConfigs
+        getUserStatisticsConfigs,
+        getUserStatisticsConfigsDetails
     }
 
 
@@ -17,19 +18,32 @@ module.exports = (service) => {
     }
 
     async function saveUserStatisticsConfigs(req, res) {
-        await service.saveUserStatisticsConfigs({
+        const createdProfile = await service.saveUserStatisticsConfigs({
             userId: req.params.id,
-            configs: JSON.parse(req.body.report)
+            name: req.body.name,
+            configs: req.body.report
         })
-        res.status(200).send()
+        res.status(200).send({
+            id: {
+                userId: createdProfile.userId,
+                profileName: createdProfile.profileName
+            }
+        })
     }
 
     async function getUserStatisticsConfigs(req, res) {
         const userConfigs = await service.getUserStatisticsConfigs({
             userId: req.params.id
         })
+        res.status(200).send(userConfigs)
+    }
 
-        res.status(200).send(userConfigs.configs)
+    async function getUserStatisticsConfigsDetails(req, res) {
+        const userConfigs = await service.getUserStatisticsConfigsDetails({
+            userId: req.params.id,
+            profileName: req.params.name
+        })
+        res.status(200).send(userConfigs)
     }
 
 }

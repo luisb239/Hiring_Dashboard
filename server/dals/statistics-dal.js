@@ -12,7 +12,7 @@ const statisticsConfigs = require('../schemas/statistics-configs-schema')
 module.exports = (query) => {
 
     return {
-        getStatistics, saveConfigs, getConfigs, updateConfigs
+        getStatistics, saveConfigs, getConfigs, getConfigsDetails
     }
 
     async function getStatistics() {
@@ -91,7 +91,7 @@ module.exports = (query) => {
         }
     }
 
-    async function getConfigs({userId}) {
+    async function getConfigs({ userId }) {
         const statement = {
             name: 'Get User Statistics Configuration',
             text:
@@ -101,44 +101,66 @@ module.exports = (query) => {
         }
 
         const result = await query(statement)
+        return result.rows.map(row => extractConfigs(row))
+    }
+
+    async function getConfigsDetails({ userId, profileName }) {
+        const statement = {
+            name: 'Get User Statistics Configuration Details',
+            text:
+                `SELECT * FROM ${statisticsConfigs.table} ` +
+                `WHERE ${statisticsConfigs.userId} = $1 AND ${statisticsConfigs.profileName} = $2;`,
+            values: [userId, profileName]
+        }
+
+        const result = await query(statement)
         if (result.rowCount) {
-            return extractConfigs(result.rows[0])
+            return extractConfigsDetails(result.rows[0])
         }
         return null
+    }
+
+    async function saveConfigs({ userId, profileName, configs }) {
+        const statement = {
+            name: 'Save User Statistics Configuration',
+            text:
+                `INSERT INTO ${statisticsConfigs.table} ` +
+                `(${statisticsConfigs.userId}, ${statisticsConfigs.profileName}, ${statisticsConfigs.configs}) ` +
+                `VALUES ($1, $2, $3) ` +
+                `RETURNING ${statisticsConfigs.userId}, ${statisticsConfigs.profileName}`,
+            values: [userId, profileName, configs]
+        }
+
+        const result = await query(statement)
+        return extractConfigs(result.rows[0])
     }
 
     function extractConfigs(row) {
         return {
             userId: row[statisticsConfigs.userId],
+            profileName: row[statisticsConfigs.profileName]
+        }
+    }
+
+    function extractConfigsDetails(row) {
+        return {
+            userId: row[statisticsConfigs.userId],
+            profileName: row[statisticsConfigs.profileName],
             configs: row[statisticsConfigs.configs]
         }
     }
 
-
-    async function saveConfigs({userId, configs}) {
-        const statement = {
-            name: 'Save User Statistics Configuration',
-            text:
-                `INSERT INTO ${statisticsConfigs.table} ` +
-                `(${statisticsConfigs.userId}, ${statisticsConfigs.configs}) ` +
-                `VALUES ($1, $2);`,
-            values: [userId, configs]
-        }
-
-        await query(statement)
-    }
-
-    async function updateConfigs({userId, configs}) {
-        const statement = {
-            name: 'Update User Statistics Configuration',
-            text:
-                `UPDATE ${statisticsConfigs.table} SET ` +
-                `${statisticsConfigs.configs} = $1 ` +
-                `WHERE ${statisticsConfigs.userId} = $2;`,
-            values: [configs, userId]
-        }
-        await query(statement)
-    }
+    // async function updateConfigs({ userId, configs }) {
+    //     const statement = {
+    //         name: 'Update User Statistics Configuration',
+    //         text:
+    //             `UPDATE ${statisticsConfigs.table} SET ` +
+    //             `${statisticsConfigs.configs} = $1` +
+    //             `WHERE ${statisticsConfigs.userId} = $2; `,
+    //         values: [configs, userId]
+    //     }
+    //     await query(statement)
+    // }
 
 
 }
