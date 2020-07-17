@@ -8,6 +8,10 @@ module.exports = (app) => {
 
     const validator = require('express-validator')
 
+    const bodyParser = require('body-parser')
+    app.use(bodyParser.urlencoded({extended: false}))
+    app.use(bodyParser.json());
+
     const transporter = nodemailer.createTransport(
         {
             pool: true,
