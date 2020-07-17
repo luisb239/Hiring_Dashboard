@@ -18,7 +18,6 @@ import {BoardProps} from './board-props';
 import {AddCandidateComponent} from '../add-candidate/add-candidate.component';
 import {AuthService} from '../../services/auth/auth.service';
 import {User} from '../../model/user/user';
-import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-board',

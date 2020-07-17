@@ -33,7 +33,7 @@
     <table>
       <caption style="display: none">Current Processes</caption>
       <tbody>
-      <tr><th></th></tr>
+      <tr><th id="non-visible1"></th></tr>
       <tr>
         <td [colSpan]="properties.currentProcess.phases.length">
           <h5>{{properties.currentRequest.request.description}}</h5>
@@ -79,7 +79,7 @@
       <table *ngFor="let process of properties.allProcesses; index as i">
         <caption style="display: none">Other Processes</caption>
         <tbody>
-        <tr><th></th></tr>
+        <tr><th id="non-visible2"></th></tr>
         <tr>
           <td [colSpan]="process.phases.length">
             <h5>{{properties.allRequests[i].request.description}}</h5>
@@ -126,7 +126,7 @@
     <table *ngFor="let process of properties.allProcesses; index as i">
       <caption style="display: none">All Processes</caption>
       <tbody>
-      <tr><th></th></tr>
+      <tr><th id="non-visible3"></th></tr>
       <tr>
         <td [colSpan]="process.phases.length">
           <h5>{{properties.allRequests[i].request.description}}</h5>

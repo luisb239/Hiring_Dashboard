@@ -18,7 +18,7 @@
       </table>
       <table *ngFor="let request of workflow.requests" [width]="tableContainer.offsetWidth">
         <caption style="display: none">Board Content</caption>
-        <tr><th></th></tr>
+        <tr><th id="non-visible"></th></tr>
         <tr>
           <td class="title-data swim-lane" [colSpan]=workflow.phases.length-1
               [routerLink]="['/request-detail', request.id]">
