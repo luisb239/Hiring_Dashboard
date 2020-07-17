@@ -129,3 +129,23 @@
 td {
   vertical-align: top;
 }
+
+@media only screen and (min-width: 768px) and (max-width: 991px) {
+
+  h3 {
+    font-size: 3.5vmax;
+  }
+
+  h4 {
+    font-size: 2.7vmax;
+  }
+
+  h5 {
+    font-size: 2.5vmax;
+  }
+
+  h6 {
+    font-size: 1.8vmax;
+  }
+
+}
