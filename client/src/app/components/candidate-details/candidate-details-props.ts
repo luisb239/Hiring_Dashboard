@@ -1,7 +1,6 @@
 import {Candidate} from '../../model/candidate/candidate';
 import {Request} from '../../model/request/request';
 import {Process} from '../../model/process/process';
-import {FormGroup} from '@angular/forms';
 
 export class CandidateDetailsProps {
   candidateId: number;
@@ -12,5 +11,4 @@ export class CandidateDetailsProps {
   profiles: string[];
   allProcesses: Process[] = [];
   allRequests: Request[] = [];
-  // updateForm: FormGroup;
 }

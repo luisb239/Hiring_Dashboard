@@ -24,9 +24,9 @@ module.exports = (userDb, authModule) => {
 
     async function getUserRoles({id}) {
         const userRoles = await authModule.userRole.getUserActiveRoles(id)
-        return await Promise.all(userRoles.map(async (userRoles) => ({
-                roleId: userRoles.RoleId,
-                role: (await authModule.role.getSpecificById(userRoles.RoleId)).role
+        return await Promise.all(userRoles.map(async (roles) => ({
+                roleId: roles.RoleId,
+                role: (await authModule.role.getSpecificById(roles.RoleId)).role
             })
         ))
 

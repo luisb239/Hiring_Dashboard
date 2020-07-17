@@ -1,5 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {Location} from '@angular/common';
+import {Component, OnInit} from '@angular/core';
 import {CandidateService} from '../../services/candidate/candidate.service';
 import {Router} from '@angular/router';
 import {Candidate} from 'src/app/model/candidate/candidate';
@@ -12,7 +11,6 @@ import {RequestList} from '../../model/request/request-list';
 import {PhaseInfo} from '../../model/phase/phase-info';
 import {CandidateProcess} from '../../model/candidate/candidate-process';
 import {CandidateDetailsProps} from './candidate-details-props';
-import {FormBuilder} from '@angular/forms';
 import {map} from 'rxjs/operators';
 import {RequestPropsService} from '../../services/requestProps/requestProps.service';
 
@@ -30,8 +28,7 @@ export class CandidateDetailsComponent implements OnInit {
               private requestService: RequestService,
               private processService: ProcessService,
               private requestPropsService: RequestPropsService,
-              private router: Router,
-              // private formBuilder: FormBuilder
+              private router: Router
   ) {
   }
 
@@ -93,12 +90,6 @@ export class CandidateDetailsComponent implements OnInit {
         console.log(error);
       });
 
-    // this.properties.updateForm = this.formBuilder.group({
-    //   cv: this.formBuilder.control(''),
-    //   profiles: this.formBuilder.control([]),
-    //   info: this.formBuilder.control('')
-    // });
-
     if (this.properties.requestId) {
       this.requestService.getRequest(this.properties.requestId)
         .subscribe(dao => {
@@ -135,18 +126,7 @@ export class CandidateDetailsComponent implements OnInit {
         link.href = downloadURL;
         link.download = this.properties.candidate.cv;
         link.click();
-        /*
-        let pwa = window.open(url);
-        if (!pwa || pwa.closed || typeof pwa.closed == 'undefined') {
-            alert( 'Please disable your Pop-up blocker and try again.');
-        }
-         */
       });
   }
-
-  // handleFileInput(files: FileList) {
-  //   // Check if filesList size == 1
-  //   this.properties.updateForm.value.cv = files.item(0);
-  // }
 
 }

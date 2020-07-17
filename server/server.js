@@ -12,11 +12,11 @@ const config = require('./config.js')(app)
 const authModule = require('../authization-module/authization')
 
 authModule.setup(config.app, config.dbOptions, config.jsonObj)
-    .then(async (authModule) => {
+    .then(async (auth) => {
         const db = require('./dals');
-        const services = require('./services')(db, authModule)
+        const services = require('./services')(db, auth)
         const controllers = require('./controllers')(services)
-        const routes = require('./routes.js')(express.Router(), controllers, authModule, config.upload, config.validator)
+        const routes = require('./routes.js')(express.Router(), controllers, auth, config.upload, config.validator)
 
         const root = 'hd'
         app.use(`/${root}`, routes)
