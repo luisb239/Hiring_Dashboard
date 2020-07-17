@@ -35,7 +35,6 @@ export class BoardComponent implements OnInit {
               private phaseService: PhaseService,
               private processPhaseService: ProcessPhaseService,
               private authService: AuthService,
-              private router: Router
   ) {
   }
 
@@ -73,7 +72,7 @@ export class BoardComponent implements OnInit {
             .filter(process => process.phase === phase.name)
             .map(process => new Candidate(process.candidate.name, process.candidate.id));
         });
-        request.placedCandidates = dao.processes.filter(proc => proc.status === 'Placed').length;
+        request.placedCandidates = dao.processes.filter(proc => proc.status === 'Placed').length || 0;
       }, error => {
         console.log(error);
       });
@@ -92,12 +91,14 @@ export class BoardComponent implements OnInit {
     }
   }
 
-  onClick(candidateId: number, requestId: number, phaseName: string) {
+  onClick(candidateId: number, request: RequestList, phaseName: string) {
     const modalRef = this.modalService.open(PopupComponent);
-
-    modalRef.componentInstance.requestId = requestId;
+    modalRef.componentInstance.requestId = request.id;
     modalRef.componentInstance.candidateId = candidateId;
     modalRef.componentInstance.phaseName = phaseName;
+    modalRef.componentInstance.candidateProcessChanged.subscribe(() => {
+      this.fetchProcessesInRequest(request);
+    });
   }
 
   addCandidate(request: RequestList) {

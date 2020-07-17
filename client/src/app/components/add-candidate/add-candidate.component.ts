@@ -81,9 +81,9 @@ export class AddCandidateComponent implements OnInit {
     values.forEach(idx => {
       this.processService.createProcess(this.request.id, this.candidates[idx].id)
         .subscribe(() => {
-            alert('Candidates added to this request successfully!');
-          this.activeModal.close('Close click');
-          this.candidateAdded.emit();
+            // alert('Candidates added to this request successfully!');
+            this.activeModal.close('Close click');
+            this.candidateAdded.emit();
           }, error => {
             console.log(error);
           }

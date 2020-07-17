@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {ProcessPhase} from '../../model/process/process-phase';
 import {PhaseAttribute} from '../../model/phase/phase-attribute';
@@ -24,6 +24,8 @@ export class PopupComponent implements OnInit {
   candidateId: number;
   @Input()
   phaseName: string;
+
+  @Output() candidateProcessChanged = new EventEmitter();
 
   statusList: string[];
   reasons: string[];
@@ -142,18 +144,14 @@ export class PopupComponent implements OnInit {
     }
 
     if (body !== {}) {
-      this.processService.updateProcess(
-        this.requestId,
-        this.candidateId,
-        body
-      ).subscribe(dao => {
-          if (body.status) {
-            location.reload();
+      this.processService.updateProcess(this.requestId, this.candidateId, body)
+        .subscribe(() => {
+            this.activeModal.close('Close click');
+            this.candidateProcessChanged.emit(`Candidate ${this.candidateId} process has been updated`);
+          }, error => {
+            console.log(error);
           }
-        }, error => {
-          console.log(error);
-        }
-      );
+        );
     }
     if (this.phase.notes !== this.updateForm.value.phaseNotes) {
       this.processPhaseService.updateProcessPhaseNotes(
