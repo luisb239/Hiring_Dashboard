@@ -1,18 +1,44 @@
 .root {
-  margin-left: 20px;
-  margin-top: 10px;
-  background-color: #ffffff;
+  width: fit-content;
 }
 
-input {
-  max-width: fit-content;
+.box {
+  margin-left: 20px;
+  margin-top: 10px;
+}
+
+#name {
+  max-width: 350px;
+}
+
+.custom-file-label{
+  max-width: 350px;
 }
 
 textarea {
-  max-width: 400px;
+  max-width: 350px;
 }
 
 #file-label {
-  margin-right: 10px;
   font-style: italic;
+}
+
+h5 {
+  margin-top: 20px;
+}
+
+@media only screen and (min-width: 360px) and (max-width: 991px) {
+
+  #name{
+    width: 70vw;
+  }
+
+  .custom-file-label{
+    width: 70vw;
+  }
+
+  textarea {
+    width: 70vw;
+  }
+
 }

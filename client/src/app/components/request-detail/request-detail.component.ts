@@ -5,7 +5,7 @@ import {RequestList} from 'src/app/model/request/request-list';
 import {UserRole} from 'src/app/model/user/user-role';
 import {ProcessList} from 'src/app/model/process/process-list';
 import {RequestDetailProps} from './request-detail-props';
-import {map, mergeMap, reduce, switchMap} from 'rxjs/operators';
+import {map} from 'rxjs/operators';
 
 @Component({
   selector: 'app-request-detail',

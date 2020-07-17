@@ -25,6 +25,7 @@
   </form>
   <form [formGroup]="candidateForm" (submit)="onSubmit()">
     <table class="table-responsive-xl">
+      <caption style="display: none">Available Candidates Table</caption>
       <thead>
       <tr>
         <th scope="col">#</th>
@@ -39,17 +40,17 @@
         <td [routerLink]="['/candidates/', candidate.id]"
             [state]="{candidateId:  candidate.id}"
             (click)="activeModal.close('Close click')"
-            class="candidate_name"
+            class="candidate_name td"
         >
           {{candidate.name}}
         </td>
-        <td>
+        <td class="td">
           <ngb-progressbar *ngIf="candidate.available" type="success" [value]="100"
                            [showValue]="false"></ngb-progressbar>
           <ngb-progressbar *ngIf="!candidate.available" type="danger" [value]="100"
                            [showValue]="false"></ngb-progressbar>
         </td>
-        <td class="form-check assign">
+        <td class="form-check assign td">
           <input class="form-check-input" type="checkbox" (change)="onChange(i, $event)">
         </td>
       </tr>

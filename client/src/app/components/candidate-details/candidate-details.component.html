@@ -4,7 +4,6 @@
     <div class="property">
       <h5 class="inline">CV:</h5>
       <h6 class="inline cv" (click)="downloadCv()">{{properties.candidate.cv}}</h6>
-<!--      <input (change)="handleFileInput($event.target.files)" id="file" required type="file" formControlName="cv">-->
     </div>
     <div class="property">
       <h5>Available?</h5>
@@ -23,12 +22,6 @@
     <div *ngIf="properties.candidate.profiles.length === 0">
       <p>There are no profiles associated.</p>
     </div>
-<!--    <mat-form-field class="profile">-->
-<!--      <mat-label>Possible Profiles</mat-label>-->
-<!--      <mat-select multiple>-->
-<!--        <mat-option *ngFor="let profile of properties.profiles" [value]="profile">{{profile}}</mat-option>-->
-<!--      </mat-select>-->
-<!--    </mat-form-field>-->
     <div *ngIf="properties.requestId">
       <a [routerLink]="['/board']">
         <h5>Return to the Board</h5>
@@ -38,7 +31,9 @@
   <div class="procs" *ngIf="properties.requestId">
     <h3 class="current">Current Process</h3>
     <table>
+      <caption style="display: none">Current Processes</caption>
       <tbody>
+      <tr><th></th></tr>
       <tr>
         <td [colSpan]="properties.currentProcess.phases.length">
           <h5>{{properties.currentRequest.request.description}}</h5>
@@ -82,7 +77,9 @@
     <div class="older">
       <h3>Other Processes</h3>
       <table *ngFor="let process of properties.allProcesses; index as i">
+        <caption style="display: none">Other Processes</caption>
         <tbody>
+        <tr><th></th></tr>
         <tr>
           <td [colSpan]="process.phases.length">
             <h5>{{properties.allRequests[i].request.description}}</h5>
@@ -127,7 +124,9 @@
   <div class="procs" *ngIf="!properties.requestId && properties.allProcesses.length > 0">
     <h3>All processes</h3>
     <table *ngFor="let process of properties.allProcesses; index as i">
+      <caption style="display: none">All Processes</caption>
       <tbody>
+      <tr><th></th></tr>
       <tr>
         <td [colSpan]="process.phases.length">
           <h5>{{properties.allRequests[i].request.description}}</h5>

@@ -1,225 +1,115 @@
-<!-- <div class='Request-Detail'>
-    <div class="container-fluid table-responsive-xl">
-        <div class="row">
-            <div class='Request'>
-                <h3>Request</h3>
-                <table class="table table-hover">
-                    <thead>
-                        <th scope="col">Workflow</th>
-                        <th scope="col">Description</th>
-                        <th scope="col">Progress</th>
-                        <th scope="col">Project</th>
-                        <th scope="col">Quantity</th>
-                        <th scope="col">Request Date</th>
-                        <th scope="col">Skill</th>
-                        <th scope="col">CSL State</th>
-                        <th scope="col">State</th>
-                        <th scope="col">Target Date</th>
-                        <th scope="col">Profile</th>
-                        <th scope="col">Date To Send Profile</th>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>{{properties.requestList.workflow}}</td>
-                            <td>{{properties.requestList.description}}</td>
-                            <td>{{properties.requestList.progress}}%</td>
-                            <td>{{properties.requestList.project}}</td>
-                            <td>{{properties.requestList.quantity}}</td>
-                            <td>{{properties.requestList.requestDate}}</td>
-                            <td>{{properties.requestList.skill}}</td>
-                            <td>{{properties.requestList.stateCSL}}</td>
-                            <td>{{properties.requestList.state}}</td>
-                            <td>{{properties.requestList.targetDate}}</td>
-                            <td>{{properties.requestList.profile}}</td>
-                            <td>{{properties.requestList.dateToSendProfile}}</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-        <div class='row'>
-            <div class='col-sm'>
-                <div class='Languages'>
-                    <h3>Languages</h3>
-                    <table class="table table-hover">
-                        <thead>
-                            <tr>
-                                <th>Language</th>
-                                <th>Mandatory</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr *ngFor="let language of properties.languages">
-                                <td>
-                                    {{language.language}}
-                                </td>
-                                <td>
-                                    {{language.isMandatory}}
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            <div class='col-sm'>
-                <div class='UserRoles'>
-                    <h3>Users</h3>
-                    <table class="table table-hover">
-                        <thead>
-                            <tr>
-                                <th>Email</th>
-                                <th>Role</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr *ngFor="let user of properties.userRoles">
-                                <td>
-                                  {{user.email}}
-                                </td>
-                                <td>
-                                    {{user.role}}
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            <div class='col-sm'>
-                <div class='Candidates'>
-                    <h3>Candidates</h3>
-                    <table class="table table-hover">
-                        <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th>Process Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr *ngFor="let process of properties.processes"
-                                [routerLink]="['/candidates/', process.candidateId]"
-                                [state]="{requestId: properties.requestId, candidateId: process.candidateId}">
-                                <td>
-                                    {{process.candidateName}}
-                                </td>
-                                <td>
-                                    {{process.status}}
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
-</div> -->
 <div class='Request-Detail'>
-    <div class="container-fluid">
-        <div *ngIf="properties.requestList">
-            <div class='row'>
-                <h2>{{properties.requestList.description}}</h2>
-            </div>
-            <div class="row">
-                <div class='col'>
-                    <div class='Request'>
-                        <ul class="list-group list-group-flush">
-                            <li class="list-group-item">
-                                <h5>Workflow: </h5>
-                                <p>{{properties.requestList.workflow}}</p>
-                            </li>
-                            <li class="list-group-item">
-                                <h5>Progress: </h5>
-                                <p>{{properties.requestList.progress}}%</p>
-                            </li>
-                            <li class="list-group-item">
-                                <h5>Project: </h5>
-                                <p>{{properties.requestList.project}}</p>
-                            </li>
-                            <li class="list-group-item">
-                                <h5>Quantity: </h5>
-                                <p>{{properties.requestList.quantity}}</p>
-                            </li>
-                            <li class="list-group-item">
-                                <h5>Request Date: </h5>
-                                <p>{{properties.requestList.requestDate}}</p>
-                            </li>
-                            <li class="list-group-item">
-                                <h5>Skill: </h5>
-                                <p>{{properties.requestList.skill}}</p>
-                            </li>
-                            <li class="list-group-item">
-                                <h5>CSL State: </h5>
-                                <p>{{properties.requestList.stateCSL}}</p>
-                            </li>
-                            <li class="list-group-item">
-                                <h5>Target Date: </h5>
-                                <p>{{properties.requestList.targetDate}}</p>
-                            </li>
-                            <li class="list-group-item">
-                                <h5>Profile: </h5>
-                                <p>{{properties.requestList.profile}}</p>
-                            </li>
-                            <li class="list-group-item">
-                                <h5>Date To Send Profile: </h5>
-                                <p>{{properties.requestList.dateToSendProfile}}</p>
-                            </li>
-                            <li class="list-group-item" *ngIf="properties.mandatoryLanguages.length > 0">
-                                <h5>Mandatory Languages: </h5>
-                                <p>{{properties.mandatoryLanguages}} </p>
-                            </li>
-                            <li class="list-group-item" *ngIf="properties.valuedLanguages.length > 0">
-                                <h5>Valued Languages: </h5>
-                                <p>{{properties.valuedLanguages}} </p>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            <div class='col'>
-                <div class='UserRoles'>
-                    <h3>Users</h3>
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Email</th>
-                                <th>Role</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr *ngFor="let user of properties.userRoles">
-                                <td>
-                                    {{user.email}}
-                                </td>
-                                <td>
-                                    {{user.role}}
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            <div class='col'>
-                <div class='Candidates'>
-                    <h3>Candidates</h3>
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th>Process Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr *ngFor="let process of properties.processes"
-                                [routerLink]="['/candidates/', process.candidateId]"
-                                [state]="{requestId: properties.requestId, candidateId: process.candidateId}">
-                                <td>
-                                    {{process.candidateName}}
-                                </td>
-                                <td>
-                                    {{process.status}}
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+  <div class="container-fluid">
+    <div *ngIf="properties.requestList">
+      <div class='row'>
+        <h2>{{properties.requestList.description}}</h2>
+      </div>
+      <div class="row">
+        <div class='col'>
+          <div class='Request'>
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item">
+                <h5>Workflow: </h5>
+                <p>{{properties.requestList.workflow}}</p>
+              </li>
+              <li class="list-group-item">
+                <h5>Progress: </h5>
+                <p>{{properties.requestList.progress}}%</p>
+              </li>
+              <li class="list-group-item">
+                <h5>Project: </h5>
+                <p>{{properties.requestList.project}}</p>
+              </li>
+              <li class="list-group-item">
+                <h5>Quantity: </h5>
+                <p>{{properties.requestList.quantity}}</p>
+              </li>
+              <li class="list-group-item">
+                <h5>Request Date: </h5>
+                <p>{{properties.requestList.requestDate}}</p>
+              </li>
+              <li class="list-group-item">
+                <h5>Skill: </h5>
+                <p>{{properties.requestList.skill}}</p>
+              </li>
+              <li class="list-group-item">
+                <h5>CSL State: </h5>
+                <p>{{properties.requestList.stateCSL}}</p>
+              </li>
+              <li class="list-group-item">
+                <h5>Target Date: </h5>
+                <p>{{properties.requestList.targetDate}}</p>
+              </li>
+              <li class="list-group-item">
+                <h5>Profile: </h5>
+                <p>{{properties.requestList.profile}}</p>
+              </li>
+              <li class="list-group-item">
+                <h5>Date To Send Profile: </h5>
+                <p>{{properties.requestList.dateToSendProfile}}</p>
+              </li>
+              <li class="list-group-item" *ngIf="properties.mandatoryLanguages.length > 0">
+                <h5>Mandatory Languages: </h5>
+                <p>{{properties.mandatoryLanguages}} </p>
+              </li>
+              <li class="list-group-item" *ngIf="properties.valuedLanguages.length > 0">
+                <h5>Valued Languages: </h5>
+                <p>{{properties.valuedLanguages}} </p>
+              </li>
+            </ul>
+          </div>
         </div>
+        <div class='col'>
+          <div class='UserRoles'>
+            <h3>Users</h3>
+            <table class="table">
+              <caption style="display: none">Request Info</caption>
+              <thead>
+              <tr>
+                <th id="email">Email</th>
+                <th id="role">Role</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr *ngFor="let user of properties.userRoles">
+                <td>
+                  {{user.email}}
+                </td>
+                <td>
+                  {{user.role}}
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class='col'>
+          <div class='Candidates'>
+            <h3>Candidates</h3>
+            <table class="table">
+              <caption style="display: none">Candidates Info</caption>
+              <thead>
+              <tr>
+                <th id="name">Name</th>
+                <th id="status">Process Status</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr *ngFor="let process of properties.processes"
+                  [routerLink]="['/candidates/', process.candidateId]"
+                  [state]="{requestId: properties.requestId, candidateId: process.candidateId}">
+                <td>
+                  {{process.candidateName}}
+                </td>
+                <td>
+                  {{process.status}}
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
     </div>
+  </div>
+</div>

@@ -2,8 +2,9 @@
   <div class="board table-responsive-xl">
     <div *ngFor="let workflow of properties.workflows" class="full-table">
       <table #tableContainer>
+        <caption style="display: none">Board Header</caption>
         <tr>
-          <th [colSpan]=workflow.phases.length>
+          <th [colSpan]=workflow.phases.length id="workflow-header">
             <div class="workflow-header"><h3>{{workflow.workflow}}</h3></div>
           </th>
         </tr>
@@ -16,6 +17,8 @@
         </tr>
       </table>
       <table *ngFor="let request of workflow.requests" [width]="tableContainer.offsetWidth">
+        <caption style="display: none">Board Content</caption>
+        <tr><th></th></tr>
         <tr>
           <td class="title-data swim-lane" [colSpan]=workflow.phases.length-1
               [routerLink]="['/request-detail', request.id]">

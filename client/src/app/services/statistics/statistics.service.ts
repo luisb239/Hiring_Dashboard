@@ -1,10 +1,10 @@
-import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpParams, HttpUrlEncodingCodec } from '@angular/common/http';
-import { catchError } from 'rxjs/operators';
-import { ErrorHandler } from '../error-handler';
-import { ConfigProfilesDao } from 'src/app/model/statistics/config-profiles-dao';
-import { ConfigProfileDao } from 'src/app/model/statistics/config-profile-dao';
-import { SuccessPostDao } from 'src/app/model/common/successPost-dao';
+import {Injectable} from '@angular/core';
+import {HttpClient, HttpHeaders, HttpUrlEncodingCodec} from '@angular/common/http';
+import {catchError} from 'rxjs/operators';
+import {ErrorHandler} from '../error-handler';
+import {ConfigProfilesDao} from 'src/app/model/statistics/config-profiles-dao';
+import {ConfigProfileDao} from 'src/app/model/statistics/config-profile-dao';
+import {SuccessPostDao} from 'src/app/model/common/successPost-dao';
 
 const httpOptions = {
   headers: new HttpHeaders({
