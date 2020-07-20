@@ -8,7 +8,7 @@
   background-color: rgb(235, 235, 235);
   border-radius: 15px;
   padding: 10px;
-  width: fit-content;
+  width: auto;
   margin-left: 20px;
   margin-top: 10px;
   margin-bottom: 10px;
@@ -75,4 +75,15 @@ table {
 
 td {
   vertical-align: text-top;
+}
+
+.root {
+  width: 100%;
+}
+
+.box {
+  width: fit-content;
+  flex-direction: column;
+  flex-grow: 1;
+  min-width: 0;
 }
