@@ -6,13 +6,10 @@
   width: 100%;
   flex-wrap: wrap;
   margin-left: 5px;
-  /*padding-right: 10px;*/
 }
 
 .form-group {
   flex-grow: 1;
-  /*width: fit-content;*/
-  /*width: 150px;*/
   width: 320px;
   margin-right: 25px;
 }
@@ -20,17 +17,12 @@
 .custom-slider {
   flex-grow: 1;
   margin-right: 40px;
-  /*width: 200px;*/
 }
 
 button {
   height: fit-content;
   margin-right: 10px;
 }
-
-/*.form {*/
-/*  padding-right: 10px;*/
-/*}*/
 
 .reset-button {
   float: right;
@@ -86,7 +78,6 @@ button {
     display:none;
   }
 
-  /*table tr th:nth-child(1),*/
   .col-un-sm{
     display:none;
   }
@@ -107,7 +98,6 @@ button {
     display: none;
   }
 
-  /*table tr th:nth-child(1),*/
   .col-un-md{
     display:none;
   }
@@ -135,45 +125,3 @@ button {
     margin-right: 10px;
   }
 }
-
-/*@media only screen and (min-width: 992px) {*/
-
-/*  !*.un-md {*!*/
-/*  !*  display: none;*!*/
-/*  !*}*!*/
-
-/*  !*table tr th:nth-child(1),*!*/
-/*  !*.col-un-md{*!*/
-/*  !*  display:none;*!*/
-/*  !*}*!*/
-
-/*  .root {*/
-/*    display: flex;*/
-/*    flex-direction: row;*/
-/*  }*/
-
-/*  .form {*/
-/*    padding-right: 10px;*/
-/*  }*/
-
-/*  .reset-button {*/
-/*    float: right;*/
-/*  }*/
-
-/*  .filter-drawer {*/
-/*    flex-grow: 1;*/
-/*    margin-right: 20px;*/
-/*    margin-left: 10px;*/
-/*    height: fit-content;*/
-/*    width: 200px;*/
-/*  }*/
-
-/*  .form-group {*/
-/*    width: 200px;*/
-/*    margin-bottom: 10px;*/
-/*  }*/
-
-/*  table {*/
-/*    flex-grow: 1;*/
-/*  }*/
-/*}*/
