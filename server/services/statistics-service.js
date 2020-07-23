@@ -15,8 +15,8 @@ module.exports = (statisticsDb, authModule) => {
     async function getStatistics() {
         const statistics = await statisticsDb.getStatistics()
 
-        const users = await authModule.user.getAll()
-        const roles = await authModule.role.getAll()
+        const users = await authModule.user.get()
+        const roles = await authModule.role.get()
 
         return statistics.map(processStats => {
             return {

@@ -6,16 +6,18 @@
 }
 
 .board {
+  width: fit-content;
   flex-direction: column;
   flex-grow: 1;
   min-width: 0;
 }
 
 .full-table {
+  background-color: rgb(240, 240, 240);
+  width: auto;
   padding: 25px;
   border-radius: 10px;
-  background: rgba(255, 255, 255, 0.4);
-  width: fit-content;
+  /* background: rgba(255, 255, 255, 0.4); */
   margin: 25px 30px 50px;
 }
 

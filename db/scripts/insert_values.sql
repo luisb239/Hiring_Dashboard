@@ -1,35 +1,16 @@
-INSERT INTO "List" (list) 
-VALUES 
-	('BLACK'),
-	('GREY'),
-	('RED');
-	
-INSERT INTO "Protocols" (protocol, active)
-VALUES
-	('Google', TRUE),
-	('AzureAD', TRUE),
-	('Saml', TRUE);
-	
+
 INSERT INTO "User" (username, password) 
 VALUES 
-	('superuser', 'superuser'),
+	/*('superuser', 'superuser'),*/
 	('A44015@alunos.isel.pt', NULL),
 	('A43553@alunos.isel.pt', NULL),
 	('A43520@alunos.isel.pt', NULL);
 	
-	
-INSERT INTO "Role" (role, parent_role)
-VALUES 
-	('admin', NULL),
-	('recruiter', NULL),
-	('jobOwner', NULL),
-	('guest', NULL);
-	
-INSERT INTO "UserRoles" ("UserId", "RoleId", active) 
-VALUES	
-	(2, 1, true),
-	(3, 1, true),
-	(4, 1, true);	
+INSERT INTO "UserRoles" ("UserId", "RoleId", active, start_date, updater) 
+VALUES    
+    (2, 1, true, CURRENT_DATE, 1),
+    (3, 1, true, CURRENT_DATE, 1),
+    (4, 1, true, CURRENT_DATE, 1);
 
 
 INSERT INTO user_profile(user_id, user_email, is_active)
