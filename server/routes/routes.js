@@ -1,8 +1,8 @@
 'use strict'
 
-const handle = require('./express-handler.js')
+const handle = require('../express-handler.js')
 
-const verifyIfAuthenticated = require('./controllers/middlewares/verify_authenticated')
+const verifyIfAuthenticated = require('../controllers/middlewares/verify_authenticated')
 
 module.exports = function (router, controllers, authModule, upload, validator) {
 
@@ -258,7 +258,17 @@ module.exports = function (router, controllers, authModule, upload, validator) {
 
     //TODO -> MISSING OTHER FIELDS
     router.put(`/${candidates}/:id`, [
-        body('available').exists().isBoolean().withMessage("available must be of string type"),
+        upload.single('cv'),
+        body('available').optional().isBoolean().withMessage("available must be of string type"),
+        body('profileInfo').optional().isString().withMessage("profile info must be of string type"),
+        checkSchema({
+            'cv': {
+                custom: {
+                    options: (value, {req}) => !!req.file,
+                    errorMessage: 'Cv file needs to be uploaded',
+                }
+            }
+        })
     ], handle(controllers.candidate.updateCandidate))
 
     /**

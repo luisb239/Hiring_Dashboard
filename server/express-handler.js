@@ -4,7 +4,7 @@ const commonErrors = require('./services/errors/common-errors.js')
 
 const {validationResult} = require('express-validator');
 
-module.exports = function handle(controller) {
+module.exports = function handle(controllerFunction) {
     return async (req, res) => {
         try {
             let validation = validationResult(req);
@@ -16,7 +16,7 @@ module.exports = function handle(controller) {
                 })
             } else {
                 // call controller
-                return await controller(req, res)
+                return await controllerFunction(req, res)
             }
         } catch (error) {
             //handling errors ...

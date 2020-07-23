@@ -129,7 +129,7 @@ module.exports = (requestDb, candidateDb, processDb, phaseDb, infoDb, processUna
         const oldStatus = await processDb.getProcessStatus({requestId, candidateId})
         if (oldStatus.status !== status) {
             const success = await processDb.updateProcessStatus({requestId, candidateId, status})
-            if (oldStatus === 'Placed' || status === 'Placed') {
+            if (oldStatus.status === 'Placed' || status === 'Placed') {
                 await updateRequestProgress({requestId})
             }
             if (success) {
@@ -143,9 +143,9 @@ module.exports = (requestDb, candidateDb, processDb, phaseDb, infoDb, processUna
     async function updateRequestProgress({requestId}) {
         const request = await requestDb.getRequestById({id: requestId})
         const processesStatus = await processDb.getAllProcessesStatusFromRequest({requestId})
-        const numberOfPlacedCandidates = processesStatus.filter(status => status.status === 'Placed').length
+        const numberOfPlacedCandidates = processesStatus.filter(status => status.status === 'Placed').length || 0
         const percentage = numberOfPlacedCandidates * 100 / request.quantity
-        await requestDb.updateRequest({id: requestId, progress: percentage})
+        await requestDb.updateRequest({id: requestId, progress: percentage > 100 ? 100 : percentage})
     }
 
 

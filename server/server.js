@@ -16,7 +16,7 @@ authModule.setup({app: config.app, db: config.dbOptions, rbac_opts: config.jsonO
         const db = require('./dals');
         const services = require('./services')(db, auth)
         const controllers = require('./controllers')(services)
-        const routes = require('./routes.js')(express.Router(), controllers, auth, config.upload, config.validator)
+        const routes = require('./routes/routes.js')(express.Router(), controllers, auth, config.upload, config.validator)
 
         const root = 'hd'
         app.use(`/${root}`, routes)
