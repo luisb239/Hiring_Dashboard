@@ -54,6 +54,7 @@ module.exports = function (router, controllers, authModule, upload, validator) {
         query('maxQuantity').optional().isInt(),
         query('minProgress').optional().isInt(),
         query('maxProgress').optional().isInt(),
+        query('targetDate').optional().isString(),
         query('userId').optional().isInt(),
         query('roleId').optional().isInt()
     ], handle(controllers.request.getRequests))

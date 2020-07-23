@@ -1,4 +1,10 @@
 <div class="root">
+
+  <button (click)="alertService.success('Success!!', options)" class="btn btn-success m-1">Success</button>
+  <button (click)="alertService.error('Error :(', options)" class="btn btn-danger m-1">Error</button>
+  <button (click)="alertService.info('Some info....', options)" class="btn btn-info m-1">Info</button>
+  <button (click)="alertService.warn('Warning: ...', options)" class="btn btn-warning m-1">Warn</button>
+
   <div class="board table-responsive-xl">
     <div *ngFor="let workflow of properties.workflows" class="full-table">
       <table #tableContainer>
@@ -38,7 +44,9 @@
             <div class="task" *ngFor="let candidate of phase.candidates"
                  [cdkDragData]="candidate"
                  cdkDrag
-                 (click)="onClick(candidate.id, request, phase.name)"><h6>{{ candidate.name }}</h6></div>
+                 (click)="onClick(candidate.id, request, phase.name)">
+              <h6>{{ candidate.name }}</h6>
+            </div>
             <div (click)="addCandidate(request)" *ngIf="i==0" class="hidden-task">
               <div class="hidden-text"><h6><span>...</span></h6></div>
             </div>

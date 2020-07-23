@@ -20,6 +20,7 @@ module.exports = (service) => {
             maxQuantity: req.query.maxQuantity,
             minProgress: req.query.minProgress,
             maxProgress: req.query.maxProgress,
+            targetDate: req.query.targetDate,
             userId: req.query.userId,
             roleId: req.query.roleId
         })

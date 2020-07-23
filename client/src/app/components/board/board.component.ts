@@ -18,6 +18,7 @@ import {BoardProps} from './board-props';
 import {AddCandidateComponent} from '../add-candidate/add-candidate.component';
 import {AuthService} from '../../services/auth/auth.service';
 import {User} from '../../model/user/user';
+import {AlertService} from '../../alert/service/alert.service';
 
 @Component({
   selector: 'app-board',
@@ -25,6 +26,13 @@ import {User} from '../../model/user/user';
   styleUrls: ['./board.component.css']
 })
 export class BoardComponent implements OnInit {
+
+  options = {
+    autoClose: true,
+    keepAfterRouteChange: true
+  };
+
+  properties: BoardProps = new BoardProps();
 
   constructor(private modalService: NgbModal,
               private requestService: RequestService,
@@ -34,10 +42,9 @@ export class BoardComponent implements OnInit {
               private phaseService: PhaseService,
               private processPhaseService: ProcessPhaseService,
               private authService: AuthService,
+              public alertService: AlertService
   ) {
   }
-
-  properties: BoardProps = new BoardProps();
 
   ngOnInit(): void {
     const user: User = this.authService.getUserInfo();

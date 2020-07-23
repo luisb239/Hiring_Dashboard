@@ -24,6 +24,7 @@ module.exports = (requestDb, processDb, requestLanguagesDb, authModule, candidat
      * @param maxQuantity : ?number
      * @param minProgress : ?number
      * @param maxProgress : ?number
+     * @param targetDate : String
      * @param userId : ?number
      * @param roleId : ?number
      */
@@ -32,12 +33,12 @@ module.exports = (requestDb, processDb, requestLanguagesDb, authModule, candidat
                                    profile = null, project = null, workflow = null,
                                    minQuantity = null, maxQuantity = null,
                                    minProgress = null, maxProgress = null,
-                                   userId = null, roleId = null
+                                   targetDate = null, userId = null, roleId = null
                                }) {
         return {
             requests: await requestDb.getRequests({
                 skill, state, stateCsl, profile, project, workflow, minQuantity,
-                maxQuantity, minProgress, maxProgress, userId, roleId
+                maxQuantity, minProgress, maxProgress, targetDate, userId, roleId
             })
         }
     }

@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {ProcessPhase} from '../../model/process/process-phase';
 import {PhaseAttribute} from '../../model/phase/phase-attribute';
@@ -185,9 +185,10 @@ export class PopupComponent implements OnInit {
         /*
         let pwa = window.open(url);
         if (!pwa || pwa.closed || typeof pwa.closed == 'undefined') {
-            alert( 'Please disable your Pop-up blocker and try again.');
+            component( 'Please disable your Pop-up blocker and try again.');
         }
          */
       });
   }
+
 }
