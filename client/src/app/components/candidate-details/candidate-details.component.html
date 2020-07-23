@@ -13,6 +13,7 @@
           <div *ngIf="!properties.candidate.available" class="circle not_available"></div>
         </div>
       </div>
+      <h5>Profile Info</h5>
       <p>{{properties.candidate.profileInfo}}</p>
       <h5>Profiles</h5>
       <div *ngIf="properties.candidate.profiles.length !== 0">
@@ -126,8 +127,7 @@
         </table>
       </div>
     </div>
-    <div class="procs"
-      *ngIf="!properties.requestId && properties.allRequests.length === properties.allProcesses.length">
+    <div class="procs" *ngIf="!properties.requestId && properties.allProcesses.length > 0">
       <h3>All processes</h3>
       <table *ngFor="let process of properties.allProcesses; index as i">
         <caption style="display: none">All Processes</caption>

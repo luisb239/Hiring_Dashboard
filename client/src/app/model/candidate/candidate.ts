@@ -8,6 +8,6 @@ export class Candidate {
               public cv: string = '',
               public profiles: string[] = [],
               public processes: CandidateProcess[] = []
-              ) {
+  ) {
   }
 }
