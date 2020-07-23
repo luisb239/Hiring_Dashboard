@@ -3,7 +3,8 @@
 const { Role } = require('../sequelize-model')
 
 const UserRole = require('../sequelize-model').UserRoles,
-sequelize=require('../../common/util/db')
+    tryCatch = require('../../common/util/functions-utils')
+
 
 module.exports = {
 
@@ -17,40 +18,46 @@ module.exports = {
      * @param active
      * @returns {Promise<void>}
      */
-    create: (user, role, startDate, endDate, updater, active) => UserRole.create({
-            UserId: user,
-            RoleId: role,
-            start_date: startDate,
-            end_date: endDate,
-            updater: updater,
-            active: active
-        }),
+    create: (user, role, startDate, endDate, updater, active) => tryCatch( () =>UserRole.create({
+        UserId: user,
+        RoleId: role,
+        start_date: startDate,
+        end_date: endDate,
+        updater: updater,
+        active: active
+    })),
     /**
      *
      * @param id
      * @returns {Promise<void>}
      */
-    deactivate: (id) => UserRole.update({active: 0}, {where: {UserId: id}}),
+    deactivate: (id) => tryCatch(() => UserRole.update({ active: 0 }, { where: { UserId: id } })),
     /**
      * checks if all User roles are active
      * @returns {Promise<*>}
      */
-    getAllActive: () => UserRole.findAll({where: {active: 1}}),
+    getActive: () => tryCatch(UserRole.findAll({ where: { active: true } })),
     /**
      *
      * @param id
      * @returns {Promise<*>}
      */
-    getUserActiveRoles: (id) => UserRole.findAll({where: {UserId: id, active: true}}),
+    getUserActiveRoles: (id) => tryCatch(() => UserRole.findAll({ where: { UserId: id, active: true } })),
     /**
      *
      * @returns {Promise<void>}
      */
-    getAll: () => UserRole.findAll({raw: true}),
+    get: () => tryCatch(() => UserRole.findAll({ raw: true })),
     /**
      *
      * @param id
      * @returns {Promise<void>}
      */
-    getById: (id) => UserRole.findByPk(id)
+    getById: (id) => tryCatch(() => UserRole.findByPk(id)),
+
+    getUserRoles: (userId) => tryCatch(() => UserRole.findAll({ where: { UserId: userId }, include: [Role], raw: true })),
+
+    delete: (UserId,RoleId) => tryCatch(() => UserRole.destroy({ where: { UserId: UserId,RoleId:RoleId } })),
+
+
 }

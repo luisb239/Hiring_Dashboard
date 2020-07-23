@@ -11,7 +11,7 @@ const config = require('./config.js')(app)
 
 const authModule = require('../authization-module/authization')
 
-authModule.setup(config.app, config.dbOptions, config.jsonObj)
+authModule.setup({app: config.app, db: config.dbOptions, rbac_opts: config.jsonObj})
     .then(async (auth) => {
         const db = require('./dals');
         const services = require('./services')(db, auth)

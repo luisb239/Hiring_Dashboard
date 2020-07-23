@@ -1,6 +1,5 @@
-'use strict'
 
-const config = require('../../../config/config')
+const config = require('../../../config/config');
 
 const
     fs = require('fs'),
@@ -9,30 +8,33 @@ const
     protocolName = 'Saml',
     SamlStrategy = new (require('passport-saml').Strategy)({
 
-        callbackUrl: config.callbackUrl,
-        entryPoint: config.entryPoint,
-        issuer: config.issuer,
-        cert: fs.readFileSync(path.join(__dirname, '../../../certificates/authentication-node.pem'), 'utf-8'),
-        privateCert: fs.readFileSync(path.join(__dirname, '../../../certificates/privateKey.pem'), 'utf-8')
+        callbackUrl: config.saml.callbackUrl,
+        entryPoint: config.saml.entryPoint,
+        issuer: config.saml.issuer,
+        cert: fs.readFileSync(path.join(__dirname, '../../../certificates/AuthizationApplication.cer'), 'utf-8'),
+        signatureAlgorithm:'sha256'
 
     }, async function (profile, done) {
-
+        console.log('VAI COMEÇAR')
         if (!(await passportUtils.checkProtocol(protocolName))) {
-            done(null, false, { message: 'Protocol is not avaiable' })
-            return
+            done(null, false, { message: 'Protocol is not avaiable' });
+            return;
         }
-
-        let user = await passportUtils.findUserByIdp(profile.nameID)
-
+        console.log('Passou o checkProtocol')
+        console.log('Showing profile obj...')
+        console.log(profile)
+        let user = await passportUtils.findUserByIdp(profile.nameID);
+        console.log(user)
         if (!user) {
-            user = await passportUtils.createUser(profile.nameID, 'saml', profile['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress'], null)
+            user = await passportUtils.createUser(profile.nameID, 'saml', profile['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress'], 'null');
         }
         if (await passportUtils.isBlackListed(user.id)) {
-            passportUtils.addNotification(user.id)
-            done(null, false, { message: 'User is BlackListed' })
-            return
+            passportUtils.addNotification(user.id);
+            done(null, false, { message: 'User is BlackListed' });
+            return;
         }
-        done(null, user)
-    })
+        console.log('CHEGOU AO FIM!')
+        done(null, user);
+    });
 
-module.exports = SamlStrategy
+module.exports = SamlStrategy;

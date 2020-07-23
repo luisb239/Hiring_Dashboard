@@ -2,7 +2,6 @@
 
 const
     users = require('../../resources/dals/users-dal'),
-    lists = require('../../resources/dals/lists-dal'),
     userList=require('../../resources/dals/user-list-dal'),
     idps = require('../../resources/dals/idps-dal'),
     userHistories = require('../../resources/dals/users-history-dal'),
@@ -82,11 +81,11 @@ module.exports = {
     addNotification: async (userId) => {
         await userHistories.create(userId, moment().format("YYYY-MM-DD HH:mm:ss"), "BlackListed User tried to Login")
     },
-    createUserSession: async (userId, sessionId) => {
-        await userSession.create(userId, sessionId)
+    updateSession: async (userId, sessionId) => {
+        await Session.update({UserId:userId},{where:{sid:sessionId}})
     },
     checkProtocol: async (protocolName) => {
-        const result = await protocol.get(protocolName)
+        const result = await protocol.getByName(protocolName)
         return result!=null
     },
     deleteUserSession : async(userId,sessionId)=>{

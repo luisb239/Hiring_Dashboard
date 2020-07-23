@@ -1,34 +1,35 @@
 'use strict'
 
-const Users = require('../sequelize-model').User,
-Idp=require('../sequelize-model').Idp,
-    Role= require('../sequelize-model').Role
 
-function getById(id){ return Users.findByPk(id)}
+const { UserHistory, User, Idp, Role, List, Session } = require('../sequelize-model'),
+    tryCatch = require('../../common/util/functions-utils')
+
+const getById = (id) => tryCatch(() => User.findByPk(id))
+
 module.exports = {
     /**
      *
      * @param idp
      * @returns {Promise<void>}
      */
-    getByIdp: async (idp) => {
-        const result=await Idp.findAll({where:{idp_id:idp}})
-        return result[0] == null ? null : await getById(result[0].user_id)
-    },
+    getByIdp: (idp) =>
+        tryCatch(async () => {
+            const result = await Idp.findAll({ where: { idp_id: idp } })
+            return result[0] == null ? null : getById(result[0].user_id)
+        }),
     /**
      * Requests the database for a user with given id
      * @param id
      * @returns {Promise<*>}
      */
-    getById:getById,
+    getById,
 
     /**
      *
      * @param username
      * @returns {Promise<{password: *, id: *, username: *}>}
      */
-    getByUsername: (username) => Users.findOne({where: {username: username}}),
-
+    getByUsername: (username) => tryCatch(() => User.findOne({ where: { username: username } })),
 
     /**
      * Requests the database to return user's that match username and password parameters
@@ -37,13 +38,13 @@ module.exports = {
      * @param password
      * @returns {Promise<{password: *, id: *, username: *}>}
      */
-    get: async (username, password) => Users.findOne({where: {username: username, password: password}}),
+    getByUsernameAndPassword: (username, password) => tryCatch(() => User.findOne({ where: { username: username, password: password } })),
 
     /**
      * Requests the database for all existing users
      * @returns {Promise<*>}
      */
-    getAll: async () => Users.findAll({raw: true}),
+    get: () => tryCatch(() => User.findAll({ raw: true })),
 
     /**
      * Requests the database for a new entry in the table users
@@ -52,7 +53,7 @@ module.exports = {
      * @param password
      * @returns {Promise<void>}
      */
-    create: (username, password) =>Users.create({username: username,password: password}),
+    create: (username, password) => tryCatch(() => User.create({ username: username, password: password })),
 
 
     /**
@@ -61,7 +62,7 @@ module.exports = {
      * @param id
      * @returns {Promise<void>}
      */
-    updateUsername: (username, id) =>Users.update({username: username}, {where: {id: id}}),
+    updateUsername: (username, id) => tryCatch(() => User.update({ username: username }, { where: { id: id } })),
 
     /**
      * update specific user's password
@@ -69,16 +70,16 @@ module.exports = {
      * @param id
      * @returns {Promise<void>}
      */
-    updatePassword: (password, id) =>Users.update({password: password}, {where: {id: id}}),
+    updatePassword: (password, id) => tryCatch(() => User.update({ password: password }, { where: { id: id } })),
 
     /**
      *delete user in the database with given id
      * @param userId
      * @returns {Promise<void>}
      */
-    delete:  (userId) =>Users.destroy({where: {id: userId}}),
+    delete: (userId) => tryCatch(() => User.destroy({ where: { id: userId } })),
 
-    getUserRoles: (userId) => Users.findAll({ where: { id:userId}, include: [Role],raw:true})
+    getUserRoles: (userId) => tryCatch(() => User.findAll({ where: { id: userId }, include: [Role], raw: true }))
 
 
 }

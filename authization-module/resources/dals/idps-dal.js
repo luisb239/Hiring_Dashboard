@@ -1,4 +1,6 @@
-const Idp = require('../sequelize-model').Idp
+const
+    Idp = require('../sequelize-model').Idp,
+    tryCatch = require('../../common/util/functions-utils')
 
 module.exports = {
     /**
@@ -8,18 +10,21 @@ module.exports = {
      * @param userId
      * @returns {Promise<*>}
      */
-    create: async (idpId, idpname, userId) =>
-         Idp.create({
+    create: (idpId, idpname, userId) =>
+        tryCatch(() =>
+            Idp.create({
                 idp_id: idpId,
                 idpname: idpname,
                 user_id: userId
-            }
+            })
         ),
     /**
      *
      * @param idpId
      * @returns {Promise<*>}
      */
-    delete: async (idpId) =>
-        Idp.destroy({where: {idp_id: idpId}})
+    delete: (idpId) =>
+        tryCatch(
+            () => Idp.destroy({ where: { idp_id: idpId } })
+        )
 }

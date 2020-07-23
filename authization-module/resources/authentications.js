@@ -3,6 +3,7 @@
 const passport = require('passport')
 const passportUtils = require('../common/util/passport-utils')
 const config = require('../common/config/config')
+const authorization=require('./authorizations')
 
 /*
 function authCallback(err, user, info) {
@@ -24,13 +25,15 @@ module.exports = {
     usingLocal: (req, res, next) => {
         passport.authenticate('local', { failWithError: true }, function (err, user) {
             if (!err && user) {
-                passportUtils.createUserSession(user.id, req.session.id)
-                req.logIn(user, function (error) {
+                req.logIn(user, async function (error) {
                     if (error) { return next(error); }
+                    //await authorization.getUserPermissions(req,res,next))
+                    return next()
                 })
-                return next()
             }
+            else{
             next(err)
+            }
         })(req, res, next)
 
     },
@@ -55,9 +58,9 @@ module.exports = {
             if (!user || err) {
                 return next(err)
             }
-            passportUtils.createUserSession(user.id, req.session.id)
             req.logIn(user, function (error) {
                 if (error) { return next(error); }
+                return 
             })
             return next();
         })(req, res, next)
@@ -107,6 +110,8 @@ module.exports = {
      */
     usingOffice365: (req, res, next) => {
         passport.authenticate('azure_ad_oauth2')(req, res, next)
+
+
     },
     /**
      *
@@ -131,8 +136,7 @@ module.exports = {
      * @param res
      * @param next
      */
-    logout: (req, res, next) => {
-        passportUtils.deleteUserSession(req.user.id,req.sessionID)
+    logout: (req, res, next) => { 
         req.logout()
         req.session.destroy((err) => {
             if (err) {

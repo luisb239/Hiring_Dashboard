@@ -1,10 +1,19 @@
-'use strict'
+'use strict';
 
-const {User,Idp,List,Permission,Protocols,Role,UserHistory} =require('../resources/sequelize-model')
-const userDal = require('../resources/dals/users-dal')
+
+
+
+
+
+//const {user,role} = authi.getFunctionalities()
+
+
+//const {User,Idp,List,Permission,Protocols,Role,UserHistory} =require('../resources/sequelize-model');
+//const userDal = require('../resources/dals/users-dal');
+//const roleDal = require('../resources/dals/roles-dal');
 
 const containsSubObject = (jsonObject,subObject) => {
-    console.log(`Searching for ${JSON.stringify(subObject).toString()} in ${JSON.stringify(jsonObject).toString()}`)
+    console.log(`Searching for ${JSON.stringify(subObject).toString()} in ${JSON.stringify(jsonObject).toString()}`);
     return Object.keys(subObject)
         .map(key=>jsonObject[key]===subObject[key])
         .reduce((prev, curr) => prev && curr)
@@ -37,20 +46,49 @@ const basicCheckById = (json,model) => {
 //if something is not working dont forget to add environment variable in your system or in your IDE: NODE_ENV=testing
 //if running test alone make sure to add await in the end of test, running all tests will make them run in parallel
 describe("Sequelize Testings", () => {
+    test('Module Setup',async ()=>{
+        //const express=require('express');
+        const authi = require('../authization');
+        await authi.setup()
+        authi.getFunctionalities()
+    })
+
     test('Test UserDal without IDPs methods',async ()=>{
+        const authi = require('../authization');
+        const user = (await authi.setup()).user
         const newPass = 'newPass',newName='newUsername';
         //Create and check
-        const created = await userDal.create('usernameTest','passwordTest').then(data=>data.dataValues);
-        await userDal.getAll().then(users=>expect(users).toContainEqual(created));
+        const created = await user.create('usernameTest','passwordTest').then(data=>data.dataValues);
+        await user.getAll().then(users=>expect(users).toContainEqual(created));
         //Update and check
-        await userDal.updatePassword(newPass,created.id);
-        await userDal.getByUsername(created.username).then(data=>expect(data.password).toEqual(newPass));
-        await userDal.updateUsername(newName,created.id);
-        await userDal.getById(created.id).then(d=>expect(d.username).toEqual(newName));
+        await user.updatePassword(newPass,created.id);
+        await user.getByUsername(created.username).then(data=>expect(data.password).toEqual(newPass));
+        await user.updateUsername(newName,created.id);
+        await user.getById(created.id).then(d=>expect(d.username).toEqual(newName));
         //Delete and check
-        await userDal.delete(created.id);
-        await userDal.get(newName,newPass).then(data=>expect(data).toBeNull());
-        await userDal.getById(created.id).then(data=>expect(data).toBeNull());
+        await user.delete(created.id);
+        await user.get(newName,newPass).then(data=>expect(data).toBeNull());
+        await user.getById(created.id).then(data=>expect(data).toBeNull());
+    })
+
+    test('Test RoleDal methods',async ()=>{
+        const newParent = 'admin',newName='newRleTest';
+        //Create and check
+        const created = await roleDal.create(newName).then(data=>data.dataValues);
+        await roleDal.getAll().then(users=>expect(users).toContainEqual(created));
+        console.log('created: ', created)
+        //Update and check
+        const parent = await roleDal.addParentRole(newParent)
+        console.log('parent: ',parent)
+        //await roleDal.update()
+        //await userDal.updatePassword(newPass,created.id);
+       //await userDal.getByUsername(created.username).then(data=>expect(data.password).toEqual(newPass));
+       //await userDal.updateUsername(newName,created.id);
+       //await userDal.getById(created.id).then(d=>expect(d.username).toEqual(newName));
+        //Delete and check
+      // await userDal.delete(created.id);
+      // await userDal.get(newName,newPass).then(data=>expect(data).toBeNull());
+      // await userDal.getById(created.id).then(data=>expect(data).toBeNull());
     })
 
     test("Check creation, obtaining and elimination of Idp", async () => {

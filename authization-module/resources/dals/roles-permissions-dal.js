@@ -1,9 +1,10 @@
 'use strict'
 
 const RolePermission = require('../sequelize-model').RolePermission,
-    sequelize = require('../../common/util/db'),
+    rolesDal = require('./roles-dal'),
     config = require('../../common/config/config'),
-    rbac = config.rbac
+    rbac = config.rbac,
+    tryCatch = require('../../common/util/functions-utils')
 
 module.exports = {
 
@@ -13,15 +14,17 @@ module.exports = {
      * @param permission
      * @returns {Promise<void>}
      */
-    create: async (role, permission, roleName, permissionObj) => {
-        rbac.grant(await rbac.getRole(roleName), await rbac.getPermission(permissionObj.action, permissionObj.resource))
-        RolePermission.findOrCreate({
-            where:{
-            RoleId: role,
-            PermissionId: permission
-            }
-        })
-    },
+    create: (RoleId, permission) =>
+        tryCatch(async () => {
+            rbac.grant(await rbac.getRole((await rolesDal.getSpecificById(RoleId)).role), await rbac.getPermission(permission.action, permission.resource))
+            return RolePermission.findOrCreate({
+                where: {
+                    RoleId: RoleId,
+                    PermissionId: permission.id
+                }
+            })
+        }),
+
     /**
      *
      * @param role
@@ -29,27 +32,25 @@ module.exports = {
      * @returns {Promise<void>}
      */
     delete: (role, permission) =>
-        RolePermission.destroy({
-            where: {
-                RoleId: role, PermissionId: permission
-            }
-        }),
+        tryCatch(() =>
+            RolePermission.destroy({
+                where: {
+                    RoleId: role, PermissionId: permission
+                }
+            })),
+
     /**
      *
      * @param permission
      * @returns {Promise<void>}
      */
     getRolesByPermission: (permission) =>
-        RolePermission.findAll({
-            where: {
-                PermissionId: permission
-            }
-        }),
-
-    joinRolesAndPermissions: () =>
-        sequelize.query(
-            "SELECT role,resource,action FROM RolePermission JOIN Role ON Role.id=RolePermission.RoleId JOIN Permission ON Permission.id=RolePermission.PermissionId",
-            { type: sequelize.QueryTypes.SELECT }
+        tryCatch(() =>
+            RolePermission.findAll({
+                where: {
+                    PermissionId: permission
+                }
+            })
         )
 
 }
