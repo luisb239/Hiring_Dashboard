@@ -1,3 +1,7 @@
 .Statistics {
     margin: 20px;
 }
+
+#wdr-tab-open:hover:before {
+    color: 5;
+}

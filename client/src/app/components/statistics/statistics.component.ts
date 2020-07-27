@@ -81,13 +81,16 @@ export class StatisticsComponent implements OnInit {
     toolbar.getTabs = () => {
       // removes unnecessary tabs and customizes others
       tabs = tabs.slice(1);
+      // Open tab
       tabs[0].menu[1].handler = () => this.openRemotelyHandler();
-      tabs[0].menu[0].title = 'Load report';
-      tabs[0].menu[1].title = 'Load configs';
+      tabs[0].menu[0].id = 'my-wdr-tab-open-local-report';
+      tabs[0].menu[1].id = 'my-wdr-tab-open-remote-report';
+      tabs[0].menu[0].title = 'Open report';
+      tabs[0].menu[1].title = 'Open configs';
+      // Save tab
       tabs[1].menu = [
         {
           title: 'Save report', id: 'wdr-tab-save-local',
-          // handler: () => this.child.webDataRocks.save('TestingConfigs.json', 'file', null, null, true),
           handler: () => this.saveLocallyHandler(),
           mobile: false, icon: this.properties.save_local
         },
