@@ -40,7 +40,9 @@ export class CandidateService {
 
   getAllCandidatesWithQueries(profiles: string[], available: boolean) {
     let params = new HttpParams();
-    params = params.append('profiles', profiles.join(','));
+    if (profiles !== null) {
+      params = params.append('profiles', profiles.join(','));
+    }
 
     if (available) {
       params = params.set('available', String(available));

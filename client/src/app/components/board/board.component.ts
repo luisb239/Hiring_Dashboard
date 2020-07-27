@@ -60,7 +60,7 @@ export class BoardComponent implements OnInit {
                 workflow.phases = workflowDao.phases.map(wp => new Phase(wp.phase));
                 workflow.requests = this.properties.requests.filter(req => req.workflow === workflow.workflow);
                 workflow.requests.forEach(request => {
-                  request.phases = workflow.phases;
+                  workflow.phases.forEach(p => request.phases.push(new Phase(p.name, [])));
                   this.fetchProcessesInRequest(request);
                 });
               }, error => {
@@ -79,6 +79,7 @@ export class BoardComponent implements OnInit {
             .map(process => {
               const candidate = new Candidate(process.candidate.name, process.candidate.id);
               candidate.status = process.status;
+              console.log(request);
               return candidate;
             });
         });

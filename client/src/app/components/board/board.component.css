@@ -26,10 +26,27 @@
   padding-left: 10px;
 }
 
-.phase{
+.phase-row {
+  display:flex;
+  flex-direction: row;
+}
+
+.phase-cell {
+  border-collapse: separate;
   width: 150px;
   margin-right: 20px;
 }
+.phase{
+  box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.05), 0 3px 14px 2px rgba(0, 0, 0, 0.05);
+  border-radius: 4px;
+  width: 150px;
+  height:100%;
+  padding-left: 10px;
+}
+
+/*.phase-cell {*/
+/*  display:table-cell;*/
+/*}*/
 
 .title-data {
   border-bottom-left-radius: 20px;
@@ -75,6 +92,7 @@
   border-bottom: solid 1px #ddd;
   border-radius: 4px;
   margin-top: 15px;
+  width: 150px;
   margin-right: 15px;
   box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.05), 0 3px 14px 2px rgba(0, 0, 0, 0.05);
   cursor: grab;
@@ -105,6 +123,7 @@
   border-radius: 4px;
   margin-top: 15px;
   margin-right: 15px;
+  width: 150px;
   box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.05), 0 3px 14px 2px rgba(0, 0, 0, 0.05);
 }
 
@@ -124,6 +143,7 @@
   background: rgb(244, 148, 4);
   border-radius: 4px;
   margin-top: 15px;
+  width: 150px;
   box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.05), 0 3px 14px 2px rgba(0, 0, 0, 0.05);
 }
 

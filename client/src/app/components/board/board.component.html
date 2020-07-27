@@ -1,23 +1,19 @@
 <div class="root">
 
-<!--  <button (click)="alertService.success('Success!!', options)" class="btn btn-success m-1">Success</button>-->
-<!--  <button (click)="alertService.error('Error :(', options)" class="btn btn-danger m-1">Error</button>-->
-<!--  <button (click)="alertService.info('Some info....', options)" class="btn btn-info m-1">Info</button>-->
-<!--  <button (click)="alertService.warn('Warning: ...', options)" class="btn btn-warning m-1">Warn</button>-->
-
   <div class="board table-responsive-xl">
     <div *ngFor="let workflow of properties.workflows" class="full-table">
-      <table #tableContainer>
+      <table #tableContainer class="header-table">
         <caption style="display: none">Board Header</caption>
         <tr>
           <th [colSpan]=workflow.phases.length id="workflow-header">
             <div class="workflow-header bg-dark text-white"><h3>{{workflow.workflow}}</h3></div>
           </th>
         </tr>
-        <tr>
-          <td *ngFor="let phase of workflow.phases">
-            <div>
-              <h4 class="phase">{{phase.name}}</h4>
+        <tr class="phase-row">
+          <td *ngFor="let phase of workflow.phases" class="phase-cell">
+            <div class="phase bg-light text-dark">
+              <h4 class="phase-name">{{phase.name}}</h4>
+<!--              <h4 class="phase">{{phase.name}}</h4>-->
             </div>
           </td>
         </tr>

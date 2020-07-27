@@ -68,7 +68,8 @@ export class StatisticsProfilesComponent implements OnInit {
     };
     this.statisticsService.saveConfigProfile(this.userId, body)
       .subscribe(result => {
-        this.alertService.success(`Profile ${result.id.profileName} created for user ${result.id.userId}`);
+        this.alertService.success(`Profile ${result.id.profileName} created.`);
+        this.activeModal.close('Close click');
       }, error => {
         alert(error);
         console.log(error);
@@ -81,6 +82,7 @@ export class StatisticsProfilesComponent implements OnInit {
       .subscribe(configDao => {
         this.properties.currentProfile =
           new ConfigProfile(configDao.userId, configDao.profileName, configDao.configs);
+        this.activeModal.close('Close click');
         this.profileChosen.emit(this.properties.currentProfile);
       }, error => {
         console.log(error);
