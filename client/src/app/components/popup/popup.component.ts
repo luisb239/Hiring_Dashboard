@@ -148,8 +148,9 @@ export class PopupComponent implements OnInit {
     if (body !== {}) {
       this.processService.updateProcess(this.requestId, this.candidateId, body)
         .subscribe(() => {
-            this.activeModal.close('Close click');
-            this.candidateProcessChanged.emit(`Candidate ${this.candidateId} process has been updated`);
+          this.alertService.success('Updated Candidate successfully!');
+          this.activeModal.close('Close click');
+          this.candidateProcessChanged.emit(`Candidate ${this.candidateId} process has been updated`);
           }, error => {
             console.log(error);
           }
@@ -169,7 +170,7 @@ export class PopupComponent implements OnInit {
 
     this.candidateService.updateCandidate(this.candidate)
       .subscribe(dao => {
-        this.alertService.success('Updated Candidate successfully!');
+
       }, error => {
         console.log(error);
       });

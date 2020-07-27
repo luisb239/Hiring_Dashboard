@@ -76,7 +76,11 @@ export class BoardComponent implements OnInit {
         request.phases.forEach(phase => {
           phase.candidates = dao.processes
             .filter(process => process.phase === phase.name)
-            .map(process => new Candidate(process.candidate.name, process.candidate.id));
+            .map(process => {
+              const candidate = new Candidate(process.candidate.name, process.candidate.id);
+              candidate.status = process.status;
+              return candidate;
+            });
         });
         request.placedCandidates = dao.processes.filter(proc => proc.status === 'Placed').length || 0;
       }, error => {
