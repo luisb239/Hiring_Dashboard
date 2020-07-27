@@ -16,24 +16,69 @@
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-      <div class="navbar-nav">
-        <a *ngIf="!authService.isAuthenticated()" [routerLinkActive]="['active']" [routerLink]="['/home']"
-           class="nav-item nav-link"><h6>Home</h6></a>
-        <a *ngIf="!authService.isAuthenticated()" [routerLinkActive]="['active']" [routerLink]="['/log-in']"
-           class="nav-item nav-link"><h6>Log In</h6></a>
-        <a *ngIf="authService.isAuthenticated()" [routerLinkActive]="['active']" [routerLink]="['/all-requests']"
-           class="nav-item nav-link"><h6>All Requests</h6></a>
-        <a *ngIf="authService.isAuthenticated()" [routerLinkActive]="['active']" [routerLink]="['/board']"
-           class="nav-item nav-link"><h6>Board</h6></a>
-        <a *ngIf="authService.isAuthenticated()" [routerLinkActive]="['active']" [routerLink]="['/create-request']"
-           class="nav-item nav-link"><h6>Create Request</h6></a>
-        <a *ngIf="authService.isAuthenticated()" [routerLinkActive]="['active']" [routerLink]="['/create-candidate']"
-           class="nav-item nav-link"><h6>Create Candidate</h6></a>
-        <a *ngIf="authService.isAuthenticated()" [routerLinkActive]="['active']" [routerLink]="['/statistics']"
-           class="nav-item nav-link"><h6>Statistics</h6></a>
-        <a *ngIf="authService.isAuthenticated()" [routerLinkActive]="['active']" [routerLink]="['/logout']"
-           class="nav-item nav-link"><h6>Logout</h6></a>
+      <div *ngIf="!authService.isAuthenticated()">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a [routerLinkActive]="['active']" [routerLink]="['/home']" class=" nav-link">
+              <h6>Home</h6>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a [routerLinkActive]="['active']" [routerLink]="['/log-in']" class="nav-link">
+              <h6>Log In</h6>
+            </a>
+          </li>
+        </ul>
       </div>
+      <div *ngIf="authService.isAuthenticated()">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a [routerLinkActive]="['active']" [routerLink]="['/board']" class="nav-link">
+              Board
+            </a>
+          </li>
+          <li class="nav-item dropdown">
+            <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle" data-toggle="dropdown"
+               href="#" id="navbarDropdownMenuLinkRequests" role="button">
+              Requests
+            </a>
+            <div aria-labelledby="navbarDropdownMenuLinkRequests" class="dropdown-menu">
+              <a [routerLinkActive]="['active']" [routerLink]="['/all-requests']" class="dropdown-item">
+                All Requests
+              </a>
+              <a [routerLinkActive]="['active']" [routerLink]="['/create-request']" class="dropdown-item">
+                Create Request
+              </a>
+            </div>
+          </li>
+          <li class="nav-item dropdown">
+            <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle" data-toggle="dropdown"
+               href="#" id="navbarDropdownMenuLinkCandidates" role="button">
+              Candidates
+            </a>
+            <div aria-labelledby="navbarDropdownMenuLinkCandidates" class="dropdown-menu">
+              <a [routerLinkActive]="['active']" [routerLink]="['/search-candidate']" class="dropdown-item">
+                Search Candidates
+              </a>
+              <a [routerLinkActive]="['active']" [routerLink]="['/create-candidate']" class="dropdown-item">
+                Create Candidate
+              </a>
+            </div>
+          </li>
+          <li class="nav-item">
+            <a [routerLinkActive]="['active']" [routerLink]="['/statistics']" class="nav-link">
+              Statistics
+            </a>
+          </li>
+        </ul>
+      </div>
+      <ul *ngIf="authService.isAuthenticated()" class="navbar-nav ml-auto">
+        <li class="nav-item navbar-right">
+          <a [routerLinkActive]="['active']" [routerLink]="['/logout']" class="nav-link">
+            Logout
+          </a>
+        </li>
+      </ul>
     </div>
   </nav>
   <app-alert></app-alert>
