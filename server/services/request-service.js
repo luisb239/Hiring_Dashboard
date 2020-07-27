@@ -10,6 +10,7 @@ module.exports = (requestDb, processDb, requestLanguagesDb, authModule, candidat
         createRequest: createRequest,
         getRequestById: getRequestById,
         addLanguagesToRequest: addLanguagesToRequest,
+        addRequestToUser: addRequestToUser
     }
 
     /**
@@ -118,6 +119,13 @@ module.exports = (requestDb, processDb, requestLanguagesDb, authModule, candidat
     async function addLanguagesToRequest({requestId, languages, isMandatory}) {
         await Promise.all(languages.map(async (l) =>
             await requestLanguagesDb.createLanguageRequirement({requestId, language: l, isMandatory})))
+    }
+
+    async function addRequestToUser({userId, requestId}) {
+        // get user roles
+        // TODO -> which role do we choose? job owner or admin, or other in between??
+        const userRoles = await authModule.userRole.getUserActiveRoles(userId);
+        await requestDb.addUserAndRoleToRequest({userId: userId, roleId: userRoles[0].RoleId, requestId: requestId})
     }
 
 }

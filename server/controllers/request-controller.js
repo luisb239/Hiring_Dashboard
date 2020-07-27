@@ -61,6 +61,11 @@ module.exports = (service) => {
             })
         }
 
+        await service.addRequestToUser({
+            userId: req.user.id,
+            requestId: id
+        })
+
         res.status(201).send({
             message: 'Request created successfully',
             id: id

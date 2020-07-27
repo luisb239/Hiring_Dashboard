@@ -8,7 +8,7 @@ module.exports = (query) => {
 
     return {
         getRequests, getRequestById, createRequest,
-        getUserRolesInRequest, updateRequest
+        getUserRolesInRequest, updateRequest, addUserAndRoleToRequest
     }
 
     async function getRequests({
@@ -165,5 +165,19 @@ module.exports = (query) => {
                 new Date(obj[requestSchema.dateToSendProfile]).toLocaleDateString() : null,
             progress: obj[requestSchema.progress]
         }
+    }
+
+    async function addUserAndRoleToRequest({userId, roleId, requestId}) {
+        const statement = {
+            name: 'Add user and role to request',
+            text:
+                `INSERT INTO ${userRoleReqSchema.table} ` +
+                `(${userRoleReqSchema.userId}, ${userRoleReqSchema.roleId}, ${userRoleReqSchema.requestId}) ` +
+                `VALUES ($1, $2, $3)`,
+            values: [userId, roleId, requestId]
+        }
+
+        await query(statement)
+        //TODO -> Check if insert was successful
     }
 }
