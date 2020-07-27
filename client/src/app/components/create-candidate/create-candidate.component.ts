@@ -4,6 +4,7 @@ import {map} from 'rxjs/operators';
 import {RequestPropsService} from '../../services/requestProps/requestProps.service';
 import {FormBuilder, FormGroup} from '@angular/forms';
 import {Router} from '@angular/router';
+import {AlertService} from '../../services/alert/alert.service';
 
 @Component({
   selector: 'app-create-candidate',
@@ -20,7 +21,8 @@ export class CreateCandidateComponent implements OnInit {
   constructor(private candidateService: CandidateService,
               private requestPropsService: RequestPropsService,
               private formBuilder: FormBuilder,
-              private router: Router) {
+              private router: Router,
+              private alertService: AlertService) {
   }
 
   ngOnInit(): void {
@@ -45,7 +47,7 @@ export class CreateCandidateComponent implements OnInit {
 
   onSubmit() {
     if (!this.createForm.value.name || this.fileToUpload === null) {
-      alert('Please insert a name and a cv.');
+      this.alertService.warn('Please insert a name and a CV.');
     } else {
       const body: { name: string, cv: File, info?: string, profiles?: string } = {
         name: this.createForm.value.name,
@@ -59,7 +61,7 @@ export class CreateCandidateComponent implements OnInit {
       }
       this.candidateService.addCandidate(body)
         .subscribe(dao => {
-          alert('Candidate added to the system');
+          this.alertService.success('Candidate added to the system');
           this.router.navigate(['/candidates', dao.id]);
         }, error => {
           console.log(error);

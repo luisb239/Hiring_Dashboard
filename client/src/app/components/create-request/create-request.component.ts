@@ -5,6 +5,7 @@ import {WorkflowService} from 'src/app/services/workflow/workflow.service';
 import {RequestService} from 'src/app/services/request/request.service';
 import {Router} from '@angular/router';
 import {CreateRequestProps} from './create-request-props';
+import {AlertService} from '../../services/alert/alert.service';
 
 
 @Component({
@@ -19,7 +20,8 @@ export class CreateRequestComponent implements OnInit {
     private reqPropsService: RequestPropsService,
     private workflowService: WorkflowService,
     private requestService: RequestService,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private alertService: AlertService
   ) {
   }
 
@@ -112,7 +114,7 @@ export class CreateRequestComponent implements OnInit {
     };
     this.requestService.createRequest(body)
       .subscribe(success => {
-          alert('Request Created Successfully!');
+          this.alertService.success('Request Created Successfully!');
           this.router.navigate(['/all-requests']);
         },
         error => {

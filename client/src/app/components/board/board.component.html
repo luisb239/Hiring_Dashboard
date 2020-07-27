@@ -1,9 +1,9 @@
 <div class="root">
 
-  <button (click)="alertService.success('Success!!', options)" class="btn btn-success m-1">Success</button>
-  <button (click)="alertService.error('Error :(', options)" class="btn btn-danger m-1">Error</button>
-  <button (click)="alertService.info('Some info....', options)" class="btn btn-info m-1">Info</button>
-  <button (click)="alertService.warn('Warning: ...', options)" class="btn btn-warning m-1">Warn</button>
+<!--  <button (click)="alertService.success('Success!!', options)" class="btn btn-success m-1">Success</button>-->
+<!--  <button (click)="alertService.error('Error :(', options)" class="btn btn-danger m-1">Error</button>-->
+<!--  <button (click)="alertService.info('Some info....', options)" class="btn btn-info m-1">Info</button>-->
+<!--  <button (click)="alertService.warn('Warning: ...', options)" class="btn btn-warning m-1">Warn</button>-->
 
   <div class="board table-responsive-xl">
     <div *ngFor="let workflow of properties.workflows" class="full-table">
@@ -11,7 +11,7 @@
         <caption style="display: none">Board Header</caption>
         <tr>
           <th [colSpan]=workflow.phases.length id="workflow-header">
-            <div class="workflow-header"><h3>{{workflow.workflow}}</h3></div>
+            <div class="workflow-header bg-dark text-white"><h3>{{workflow.workflow}}</h3></div>
           </th>
         </tr>
         <tr>
@@ -26,12 +26,12 @@
         <caption style="display: none">Board Content</caption>
         <tr><th id="non-visible"></th></tr>
         <tr>
-          <td class="title-data swim-lane" [colSpan]=workflow.phases.length-1
+          <td class="title-data swim-lane bg-dark text-white" [colSpan]=workflow.phases.length-1
               [routerLink]="['/request-detail', request.id]">
             <h5 class="swim-lane-title">{{request.description}} [Placed: {{request.placedCandidates}}/{{request.quantity}}]</h5>
           </td>
-          <td class="fraction-data swim-lane">
-              <h5 class="swim-lane-minus" (click)="hide($event, request)">&minus;</h5>
+          <td class="fraction-data swim-lane bg-dark text-white">
+            <h5 class="swim-lane-minus" (click)="hide($event, request)">&minus;</h5>
           </td>
         </tr>
         <tr cdkDropListGroup [hidden]=request.hidden>
@@ -41,12 +41,10 @@
               *ngFor="let phase of request.phases; index as i"
               [cdkDropListData]="phase.candidates"
               (cdkDropListDropped)="drop($event, request.id, phase.name)">
-            <div class="task" *ngFor="let candidate of phase.candidates"
+            <div class="task bg-light text-dark" *ngFor="let candidate of phase.candidates"
                  [cdkDragData]="candidate"
                  cdkDrag
-                 (click)="onClick(candidate.id, request, phase.name)">
-              <h6>{{ candidate.name }}</h6>
-            </div>
+                 (click)="onClick(candidate.id, request, phase.name)"><h6>{{ candidate.name }}</h6></div>
             <div (click)="addCandidate(request)" *ngIf="i==0" class="hidden-task">
               <div class="hidden-text"><h6><span>...</span></h6></div>
             </div>

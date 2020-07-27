@@ -48,7 +48,7 @@ module.exports = (service) => {
         if (req.body.profiles) {
             await service.addCandidateProfiles({
                 id: candidate.id,
-                profiles: req.body.profiles
+                profiles: JSON.parse(req.body.profiles)
             })
         }
 

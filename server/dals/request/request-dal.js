@@ -112,7 +112,7 @@ module.exports = (query) => {
         }
 
         // TODO
-        // try catch -> mapear o erro do node pg -> mandar um erro que faça sentido para o service..
+        // try catch -> mapear o erro do node pg -> mandar um erro que faça sentido para o alert..
         // log do erro original -> causa do erro
 
         const result = await query(statement)

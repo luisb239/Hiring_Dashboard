@@ -1,28 +1,27 @@
-.container {
+.root {
+  width: fit-content;
   display: flex;
   flex-direction: column;
-  height: auto;
-  background-color: beige;
 }
 
 .board {
   width: fit-content;
   flex-direction: column;
-  flex-grow: 1;
+  display: flex;
   min-width: 0;
 }
 
 .full-table {
   background-color: rgb(240, 240, 240);
-  width: auto;
+  /*width: auto;*/
   padding: 25px;
+  flex-grow: 1;
   border-radius: 10px;
-  /* background: rgba(255, 255, 255, 0.4); */
   margin: 25px 30px 50px;
 }
 
 .workflow-header {
-  background-color: rgb(82, 255, 184);
+  /*background-color: rgb(82, 255, 184);*/
   border-top-right-radius: 20px;
   padding-left: 10px;
 }
@@ -37,7 +36,7 @@
 }
 
 .swim-lane {
-  background-color: rgb(82, 255, 184);
+  /*background-color: rgb(82, 255, 184);*/
   vertical-align: middle;
 }
 
@@ -72,7 +71,7 @@
 .task {
   display: flex;
   padding: 15px 12px;
-  background: rgb(250, 235, 201);
+  /*background: rgb(250, 235, 201);*/
   border-bottom: solid 1px #ddd;
   border-radius: 4px;
   margin-top: 15px;
@@ -102,7 +101,7 @@
 .hidden-task {
   visibility: visible;
   display: block;
-  background: rgba(213, 203, 188, 0.39);
+  background: rgb(244, 148, 4);
   border-radius: 4px;
   margin-top: 15px;
   margin-right: 15px;
@@ -122,7 +121,7 @@
   visibility: visible;
   display: block;
   padding: 15px 12px;
-  background: rgb(213, 203, 188);
+  background: rgb(244, 148, 4);
   border-radius: 4px;
   margin-top: 15px;
   box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.05), 0 3px 14px 2px rgba(0, 0, 0, 0.05);

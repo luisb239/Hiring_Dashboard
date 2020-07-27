@@ -24,7 +24,7 @@ import {LogoutComponent} from './components/logout/logout.component';
 import {CreateCandidateComponent} from './components/create-candidate/create-candidate.component';
 import {WebDataRocksPivotComponent} from './webdatarocks/webdatarocks.angular4';
 import {StatisticsProfilesComponent} from './components/statistics-profiles/statistics-profiles.component';
-import {AlertModule} from "./alert/alert.module";
+import {AlertModule} from "./components/alert/alert.module";
 
 @NgModule({
   declarations: [

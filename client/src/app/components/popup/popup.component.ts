@@ -10,6 +10,7 @@ import {CandidateService} from '../../services/candidate/candidate.service';
 import {PhaseService} from '../../services/phase/phase.service';
 import {ProcessPhaseService} from '../../services/process-phase/process-phase.service';
 import {map} from 'rxjs/operators';
+import {AlertService} from '../../services/alert/alert.service';
 
 @Component({
   selector: 'app-popup',
@@ -41,7 +42,8 @@ export class PopupComponent implements OnInit {
     private processService: ProcessService,
     private candidateService: CandidateService,
     private phaseService: PhaseService,
-    private processPhaseService: ProcessPhaseService
+    private processPhaseService: ProcessPhaseService,
+    private alertService: AlertService
   ) {
     this.updateForm = this.formBuilder.group(
       {
@@ -167,7 +169,7 @@ export class PopupComponent implements OnInit {
 
     this.candidateService.updateCandidate(this.candidate)
       .subscribe(dao => {
-        alert('Updated Candidate successfully!');
+        this.alertService.success('Updated Candidate successfully!');
       }, error => {
         console.log(error);
       });

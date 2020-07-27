@@ -64,7 +64,8 @@ export class CandidateService {
       formData.append('profileInfo', body.info);
     }
     if (body.profiles) {
-      body.profiles.forEach(profile => formData.append('profiles', profile));
+      // body.profiles.forEach(profile => formData.append('profiles', profile));
+      formData.append('profiles', JSON.stringify(body.profiles));
     }
     return this.http
       .post<any>(`${this.baseUrl}/candidates`, formData, {

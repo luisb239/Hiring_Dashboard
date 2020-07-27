@@ -1,40 +1,40 @@
 <div class="table-responsive-xl root">
-  <div class="box">
-    <div *ngIf="properties.candidate" class="props">
-      <h1>{{properties.candidate.name}}</h1>
-      <div class="property">
-        <h5 class="inline">CV:</h5>
-        <h6 class="inline cv" (click)="downloadCv()">{{properties.candidate.cv}}</h6>
-      </div>
-      <div class="property">
-        <h5>Available?</h5>
-        <div (click)="properties.candidate.available = !properties.candidate.available" class="click-box">
-          <div *ngIf="properties.candidate.available" class="circle available"></div>
-          <div *ngIf="!properties.candidate.available" class="circle not_available"></div>
+    <div class="box">
+      <div *ngIf="properties.candidate" class="props">
+        <h1>{{properties.candidate.name}}</h1>
+        <div class="property">
+          <h5 class="inline">CV:</h5>
+          <h6 class="inline cv" (click)="downloadCv()">{{properties.candidate.cv}}</h6>
+        </div>
+        <div class="property">
+          <h5>Available?</h5>
+          <div (click)="properties.candidate.available = !properties.candidate.available" class="click-box">
+            <div *ngIf="properties.candidate.available" class="circle available"></div>
+            <div *ngIf="!properties.candidate.available" class="circle not_available"></div>
+          </div>
+        </div>
+        <h5>Profile Info</h5>
+        <p>{{properties.candidate.profileInfo}}</p>
+        <h5>Profiles</h5>
+        <div *ngIf="properties.candidate.profiles.length !== 0">
+          <ul>
+            <li *ngFor="let profile of properties.candidate.profiles">{{profile}}</li>
+          </ul>
+        </div>
+        <div *ngIf="properties.candidate.profiles.length === 0">
+          <p>There are no profiles associated.</p>
+        </div>
+        <div *ngIf="properties.requestId">
+          <a [routerLink]="['/board']">
+            <h5>Return to the Board</h5>
+          </a>
         </div>
       </div>
-      <h5>Profile Info</h5>
-      <p>{{properties.candidate.profileInfo}}</p>
-      <h5>Profiles</h5>
-      <div *ngIf="properties.candidate.profiles.length !== 0">
-        <ul>
-          <li *ngFor="let profile of properties.candidate.profiles">{{profile}}</li>
-        </ul>
-      </div>
-      <div *ngIf="properties.candidate.profiles.length === 0">
-        <p>There are no profiles associated.</p>
-      </div>
-      <div *ngIf="properties.requestId">
-        <a [routerLink]="['/board']">
-          <h5>Return to the Board</h5>
-        </a>
-      </div>
-    </div>
-    <div class="procs" *ngIf="properties.requestId && properties.currentRequest && properties.currentProcess">
-      <h3 class=" current">Current Process</h3>
-      <table>
-        <caption style="display: none">Current Processes</caption>
-        <tbody>
+      <div class="procs" *ngIf="properties.requestId && properties.currentRequest && properties.currentProcess">
+        <h3 class=" current">Current Process</h3>
+        <table>
+          <caption style="display: none">Current Processes</caption>
+          <tbody>
           <tr>
             <th id="non-visible1"></th>
           </tr>
@@ -75,14 +75,14 @@
             </td>
             <td>
           </tr>
-        </tbody>
-      </table>
-      <h5 class="older" *ngIf="properties.allProcesses.length === 0">There are no other processes.</h5>
-      <div *ngIf="properties.allRequests.length > 0 && properties.allProcesses.length > 0" class="older">
-        <h3>Other Processes</h3>
-        <table *ngFor="let process of properties.allProcesses; index as i">
-          <caption style="display: none">Other Processes</caption>
-          <tbody>
+          </tbody>
+        </table>
+        <h5 class="older" *ngIf="properties.allProcesses.length === 0">There are no other processes.</h5>
+        <div *ngIf="properties.allRequests.length > 0 && properties.allProcesses.length > 0" class="older">
+          <h3>Other Processes</h3>
+          <table *ngFor="let process of properties.allProcesses; index as i">
+            <caption style="display: none">Other Processes</caption>
+            <tbody>
             <tr>
               <th id="non-visible2"></th>
             </tr>
@@ -123,15 +123,15 @@
               </td>
               <td>
             </tr>
-          </tbody>
-        </table>
+            </tbody>
+          </table>
+        </div>
       </div>
-    </div>
-    <div class="procs" *ngIf="!properties.requestId && properties.allProcesses.length > 0">
-      <h3>All processes</h3>
-      <table *ngFor="let process of properties.allProcesses; index as i">
-        <caption style="display: none">All Processes</caption>
-        <tbody>
+      <div class="procs" *ngIf="!properties.requestId && properties.allProcesses.length > 0">
+        <h3>All processes</h3>
+        <table *ngFor="let process of properties.allProcesses; index as i">
+          <caption style="display: none">All Processes</caption>
+          <tbody>
           <tr>
             <th id="non-visible3"></th>
           </tr>
@@ -172,11 +172,11 @@
             </td>
             <td>
           </tr>
-        </tbody>
-      </table>
+          </tbody>
+        </table>
+      </div>
+      <div class="procs" *ngIf="!properties.requestId && properties.allProcesses.length === 0">
+        <h3>There are no processes.</h3>
+      </div>
     </div>
-    <div class="procs" *ngIf="!properties.requestId && properties.allProcesses.length === 0">
-      <h3>There are no processes.</h3>
-    </div>
-  </div>
 </div>

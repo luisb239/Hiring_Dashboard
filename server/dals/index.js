@@ -13,7 +13,7 @@ async function query(text, params) {
     } catch (e) {
         // log the error
         console.log(e)
-        // check the pg error code and throw respective exception to service layer
+        // check the pg error code and throw respective exception to alert layer
         checkAndThrowError(e)
     }
 }

@@ -79,7 +79,7 @@ export class StatisticsComponent implements OnInit {
     // get all tabs from the toolbar
     let tabs = toolbar.getTabs();
     toolbar.getTabs = () => {
-      // removes unecessary tabs and customizes others
+      // removes unnecessary tabs and customizes others
       tabs = tabs.slice(1);
       tabs[0].menu[1].handler = () => this.openRemotelyHandler();
       tabs[0].menu[0].title = 'Load report';

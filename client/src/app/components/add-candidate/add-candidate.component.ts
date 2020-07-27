@@ -8,6 +8,7 @@ import {ProcessService} from '../../services/process/process.service';
 import {map} from 'rxjs/operators';
 import {RequestService} from '../../services/request/request.service';
 import {RequestList} from '../../model/request/request-list';
+import {AlertService} from '../../services/alert/alert.service';
 
 @Component({
   selector: 'app-add-candidate',
@@ -30,7 +31,8 @@ export class AddCandidateComponent implements OnInit {
     private requestPropsService: RequestPropsService,
     private processService: ProcessService,
     private requestService: RequestService,
-    private formBuilder: FormBuilder) {
+    private formBuilder: FormBuilder,
+    private alertService: AlertService) {
   }
 
   ngOnInit(): void {
@@ -82,6 +84,7 @@ export class AddCandidateComponent implements OnInit {
       this.processService.createProcess(this.request.id, this.candidates[idx].id)
         .subscribe(() => {
             // component('Candidates added to this request successfully!');
+            this.alertService.success('Candidates added to this request successfully!');
             this.activeModal.close('Close click');
             this.candidateAdded.emit();
           }, error => {

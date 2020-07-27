@@ -3,7 +3,7 @@ import {Router, NavigationStart} from '@angular/router';
 import {Subscription} from 'rxjs';
 
 import {Alert, AlertType} from '../alert.model';
-import {AlertService} from '../service/alert.service';
+import {AlertService} from '../../../services/alert/alert.service';
 
 @Component({selector: 'app-alert', templateUrl: 'alert.component.html'})
 export class AlertComponent implements OnInit, OnDestroy {

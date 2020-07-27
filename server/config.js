@@ -1,7 +1,7 @@
 require("dotenv").config();
 
 module.exports = (app) => {
-    const nodemailer = require("nodemailer")
+    // const nodemailer = require("nodemailer")
 
     const multer = require('multer')
     const upload = multer({ storage: multer.memoryStorage() })
@@ -12,28 +12,28 @@ module.exports = (app) => {
     app.use(bodyParser.urlencoded({extended: false}))
     app.use(bodyParser.json());
 
-    const transporter = nodemailer.createTransport(
-        {
-            pool: true,
-            host: process.env.NODEMAILER_HOST,
-            port: process.env.NODEMAILER_PORT,
-            secure: false,
-            auth: {
-                user: process.env.NODEMAILER_AUTH_USER,
-                pass: process.env.NODEMAILER_AUTH_PASSWORD
-            },
-            tls: {
-                rejectUnauthorized: false
-            }
-        }
-    )
-    transporter.verify(function (error) {
-        if (error) {
-            console.log(error);
-        } else {
-            console.log("SMTP Server setup was successful.");
-        }
-    });
+    // const transporter = nodemailer.createTransport(
+    //     {
+    //         pool: true,
+    //         host: process.env.NODEMAILER_HOST,
+    //         port: process.env.NODEMAILER_PORT,
+    //         secure: false,
+    //         auth: {
+    //             user: process.env.NODEMAILER_AUTH_USER,
+    //             pass: process.env.NODEMAILER_AUTH_PASSWORD
+    //         },
+    //         tls: {
+    //             rejectUnauthorized: false
+    //         }
+    //     }
+    // )
+    // transporter.verify(function (error) {
+    //     if (error) {
+    //         console.log(error);
+    //     } else {
+    //         console.log("SMTP Server setup was successful.");
+    //     }
+    // });
     const dbOptions = {
         "host": process.env.PGHOST,
         "port": process.env.PGPORT,
@@ -103,5 +103,6 @@ module.exports = (app) => {
             ]
         }
     }
-    return { app, transporter, dbOptions, jsonObj, upload, validator }
+    // return { app, transporter, dbOptions, jsonObj, upload, validator }
+    return { app, dbOptions, jsonObj, upload, validator }
 }

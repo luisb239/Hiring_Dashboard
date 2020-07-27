@@ -4,6 +4,7 @@ import { StatisticsService } from 'src/app/services/statistics/statistics.servic
 import { StatisticsProfilesProps } from './statistics-profiles-props';
 import { ConfigProfile } from 'src/app/model/statistics/config-profile';
 import { FormBuilder } from '@angular/forms';
+import {AlertService} from '../../services/alert/alert.service';
 
 @Component({
   selector: 'app-statistics-profiles',
@@ -21,7 +22,9 @@ export class StatisticsProfilesComponent implements OnInit {
   constructor(
     public activeModal: NgbActiveModal,
     public statisticsService: StatisticsService,
-    private formBuilder: FormBuilder) { }
+    private formBuilder: FormBuilder,
+    private alertService: AlertService
+    ) { }
 
   ngOnInit(): void {
     // this.requestService.getRequest(this.request.id)
@@ -65,7 +68,7 @@ export class StatisticsProfilesComponent implements OnInit {
     };
     this.statisticsService.saveConfigProfile(this.userId, body)
       .subscribe(result => {
-        alert(`Profile ${result.id.profileName} created for user ${result.id.userId}`);
+        this.alertService.success(`Profile ${result.id.profileName} created for user ${result.id.userId}`);
       }, error => {
         alert(error);
         console.log(error);

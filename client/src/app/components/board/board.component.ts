@@ -18,7 +18,7 @@ import {BoardProps} from './board-props';
 import {AddCandidateComponent} from '../add-candidate/add-candidate.component';
 import {AuthService} from '../../services/auth/auth.service';
 import {User} from '../../model/user/user';
-import {AlertService} from '../../alert/service/alert.service';
+import {AlertService} from '../../services/alert/alert.service';
 
 @Component({
   selector: 'app-board',
