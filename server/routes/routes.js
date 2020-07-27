@@ -259,17 +259,17 @@ module.exports = function (router, controllers, authModule, upload, validator) {
 
     //TODO -> MISSING OTHER FIELDS
     router.put(`/${candidates}/:id`, [
-        upload.single('cv'),
+        // upload.single('cv'),
         body('available').optional().isBoolean().withMessage("available must be of string type"),
-        body('profileInfo').optional().isString().withMessage("profile info must be of string type")
-        /*checkSchema({
-            'cv': {
-                custom: {
-                    options: (value, {req}) => !!req.file,
-                    errorMessage: 'Cv file needs to be uploaded',
-                }
-            }
-        })*/
+        body('profileInfo').optional().isString().withMessage("profile info must be of string type"),
+        // checkSchema({
+        //     'cv': {
+        //         custom: {
+        //             options: (value, {req}) => !!req.file,
+        //             errorMessage: 'Cv file needs to be uploaded',
+        //         }
+        //     }
+        // })
     ], handle(controllers.candidate.updateCandidate))
 
     /**

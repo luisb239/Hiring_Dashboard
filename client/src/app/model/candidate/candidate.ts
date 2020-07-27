@@ -10,4 +10,5 @@ export class Candidate {
               public processes: CandidateProcess[] = []
   ) {
   }
+  public status: string;
 }

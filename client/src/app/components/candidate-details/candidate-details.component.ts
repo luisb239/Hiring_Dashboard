@@ -1,18 +1,18 @@
-import { Component, OnInit } from '@angular/core';
-import { CandidateService } from '../../services/candidate/candidate.service';
-import { Router } from '@angular/router';
-import { Candidate } from 'src/app/model/candidate/candidate';
-import { ProcessService } from '../../services/process/process.service';
-import { Process } from '../../model/process/process';
-import { ProcessPhase } from '../../model/process/process-phase';
-import { RequestService } from '../../services/request/request.service';
-import { Request } from '../../model/request/request';
-import { RequestList } from '../../model/request/request-list';
-import { PhaseInfo } from '../../model/phase/phase-info';
-import { CandidateProcess } from '../../model/candidate/candidate-process';
-import { CandidateDetailsProps } from './candidate-details-props';
-import { map } from 'rxjs/operators';
-import { RequestPropsService } from '../../services/requestProps/requestProps.service';
+import {Component, OnInit} from '@angular/core';
+import {CandidateService} from '../../services/candidate/candidate.service';
+import {Router} from '@angular/router';
+import {Candidate} from 'src/app/model/candidate/candidate';
+import {ProcessService} from '../../services/process/process.service';
+import {Process} from '../../model/process/process';
+import {ProcessPhase} from '../../model/process/process-phase';
+import {RequestService} from '../../services/request/request.service';
+import {Request} from '../../model/request/request';
+import {RequestList} from '../../model/request/request-list';
+import {PhaseInfo} from '../../model/phase/phase-info';
+import {CandidateProcess} from '../../model/candidate/candidate-process';
+import {CandidateDetailsProps} from './candidate-details-props';
+import {map} from 'rxjs/operators';
+import {RequestPropsService} from '../../services/requestProps/requestProps.service';
 
 
 @Component({
@@ -47,8 +47,7 @@ export class CandidateDetailsComponent implements OnInit {
           result.cvFileName,
           dao.profiles.map(pi => pi.profile),
           dao.processes.map(proc => new CandidateProcess(proc.status, proc.requestId)));
-        const myTemp = this.properties.candidate.processes.filter(process => process.requestId !== this.properties.requestId)
-        myTemp
+        this.properties.candidate.processes.filter(process => process.requestId !== this.properties.requestId)
           .forEach(process => {
             this.requestService.getRequest(process.requestId)
               .subscribe(requestDao => {
@@ -64,17 +63,17 @@ export class CandidateDetailsComponent implements OnInit {
 
             this.processService.getProcess(process.requestId, this.properties.candidateId)
               .subscribe(processDao => {
-                this.properties.allProcesses.push(new Process(processDao.status,
-                  processDao.unavailableReason,
-                  processDao.phases.map(phase => new ProcessPhase(
-                    phase.phase,
-                    phase.startDate,
-                    phase.updateDate,
-                    phase.notes,
-                    phase.infos.map(info => new PhaseInfo(info.name, info.value))
-                  )))
-                );
-              },
+                  this.properties.allProcesses.push(new Process(processDao.status,
+                    processDao.unavailableReason,
+                    processDao.phases.map(phase => new ProcessPhase(
+                      phase.phase,
+                      phase.startDate,
+                      phase.updateDate,
+                      phase.notes,
+                      phase.infos.map(info => new PhaseInfo(info.name, info.value))
+                    )))
+                  );
+                },
                 error => {
                   console.log(error);
                 });
@@ -122,7 +121,7 @@ export class CandidateDetailsComponent implements OnInit {
   downloadCv() {
     this.candidateService.downloadCandidateCv(this.properties.candidateId)
       .subscribe(data => {
-        const blob = new Blob([data], { type: 'application/pdf' });
+        const blob = new Blob([data], {type: 'application/pdf'});
         const downloadURL = window.URL.createObjectURL(blob);
         const link = document.createElement('a');
         link.href = downloadURL;
