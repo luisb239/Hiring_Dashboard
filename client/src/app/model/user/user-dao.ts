@@ -5,3 +5,7 @@ export class UserDao {
   last_sign_in: string;
   is_active: boolean;
 }
+
+export class UsersDao {
+  users: UserDao[];
+}
