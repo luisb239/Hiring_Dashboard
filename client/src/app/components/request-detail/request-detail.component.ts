@@ -8,6 +8,8 @@ import {RequestDetailProps} from './request-detail-props';
 import {map} from 'rxjs/operators';
 import {FormArray, FormBuilder, FormControl} from '@angular/forms';
 import {AlertService} from '../../services/alert/alert.service';
+import {UserService} from '../../services/user/user.service';
+import {User} from '../../model/user/user';
 
 @Component({
   selector: 'app-request-detail',
@@ -23,7 +25,7 @@ export class RequestDetailComponent implements OnInit {
     private router: Router,
     private requestService: RequestService,
     private formBuilder: FormBuilder,
-    private userService: userService,
+    private userService: UserService,
     private alertService: AlertService) {
   }
 
@@ -86,7 +88,7 @@ export class RequestDetailComponent implements OnInit {
       });
 
     this.userService.getAllRecruiters()
-      .subscribe(dao => this.properties.users = dao);
+      .subscribe(dao => this.properties.users = dao.users.map(user => new User(user.id, user.username)));
   }
 
   /**

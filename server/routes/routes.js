@@ -158,6 +158,13 @@ module.exports = function (router, controllers, authModule, upload, validator) {
     ], handle(controllers.process.updateProcess))
 
     /**
+     * Add User to Request
+     */
+    router.post(`${requests}/requests/:id/${users}`, [
+        body('userId').exists().isNumeric().withMessage("User Id must exist and be of numeric type")
+    ], handle(controllers.request.postUser))
+
+    /**
      * Update process phase notes
      */
     router.put(`/${requests}/:requestId/${candidates}/:candidateId/${process}/${phases}/:phase`, [
@@ -178,13 +185,13 @@ module.exports = function (router, controllers, authModule, upload, validator) {
      */
     router.get(`/${phases}`, handle(controllers.phase.getPhases))
 
+
     /**
      * Get phase detail
      */
     router.get(`/${phases}/:phase`, [
         param('phase').isString().withMessage("Phase must be of string type")
     ], handle(controllers.phase.getPhase))
-
 
     /**
      * Get all skills

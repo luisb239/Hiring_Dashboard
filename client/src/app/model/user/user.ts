@@ -1,7 +1,7 @@
 export class User {
   constructor(public userId: number,
               public userEmail: string,
-              public roles: Role[]) {
+              public roles: Role[] = []) {
   }
 }
 
