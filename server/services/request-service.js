@@ -11,7 +11,7 @@ module.exports = (requestDb, processDb, requestLanguagesDb, authModule, candidat
         getRequestById: getRequestById,
         addLanguagesToRequest: addLanguagesToRequest,
         addRequestToUser: addRequestToUser,
-        addUserAsRecruiterToRequest: addUserAsRecruiterToRequest
+        addUserToRequest: addUserToRequest
     }
 
     /**
@@ -129,7 +129,7 @@ module.exports = (requestDb, processDb, requestLanguagesDb, authModule, candidat
         await requestDb.addUserAndRoleToRequest({userId: userId, roleId: userRoles[0].RoleId, requestId: requestId})
     }
 
-    async function addUserAsRecruiterToRequest({requestId, userId, roleId}) {
+    async function addUserToRequest({requestId, userId, roleId}) {
         await requestDb.addUserAndRoleToRequest({userId, roleId, requestId})
     }
 
