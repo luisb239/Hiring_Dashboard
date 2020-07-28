@@ -98,6 +98,13 @@ module.exports = function (router, controllers, authModule, upload, validator) {
     ], handle(controllers.statistics.saveUserStatisticsConfigs))
 
     /**
+     * Get all users + query filter
+     */
+    router.get(`/${users}`, [
+        query('roleId').optional().isInt(),
+    ], handle(controllers.user.getUsers))
+
+    /**
      * Get user's statistics configs
      */
     router.get(`/${users}/:id/${statistics}/configs`, [
@@ -161,7 +168,7 @@ module.exports = function (router, controllers, authModule, upload, validator) {
      * Add User to Request
      */
     router.post(`${requests}/requests/:id/${users}`, [
-        body('userId').exists().isNumeric().withMessage("User Id must exist and be of numeric type")
+        body('userId').exists().isInt().withMessage("User Id must exist and be of int type")
     ], handle(controllers.request.postUser))
 
     /**

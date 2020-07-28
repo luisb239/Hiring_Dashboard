@@ -2,6 +2,8 @@
 
 module.exports = (db, authModule) => {
 
+    const user = require('./user-service.js')(db.user)
+
     const request = require('./request-service.js')(db.request, db.process,
         db.requestLanguage, authModule, db.candidate)
 
@@ -21,6 +23,6 @@ module.exports = (db, authModule) => {
     const statistics = require('./statistics-service.js')(db.statistics, authModule)
 
     return {
-        requestProps, request, candidate, phase, process, auth, statistics
+        user, requestProps, request, candidate, phase, process, auth, statistics
     }
 }
