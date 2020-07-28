@@ -3,7 +3,8 @@
 module.exports = (service) => {
 
     return {
-        getUsers: getUsers
+        getUsers: getUsers,
+        getRoleByName: getRoleByName
     }
 
     async function getUsers(req, res) {
@@ -11,6 +12,13 @@ module.exports = (service) => {
             roleId: req.query.roleId
         })
         res.status(200).send(requests)
+    }
+
+    async function getRoleByName(req, res) {
+        const role = await service.getRoleByName({
+            role: req.query.role
+        })
+        res.status(200).send(role)
     }
 
 }

@@ -2,7 +2,7 @@
 
 module.exports = (db, authModule) => {
 
-    const user = require('./user-service.js')(db.user)
+    const user = require('./user-service.js')(db.user, authModule)
 
     const request = require('./request-service.js')(db.request, db.process,
         db.requestLanguage, authModule, db.candidate)

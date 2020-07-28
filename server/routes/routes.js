@@ -9,6 +9,7 @@ module.exports = function (router, controllers, authModule, upload, validator) {
     const { body, param, query, checkSchema } = validator
 
     const users = 'users'
+    const roles = 'roles'
     const candidates = 'candidates'
     const requests = 'requests'
     const phases = 'phases'
@@ -103,6 +104,14 @@ module.exports = function (router, controllers, authModule, upload, validator) {
     router.get(`/${users}`, [
         query('roleId').optional().isInt(),
     ], handle(controllers.user.getUsers))
+
+    /**
+     * Get role by name
+     */
+    // TODO -> maybe find a better route..
+    router.get(`/${roles}`, [
+        query('role').isString().withMessage("Role Name must be a string")
+    ], handle(controllers.user.getRoleByName))
 
     /**
      * Get user's statistics configs

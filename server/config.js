@@ -60,16 +60,18 @@ module.exports = (app) => {
 
             { "resource": "requests-properties", "action": "GET" },
 
-            { "resource": "candidates", "action": "GET" },
-            { "resource": "candidates", "action": "POST" },
-            { "resource": "candidates", "action": "PUT" },
+            {"resource": "candidates", "action": "GET"},
+            {"resource": "candidates", "action": "POST"},
+            {"resource": "candidates", "action": "PUT"},
 
-            { "resource": "process", "action": "GET" },
+            {"resource": "process", "action": "GET"},
 
-            { "resource": "statistics", "action": "GET" },
-            { "resource": "users", "action": "GET" },
-            { "resource": "users", "action": "POST" }
+            {"resource": "statistics", "action": "GET"},
 
+            {"resource": "users", "action": "GET"},
+            {"resource": "users", "action": "POST"},
+
+            {"resource": "roles", "action": "GET"},
         ],
         "grants": {
             //TODO -> guest permissions
@@ -81,16 +83,17 @@ module.exports = (app) => {
                 { "resource": "requests", "action": "POST" },
                 { "resource": "requests", "action": "PUT" },
 
-                { "resource": "workflows", "action": "GET" },
-                { "resource": "phases", "action": "GET" },
-                { "resource": "requests-properties", "action": "GET" },
-                { "resource": "candidates", "action": "GET" },
-                { "resource": "candidates", "action": "POST" },
-                { "resource": "candidates", "action": "PUT" },
-                { "resource": "process", "action": "GET" },
-                { "resource": "statistics", "action": "GET" },
-                { "resource": "users", "action": "GET" },
-                { "resource": "users", "action": "POST" }
+                {"resource": "workflows", "action": "GET"},
+                {"resource": "phases", "action": "GET"},
+                {"resource": "requests-properties", "action": "GET"},
+                {"resource": "candidates", "action": "GET"},
+                {"resource": "candidates", "action": "POST"},
+                {"resource": "candidates", "action": "PUT"},
+                {"resource": "process", "action": "GET"},
+                {"resource": "statistics", "action": "GET"},
+                {"resource": "users", "action": "GET"},
+                {"resource": "users", "action": "POST"},
+                {"resource": "roles", "action": "GET"},
             ],
             "recruiter": [
                 { "role": "guest" }
