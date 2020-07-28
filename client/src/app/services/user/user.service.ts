@@ -26,9 +26,9 @@ export class UserService {
   /**
    * This function retrieves all the recruiters from the database.
    */
-  getAllRecruiters() {
+  getAllUsers(role: string) {
     let params = new HttpParams();
-    params = params.set('roleId', '3');
+    params = params.set('role', role);
     return this.http.get<UsersDao>(`${this.baseUrl}/users`, {
       headers: new HttpHeaders({
         'Content-Type': 'application/json'

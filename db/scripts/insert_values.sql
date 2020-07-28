@@ -10,7 +10,10 @@ INSERT INTO "UserRoles" ("UserId", "RoleId", active, start_date, updater)
 VALUES    
     (2, 1, true, CURRENT_DATE, 1),
     (3, 1, true, CURRENT_DATE, 1),
-    (4, 1, true, CURRENT_DATE, 1);
+    (4, 1, true, CURRENT_DATE, 1),
+	(2, 2, true, CURRENT_DATE, 1),
+    (3, 2, true, CURRENT_DATE, 1),
+    (4, 2, true, CURRENT_DATE, 1);
 
 
 INSERT INTO user_profile(user_id, user_email, is_active)
@@ -35,7 +38,10 @@ INSERT INTO user_role(user_id, role_id, role_type)
 	VALUES	
 	(2, 1, 'Team Leader'),
 	(3, 1, 'Team Leader'),
-	(4, 1, 'Team Leader');
+	(4, 1, 'Team Leader'),
+	(2, 2, 'Team Worker'),
+	(3, 2, 'Team Worker'),
+	(4, 2, 'Team Worker');
 	
 INSERT INTO request_state
 	VALUES
