@@ -1,10 +1,12 @@
 'use strict'
 
 const user = require('../../schemas/user-roles-schemas/user-schema.js')
+const userRole = require('../../schemas/user-roles-schemas/user-role-schema.js')
 
 module.exports = (query) => {
 
     return {
+        getUsers: getUsers,
         getUserById: getUserById,
         createUser: createUser
     }
@@ -17,7 +19,22 @@ module.exports = (query) => {
         }
     }
 
-    async function getUserById({userId}) {
+    async function getUsers({ roleId }) {
+        const statement = {
+            name: 'Get Users',
+            text:
+                `SELECT U.* FROM ${user.table} AS U ` +
+                `INNER JOIN ${userRole.table} AS UR ON ` +
+                `U.${user.id} = UR.${userRole.userId} ` +
+                `WHERE UR.${userRole.roleId} = $1;`,
+            values: [roleId]
+        }
+        const result = await query(statement)
+        return result.rows.map(row => extractUser(row))
+    }
+
+
+    async function getUserById({ userId }) {
         const statement = {
             name: 'Get User By Id',
             text:
@@ -33,7 +50,7 @@ module.exports = (query) => {
         return null
     }
 
-    async function createUser({userId, email, isActive = true}) {
+    async function createUser({ userId, email, isActive = true }) {
         const statement = {
             name: 'Create User',
             text:

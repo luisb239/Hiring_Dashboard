@@ -2,6 +2,8 @@
 
 module.exports = (services) => {
 
+    const user = require('./user-controller.js')(services.user)
+
     const request = require('./request-controller.js')(services.request)
 
     const requestProps = require('./request-props-controller.js')(services.requestProps)
@@ -16,5 +18,5 @@ module.exports = (services) => {
 
     const statistics = require('./statistics-controller.js')(services.statistics)
 
-    return {request, candidate, requestProps, phase, process, auth, statistics}
+    return { user, request, candidate, requestProps, phase, process, auth, statistics }
 }
