@@ -79,7 +79,6 @@ export class AddCandidateComponent implements OnInit {
 
   onSubmit() {
     const values = this.candidateForm.value.candidatesIdx;
-    console.log(values);
     values.forEach(idx => {
       this.processService.createProcess(this.request.id, this.candidates[idx].id)
         .subscribe(() => {
@@ -97,8 +96,7 @@ export class AddCandidateComponent implements OnInit {
   filterCandidates() {
     this.candidateService.getAllCandidatesWithQueries(this.filterForm.value.profiles, this.filterForm.value.available)
       .pipe(map(dao => dao.candidates.filter(
-        candidate => !this.existingCandidates.includes(candidate.id)
-      ).map(c =>
+        candidate => !this.existingCandidates.includes(candidate.id)).map(c =>
         new Candidate(c.name, c.id, c.profileInfo, c.available, c.cvFileName))))
       .subscribe(result => {
         this.candidates = result;
@@ -108,6 +106,7 @@ export class AddCandidateComponent implements OnInit {
   }
 
   getAllCandidates() {
+    console.log(this.filterForm);
     this.candidateService.getAllCandidates()
       .pipe(
         map(dao => dao.candidates.filter(

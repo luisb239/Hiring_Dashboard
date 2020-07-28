@@ -1,0 +1,40 @@
+.filter-box {
+  margin-left: 50px;
+  display: inline;
+}
+
+.profile {
+  max-width: fit-content;
+}
+
+.filter {
+  margin-bottom: 10px;
+  margin-right: 10px;
+  display: inline;
+}
+
+.reset {
+  display: inline;
+}
+
+.add {
+  margin-top: 10px;
+  display: block;
+}
+
+table {
+  border-collapse: separate;
+  border-spacing: 10px 10px;
+}
+
+.candidate_name {
+  cursor: pointer;
+}
+
+.td {
+  vertical-align: middle;
+}
+
+.assign {
+  text-align: center;
+}

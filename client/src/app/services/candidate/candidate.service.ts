@@ -40,7 +40,7 @@ export class CandidateService {
 
   getAllCandidatesWithQueries(profiles: string[], available: boolean) {
     let params = new HttpParams();
-    if (profiles !== null) {
+    if (profiles && profiles.length > 0) {
       params = params.append('profiles', profiles.join(','));
     }
 
