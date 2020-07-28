@@ -6,6 +6,8 @@ import {UserRole} from 'src/app/model/user/user-role';
 import {ProcessList} from 'src/app/model/process/process-list';
 import {RequestDetailProps} from './request-detail-props';
 import {map} from 'rxjs/operators';
+import {FormArray, FormBuilder, FormControl} from '@angular/forms';
+import {AlertService} from '../../services/alert/alert.service';
 
 @Component({
   selector: 'app-request-detail',
@@ -19,7 +21,10 @@ export class RequestDetailComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private requestService: RequestService) {
+    private requestService: RequestService,
+    private formBuilder: FormBuilder,
+    private userService: userService,
+    private alertService: AlertService) {
   }
 
   /**
@@ -80,6 +85,8 @@ export class RequestDetailComponent implements OnInit {
         this.properties.valuedLanguages = result.valued;
       });
 
+    this.userService.getAllRecruiters()
+      .subscribe(dao => this.properties.users = dao);
   }
 
   /**
@@ -90,6 +97,35 @@ export class RequestDetailComponent implements OnInit {
   ngOnInit() {
     this.properties.requestId = history.state.requestId || this.router.url.split('/')[2];
     this.getRequest(this.properties.requestId);
+    this.properties.userForm = this.formBuilder.group({
+      userIdx: this.formBuilder.array([])
+    });
+  }
+
+  onChange(idx: number, event: any) {
+    const array = this.properties.userForm.controls.userIdx as FormArray;
+
+    if (event.target.checked) {
+      array.push(new FormControl(idx));
+    } else {
+      const index = array.controls.findIndex(x => x.value === idx);
+      array.removeAt(index);
+    }
+  }
+
+  onSubmit() {
+    const values = this.properties.userForm.value.userIdx;
+    console.log(values);
+    values.forEach(idx => {
+      this.requestService.addUser(this.properties.requestId, this.properties.users[idx].userId)
+        .subscribe(() => {
+            this.alertService.success('Recruiters added to this request successfully!');
+            this.getRequest(this.properties.requestId);
+          }, error => {
+            console.log(error);
+          }
+        );
+    });
   }
 
 }

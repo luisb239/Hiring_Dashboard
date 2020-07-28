@@ -122,4 +122,12 @@ export class RequestService {
       },
         catchError(this.errorHandler.handleError));
   }
+
+  addUser(requestId: number, userId: number) {
+    return this.http.post<SuccessPostDao>(`${this.baseUrl}/requests/${requestId}/users`, {userId}, httpOptions)
+      .pipe(data => {
+        return data;
+      },
+      catchError(this.errorHandler.handleError));
+  }
 }

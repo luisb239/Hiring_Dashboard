@@ -79,7 +79,6 @@ export class BoardComponent implements OnInit {
             .map(process => {
               const candidate = new Candidate(process.candidate.name, process.candidate.id);
               candidate.status = process.status;
-              console.log(request);
               return candidate;
             });
         });

@@ -82,6 +82,29 @@
               </tbody>
             </table>
           </div>
+          <form [formGroup]="properties.userForm" (submit)="onSubmit()">
+            <table class="table-responsive-xl">
+              <caption style="display: none">Available Candidates Table</caption>
+              <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Email</th>
+                <th scope="col">Assign</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr *ngFor="let user of properties.users; index as i">
+                <th scope="row">{{ i + 1 }}</th>
+                <td class="candidate_name td">
+                  {{user.userEmail}}
+                </td>
+                <td class="form-check assign td">
+                  <input class="form-check-input" type="checkbox" (change)="onChange(i, $event)">
+                </td>
+              </tr>
+            </table>
+            <button type="submit" class="btn btn-primary add">Add Candidates</button>
+          </form>
         </div>
         <div class='col'>
           <div class='Candidates'>
