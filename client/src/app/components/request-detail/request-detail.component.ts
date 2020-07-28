@@ -33,7 +33,7 @@ export class RequestDetailComponent implements OnInit {
    * This function fetches all the attributes inherent to a request. Used for the view Request Details.
    * @param requestId is used to get a specific request from the database.
    */
-  private getRequest(requestId: number) {
+  private getRequestAndUsers(requestId: number) {
     this.requestService.getRequest(requestId)
       .pipe(
         map(dao => {
@@ -85,10 +85,17 @@ export class RequestDetailComponent implements OnInit {
         this.properties.processes = result.processes;
         this.properties.mandatoryLanguages = result.mandatory;
         this.properties.valuedLanguages = result.valued;
+        this.userService.getAllUsers('Recruiter')
+          .subscribe(dao => {
+              this.properties.users = dao.users
+                .filter(user => !this.properties.userRoles.map(u => u.userId).includes(user.id))
+                .map(user => new User(user.id, user.email));
+              console.log(this.properties.users);
+            }
+          );
       });
 
-    this.userService.getAllRecruiters()
-      .subscribe(dao => this.properties.users = dao.users.map(user => new User(user.id, user.username)));
+
   }
 
   /**
@@ -98,7 +105,7 @@ export class RequestDetailComponent implements OnInit {
    */
   ngOnInit() {
     this.properties.requestId = history.state.requestId || this.router.url.split('/')[2];
-    this.getRequest(this.properties.requestId);
+    this.getRequestAndUsers(this.properties.requestId);
     this.properties.userForm = this.formBuilder.group({
       userIdx: this.formBuilder.array([])
     });
@@ -119,10 +126,10 @@ export class RequestDetailComponent implements OnInit {
     const values = this.properties.userForm.value.userIdx;
     console.log(values);
     values.forEach(idx => {
-      this.requestService.addUser(this.properties.requestId, this.properties.users[idx].userId)
+      this.requestService.addUser(this.properties.requestId, this.properties.users[idx].userId, 'Recruiter')
         .subscribe(() => {
             this.alertService.success('Recruiters added to this request successfully!');
-            this.getRequest(this.properties.requestId);
+            this.getRequestAndUsers(this.properties.requestId);
           }, error => {
             console.log(error);
           }

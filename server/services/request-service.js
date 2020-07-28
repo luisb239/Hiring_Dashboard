@@ -10,7 +10,8 @@ module.exports = (requestDb, processDb, requestLanguagesDb, authModule, candidat
         createRequest: createRequest,
         getRequestById: getRequestById,
         addLanguagesToRequest: addLanguagesToRequest,
-        addRequestToUser: addRequestToUser
+        addRequestToUser: addRequestToUser,
+        addUserToRequest: addUserToRequest
     }
 
     /**
@@ -126,6 +127,10 @@ module.exports = (requestDb, processDb, requestLanguagesDb, authModule, candidat
         // TODO -> which role do we choose? job owner or admin, or other in between??
         const userRoles = await authModule.userRole.getUserActiveRoles(userId);
         await requestDb.addUserAndRoleToRequest({userId: userId, roleId: userRoles[0].RoleId, requestId: requestId})
+    }
+
+    async function addUserToRequest({requestId, userId, roleId}) {
+        await requestDb.addUserAndRoleToRequest({userId, roleId, requestId})
     }
 
 }

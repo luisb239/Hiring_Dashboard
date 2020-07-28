@@ -6,6 +6,7 @@ module.exports = (service) => {
         getRequests: getRequests,
         postRequest: postRequest,
         getRequestById: getRequestById,
+        postUser: postUser
     }
 
     async function getRequests(req, res) {
@@ -69,6 +70,13 @@ module.exports = (service) => {
         res.status(201).send({
             message: 'Request created successfully',
             id: id
+        })
+    }
+
+    async function postUser(req, res) {
+        await service.addUserToRequest({requestId: req.params.id, userId: req.body.userId, roleId: req.body.roleId})
+        res.status(201).send({
+            message: 'User added to the request successfully'
         })
     }
 

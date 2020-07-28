@@ -127,9 +127,10 @@ export class RequestService {
    * This function adds a user with the id userId to the request with the id requestId in the database.
    * @param requestId is used to specify a request.
    * @param userId is used to specify a user.
+   * @param role is used to specify a role.
    */
-  addUser(requestId: number, userId: number) {
-    return this.http.post<SuccessPostDao>(`${this.baseUrl}/requests/${requestId}/users`, {userId}, httpOptions)
+  addUser(requestId: number, userId: number, role: string) {
+    return this.http.post<SuccessPostDao>(`${this.baseUrl}/requests/${requestId}/users`, {userId, role}, httpOptions)
       .pipe(data => {
         return data;
       },

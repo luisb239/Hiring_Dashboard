@@ -176,8 +176,9 @@ module.exports = function (router, controllers, authModule, upload, validator) {
     /**
      * Add User to Request
      */
-    router.post(`${requests}/requests/:id/${users}`, [
-        body('userId').exists().isInt().withMessage("User Id must exist and be of int type")
+    router.post(`/${requests}/:id/${users}`, [
+        body('userId').exists().isInt().withMessage("User Id must exist and be of int type"),
+        body('roleId').exists().isInt().withMessage("Role Id must exist and be of int type")
     ], handle(controllers.request.postUser))
 
     /**
