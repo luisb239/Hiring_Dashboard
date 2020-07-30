@@ -103,8 +103,15 @@ module.exports = (requestDb, candidateDb, processDb, phaseDb, infoDb, processUna
 
         const processPhases = await processPhaseDb.getProcessPhases({requestId, candidateId})
 
-        const processDetailedPhases = await Promise.all(processPhases.map(async (procPhase) => {
-            const phaseInfos = await infoDb.getInfosByPhase({phase: procPhase.phase})
+        // Get process related workflow and the workflow's phases
+        const {workflow} = await requestDb.getRequestById({id: requestId})
+        let workflowPhases = await phaseDb.getPhasesByWorkflow({workflow})
+        workflowPhases = workflowPhases.filter(workflowPhase =>
+            processPhases.find(procPhase => procPhase.phase === workflowPhase.phase))
+
+        const processDetailedPhases = await Promise.all(workflowPhases.map(async (workflowPhase) => {
+            const phaseInfos = await infoDb.getInfosByPhase({phase: workflowPhase.phase})
+            const procPhase = processPhases.find(proc => proc.phase === workflowPhase.phase);
             procPhase.infos = phaseInfos.map(phaseInfo => {
                 let value = processInfos.find(procInfo => procInfo.name === phaseInfo.name);
                 value = value ? value.value : null
