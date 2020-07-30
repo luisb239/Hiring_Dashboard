@@ -5,7 +5,7 @@ import {RequestList} from 'src/app/model/request/request-list';
 import {UserRole} from 'src/app/model/user/user-role';
 import {ProcessList} from 'src/app/model/process/process-list';
 import {RequestDetailProps} from './request-detail-props';
-import {map} from 'rxjs/operators';
+import {map, switchMap} from 'rxjs/operators';
 import {FormArray, FormBuilder, FormControl} from '@angular/forms';
 import {AlertService} from '../../services/alert/alert.service';
 import {UserService} from '../../services/user/user.service';
@@ -85,11 +85,22 @@ export class RequestDetailComponent implements OnInit {
         this.properties.processes = result.processes;
         this.properties.mandatoryLanguages = result.mandatory;
         this.properties.valuedLanguages = result.valued;
-        this.userService.getAllUsers('Recruiter')
-          .subscribe(dao => {
-              this.properties.users = dao.users
-                .filter(user => !this.properties.userRoles.map(u => u.userId).includes(user.id))
+        this.userService.getRoleIdByName('recruiter')
+          .pipe(
+            switchMap(dao => {
+              console.log(dao);
+              return this.userService.getAllUsers(dao.id);
+            }),
+            map(dao => {
+              console.log(dao);
+              const existingUsers = this.properties.userRoles.map(u => u.userId);
+              return dao.users
+                .filter(user => !existingUsers.includes(user.id))
                 .map(user => new User(user.id, user.email));
+            })
+          )
+          .subscribe(users => {
+              this.properties.users = users;
               console.log(this.properties.users);
             }
           );
@@ -125,16 +136,21 @@ export class RequestDetailComponent implements OnInit {
   onSubmit() {
     const values = this.properties.userForm.value.userIdx;
     console.log(values);
-    values.forEach(idx => {
-      this.requestService.addUser(this.properties.requestId, this.properties.users[idx].userId, 'Recruiter')
-        .subscribe(() => {
-            this.alertService.success('Recruiters added to this request successfully!');
-            this.getRequestAndUsers(this.properties.requestId);
-          }, error => {
-            console.log(error);
-          }
-        );
-    });
+    this.userService.getRoleIdByName('recruiter').subscribe(dao => {
+        const roleId = dao.id;
+        values.forEach(idx => {
+          this.requestService.addUser(this.properties.requestId, this.properties.users[idx].userId, roleId)
+            .subscribe(() => {
+                this.alertService.success('Recruiters added to this request successfully!');
+                this.getRequestAndUsers(this.properties.requestId);
+              }, error => {
+                console.log(error);
+              }
+            );
+        });
+      }
+    );
+
   }
 
 }
