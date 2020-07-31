@@ -1,6 +1,5 @@
-<div class="root">
-
-  <div class="board table-responsive-xl">
+<div class="root table-responsive-xl">
+  <div class="board">
     <div *ngFor="let workflow of properties.workflows" class="full-table">
       <table #tableContainer class="header-table">
         <caption style="display: none">Board Header</caption>
@@ -14,7 +13,6 @@
           <td *ngFor="let phase of workflow.phases" class="phase-cell">
             <div class="phase bg-light text-dark">
               <h4 class="phase-name">{{phase.name}}</h4>
-<!--              <h4 class="phase">{{phase.name}}</h4>-->
             </div>
           </td>
         </tr>
