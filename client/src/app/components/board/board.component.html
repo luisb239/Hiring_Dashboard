@@ -8,6 +8,7 @@
           <th [colSpan]=workflow.phases.length id="workflow-header">
             <div class="workflow-header bg-dark text-white"><h3>{{workflow.workflow}}</h3></div>
           </th>
+          <th><div></div></th>
         </tr>
         <tr class="phase-row">
           <td *ngFor="let phase of workflow.phases" class="phase-cell">
@@ -30,7 +31,7 @@
             <h5 class="swim-lane-minus" (click)="hide($event, request)">&minus;</h5>
           </td>
         </tr>
-        <tr cdkDropListGroup [hidden]=request.hidden>
+        <tr cdkDropListGroup [hidden]=request.hidden class="list">
           <td class="tasks-container"
               cdkDropList
               [width]="tableContainer.offsetWidth/request.phases.length"

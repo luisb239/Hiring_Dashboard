@@ -1,3 +1,8 @@
+.root {
+  margin-left: 20px;
+  margin-top: 20px;
+}
+
 .filter-box {
   margin-left: 50px;
   display: inline;

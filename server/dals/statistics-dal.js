@@ -84,7 +84,7 @@ module.exports = (query) => {
             currentPhase: row[currentPhaseSchema.currentPhase],
             // User Role Request
             userId: row[userRoleReqSchema.userId],
-            roleId: row[userRoleReqSchema.requestId],
+            roleId: row[userRoleReqSchema.roleId],
             // Request Languages
             language: row[reqLanguagesSchema.language],
             isMandatory: row[reqLanguagesSchema.isMandatory]

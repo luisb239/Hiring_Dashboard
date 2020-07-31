@@ -23,6 +23,7 @@
             (click)="getAllCandidates()">Reset Filter
     </button>
   </form>
+  <h3 class="table-title">Candidates</h3>
   <form [formGroup]="candidateForm" (submit)="onSubmit()">
     <table class="table-responsive-xl">
       <caption style="display: none">Available Candidates Table</caption>
@@ -56,7 +57,7 @@
     </table>
     <button type="submit" class="btn btn-primary add">Add Candidates</button>
   </form>
-  <a [routerLink]="['/create-candidate/']" (click)="activeModal.close('Close click')">Create Candidate</a>
+  <a [routerLink]="['/create-candidate/']" (click)="activeModal.close('Close click')"><h6>Create Candidate</h6></a>
 </div>
 <div class="modal-footer">
   <button type="button" class="btn btn-outline-dark" (click)="activeModal.close('Close click')">Close</button>

@@ -22,6 +22,10 @@
   display: block;
 }
 
+.table-title {
+  margin-top: 20px;
+}
+
 table {
   border-collapse: separate;
   border-spacing: 10px 10px;
