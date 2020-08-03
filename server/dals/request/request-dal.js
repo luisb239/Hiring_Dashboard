@@ -3,6 +3,7 @@
 const requestSchema = require('../../schemas/request-schema.js')
 const userRoleReqSchema = require('../../schemas/user-roles-schemas/user-role-request-schema.js')
 const userRoleSchema = require('../../schemas/user-roles-schemas/user-role-schema.js')
+const dateFormat = require('dateformat');
 
 module.exports = (query) => {
 
@@ -153,7 +154,7 @@ module.exports = (query) => {
             id: obj[requestSchema.id],
             quantity: obj[requestSchema.quantity],
             description: obj[requestSchema.description],
-            requestDate: new Date(obj[requestSchema.request_date]).toLocaleDateString(),
+            requestDate: dateFormat(new Date(obj[requestSchema.request_date]), "yyyy-mm-dd"),
             targetDate: obj[requestSchema.targetDate],
             state: obj[requestSchema.state],
             skill: obj[requestSchema.skill],
@@ -162,7 +163,7 @@ module.exports = (query) => {
             profile: obj[requestSchema.profile],
             workflow: obj[requestSchema.workflow],
             dateToSendProfile: obj[requestSchema.workflow] ?
-                new Date(obj[requestSchema.dateToSendProfile]).toLocaleDateString() : null,
+                dateFormat(new Date(obj[requestSchema.dateToSendProfile]),"yyyy-mm-dd") : null,
             progress: obj[requestSchema.progress]
         }
     }
