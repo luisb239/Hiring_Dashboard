@@ -15,7 +15,7 @@ module.exports = (query) => {
         getCandidateCvInfo
     }
 
-    async function getCandidates({available = null, profiles = null}) {
+    async function getCandidates({ available = null, profiles = null }) {
         const statement = {
             name: 'Get Candidates',
             text:
@@ -31,7 +31,7 @@ module.exports = (query) => {
         return result.rows.map(row => extract(row))
     }
 
-    async function getCandidateById({id}) {
+    async function getCandidateById({ id }) {
         const statement = {
             name: 'Get Candidate By Id',
             text:
@@ -48,7 +48,7 @@ module.exports = (query) => {
         return null
     }
 
-    async function getCandidatesByRequestId({requestId}) {
+    async function getCandidatesByRequestId({ requestId }) {
         const statement = {
             name: 'Get Candidates By Request Id',
             text:
@@ -64,9 +64,9 @@ module.exports = (query) => {
     }
 
     async function createCandidate({
-                                       name, available = true, profileInfo = null,
-                                       cvBuffer, cvMimeType, cvFileName, cvEncoding
-                                   }) {
+        name, available = true, profileInfo = null,
+        cvBuffer, cvMimeType, cvFileName, cvEncoding
+    }) {
         const statement = {
             name: 'Create Candidate',
             text:
@@ -83,21 +83,27 @@ module.exports = (query) => {
         return extract(result.rows[0])
     }
 
-    //TODO
-    async function updateCandidate({id, available}) {
+    
+    async function updateCandidate({ id, cvFileName, cvMimeType, cvBuffer,
+        cvEncoding, profileInfo, available }) {
         const statement = {
             name: 'Update Candidate',
             text:
-                `UPDATE ${candidate.table} ` +
-                `SET ${candidate.available} = $1 ` +
-                `WHERE ${candidate.id} = $2;`,
-            values: [available, id]
+                `UPDATE ${candidate.table} SET ` +
+                `${candidate.cv} = COALESCE($1, ${candidate.cv}), ` +
+                `${candidate.cvFileName} = COALESCE($2, ${candidate.cvFileName}), ` +
+                `${candidate.cvMimeType} = COALESCE($3, ${candidate.cvMimeType}), ` +
+                `${candidate.cvEncoding} = COALESCE($4, ${candidate.cvEncoding}), ` +
+                `${candidate.profileInfo} = COALESCE($5, ${candidate.profileInfo}), ` +
+                `${candidate.available} = COALESCE($6, ${candidate.available}) ` +
+                `WHERE ${candidate.id} = $7;`,
+            values: [cvBuffer, cvFileName, cvMimeType, cvEncoding, profileInfo, available, id]
         }
 
         await query(statement)
     }
 
-    async function getCandidateCvInfo({id}) {
+    async function getCandidateCvInfo({ id }) {
         const statement = {
             name: 'Get Candidate Cv Info',
             text:

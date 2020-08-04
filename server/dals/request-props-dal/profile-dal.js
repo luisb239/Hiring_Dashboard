@@ -5,7 +5,7 @@ const candidateProfileSchema = require('../../schemas/candidate-profile-schema.j
 
 module.exports = (query) => {
 
-    return {getProfiles, getCandidateProfiles, addProfileToCandidate}
+    return { getProfiles, getCandidateProfiles, addProfileToCandidate, deleteProfileFromCandidate }
 
     async function getProfiles() {
         const statement = {
@@ -19,7 +19,7 @@ module.exports = (query) => {
         return result.rows.map(row => extract(row))
     }
 
-    async function getCandidateProfiles({candidateId}) {
+    async function getCandidateProfiles({ candidateId }) {
         const statement = {
             name: 'Get Candidate Profiles',
             text:
@@ -40,7 +40,7 @@ module.exports = (query) => {
         }
     }
 
-    async function addProfileToCandidate({candidateId, profile}) {
+    async function addProfileToCandidate({ candidateId, profile }) {
         const statement = {
             name: 'Add Profile To Candidate',
             text:
@@ -50,6 +50,19 @@ module.exports = (query) => {
             values: [candidateId, profile]
         }
 
+        await query(statement)
+    }
+
+    async function deleteProfileFromCandidate({ candidateId, profile }) {
+        const statement = {
+            name: 'Delete Profile From Candidate',
+            text:
+                `DELETE FROM ${candidateProfileSchema.table} ` +
+                `WHERE ${candidateProfileSchema.candidateId} = $1 AND ` +
+                `${candidateProfileSchema.profile} = $2 RETURNING ` +
+                `${candidateProfileSchema.candidateId}, ${candidateProfileSchema.profile};`,
+            values: [candidateId, profile]
+        }
         await query(statement)
     }
 }

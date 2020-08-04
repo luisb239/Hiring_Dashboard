@@ -7,6 +7,7 @@ module.exports = (service) => {
         getCandidateById: getCandidateById,
         postCandidate: postCandidate,
         updateCandidate: updateCandidate,
+        removeCandidateProfile: removeCandidateProfile,
         downloadCandidateCv: downloadCandidateCv
     }
 
@@ -27,11 +28,36 @@ module.exports = (service) => {
     }
 
     async function updateCandidate(req, res) {
-        await service.updateCandidate({
+        const fileInfo = req.file
+        if (fileInfo) {
+            await service.updateCandidate({
+                id: req.params.id,
+                cvFileName: fileInfo.originalname,
+                cvMimeType: fileInfo.mimetype,
+                cvFileBuffer: fileInfo.buffer,
+                cvEncoding: fileInfo.encoding,
+                profileInfo: req.body.profileInfo,
+                available: req.body.available,
+                profiles: req.body.profiles
+            })
+        } else {
+            await service.updateCandidate({
+                id: req.params.id,
+                profileInfo: req.body.profileInfo,
+                available: req.body.available,
+                profiles: req.body.profiles
+            })
+        }
+        res.status(200).send({ message: 'Candidate updated successfully' })
+    }
+
+    async function removeCandidateProfile(req, res) {
+        const decodedProfile = Buffer.from(req.params.profile, 'base64').toString('binary')
+        const success = await service.removeCandidateProfile({
             id: req.params.id,
-            available: req.body.available
+            profile: decodedProfile
         })
-        res.status(200).send({message: 'Candidate updated successfully'})
+        res.status(200).send(success)
     }
 
     async function postCandidate(req, res) {
