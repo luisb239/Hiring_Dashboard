@@ -21,16 +21,14 @@ module.exports = (requestDb, candidateDb, processDb, phaseDb, infoDb, processUna
     }
 
     async function getAllStatus() {
-        const status = await statusDb.getAllStatus()
         return {
-            status: status
+            status: await statusDb.getAllStatus()
         }
     }
 
     async function getUnavailableReasons() {
-        const reasons = await reasonsDb.getAllUnavailableReasons()
         return {
-            unavailableReasons: reasons
+            unavailableReasons: await reasonsDb.getAllUnavailableReasons()
         }
     }
 
@@ -79,6 +77,7 @@ module.exports = (requestDb, candidateDb, processDb, phaseDb, infoDb, processUna
                 phase: processCurrentPhase.currentPhase
             }
         }))
+
         return {
             processes: processes
         }
@@ -105,7 +104,9 @@ module.exports = (requestDb, candidateDb, processDb, phaseDb, infoDb, processUna
 
         // Get process related workflow and the workflow's phases
         const {workflow} = await requestDb.getRequestById({id: requestId})
+
         let workflowPhases = await phaseDb.getPhasesByWorkflow({workflow})
+
         workflowPhases = workflowPhases.filter(workflowPhase =>
             processPhases.find(procPhase => procPhase.phase === workflowPhase.phase))
 

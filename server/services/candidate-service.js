@@ -16,10 +16,8 @@ module.exports = (candidateDb, profilesDb, processDb) => {
     }
 
     async function getCandidates({ available = null, profiles = null }) {
-        const candidates = await candidateDb.getCandidates({ available, profiles })
-
         return {
-            candidates: candidates,
+            candidates: await candidateDb.getCandidates({available, profiles}),
         }
     }
 
@@ -28,7 +26,8 @@ module.exports = (candidateDb, profilesDb, processDb) => {
         const candidateFound = await candidateDb.getCandidateById({ id })
 
         if (!candidateFound)
-            throw new AppError(errors.notFound, "Candidate not found", `Candidate with id ${id} does not exist`)
+            throw new AppError(errors.notFound,
+                "Candidate not found", `Candidate with id ${id} does not exist`)
 
         const profiles = await profilesDb.getCandidateProfiles({ candidateId: id })
 
@@ -41,15 +40,18 @@ module.exports = (candidateDb, profilesDb, processDb) => {
         }
     }
 
-    async function updateCandidate({ id, cvFileName = null, cvMimeType = null,
-        cvFileBuffer = null, cvEncoding = null, profileInfo = null, available = null,
-        profiles = null }) {
+    async function updateCandidate({
+                                       id, cvFileName = null, cvMimeType = null,
+                                       cvFileBuffer = null, cvEncoding = null, profileInfo = null, available = null,
+                                       profiles = null
+                                   }) {
         // Convert string to boolean
         if (available)
             available = (available === 'true')
         // Convert string to array
-        if(profiles)
+        if (profiles)
             profiles = JSON.parse(profiles)
+
         await candidateDb.updateCandidate({
             id: id,
             profileInfo: profileInfo,
@@ -59,6 +61,7 @@ module.exports = (candidateDb, profilesDb, processDb) => {
             cvBuffer: cvFileBuffer,
             cvEncoding: cvEncoding
         })
+
         if (profiles && profiles.length > 0) {
             await addCandidateProfiles({id, profiles})
         }

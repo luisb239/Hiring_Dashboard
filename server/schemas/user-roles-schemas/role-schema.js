@@ -1,6 +1,8 @@
 'use strict'
 
 module.exports = {
-    table: 'role',
-    roleId: 'role_id'
+    table: 'public."Role"',
+    roleId: 'id',
+    role: 'role',
+    parentRole: 'parent_role'
 }

@@ -3,6 +3,5 @@
 module.exports = {
     table: 'public."User"',
     id: 'id',
-    username: 'username',
-    password: 'password'
+    email: 'username'
 }

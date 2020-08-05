@@ -2,6 +2,9 @@
 
 const requestSchema = require('../schemas/request-schema.js')
 const userRoleReqSchema = require('../schemas/user-roles-schemas/user-role-request-schema.js')
+const userRoleSchema = require('../schemas/user-roles-schemas/user-role-schema.js')
+const user = require('../schemas/user-roles-schemas/user-schema.js')
+const role = require('../schemas/user-roles-schemas/role-schema.js')
 const processSchema = require('../schemas/process/process-schema.js')
 const candidateSchema = require('../schemas/candidate-schema')
 const currentPhaseSchema = require('../schemas/process/process-current-phase.js')
@@ -31,6 +34,8 @@ module.exports = (query) => {
                 `PP.${currentPhaseSchema.currentPhase}, ` +
                 // User Role Request info
                 `URR.${userRoleReqSchema.userId}, URR.${userRoleReqSchema.roleId}, ` +
+                // User email and Role name
+                `${user.table}.${user.email}, ${role.table}.${role.role}, ` +
                 // Request Languages
                 `RL.${reqLanguagesSchema.language}, RL.${reqLanguagesSchema.isMandatory} ` +
 
@@ -48,6 +53,16 @@ module.exports = (query) => {
 
                 `LEFT JOIN ${userRoleReqSchema.table} AS URR ` +
                 `ON P.${processSchema.requestId} = URR.${userRoleReqSchema.requestId} ` +
+
+                `LEFT JOIN ${userRoleSchema.table} as UserRole ` +
+                `ON URR.${userRoleReqSchema.userId} = UserRole.${userRoleSchema.userId} ` +
+                `AND URR.${userRoleReqSchema.roleId} = UserRole.${userRoleSchema.roleId} ` +
+
+                `LEFT JOIN ${user.table} ` +
+                `ON UserRole.${userRoleSchema.userId} = ${user.table}.${user.id} ` +
+
+                `LEFT JOIN ${role.table} ` +
+                `ON UserRole.${userRoleSchema.roleId} = ${role.table}.${role.roleId} ` +
 
                 `LEFT JOIN ${reqLanguagesSchema.table} AS RL ` +
                 `ON P.${processSchema.requestId} = RL.${reqLanguagesSchema.requestId};`,
@@ -85,6 +100,8 @@ module.exports = (query) => {
             // User Role Request
             userId: row[userRoleReqSchema.userId],
             roleId: row[userRoleReqSchema.roleId],
+            userEmail: row[user.email],
+            role: row[role.role],
             // Request Languages
             language: row[reqLanguagesSchema.language],
             isMandatory: row[reqLanguagesSchema.isMandatory]
@@ -127,7 +144,7 @@ module.exports = (query) => {
                 `INSERT INTO ${statisticsConfigs.table} ` +
                 `(${statisticsConfigs.userId}, ${statisticsConfigs.profileName}, ${statisticsConfigs.configs}) ` +
                 `VALUES ($1, $2, $3) ` +
-                `RETURNING ${statisticsConfigs.userId}, ${statisticsConfigs.profileName}`,
+                `RETURNING ${statisticsConfigs.userId}, ${statisticsConfigs.profileName};`,
             values: [userId, profileName, configs]
         }
 
@@ -149,18 +166,5 @@ module.exports = (query) => {
             configs: row[statisticsConfigs.configs]
         }
     }
-
-    // async function updateConfigs({ userId, configs }) {
-    //     const statement = {
-    //         name: 'Update User Statistics Configuration',
-    //         text:
-    //             `UPDATE ${statisticsConfigs.table} SET ` +
-    //             `${statisticsConfigs.configs} = $1` +
-    //             `WHERE ${statisticsConfigs.userId} = $2; `,
-    //         values: [configs, userId]
-    //     }
-    //     await query(statement)
-    // }
-
 
 }

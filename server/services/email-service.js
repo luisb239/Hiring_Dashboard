@@ -1,8 +1,5 @@
 'use strict'
 
-const AppError = require('./errors/app-error.js')
-const errors = require('./errors/common-errors.js')
-
 module.exports = (userDb, transporter) => {
 
     return {
@@ -31,19 +28,11 @@ module.exports = (userDb, transporter) => {
     async function sendMultipleEmails({id, emailTitle, emailContent}) {
         const usersInRequest = await userDb.getUsersInRequest({id})
         if (usersInRequest && usersInRequest.length > 0) {
-            let message = {
+            sendMail({
                 from: 'hiring.dashboard.isel@gmail.com', // listed in rfc822 message header
                 cc: usersInRequest, // listed in rfc822 message header
                 subject: emailTitle,
                 text: emailContent
-            }
-
-            transporter.sendMail(message, (error) => {
-                if (error)
-                    console.error("Message not sent: " + error)
-                else {
-                    console.log("Message Sent.")
-                }
             })
         }
     }
@@ -51,20 +40,22 @@ module.exports = (userDb, transporter) => {
     async function sendSingularEmail({userId, emailTitle, emailContent}) {
         const user = await userDb.getUserById({userId})
         if (user && user.email) {
-            let message = {
+            sendMail({
                 from: 'hiring.dashboard.isel@gmail.com', // listed in rfc822 message header
                 to: user.email, // listed in rfc822 message header
                 subject: emailTitle,
                 text: emailContent
-            }
-
-            transporter.sendMail(message, (error) => {
-                if (error)
-                    console.error("Message not sent: " + error)
-                else {
-                    console.log("Message Sent.")
-                }
             })
         }
+    }
+
+    function sendMail(message) {
+        transporter.sendMail(message, (error) => {
+            if (error) {
+                console.error("Message not sent. Error -> " + error)
+            } else {
+                console.log("Message Sent.")
+            }
+        })
     }
 }

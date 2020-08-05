@@ -12,58 +12,50 @@ module.exports = (languagesDao, monthsDao, profilesDao, projectsDao,
     }
 
     async function getLanguages() {
-        const languages = await languagesDao.getLanguages()
         return {
-            languages: languages
+            languages: await languagesDao.getLanguages()
         }
     }
 
     async function getMonths() {
-        const months = await monthsDao.getMonths()
         return {
-            months: months
+            months: await monthsDao.getMonths()
         }
     }
 
     async function getProfiles() {
-        const profiles = await profilesDao.getProfiles()
         return {
-            profiles: profiles
+            profiles: await profilesDao.getProfiles()
         }
     }
 
     async function getProjects() {
-        const projects = await projectsDao.getProjects()
         return {
-            projects: projects
+            projects: await projectsDao.getProjects()
         }
     }
 
     async function getSkills() {
-        const skills = await skillsDao.getSkills()
         return {
-            skills: skills
+            skills: await skillsDao.getSkills()
         }
     }
 
     async function getStates() {
-        const states = await statesDao.getStates()
         return {
-            states: states
+            states: await statesDao.getStates()
         }
     }
 
     async function getStatesCsl() {
-        const statesCsl = await statesCslDao.getStatesCsl()
         return {
-            statesCsl: statesCsl
+            statesCsl: await statesCslDao.getStatesCsl()
         }
     }
 
     async function getWorkflows() {
-        const workflows = await workflowsDao.getWorkflows()
         return {
-            workflows: workflows
+            workflows: await workflowsDao.getWorkflows()
         }
     }
 

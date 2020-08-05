@@ -1,3 +1,5 @@
+'use strict'
+
 const infos = require('../schemas/workflow-phases-schemas/info-schema.js')
 const phaseInfos = require('../schemas/workflow-phases-schemas/phase-info-schema.js')
 

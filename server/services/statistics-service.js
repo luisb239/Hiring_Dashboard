@@ -3,7 +3,7 @@
 const errors = require('./errors/common-errors.js')
 const AppError = require('./errors/app-error.js')
 
-module.exports = (statisticsDb, authModule) => {
+module.exports = (statisticsDb) => {
 
     return {
         getStatistics,
@@ -13,25 +13,11 @@ module.exports = (statisticsDb, authModule) => {
     }
 
     async function getStatistics() {
-        const statistics = await statisticsDb.getStatistics()
-
-        const users = await authModule.user.get()
-        const roles = await authModule.role.get()
-
-        return statistics.map(processStats => {
-            return {
-                ...processStats,
-                user: users.find(user => user.id === processStats.userId).username,
-                role: roles.find(role => role.id === processStats.roleId).role
-            }
-        })
+        return await statisticsDb.getStatistics()
     }
 
     async function getUserStatisticsConfigs({ userId }) {
-        const configs = await statisticsDb.getConfigs({ userId })
-        return {
-            configs: configs
-        }
+        return await statisticsDb.getConfigs({userId})
     }
 
     async function getUserStatisticsConfigsDetails({ userId, profileName }) {

@@ -62,8 +62,9 @@ module.exports = (requestDb, processDb, requestLanguagesDb, authModule, candidat
 
         // TODO -> CALL user_roles_db instead
         // Get users (and their roles) in current request
-        const requestUserRoles = await requestDb.getUserRolesInRequest({requestId: id})
+        const userRoles = await requestDb.getUserRolesInRequest({requestId: id})
 
+        /*
         const userRoles = await Promise.all(requestUserRoles.map(async userRole => {
             const userInfo = await authModule.user.getById(userRole.userId)
             const roleInfo = await authModule.role.getSpecificById(userRole.roleId)
@@ -74,6 +75,7 @@ module.exports = (requestDb, processDb, requestLanguagesDb, authModule, candidat
                 role: roleInfo.role
             }
         }))
+         */
 
         const candidates = await candidateDb.getCandidatesByRequestId({requestId: id});
 
@@ -119,6 +121,7 @@ module.exports = (requestDb, processDb, requestLanguagesDb, authModule, candidat
 
     }
 
+    // TODO -> Check if successful ...
     async function updateRequest({
                                      id, quantity, targetDate,
                                      state, skill, stateCsl,

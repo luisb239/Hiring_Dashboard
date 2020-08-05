@@ -10,10 +10,8 @@ module.exports = (phaseDb, infoDb) => {
     }
 
     async function getPhases() {
-        const phases = await phaseDb.getPhases()
-
         return {
-            phases: phases
+            phases: await phaseDb.getPhases()
         }
     }
 

@@ -17,9 +17,8 @@ export class AuthGuardService implements CanActivate {
   }
 
   checkLogin(url: string): boolean {
-    console.log(`Check login... Url -> ${url}, Auth -> ${this.authService.getSessionFromStorage()}`);
     if (!this.authService.getSessionFromStorage()) {
-      // Store the attempted URL for redirecting
+      // Store the attempted URL for redirecting -> TODO -> We are not redirecting yet..
       this.authService.redirectUrl = url;
       // Alert the user
       this.alertService.warn('You need to be signed in order to perform that action');

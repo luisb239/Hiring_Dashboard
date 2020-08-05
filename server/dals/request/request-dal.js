@@ -3,13 +3,16 @@
 const requestSchema = require('../../schemas/request-schema.js')
 const userRoleReqSchema = require('../../schemas/user-roles-schemas/user-role-request-schema.js')
 const userRoleSchema = require('../../schemas/user-roles-schemas/user-role-schema.js')
+const user = require('../../schemas/user-roles-schemas/user-schema.js')
+const role = require('../../schemas/user-roles-schemas/role-schema.js')
+
 const dateFormat = require('dateformat');
 
 module.exports = (query) => {
 
     return {
         getRequests, getRequestById, createRequest,
-        getUserRolesInRequest, updateRequest, addUserAndRoleToRequest, updateRequestLanguages
+        getUserRolesInRequest, updateRequest, addUserAndRoleToRequest
     }
 
     async function getRequests({
@@ -122,12 +125,19 @@ module.exports = (query) => {
         const statement = {
             name: 'Get User Roles In Request',
             text:
-                `SELECT URR.${userRoleSchema.userId}, URR.${userRoleSchema.roleId} ` +
+                `SELECT UR.${userRoleSchema.userId}, UR.${userRoleSchema.roleId}, ` +
+                `${user.table}.${user.email}, ${role.table}.${role.role} ` +
                 `FROM ${userRoleReqSchema.table} AS URR ` +
 
                 `INNER JOIN ${userRoleSchema.table} AS UR ` +
                 `ON URR.${userRoleReqSchema.userId} = UR.${userRoleSchema.userId} ` +
                 `AND URR.${userRoleReqSchema.roleId} = UR.${userRoleSchema.roleId} ` +
+
+                `INNER JOIN ${user.table} ` +
+                `ON UR.${userRoleSchema.userId} = ${user.table}.${user.id} ` +
+
+                `INNER JOIN ${role.table} ` +
+                `ON UR.${userRoleSchema.roleId} = ${role.table}.${role.roleId} ` +
 
                 `WHERE URR.${userRoleReqSchema.requestId} = $1;`,
             values: [requestId]
@@ -138,10 +148,12 @@ module.exports = (query) => {
         return result.rows.map(row => extractUserRole(row))
     }
 
-    function extractUserRole(obj) {
+    function extractUserRole(row) {
         return {
-            userId: obj[userRoleSchema.userId],
-            roleId: obj[userRoleSchema.roleId],
+            userId: row[userRoleSchema.userId],
+            roleId: row[userRoleSchema.roleId],
+            email: row[user.email],
+            role: row[role.role]
         }
     }
 
@@ -170,15 +182,11 @@ module.exports = (query) => {
             text:
                 `INSERT INTO ${userRoleReqSchema.table} ` +
                 `(${userRoleReqSchema.userId}, ${userRoleReqSchema.roleId}, ${userRoleReqSchema.requestId}) ` +
-                `VALUES ($1, $2, $3)`,
+                `VALUES ($1, $2, $3);`,
             values: [userId, roleId, requestId]
         }
 
         await query(statement)
         //TODO -> Check if insert was successful
-    }
-
-    async function updateRequestLanguages({requestId, languages, isMandatory}) {
-
     }
 }
