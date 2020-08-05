@@ -13,19 +13,19 @@ module.exports = (userDb, transporter) => {
 
     async function notifyStatus({id, oldStatus, newStatus, candidate, request}) {
         await sendMultipleEmails({id, emailTitle: "Candidate Status Changed - HIRING DASHBOARD",
-            emailContent: `The candidate "*${candidate.name}*" status, in the "*${request.description}*" request, has been changed. ` +
+            emailContent: `The candidate "${candidate.name}" status, in the "${request.description}" request, has been changed. ` +
             `Changed from "${oldStatus}" to "${newStatus}".`})
     }
 
     async function notifyMoved({id, oldPhase, newPhase, candidate, request}) {
         await sendMultipleEmails({id, emailTitle: "Moved Candidate - HIRING DASHBOARD",
-            emailContent: `The candidate "*${candidate.name}*" in the "*${request.description}*" request ` +
-                `has been moved from "*${oldPhase}*" to "*${newPhase}*".`})
+            emailContent: `The candidate "${candidate.name}" in the "${request.description}" request ` +
+                `has been moved from "${oldPhase}" to "${newPhase}".`})
     }
 
     async function notifyAssigned({userId, request}) {
         await sendSingularEmail({userId, emailTitle: "New Request Assignment - HIRING DASHBOARD",
-            emailContent: `You have been assigned to the "*${request.description}*" request.`})
+            emailContent: `You have been assigned to the "${request.description}" request.`})
     }
 
     async function sendMultipleEmails({id, emailTitle, emailContent}) {
