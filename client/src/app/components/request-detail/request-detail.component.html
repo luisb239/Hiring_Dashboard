@@ -7,56 +7,113 @@
       <div class="row">
         <div class='col'>
           <div class='Request'>
-            <ul class="list-group list-group-flush">
-              <li class="list-group-item">
-                <h5>Workflow: </h5>
-                <p>{{properties.requestList.workflow}}</p>
-              </li>
-              <li class="list-group-item">
-                <h5>Progress: </h5>
-                <p>{{properties.requestList.progress}}%</p>
-              </li>
-              <li class="list-group-item">
-                <h5>Project: </h5>
-                <p>{{properties.requestList.project}}</p>
-              </li>
-              <li class="list-group-item">
-                <h5>Quantity: </h5>
-                <p>{{properties.requestList.quantity}}</p>
-              </li>
-              <li class="list-group-item">
-                <h5>Request Date: </h5>
-                <p>{{properties.requestList.requestDate}}</p>
-              </li>
-              <li class="list-group-item">
-                <h5>Skill: </h5>
-                <p>{{properties.requestList.skill}}</p>
-              </li>
-              <li class="list-group-item">
-                <h5>CSL State: </h5>
-                <p>{{properties.requestList.stateCSL}}</p>
-              </li>
-              <li class="list-group-item">
-                <h5>Target Date: </h5>
-                <p>{{properties.requestList.targetDate}}</p>
-              </li>
-              <li class="list-group-item">
-                <h5>Profile: </h5>
-                <p>{{properties.requestList.profile}}</p>
-              </li>
-              <li class="list-group-item">
-                <h5>Date To Send Profile: </h5>
-                <p>{{properties.requestList.dateToSendProfile}}</p>
-              </li>
-              <li class="list-group-item" *ngIf="properties.mandatoryLanguages.length > 0">
-                <h5>Mandatory Languages: </h5>
-                <p>{{properties.mandatoryLanguages}} </p>
-              </li>
-              <li class="list-group-item" *ngIf="properties.valuedLanguages.length > 0">
-                <h5>Valued Languages: </h5>
-                <p>{{properties.valuedLanguages}} </p>
-              </li>
-            </ul>
+            <form [formGroup]="properties.updateForm" (submit)="onUpdate()">
+              <ul class="list-group list-group-flush">
+                <li class="list-group-item">
+                  <h5>Workflow: </h5>
+                  <p>{{properties.requestList.workflow}}</p>
+                </li>
+                <li class="list-group-item">
+                  <h5>Progress: </h5>
+                  <p>{{properties.requestList.progress}}%</p>
+                </li>
+                <li class="list-group-item">
+                  <h5>Request Date: </h5>
+                  <p>{{properties.requestList.requestDate}}</p>
+                </li>
+                <li class="list-group-item">
+                  <h5>Project: </h5>
+                  <label>
+                    <select formControlName="project">
+                      <option [selected]="true"
+                              [value]="properties.requestList.project">{{properties.requestList.project}}</option>
+                      <option *ngFor="let project of properties.projects" [value]="project">{{project}}</option>
+                    </select>
+                  </label>
+                </li>
+                <li class="list-group-item">
+                  <h5>Quantity: </h5>
+                  <label>
+                    <input type="number" min="1" formControlName="quantity" [value]="properties.requestList.quantity">
+                  </label>
+                </li>
+                <li class="list-group-item">
+                  <h5>Skill Center: </h5>
+                  <label>
+                    <select formControlName="skill">
+                      <option [selected]="true"
+                              [value]="properties.requestList.skill">{{properties.requestList.skill}}</option>
+                      <option *ngFor="let skill of properties.skills" [value]="skill">{{skill}}</option>
+                    </select>
+                  </label>
+                </li>
+                <li class="list-group-item">
+                  <h5>CSL State: </h5>
+                  <label>
+                    <select formControlName="stateCsl">
+                      <option [selected]="true"
+                              [value]="properties.requestList.stateCSL">{{properties.requestList.stateCSL}}</option>
+                      <option *ngFor="let state of properties.statesCsl" [value]="state">{{state}}</option>
+                    </select>
+                  </label>
+                </li>
+                <li class="list-group-item">
+                  <h5>Target Date: </h5>
+                  <label>
+                    <select formControlName="targetDate">
+                      <option [selected]="true"
+                              [value]="properties.requestList.targetDate">{{properties.requestList.targetDate}}</option>
+                      <option *ngFor="let date of properties.targetDates" [value]="date">{{date}}</option>
+                    </select>
+                  </label>
+                </li>
+                <li class="list-group-item">
+                  <h5>Profile: </h5>
+                  <label>
+                    <select formControlName="profile">
+                      <option [selected]="true"
+                              [value]="properties.requestList.profile">{{properties.requestList.profile}}</option>
+                      <option *ngFor="let profile of properties.profiles" [value]="profile">{{profile}}</option>
+                    </select>
+                  </label>
+                </li>
+                <li class="list-group-item">
+                  <h5>Date To Send Profile: </h5>
+                  <label>
+                    <input formControlName="dateToSendProfile" type="date"
+                           [ngModel]="properties.requestList.dateToSendProfile"
+                           [value]="properties.requestList.dateToSendProfile">
+                  </label>
+                </li>
+                <li class="list-group-item" *ngIf="properties.mandatoryLanguages.length > 0">
+                  <h5>Mandatory Languages: </h5>
+                  <ul>
+                    <li *ngFor="let language of properties.mandatoryLanguages; index as idx">
+                      <label>
+                        <input type="checkbox" [(ngModel)]="language.checked"
+                               [ngModelOptions]="{standalone: true}"
+                               (change)="onLanguageChange(language, true)">
+                      </label>
+                      <p class="lang">{{language.language}}</p>
+                    </li>
+                  </ul>
+                </li>
+                <li class="list-group-item" *ngIf="properties.valuedLanguages.length > 0">
+                  <h5>Valued Languages: </h5>
+                  <ul>
+                    <li *ngFor="let language of properties.valuedLanguages; index as idx">
+                      <label>
+                        <input type="checkbox" [(ngModel)]="language.checked"
+                               [ngModelOptions]="{standalone: true}"
+                               (change)="onLanguageChange(language, false)">
+                      </label>
+                      <p class="lang">{{language.language}}</p>
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+              <button type="submit" class="btn btn-primary add">Update Request</button>
+            </form>
           </div>
         </div>
         <div class='col'>
@@ -99,7 +156,9 @@
                   {{user.userEmail}}
                 </td>
                 <td class="form-check assign td">
-                  <input class="form-check-input" type="checkbox" (change)="onChange(i, $event)">
+                  <label>
+                    <input class="form-check-input" type="checkbox" (change)="onChange(i, $event)">
+                  </label>
                 </td>
               </tr>
             </table>

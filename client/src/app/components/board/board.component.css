@@ -23,7 +23,7 @@
 }
 
 .phase-row {
-  display:flex;
+  display: flex;
   flex-direction: row;
 }
 
@@ -32,11 +32,12 @@
   width: 150px;
   margin-right: 20px;
 }
-.phase{
+
+.phase {
   box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.05), 0 3px 14px 2px rgba(0, 0, 0, 0.05);
   border-radius: 4px;
   width: 150px;
-  height:100%;
+  height: 100%;
   padding-left: 10px;
   border-bottom: solid 5px rgb(244, 148, 4);
 }
@@ -71,7 +72,7 @@
 }
 
 .list {
-  display:flex;
+  display: flex;
   flex-direction: row;
 }
 

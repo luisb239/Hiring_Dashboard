@@ -5,7 +5,8 @@ module.exports = (query) => {
 
     return {
         createLanguageRequirement,
-        getRequestLanguages
+        getRequestLanguages,
+        deleteLanguage
     }
 
     function extract(row) {
@@ -41,6 +42,20 @@ module.exports = (query) => {
 
         const result = await query(statement)
         return result.rows.map(row => extract(row))
+    }
+
+    async function deleteLanguage({requestId, language, isMandatory}) {
+        const statement = {
+            name: 'Delete Language Requirement in Request',
+            text:
+                `DELETE FROM ${schema.table} ` +
+                `WHERE ${schema.requestId} = $1 ` +
+                `AND ${schema.language} = $2 ` +
+                `AND ${schema.isMandatory} = $3;`,
+            values: [requestId, language, isMandatory]
+        }
+
+        await query(statement)
     }
 
 }

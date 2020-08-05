@@ -5,7 +5,7 @@
     <h3>Filters</h3>
     <form #form="ngForm" (ngSubmit)="onSubmit(form)" novalidate class="form">
       <div class="form-group un-sm un-md">
-        <label for="inputSkill">Skill</label>
+        <label for="inputSkill">Skill Center</label>
         <select class="custom-select" id="inputSkill" name="skill" #skill='ngModel' ngModel>
           <option disabled value=""></option>
           <option *ngFor="let skill of properties.skills" [value]="skill">{{skill}}</option>
@@ -84,7 +84,7 @@
       <th scope="col">Project</th>
       <th scope="col" class="col-un-sm">Quantity</th>
       <th scope="col" class="col-un-sm">Request Date</th>
-      <th scope="col" class="col-un-sm col-un-md">Skill</th>
+      <th scope="col" class="col-un-sm col-un-md">Skill Center</th>
       <th scope="col" class="col-un-sm col-un-md">CSL State</th>
       <th scope="col" class="col-un-sm col-un-md">State</th>
       <th scope="col" class="col-un-sm col-un-md">Target Date</th>

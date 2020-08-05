@@ -6,7 +6,9 @@ module.exports = (service) => {
         getRequests: getRequests,
         postRequest: postRequest,
         getRequestById: getRequestById,
-        postUser: postUser
+        postUser: postUser,
+        patchRequest: patchRequest,
+        deleteLanguage: deleteLanguage
     }
 
     async function getRequests(req, res) {
@@ -76,6 +78,50 @@ module.exports = (service) => {
         await service.addUserToRequest({requestId: req.params.id, userId: req.body.userId, roleId: req.body.roleId})
         res.status(201).send({
             message: 'User added to the request successfully'
+        })
+    }
+
+    async function patchRequest(req, res) {
+        await service.updateRequest({
+            id: req.params.id,
+            quantity: req.body.quantity,
+            targetDate: req.body.targetDate,
+            skill: req.body.skill,
+            project: req.body.project,
+            profile: req.body.profile,
+            dateToSendProfile: req.body.dateToSendProfile,
+        })
+
+        if (req.body.mandatoryLanguages && req.body.mandatoryLanguages.length) {
+            await service.updateRequestLanguages({
+                requestId: req.params.id,
+                languages: req.body.mandatoryLanguages,
+                isMandatory: true
+            })
+        }
+        if (req.body.valuedLanguages && req.body.valuedLanguages.length) {
+            await service.updateRequestLanguages({
+                requestId: req.params.id,
+                languages: req.body.valuedLanguages,
+                isMandatory: false
+            })
+        }
+
+        res.status(201).send({
+            message: 'Request updated successfully',
+            id: req.params.id
+        })
+    }
+
+    async function deleteLanguage(req, res) {
+        await service.deleteLanguage({
+            requestId: req.params.id,
+            language: req.query.language,
+            isMandatory: req.query.isMandatory
+        })
+
+        res.status(200).send({
+            message: 'Language deleted successfully'
         })
     }
 

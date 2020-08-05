@@ -11,7 +11,10 @@ module.exports = (requestDb, processDb, requestLanguagesDb, authModule, candidat
         getRequestById: getRequestById,
         addLanguagesToRequest: addLanguagesToRequest,
         addRequestToUser: addRequestToUser,
-        addUserToRequest: addUserToRequest
+        addUserToRequest: addUserToRequest,
+        updateRequest: updateRequest,
+        updateRequestLanguages: updateRequestLanguages,
+        deleteLanguage: deleteLanguage
     }
 
     /**
@@ -116,6 +119,18 @@ module.exports = (requestDb, processDb, requestLanguagesDb, authModule, candidat
 
     }
 
+    async function updateRequest({
+                                     id, quantity, targetDate,
+                                     state, skill, stateCsl,
+                                     project, profile, dateToSendProfile
+                                 }) {
+
+        await requestDb.updateRequest({
+            id, quantity, targetDate, state, skill,
+            stateCsl, project, profile, dateToSendProfile
+        })
+    }
+
     //TODO -> TRY CATCH..DUPLICATE, FOREIGN KEY, ...
     async function addLanguagesToRequest({requestId, languages, isMandatory}) {
         await Promise.all(languages.map(async (l) =>
@@ -131,6 +146,15 @@ module.exports = (requestDb, processDb, requestLanguagesDb, authModule, candidat
 
     async function addUserToRequest({requestId, userId, roleId}) {
         await requestDb.addUserAndRoleToRequest({userId, roleId, requestId})
+    }
+
+    async function updateRequestLanguages({requestId, languages, isMandatory}) {
+        await Promise.all(languages.map(async (l) =>
+            await requestLanguagesDb.createLanguageRequirement({requestId, language: l, isMandatory})))
+    }
+
+    async function deleteLanguage({requestId, language, isMandatory}) {
+        await requestLanguagesDb.deleteLanguage({requestId, language, isMandatory})
     }
 
 }
