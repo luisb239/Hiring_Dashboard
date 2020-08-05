@@ -1,6 +1,6 @@
 'use strict'
 
-module.exports = (processService) => {
+module.exports = (processService, emailService) => {
 
     return {
         getProcessDetail,

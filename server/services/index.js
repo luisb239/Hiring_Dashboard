@@ -1,6 +1,6 @@
 'use strict'
 
-module.exports = (db, authModule) => {
+module.exports = (db, authModule, transporter) => {
 
     const user = require('./user-service.js')(db.user, authModule)
 
@@ -14,15 +14,17 @@ module.exports = (db, authModule) => {
 
     const phase = require('./phase-service.js')(db.phase, db.info)
 
+    const email = require('./email-service.js')(db.user, transporter)
+
     const process = require('./process-service.js')(db.request, db.candidate,
         db.process, db.phase, db.info, db.processUnavailableReason, db.processPhases,
-        db.processInfo, db.reasons, db.status)
+        db.processInfo, db.reasons, db.status, email)
 
     const auth = require('./auth-service.js')(db.user, authModule)
 
     const statistics = require('./statistics-service.js')(db.statistics, authModule)
 
     return {
-        user, requestProps, request, candidate, phase, process, auth, statistics
+        user, requestProps, request, candidate, phase, process, auth, statistics, email
     }
 }

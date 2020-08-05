@@ -1,21 +1,24 @@
 'use strict'
 
-const user = require('../../schemas/user-roles-schemas/user-schema.js')
+const userProfile = require('../../schemas/user-roles-schemas/user-profile-schema.js')
 const userRole = require('../../schemas/user-roles-schemas/user-role-schema.js')
+const userRoleRequest = require('../../schemas/user-roles-schemas/user-role-request-schema.js')
+const user = require('../../schemas/user-roles-schemas/user-schema.js')
 
 module.exports = (query) => {
 
     return {
         getUsers: getUsers,
         getUserById: getUserById,
-        createUser: createUser
+        createUser: createUser,
+        getUsersInRequest: getUsersInRequest
     }
 
     function extractUser(row) {
         return {
-            id: row[user.id],
-            email: row[user.email],
-            isActive: row[user.isActive]
+            id: row[userProfile.id],
+            email: row[userProfile.email],
+            isActive: row[userProfile.isActive]
         }
     }
 
@@ -23,7 +26,7 @@ module.exports = (query) => {
         const statement = {
             name: 'Get Users',
             text:
-                `SELECT U.* FROM ${user.table} AS U ` +
+                `SELECT U.* FROM ${userProfile.table} AS U ` +
                 `INNER JOIN ${userRole.table} AS UR ON ` +
                 `U.${user.id} = UR.${userRole.userId} ` +
                 `WHERE UR.${userRole.roleId} = $1;`,
@@ -38,7 +41,7 @@ module.exports = (query) => {
         const statement = {
             name: 'Get User By Id',
             text:
-                `SELECT * FROM ${user.table} ` +
+                `SELECT * FROM ${userProfile.table} ` +
                 `WHERE ${user.id} = $1;`,
             values: [userId]
         }
@@ -54,10 +57,33 @@ module.exports = (query) => {
         const statement = {
             name: 'Create User',
             text:
-                `INSERT INTO ${user.table} (${user.id}, ${user.email}, ${user.isActive}) VALUES ` +
+                `INSERT INTO ${userProfile.table} (${userProfile.id}, ${userProfile.email}, ${userProfile.isActive}) VALUES ` +
                 `($1, $2, $3);`,
             values: [userId, email, isActive]
         }
         await query(statement)
+    }
+
+    async function getUsersInRequest({id}) {
+        const statement = {
+            name: 'Get Request Users',
+            text:
+                `SELECT DISTINCT U.${user.username} FROM ${user.table} AS U ` +
+                `INNER JOIN ${userRoleRequest.table} AS URR ` +
+                `ON U.${user.id} = URR.${userRoleRequest.userId} ` +
+                `WHERE URR.${userRoleRequest.requestId} = $1;`
+            ,
+            values: [id]
+        }
+        const result = await query(statement)
+
+        if (result.rowCount) {
+            return result.rows.map(row => extractUsername(row))
+        }
+        return null
+    }
+
+    function extractUsername(row) {
+        return row[user.username]
     }
 }

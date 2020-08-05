@@ -4,7 +4,7 @@ const errors = require('./errors/common-errors.js')
 const AppError = require('./errors/app-error.js')
 
 module.exports = (requestDb, candidateDb, processDb, phaseDb, infoDb, processUnavailableReasonDb,
-                  processPhaseDb, processInfoDb, reasonsDb, statusDb) => {
+                  processPhaseDb, processInfoDb, reasonsDb, statusDb, emailService) => {
 
     return {
         getProcessDetail,
@@ -140,6 +140,9 @@ module.exports = (requestDb, candidateDb, processDb, phaseDb, infoDb, processUna
                 await updateRequestProgress({requestId})
             }
             if (success) {
+                const candidate = await candidateDb.getCandidateById({id: candidateId})
+                const request = await requestDb.getRequestById({id: requestId})
+                await emailService.notifyStatus({id: requestId, oldStatus: oldStatus.status, newStatus: status, candidate, request})
                 return {
                     message: `Process status updated with success to ${status}`
                 }
@@ -217,6 +220,9 @@ module.exports = (requestDb, candidateDb, processDb, phaseDb, infoDb, processUna
             await processPhaseDb.addPhaseToProcess({requestId, candidateId, phase: newPhase, startDate: new Date()})
         }
         await processPhaseDb.updateProcessCurrentPhase({requestId, candidateId, phase: newPhase})
+        const candidate = await candidateDb.getCandidateById({id: candidateId})
+        const request = await requestDb.getRequestById({id: requestId})
+        await emailService.notifyMoved({id: requestId, oldPhase: currentPhase.currentPhase, newPhase, candidate, request})
 
         return {
             oldPhase: currentPhase.currentPhase,

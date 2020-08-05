@@ -14,7 +14,7 @@ const authModule = require('../authization-module/authization')
 authModule.setup({app: config.app, db: config.dbOptions, rbac_opts: config.jsonObj})
     .then(async (auth) => {
         const db = require('./dals');
-        const services = require('./services')(db, auth)
+        const services = require('./services')(db, auth, config.transporter)
         const controllers = require('./controllers')(services)
         const routes = require('./routes/routes.js')(express.Router(), controllers, auth, config.upload, config.validator)
 

@@ -3,7 +3,7 @@
 const errors = require('./errors/common-errors.js')
 const AppError = require('./errors/app-error.js')
 
-module.exports = (requestDb, processDb, requestLanguagesDb, authModule, candidateDb) => {
+module.exports = (requestDb, processDb, requestLanguagesDb, authModule, candidateDb, emailService) => {
 
     return {
         getRequests: getRequests,
@@ -146,6 +146,8 @@ module.exports = (requestDb, processDb, requestLanguagesDb, authModule, candidat
 
     async function addUserToRequest({requestId, userId, roleId}) {
         await requestDb.addUserAndRoleToRequest({userId, roleId, requestId})
+        const request = requestDb.getRequestById({id: requestId})
+        await emailService.notifyAssigned({userId, request})
     }
 
     async function updateRequestLanguages({requestId, languages, isMandatory}) {

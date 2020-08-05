@@ -4,7 +4,7 @@ module.exports = (services) => {
 
     const user = require('./user-controller.js')(services.user)
 
-    const request = require('./request-controller.js')(services.request)
+    const request = require('./request-controller.js')(services.request, services.email)
 
     const requestProps = require('./request-props-controller.js')(services.requestProps)
 
@@ -12,7 +12,7 @@ module.exports = (services) => {
 
     const candidate = require('./candidate-controller.js')(services.candidate)
 
-    const process = require('./process-controller.js')(services.process)
+    const process = require('./process-controller.js')(services.process, services.email)
 
     const auth = require('./auth-controller.js')()
 

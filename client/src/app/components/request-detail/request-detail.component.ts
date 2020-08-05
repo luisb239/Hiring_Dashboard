@@ -6,13 +6,12 @@ import {UserRole} from 'src/app/model/user/user-role';
 import {ProcessList} from 'src/app/model/process/process-list';
 import {RequestDetailProps} from './request-detail-props';
 import {map, switchMap} from 'rxjs/operators';
-import {FormArray, FormBuilder, FormControl, FormGroup} from '@angular/forms';
+import {FormArray, FormBuilder, FormControl} from '@angular/forms';
 import {AlertService} from '../../services/alert/alert.service';
 import {UserService} from '../../services/user/user.service';
 import {User} from '../../model/user/user';
 import {RequestPropsService} from '../../services/requestProps/requestProps.service';
 import {LanguageCheckbox} from '../../model/requestProps/language-checkbox';
-import {Observable} from 'rxjs';
 
 @Component({
   selector: 'app-request-detail',
@@ -99,16 +98,6 @@ export class RequestDetailComponent implements OnInit {
         this.properties.updateForm.addControl('profile', new FormControl(result.requests.profile));
         this.properties.updateForm.addControl('dateToSendProfile', new FormControl(result.requests.dateToSendProfile));
         this.properties.updateForm.addControl('quantity', new FormControl(result.requests.quantity));
-        // this.properties.updateForm.addControl('mandatory', new FormArray(result.mandatory
-        //   .map((l, idx) => this.formBuilder.group({idx}))
-        // ));
-        //
-        // this.properties.updateForm.addControl('valued', new FormArray((result.valued
-        //   .map((l, idx) => this.formBuilder.group({idx})))
-        // ));
-        //
-        // this.properties.updateForm.addControl('otherMandatory', new FormArray([]));
-        // this.properties.updateForm.addControl('otherValued', new FormArray([]));
 
         this.userService.getRoleIdByName('recruiter')
           .pipe(
@@ -197,8 +186,6 @@ export class RequestDetailComponent implements OnInit {
           .pipe(map(dao => dao.languages
             .map(l => l.language)))
           .subscribe(lang => {
-              // this.properties.otherMandatory = lang.filter(l => !this.properties.mandatoryLanguages.includes(l));
-              // this.properties.otherValued = lang.filter(l => !this.properties.valuedLanguages.includes(l));
               this.properties.languages = lang;
               const mandatory = this.properties.mandatoryLanguages.map(l => l.language);
               const valued = this.properties.valuedLanguages.map(l => l.language);
@@ -260,33 +247,6 @@ export class RequestDetailComponent implements OnInit {
     );
   }
 
-  // onChangeLanguages(isMandatory: boolean, isOther: boolean, idx: number, event: any) {
-  //   // const array = isMandatory ? this.properties.updateForm.controls.mandatoryLanguages as FormArray :
-  //   //   this.properties.form.controls.valuedLanguages as FormArray;
-  //   let array;
-  //   if (isMandatory) {
-  //     if (isOther) {
-  //       array = this.properties.updateForm.controls.otherMandatory as FormArray;
-  //     } else {
-  //       array = this.properties.updateForm.controls.mandatory as FormArray;
-  //     }
-  //   } else {
-  //     if (isOther) {
-  //       array = this.properties.updateForm.controls.otherValued as FormArray;
-  //     } else {
-  //       array = this.properties.updateForm.controls.valued as FormArray;
-  //     }
-  //   }
-  //   if (event.target.checked) {
-  //     array.push(new FormControl(idx));
-  //   } else {
-  //     const index = array.controls.findIndex(x => x.value === idx);
-  //     array.removeAt(index);
-  //   }
-  //   console.log(array);
-  //   console.log(...arguments);
-  // }
-
   onUpdate() {
     const values = this.properties.updateForm.value;
     const body = {
@@ -303,15 +263,7 @@ export class RequestDetailComponent implements OnInit {
         .filter(l => l.checked && !l.initialCheck)
         .map(l => l.language)
     };
-    // this.properties.mandatoryLanguages
-    //   .filter(l => !l.checked && l.initialCheck)
-    //   .forEach(l => this.requestService.deleteRequestLanguage(this.properties.requestId,
-    //     {language: l.language, isMandatory: true}).subscribe());
-    //
-    // this.properties.valuedLanguages
-    //   .filter(l => !l.checked && l.initialCheck)
-    //   .forEach(l => this.requestService.deleteRequestLanguage(this.properties.requestId,
-    //     {language: l.language, isMandatory: false}).subscribe());
+
     this.requestService.updateRequest(this.properties.requestId, body)
       .subscribe(dao => {
         this.alertService.success('Updated request details successfully!');
@@ -323,7 +275,7 @@ export class RequestDetailComponent implements OnInit {
     if (!language.checked) {
       this.requestService.deleteRequestLanguage(this.properties.requestId,
         {language: language.language, isMandatory}).subscribe(
-        result => {
+        () => {
           this.alertService.success('Removed Language successfully!');
         }
       );

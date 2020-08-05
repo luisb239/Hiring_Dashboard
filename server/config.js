@@ -60,18 +60,18 @@ module.exports = (app) => {
         "roles": ["admin", "recruiter", "jobOwner", "guest"],
         // admin -> id = 1, recruiter -> id = 2,...
         "permissions": [
-            { "resource": "auth", "action": "GET" },
-            { "resource": "auth", "action": "POST" },
+            {"resource": "auth", "action": "GET"},
+            {"resource": "auth", "action": "POST"},
 
-            { "resource": "requests", "action": "GET" },
-            { "resource": "requests", "action": "POST" },
-            { "resource": "requests", "action": "PUT" },
+            {"resource": "requests", "action": "GET"},
+            {"resource": "requests", "action": "POST"},
+            {"resource": "requests", "action": "PUT"},
 
-            { "resource": "workflows", "action": "GET" },
+            {"resource": "workflows", "action": "GET"},
 
-            { "resource": "phases", "action": "GET" },
+            {"resource": "phases", "action": "GET"},
 
-            { "resource": "requests-properties", "action": "GET" },
+            {"resource": "requests-properties", "action": "GET"},
 
             {"resource": "candidates", "action": "GET"},
             {"resource": "candidates", "action": "POST"},
@@ -89,12 +89,12 @@ module.exports = (app) => {
         "grants": {
             //TODO -> guest permissions
             "guest": [
-                { "resource": "auth", "action": "GET" },
-                { "resource": "auth", "action": "POST" },
+                {"resource": "auth", "action": "GET"},
+                {"resource": "auth", "action": "POST"},
 
-                { "resource": "requests", "action": "GET" },
-                { "resource": "requests", "action": "POST" },
-                { "resource": "requests", "action": "PUT" },
+                {"resource": "requests", "action": "GET"},
+                {"resource": "requests", "action": "POST"},
+                {"resource": "requests", "action": "PUT"},
 
                 {"resource": "workflows", "action": "GET"},
                 {"resource": "phases", "action": "GET"},
@@ -109,15 +109,15 @@ module.exports = (app) => {
                 {"resource": "roles", "action": "GET"},
             ],
             "recruiter": [
-                { "role": "guest" }
+                {"role": "guest"}
             ],
             "jobOwner": [
-                { "role": "guest" }
+                {"role": "guest"}
             ],
             "admin": [
-                { "role": "guest" }
+                {"role": "guest"}
             ]
         }
     }
-    return { app, transporter, dbOptions, jsonObj, upload, validator }
+    return {app, transporter, dbOptions, jsonObj, upload, validator}
 }
