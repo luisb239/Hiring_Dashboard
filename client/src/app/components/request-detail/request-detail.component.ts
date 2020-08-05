@@ -6,10 +6,13 @@ import {UserRole} from 'src/app/model/user/user-role';
 import {ProcessList} from 'src/app/model/process/process-list';
 import {RequestDetailProps} from './request-detail-props';
 import {map, switchMap} from 'rxjs/operators';
-import {FormArray, FormBuilder, FormControl} from '@angular/forms';
+import {FormArray, FormBuilder, FormControl, FormGroup} from '@angular/forms';
 import {AlertService} from '../../services/alert/alert.service';
 import {UserService} from '../../services/user/user.service';
 import {User} from '../../model/user/user';
+import {RequestPropsService} from '../../services/requestProps/requestProps.service';
+import {LanguageCheckbox} from '../../model/requestProps/language-checkbox';
+import {Observable} from 'rxjs';
 
 @Component({
   selector: 'app-request-detail',
@@ -25,8 +28,10 @@ export class RequestDetailComponent implements OnInit {
     private router: Router,
     private requestService: RequestService,
     private formBuilder: FormBuilder,
+    private reqPropsService: RequestPropsService,
     private userService: UserService,
     private alertService: AlertService) {
+    this.properties.updateForm = this.formBuilder.group({});
   }
 
   /**
@@ -67,24 +72,44 @@ export class RequestDetailComponent implements OnInit {
         map(data => {
           const mandatory = data.dao.languages
             .filter(languageDao => languageDao.isMandatory)
-            .map(l => l.language).join(', ');
+            .map(l => new LanguageCheckbox(l.language, true, true));
           return {...data, mandatory};
         }),
         map(data => {
           const valued = data.dao.languages
             .filter(languageDao => !languageDao.isMandatory)
-            .map(l => l.language).join(', ');
+            .map(l => new LanguageCheckbox(l.language, true, true));
           return {...data, valued};
         }),
       )
       .subscribe(result => {
         this.properties.requestList = result.requests;
-        this.properties.requestAttrs = Object.keys(this.properties.requestList).filter(
-          attr => attr !== 'phases' && attr !== 'id');
+        this.properties.requestAttrs = Object.keys(this.properties.requestList)
+          .filter(attr => attr !== 'phases' && attr !== 'id');
         this.properties.userRoles = result.userRoles;
         this.properties.processes = result.processes;
         this.properties.mandatoryLanguages = result.mandatory;
         this.properties.valuedLanguages = result.valued;
+
+
+        this.properties.updateForm.addControl('project', new FormControl(result.requests.project));
+        this.properties.updateForm.addControl('skill', new FormControl(result.requests.skill));
+        this.properties.updateForm.addControl('stateCsl', new FormControl(result.requests.stateCSL));
+        this.properties.updateForm.addControl('targetDate', new FormControl(result.requests.targetDate));
+        this.properties.updateForm.addControl('profile', new FormControl(result.requests.profile));
+        this.properties.updateForm.addControl('dateToSendProfile', new FormControl(result.requests.dateToSendProfile));
+        this.properties.updateForm.addControl('quantity', new FormControl(result.requests.quantity));
+        // this.properties.updateForm.addControl('mandatory', new FormArray(result.mandatory
+        //   .map((l, idx) => this.formBuilder.group({idx}))
+        // ));
+        //
+        // this.properties.updateForm.addControl('valued', new FormArray((result.valued
+        //   .map((l, idx) => this.formBuilder.group({idx})))
+        // ));
+        //
+        // this.properties.updateForm.addControl('otherMandatory', new FormArray([]));
+        // this.properties.updateForm.addControl('otherValued', new FormArray([]));
+
         this.userService.getRoleIdByName('recruiter')
           .pipe(
             switchMap(dao => {
@@ -104,9 +129,92 @@ export class RequestDetailComponent implements OnInit {
               console.log(this.properties.users);
             }
           );
+        this.reqPropsService.getRequestStates()
+          .pipe(map(dao => dao.states
+            .filter(s => s.state !== result.requests.state)
+            .map(s => s.state)))
+          .subscribe(s => {
+              this.properties.states = s;
+            },
+            error => {
+              console.log(error);
+            });
+        this.reqPropsService.getRequestStatesCsl()
+          .pipe(map(dao => dao.statesCsl
+            .filter(s => s.stateCsl !== result.requests.stateCSL)
+            .map(s => s.stateCsl)))
+          .subscribe(s => {
+              this.properties.statesCsl = s;
+            },
+            error => {
+              console.log(error);
+            });
+        this.reqPropsService.getRequestProjects()
+          .pipe(map(dao => dao.projects
+            .filter(p => p.project !== result.requests.project)
+            .map(p => p.project)))
+          .subscribe(p => {
+              this.properties.projects = p;
+            },
+            error => {
+              console.log(error);
+            });
+
+        this.reqPropsService.getRequestSkills()
+          .pipe(map(dao => dao.skills
+            .filter(s => s.skill !== result.requests.skill)
+            .map(s => s.skill)))
+          .subscribe(s => {
+              this.properties.skills = s;
+            },
+            error => {
+              console.log(error);
+            });
+
+        this.reqPropsService.getRequestProfiles()
+          .pipe(map(dao => dao.profiles
+            .filter(p => p.profile !== result.requests.profile)
+            .map(p => p.profile)))
+          .subscribe(p => {
+              this.properties.profiles = p;
+            },
+            error => {
+              console.log(error);
+            });
+
+        this.reqPropsService.getTargetDates()
+          .pipe(map(dao => dao.months
+            .filter(m => m.month !== result.requests.targetDate)
+            .map(m => m.month)))
+          .subscribe(t => {
+              this.properties.targetDates = t;
+            },
+            error => {
+              console.log(error);
+            });
+
+        this.reqPropsService.getRequestLanguages()
+          .pipe(map(dao => dao.languages
+            .map(l => l.language)))
+          .subscribe(lang => {
+              // this.properties.otherMandatory = lang.filter(l => !this.properties.mandatoryLanguages.includes(l));
+              // this.properties.otherValued = lang.filter(l => !this.properties.valuedLanguages.includes(l));
+              this.properties.languages = lang;
+              const mandatory = this.properties.mandatoryLanguages.map(l => l.language);
+              const valued = this.properties.valuedLanguages.map(l => l.language);
+              this.properties.mandatoryLanguages = this.properties.mandatoryLanguages.concat(lang
+                .filter(l => !mandatory.includes(l))
+                .map(l => new LanguageCheckbox(l, false, false))
+              );
+              this.properties.valuedLanguages = this.properties.valuedLanguages.concat(lang
+                .filter(l => !valued.includes(l))
+                .map(l => new LanguageCheckbox(l, false, false))
+              );
+            },
+            error => {
+              console.log(error);
+            });
       });
-
-
   }
 
   /**
@@ -150,7 +258,75 @@ export class RequestDetailComponent implements OnInit {
         });
       }
     );
-
   }
 
+  // onChangeLanguages(isMandatory: boolean, isOther: boolean, idx: number, event: any) {
+  //   // const array = isMandatory ? this.properties.updateForm.controls.mandatoryLanguages as FormArray :
+  //   //   this.properties.form.controls.valuedLanguages as FormArray;
+  //   let array;
+  //   if (isMandatory) {
+  //     if (isOther) {
+  //       array = this.properties.updateForm.controls.otherMandatory as FormArray;
+  //     } else {
+  //       array = this.properties.updateForm.controls.mandatory as FormArray;
+  //     }
+  //   } else {
+  //     if (isOther) {
+  //       array = this.properties.updateForm.controls.otherValued as FormArray;
+  //     } else {
+  //       array = this.properties.updateForm.controls.valued as FormArray;
+  //     }
+  //   }
+  //   if (event.target.checked) {
+  //     array.push(new FormControl(idx));
+  //   } else {
+  //     const index = array.controls.findIndex(x => x.value === idx);
+  //     array.removeAt(index);
+  //   }
+  //   console.log(array);
+  //   console.log(...arguments);
+  // }
+
+  onUpdate() {
+    const values = this.properties.updateForm.value;
+    const body = {
+      quantity: values.quantity,
+      targetDate: values.targetDate,
+      skill: values.skill,
+      project: values.project,
+      profile: values.profile,
+      dateToSendProfile: values.dateToSendProfile,
+      mandatoryLanguages: this.properties.mandatoryLanguages
+        .filter(l => l.checked && !l.initialCheck)
+        .map(l => l.language),
+      valuedLanguages: this.properties.valuedLanguages
+        .filter(l => l.checked && !l.initialCheck)
+        .map(l => l.language)
+    };
+    // this.properties.mandatoryLanguages
+    //   .filter(l => !l.checked && l.initialCheck)
+    //   .forEach(l => this.requestService.deleteRequestLanguage(this.properties.requestId,
+    //     {language: l.language, isMandatory: true}).subscribe());
+    //
+    // this.properties.valuedLanguages
+    //   .filter(l => !l.checked && l.initialCheck)
+    //   .forEach(l => this.requestService.deleteRequestLanguage(this.properties.requestId,
+    //     {language: l.language, isMandatory: false}).subscribe());
+    this.requestService.updateRequest(this.properties.requestId, body)
+      .subscribe(dao => {
+        this.alertService.success('Updated request details successfully!');
+      }, error => {
+      });
+  }
+
+  onLanguageChange(language: LanguageCheckbox, isMandatory: boolean) {
+    if (!language.checked) {
+      this.requestService.deleteRequestLanguage(this.properties.requestId,
+        {language: language.language, isMandatory}).subscribe(
+        result => {
+          this.alertService.success('Removed Language successfully!');
+        }
+      );
+    }
+  }
 }

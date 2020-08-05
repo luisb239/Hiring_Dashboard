@@ -136,4 +136,29 @@ export class RequestService {
       },
       catchError(this.errorHandler.handleError));
   }
+
+  updateRequest(requestId: number, body: any) {
+    return this.http.patch<SuccessPostDao>(`${this.baseUrl}/requests/${requestId}`, body, httpOptions)
+      .pipe(data => {
+          return data;
+        },
+        catchError(this.errorHandler.handleError));
+  }
+
+  deleteRequestLanguage(requestId: number, parameters: any) {
+    let params = new HttpParams();
+    Object.keys(parameters).forEach(p => {
+      params = params.set(p, parameters[p]);
+    });
+    return this.http.delete<SuccessPostDao>(`${this.baseUrl}/requests/${requestId}/languages`, {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json'
+      }),
+      params
+    })
+      .pipe(data => {
+          return data;
+        },
+        catchError(this.errorHandler.handleError));
+  }
 }

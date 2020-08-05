@@ -9,7 +9,7 @@ module.exports = (query) => {
 
     return {
         getRequests, getRequestById, createRequest,
-        getUserRolesInRequest, updateRequest, addUserAndRoleToRequest
+        getUserRolesInRequest, updateRequest, addUserAndRoleToRequest, updateRequestLanguages
     }
 
     async function getRequests({
@@ -65,29 +65,26 @@ module.exports = (query) => {
     }
 
     async function updateRequest({
-                                     id, quantity = null, description = null, targetDate = null,
+                                     id, quantity = null, targetDate = null,
                                      state = null, skill = null, stateCsl = null,
-                                     project = null, profile = null, workflow = null,
-                                     dateToSendProfile = null, progress = null
+                                     project = null, profile = null,
+                                     dateToSendProfile = null
                                  }) {
         const statement = {
             name: 'Update Request',
             text:
                 `UPDATE ${requestSchema.table} SET ` +
                 `${requestSchema.quantity} = COALESCE($1, ${requestSchema.quantity}), ` +
-                `${requestSchema.description} = COALESCE($2, ${requestSchema.description}), ` +
-                `${requestSchema.targetDate} = COALESCE($3, ${requestSchema.targetDate}), ` +
-                `${requestSchema.state} = COALESCE($4, ${requestSchema.state}), ` +
-                `${requestSchema.skill} = COALESCE($5, ${requestSchema.skill}), ` +
-                `${requestSchema.stateCsl} = COALESCE($6, ${requestSchema.stateCsl}), ` +
-                `${requestSchema.project} = COALESCE($7, ${requestSchema.project}), ` +
-                `${requestSchema.profile} = COALESCE($8, ${requestSchema.profile}), ` +
-                `${requestSchema.workflow} = COALESCE($9, ${requestSchema.workflow}), ` +
-                `${requestSchema.dateToSendProfile} = COALESCE($10, ${requestSchema.dateToSendProfile}), ` +
-                `${requestSchema.progress} = COALESCE($11, ${requestSchema.progress}) ` +
-                `WHERE ${requestSchema.id} = $12;`,
-            values: [quantity, description, targetDate, state, skill, stateCsl,
-                project, profile, workflow, dateToSendProfile, progress, id]
+                `${requestSchema.targetDate} = COALESCE($2, ${requestSchema.targetDate}), ` +
+                `${requestSchema.state} = COALESCE($3, ${requestSchema.state}), ` +
+                `${requestSchema.skill} = COALESCE($4, ${requestSchema.skill}), ` +
+                `${requestSchema.stateCsl} = COALESCE($5, ${requestSchema.stateCsl}), ` +
+                `${requestSchema.project} = COALESCE($6, ${requestSchema.project}), ` +
+                `${requestSchema.profile} = COALESCE($7, ${requestSchema.profile}), ` +
+                `${requestSchema.dateToSendProfile} = COALESCE($8, ${requestSchema.dateToSendProfile}) ` +
+                `WHERE ${requestSchema.id} = $9;`,
+            values: [quantity, targetDate, state, skill, stateCsl,
+                project, profile, dateToSendProfile, id]
         }
 
         await query(statement)
@@ -163,7 +160,7 @@ module.exports = (query) => {
             profile: obj[requestSchema.profile],
             workflow: obj[requestSchema.workflow],
             dateToSendProfile: obj[requestSchema.workflow] ?
-                dateFormat(new Date(obj[requestSchema.dateToSendProfile]),"yyyy-mm-dd") : null,
+                dateFormat(new Date(obj[requestSchema.dateToSendProfile]), "yyyy-mm-dd") : null,
             progress: obj[requestSchema.progress]
         }
     }
@@ -180,5 +177,9 @@ module.exports = (query) => {
 
         await query(statement)
         //TODO -> Check if insert was successful
+    }
+
+    async function updateRequestLanguages({requestId, languages, isMandatory}) {
+
     }
 }

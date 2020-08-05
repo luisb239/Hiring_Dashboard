@@ -37,3 +37,12 @@
     padding: 10px;
     width: 100%;
 }
+
+.Request-Detail > input, select {
+  width: 180px;
+}
+
+.lang {
+  display: inline;
+  margin-left: 1ex;
+}

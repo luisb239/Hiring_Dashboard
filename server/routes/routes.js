@@ -80,6 +80,27 @@ module.exports = function (router, controllers, authModule, upload, validator) {
         body('valuedLanguages').optional().isArray().withMessage("Valued Languages  must be an array of languages"),
     ], handle(controllers.request.postRequest))
 
+    /**
+     * Update Request
+     */
+    router.patch(`/${requests}/:id`, [
+        body('quantity').exists().withMessage("Request must have a quantity"),
+        body('targetDate').exists().withMessage("Request must have a target date"),
+        body('skill').exists().withMessage("Request must have a skill"),
+        body('project').exists().withMessage("Request must have a project"),
+        body('profile').exists().withMessage("Request must have a profile"),
+        body('dateToSendProfile').optional().isAfter().toDate().withMessage("Date to send profile a date be after today"),
+        body('mandatoryLanguages').optional().isArray().withMessage("Mandatory Languages must be an array of languages"),
+        body('valuedLanguages').optional().isArray().withMessage("Valued Languages must be an array of languages"),
+    ], handle(controllers.request.patchRequest))
+
+    /**
+     * Remove Language From Request
+     */
+    router.delete(`/${requests}/:id/languages`, [
+        query('language').exists().isString().withMessage("Language must exist and be a string"),
+        query('isMandatory').exists().isBoolean().withMessage("Language Mandatory must exist and be a boolean")
+    ], handle(controllers.request.deleteLanguage))
 
     /**
      * Get statistics of all requests
