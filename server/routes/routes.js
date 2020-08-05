@@ -6,7 +6,7 @@ const verifyIfAuthenticated = require('../controllers/middlewares/verify_authent
 
 module.exports = function (router, controllers, authModule, upload, validator) {
 
-    const { body, param, query, checkSchema } = validator
+    const {body, param, query, checkSchema} = validator
 
     const users = 'users'
     const roles = 'roles'
@@ -27,19 +27,16 @@ module.exports = function (router, controllers, authModule, upload, validator) {
     const workflows = 'workflows'
     const months = 'months'
 
-    router.get('/auth/session', verifyIfAuthenticated, handle(controllers.auth.getSessionInfo))
+    router.get('/auth/session', verifyIfAuthenticated, handle(controllers.auth.getSession))
 
     router.get('/auth/azure', authModule.authenticate.usingOffice365)
 
-    router.get('/auth/azure/callback',
-        authModule.authenticate.usingOffice365Callback, (req, res) => {
-            res.redirect("http://localhost:4200/all-requests")
-        })
-
-    // TODO -> TEMPORARY REDIRECT TO CLIENT SIDE
-    router.get('/auth/logout', authModule.authenticate.logout, (req, res) => {
-        res.redirect("http://localhost:4200/home")
+    router.get('/auth/azure/callback', authModule.authenticate.usingOffice365Callback, (req, res) => {
+        res.redirect("http://localhost:4200/")
     })
+
+
+    router.post('/auth/logout', authModule.authenticate.logout, handle(controllers.auth.getSession))
 
     /**
      * Get all requests + query filter
@@ -83,8 +80,6 @@ module.exports = function (router, controllers, authModule, upload, validator) {
         body('valuedLanguages').optional().isArray().withMessage("Valued Languages  must be an array of languages"),
     ], handle(controllers.request.postRequest))
 
-    // Update Request
-    // router.put(`/${requests}/:id`, )
 
     /**
      * Get statistics of all requests
@@ -309,7 +304,7 @@ module.exports = function (router, controllers, authModule, upload, validator) {
         checkSchema({
             'cv': {
                 custom: {
-                    options: (value, { req }) => !!req.file,
+                    options: (value, {req}) => !!req.file,
                     errorMessage: 'Cv file needs to be uploaded',
                 }
             }
