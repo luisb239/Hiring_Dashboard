@@ -28,6 +28,8 @@ import {AlertModule} from './components/alert/alert.module';
 import {SearchCandidateComponent} from './components/search-candidate/search-candidate.component';
 import {DashboardComponent} from './components/dashboard/dashboard.component';
 import {HttpErrorInterceptor} from './services/htttp-error-interceptor';
+import {MatTableModule} from '@angular/material/table';
+import {MatPaginatorModule} from '@angular/material/paginator';
 
 @NgModule({
   declarations: [
@@ -61,7 +63,9 @@ import {HttpErrorInterceptor} from './services/htttp-error-interceptor';
     FormsModule,
     MatOptionModule,
     MatSelectModule,
-    AlertModule
+    AlertModule,
+    MatTableModule,
+    MatPaginatorModule
   ],
   providers: [{
     provide: HTTP_INTERCEPTORS,

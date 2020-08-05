@@ -37,6 +37,20 @@ button {
   width: fit-content;
 }
 
+table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 20px 0px;
+}
+
+.mat-cell {
+  padding-right: 10px;
+}
+/* td {
+  margin-left: 5px;
+  margin-right: 5px;
+} */
+
 ::ng-deep .custom-slider .ng5-slider .ng5-slider-bar {
   height: 2px;
 }
