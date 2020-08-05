@@ -1,14 +1,13 @@
 require("dotenv").config();
+const nodemailer = require("nodemailer")
+const multer = require('multer')
+const validator = require('express-validator')
+const bodyParser = require('body-parser')
 
 module.exports = (app) => {
-    const nodemailer = require("nodemailer")
 
-    const multer = require('multer')
-    const upload = multer({ storage: multer.memoryStorage() })
+    const upload = multer({storage: multer.memoryStorage()})
 
-    const validator = require('express-validator')
-
-    const bodyParser = require('body-parser')
     app.use(bodyParser.urlencoded({extended: false}))
     app.use(bodyParser.json());
 
@@ -59,6 +58,7 @@ module.exports = (app) => {
 
     const jsonObj = {
         "roles": ["admin", "recruiter", "jobOwner", "guest"],
+        // admin -> id = 1, recruiter -> id = 2,...
         "permissions": [
             { "resource": "auth", "action": "GET" },
             { "resource": "auth", "action": "POST" },
@@ -120,5 +120,4 @@ module.exports = (app) => {
         }
     }
     return { app, transporter, dbOptions, jsonObj, upload, validator }
-    // return { app, dbOptions, jsonObj, upload, validator }
 }

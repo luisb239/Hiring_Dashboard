@@ -47,8 +47,7 @@ export class BoardComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    const user: User = this.authService.getUserInfo();
-    this.requestService.getRequestsByUser(user.userId, user.roles[0].roleId)
+    this.requestService.getUserCurrentRequests()
       .subscribe(
         requestsDao => {
           this.properties.requests = requestsDao.requests.map(r => new RequestList(r.id, r.workflow, r.progress,

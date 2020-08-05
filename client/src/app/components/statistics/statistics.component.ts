@@ -105,7 +105,7 @@ export class StatisticsComponent implements OnInit {
     };
   }
   ngOnInit(): void {
-    this.properties.userId = this.authService.getUserInfo().userId;
+    this.properties.userId = this.authService.userId;
   }
 
   saveLocallyHandler() {

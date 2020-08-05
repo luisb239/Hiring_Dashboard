@@ -5,6 +5,7 @@ import {ErrorHandler} from '../error-handler';
 import {SuccessPostDao} from '../../model/common/successPost-dao';
 import {RequestDao} from 'src/app/model/request/request-dao';
 import {RequestsDao} from 'src/app/model/request/requests-dao';
+import {AuthService} from '../auth/auth.service';
 
 const httpOptions = {
   headers: new HttpHeaders({
@@ -23,7 +24,8 @@ const singleParams: string[] = ['skill', 'state', 'stateCsl', 'project', 'profil
  * This class supplies all the functions needed to manage requests.
  */
 export class RequestService {
-  constructor(private http: HttpClient, private errorHandler: ErrorHandler) {
+  constructor(private http: HttpClient, private errorHandler: ErrorHandler,
+              private authService: AuthService) {
   }
 
   baseUrl = `/hd`;
@@ -43,12 +45,10 @@ export class RequestService {
   /**
    *  This function queries the server for all the requests associated with a user-role.
    * @param userId is used to specify a user's requests.
-   * @param roleId is used to specify a role's requests.
    */
-  getRequestsByUser(userId: number, roleId: number) {
+  getUserCurrentRequests() {
     const params = new HttpParams()
-      .set('userId', String(userId))
-      .set('roleId', String(roleId));
+      .set('userId', String(this.authService.userId));
     return this.http.get<RequestsDao>(`${this.baseUrl}/requests`,
       {
         headers: new HttpHeaders({
@@ -56,7 +56,7 @@ export class RequestService {
         }), params
       })
       .pipe(data => {
-        return data;
+          return data;
       },
         catchError(this.errorHandler.handleError));
   }

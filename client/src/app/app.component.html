@@ -16,7 +16,7 @@
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-      <div *ngIf="!authService.isAuthenticated()">
+      <div *ngIf="!authService.isAuthenticated">
         <ul class="navbar-nav">
           <li class="nav-item">
             <a [routerLinkActive]="['active']" [routerLink]="['/home']" class=" nav-link">
@@ -30,7 +30,7 @@
           </li>
         </ul>
       </div>
-      <div *ngIf="authService.isAuthenticated()">
+      <div *ngIf="authService.isAuthenticated">
         <ul class="navbar-nav">
           <li class="nav-item">
             <a [routerLinkActive]="['active']" [routerLink]="['/board']" class="nav-link">
@@ -72,7 +72,7 @@
           </li>
         </ul>
       </div>
-      <ul *ngIf="authService.isAuthenticated()" class="navbar-nav ml-auto">
+      <ul *ngIf="authService.isAuthenticated" class="navbar-nav ml-auto">
         <li class="nav-item navbar-right">
           <a [routerLinkActive]="['active']" [routerLink]="['/logout']" class="nav-link">
             Logout

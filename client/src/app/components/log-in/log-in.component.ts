@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
+import {AuthService} from '../../services/auth/auth.service';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-log-in',
@@ -7,14 +9,13 @@ import { Component, OnInit } from '@angular/core';
 })
 export class LogInComponent implements OnInit {
 
-  authUrl = `/hd/auth`;
-  azureAuthenticationUrl = `${this.authUrl}/azure`;
-
-  constructor() {
+  constructor(private authService: AuthService) {
   }
 
   ngOnInit(): void {
-    window.location.href = this.azureAuthenticationUrl;
+    // login -> redirect to office 365 auth
+    // TODO -> Change into an <a href...> with ngIf notAuthenticated
+    window.location.href = this.authService.azureAuthenticationUrl;
   }
 
 }

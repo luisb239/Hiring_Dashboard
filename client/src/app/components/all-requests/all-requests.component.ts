@@ -28,11 +28,6 @@ export class AllRequestsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    if (!this.authService.isAuthenticated()) {
-      this.authService.getUserSession().subscribe(data => {
-        this.authService.setUserInfo(data);
-      });
-    }
     this.getFilterParameters();
     this.getRequests();
   }

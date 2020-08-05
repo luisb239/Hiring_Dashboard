@@ -2,7 +2,9 @@ import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {catchError} from 'rxjs/operators';
 import {ErrorHandler} from '../error-handler';
-import {Role, User} from '../../model/user/user';
+import {Router} from '@angular/router';
+import {Observable} from 'rxjs';
+import {Session} from '../../model/session/session';
 
 const httpOptions = {
   headers: new HttpHeaders({
@@ -16,48 +18,32 @@ const httpOptions = {
 export class AuthService {
 
   // We can also add UserService instead of HttpClient, the UserService
+  isAuthenticated: boolean;
+  // store the URL so we can redirect after logging in
+  redirectUrl: string;
+  userId: number;
+  private authUrl = `/hd/auth`;
+  public azureAuthenticationUrl = `${this.authUrl}/azure`;
+  private authSession = `${this.authUrl}/session`;
+  private sessionInfo = `${this.authSession}/info`;
+  private logoutUrl = `${this.authUrl}/logout`;
+
   // would be responsible for creating and managing users (create/get)
-  constructor(private http: HttpClient, private errorHandler: ErrorHandler) {
+  constructor(private http: HttpClient,
+              private router: Router,
+              private errorHandler: ErrorHandler) {
   }
 
-  authUrl = `/hd/auth`;
-
-  azureAuthenticationUrl = `${this.authUrl}/azure`;
-  authSession = `${this.authUrl}/session`;
-  logoutUrl = `${this.authUrl}/logout`;
-
-  registerUrl = 'test';
-
-  // We can call also call GET '/session' api endpoint
-  isAuthenticated(): boolean {
-    return (this.getUserInfo() != null);
+  // Get current session
+  getSession(): Observable<Session> {
+    return this.http.get<Session>(this.authSession, httpOptions)
+      .pipe(catchError(this.errorHandler.handleError));
   }
 
-
-  getUserInfo(): User {
-    const local = JSON.parse(localStorage.getItem('userInfo'));
-    return local === null ? null :
-      new User(local.user.id, local.user.email, local.roles.map(role => new Role(role.roleId, role.role)));
+  logout() {
+    return this.http.post<Session>(this.logoutUrl, null)
+      .pipe(catchError(this.errorHandler.handleError));
   }
-
-  setUserInfo(user) {
-    localStorage.setItem('userInfo', JSON.stringify(user));
-  }
-
-  getUserSession() {
-    return this.http.get(this.authSession, httpOptions)
-      .pipe(data => {
-          return data;
-        },
-        catchError(this.errorHandler.handleError));
-  }
-
-  authenticate() {
-    return this.http.get(this.azureAuthenticationUrl, httpOptions)
-      .pipe(data => data, catchError(this.errorHandler.handleError));
-  }
-
-
 }
 
 

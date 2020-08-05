@@ -24,8 +24,9 @@ import {LogoutComponent} from './components/logout/logout.component';
 import {CreateCandidateComponent} from './components/create-candidate/create-candidate.component';
 import {WebDataRocksPivotComponent} from './webdatarocks/webdatarocks.angular4';
 import {StatisticsProfilesComponent} from './components/statistics-profiles/statistics-profiles.component';
-import {AlertModule} from "./components/alert/alert.module";
+import {AlertModule} from './components/alert/alert.module';
 import {SearchCandidateComponent} from './components/search-candidate/search-candidate.component';
+import {DashboardComponent} from './components/dashboard/dashboard.component';
 
 @NgModule({
   declarations: [
@@ -44,7 +45,8 @@ import {SearchCandidateComponent} from './components/search-candidate/search-can
     CreateCandidateComponent,
     WebDataRocksPivotComponent,
     StatisticsProfilesComponent,
-    SearchCandidateComponent
+    SearchCandidateComponent,
+    DashboardComponent
   ],
   imports: [
     BrowserModule,
