@@ -25,21 +25,27 @@ module.exports = function handle(controllerFunction) {
     }
 }
 
-
 function handleError(res, error) {
     if (error.commonError === commonErrors.invalidInput || error.commonError === commonErrors.missingInput) {
         // Bad Request
-        res.status(400).send({title: error.title, detail: error.detail})
+        res.status(400).send(format(error.title, error.detail))
     } else if (error.commonError === commonErrors.notFound) {
         // Not Found
-        res.status(404).send({title: error.title, detail: error.detail})
+        res.status(404).send(format(error.title, error.detail))
     } else if (error.commonError === commonErrors.alreadyExists) {
         // Conflict
-        res.status(409).send({title: error.title, detail: error.detail})
+        res.status(409).send(format(error.title, error.detail))
     } else {
         // Internal Server Error
         console.log(error)
-        res.status(500).send({error: "Internal Server Error", message: "Something unexpected happened!"})
+        res.status(500).send(format("Internal Server Error", "Something unexpected happened!"))
+    }
+}
+
+function format(title, detail) {
+    return {
+        title: title,
+        detail: detail
     }
 }
 

@@ -20,7 +20,7 @@ export class DashboardComponent implements OnInit {
       this.authService.getSession().subscribe(session => {
         this.authService.setSessionInStorage(session.auth);
         if (session.auth) {
-          this.router.navigate([this.authService.redirectUrl || '/all-requests']);
+          this.router.navigate(['/all-requests']);
         } else {
           this.router.navigate(['/home']);
         }

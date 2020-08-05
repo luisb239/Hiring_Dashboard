@@ -1,7 +1,5 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
-import {catchError} from 'rxjs/operators';
-import {ErrorHandler} from '../error-handler';
 import {SuccessPostDao} from '../../model/common/successPost-dao';
 import {RequestDao} from 'src/app/model/request/request-dao';
 import {RequestsDao} from 'src/app/model/request/requests-dao';
@@ -23,7 +21,7 @@ const singleParams: string[] = ['skill', 'state', 'stateCsl', 'project', 'profil
  * This class supplies all the functions needed to manage requests.
  */
 export class RequestService {
-  constructor(private http: HttpClient, private errorHandler: ErrorHandler) {
+  constructor(private http: HttpClient) {
   }
 
   baseUrl = `/hd`;
@@ -33,11 +31,7 @@ export class RequestService {
    * @param requestId is used to get a specific request' details.
    */
   getRequest(requestId: number) {
-    return this.http.get<RequestDao>(`${this.baseUrl}/requests/${requestId}`, httpOptions)
-      .pipe(data => {
-        return data;
-      },
-        catchError(this.errorHandler.handleError));
+    return this.http.get<RequestDao>(`${this.baseUrl}/requests/${requestId}`, httpOptions);
   }
 
   /**
@@ -45,29 +39,20 @@ export class RequestService {
    * @param userId is used to specify a user's requests.
    */
   getUserCurrentRequests() {
-    const params = new HttpParams()
-      .set('currentUser', String(true));
+    const params = new HttpParams().set('currentUser', String(true));
     return this.http.get<RequestsDao>(`${this.baseUrl}/requests`,
       {
         headers: new HttpHeaders({
           'Content-Type': 'application/json'
         }), params
-      })
-      .pipe(data => {
-          return data;
-      },
-        catchError(this.errorHandler.handleError));
+      });
   }
 
   /**
    * This function queries the server for all the existing requests in the system.
    */
   getAllRequests() {
-    return this.http.get<RequestsDao>(`${this.baseUrl}/requests`, httpOptions)
-      .pipe(data => {
-        return data;
-      },
-        catchError(this.errorHandler.handleError));
+    return this.http.get<RequestsDao>(`${this.baseUrl}/requests`, httpOptions);
   }
 
   /**
@@ -76,7 +61,6 @@ export class RequestService {
    * @param parameters are used to filter the values that are retrieved from the database.
    */
   getAllRequestsWithQuery(parameters: any) {
-    console.log(parameters);
     let params = new HttpParams();
     singleParams.forEach(p => {
       if (parameters[p] !== null && parameters[p] !== '') {
@@ -96,17 +80,11 @@ export class RequestService {
     if (parameters.quantity[1]) {
       params = params.set('maxQuantity', String(parameters.quantity[1]));
     }
-
-    console.log(params.toString());
     return this.http.get<RequestsDao>(`${this.baseUrl}/requests`, {
       headers: new HttpHeaders({
         'Content-Type': 'application/json'
       }), params
-    })
-      .pipe(data => {
-        return data;
-      },
-        catchError(this.errorHandler.handleError));
+    });
   }
 
   /**
@@ -114,11 +92,7 @@ export class RequestService {
    * @param requestBody is used to insert a new request in the database.
    */
   createRequest(requestBody) {
-    return this.http.post<SuccessPostDao>(`${this.baseUrl}/requests`, requestBody, httpOptions)
-      .pipe(data => {
-        return data;
-      },
-        catchError(this.errorHandler.handleError));
+    return this.http.post<SuccessPostDao>(`${this.baseUrl}/requests`, requestBody, httpOptions);
   }
 
   /**
@@ -128,19 +102,12 @@ export class RequestService {
    * @param roleId is used to specify a role.
    */
   addUser(requestId: number, userId: number, roleId: number) {
-    return this.http.post<SuccessPostDao>(`${this.baseUrl}/requests/${requestId}/users`, {userId, roleId}, httpOptions)
-      .pipe(data => {
-        return data;
-      },
-      catchError(this.errorHandler.handleError));
+    return this.http.post<SuccessPostDao>(`${this.baseUrl}/requests/${requestId}/users`,
+      {userId, roleId}, httpOptions);
   }
 
   updateRequest(requestId: number, body: any) {
-    return this.http.patch<SuccessPostDao>(`${this.baseUrl}/requests/${requestId}`, body, httpOptions)
-      .pipe(data => {
-          return data;
-        },
-        catchError(this.errorHandler.handleError));
+    return this.http.patch<SuccessPostDao>(`${this.baseUrl}/requests/${requestId}`, body, httpOptions);
   }
 
   deleteRequestLanguage(requestId: number, parameters: any) {
@@ -149,14 +116,7 @@ export class RequestService {
       params = params.set(p, parameters[p]);
     });
     return this.http.delete<SuccessPostDao>(`${this.baseUrl}/requests/${requestId}/languages`, {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json'
-      }),
-      params
-    })
-      .pipe(data => {
-          return data;
-        },
-        catchError(this.errorHandler.handleError));
+      headers: new HttpHeaders({'Content-Type': 'application/json'}), params
+    });
   }
 }

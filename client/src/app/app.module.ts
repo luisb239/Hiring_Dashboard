@@ -8,7 +8,7 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {DragDropModule} from '@angular/cdk/drag-drop';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {HomeComponent} from './components/home/home.component';
-import {HttpClientModule} from '@angular/common/http';
+import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import {PopupComponent} from './components/popup/popup.component';
 import {CreateRequestComponent} from './components/create-request/create-request.component';
 import {AllRequestsComponent} from './components/all-requests/all-requests.component';
@@ -27,6 +27,7 @@ import {StatisticsProfilesComponent} from './components/statistics-profiles/stat
 import {AlertModule} from './components/alert/alert.module';
 import {SearchCandidateComponent} from './components/search-candidate/search-candidate.component';
 import {DashboardComponent} from './components/dashboard/dashboard.component';
+import {HttpErrorInterceptor} from './services/htttp-error-interceptor';
 
 @NgModule({
   declarations: [
@@ -62,7 +63,11 @@ import {DashboardComponent} from './components/dashboard/dashboard.component';
     MatSelectModule,
     AlertModule
   ],
-  providers: [],
+  providers: [{
+    provide: HTTP_INTERCEPTORS,
+    useClass: HttpErrorInterceptor,
+    multi: true
+  }],
   bootstrap: [AppComponent]
 })
 export class AppModule {
