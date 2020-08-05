@@ -31,8 +31,7 @@ const routes: Routes = [
   {path: 'create-candidate', component: CreateCandidateComponent, canActivate: [AuthGuardService]},
   {path: 'search-candidate', component: SearchCandidateComponent, canActivate: [AuthGuardService]},
   // otherwise redirect to home
-  {path: '**', redirectTo: 'home'}
-  // TODO -> Page Not Found Component instead of redirecting to home
+  {path: '**', redirectTo: ''}
 ];
 
 @NgModule({
