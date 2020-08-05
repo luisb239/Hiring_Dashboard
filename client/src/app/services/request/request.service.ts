@@ -5,7 +5,6 @@ import {ErrorHandler} from '../error-handler';
 import {SuccessPostDao} from '../../model/common/successPost-dao';
 import {RequestDao} from 'src/app/model/request/request-dao';
 import {RequestsDao} from 'src/app/model/request/requests-dao';
-import {AuthService} from '../auth/auth.service';
 
 const httpOptions = {
   headers: new HttpHeaders({
@@ -24,8 +23,7 @@ const singleParams: string[] = ['skill', 'state', 'stateCsl', 'project', 'profil
  * This class supplies all the functions needed to manage requests.
  */
 export class RequestService {
-  constructor(private http: HttpClient, private errorHandler: ErrorHandler,
-              private authService: AuthService) {
+  constructor(private http: HttpClient, private errorHandler: ErrorHandler) {
   }
 
   baseUrl = `/hd`;
@@ -48,7 +46,7 @@ export class RequestService {
    */
   getUserCurrentRequests() {
     const params = new HttpParams()
-      .set('userId', String(this.authService.userId));
+      .set('currentUser', String(true));
     return this.http.get<RequestsDao>(`${this.baseUrl}/requests`,
       {
         headers: new HttpHeaders({

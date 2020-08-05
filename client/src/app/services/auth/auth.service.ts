@@ -17,18 +17,15 @@ const httpOptions = {
 })
 export class AuthService {
 
-  // We can also add UserService instead of HttpClient, the UserService
-  isAuthenticated: boolean;
   // store the URL so we can redirect after logging in
   redirectUrl: string;
-  userId: number;
   private authUrl = `/hd/auth`;
   public azureAuthenticationUrl = `${this.authUrl}/azure`;
   private authSession = `${this.authUrl}/session`;
   private sessionInfo = `${this.authSession}/info`;
   private logoutUrl = `${this.authUrl}/logout`;
+  private authKey = 'auth';
 
-  // would be responsible for creating and managing users (create/get)
   constructor(private http: HttpClient,
               private router: Router,
               private errorHandler: ErrorHandler) {
@@ -40,10 +37,29 @@ export class AuthService {
       .pipe(catchError(this.errorHandler.handleError));
   }
 
+  // Logout current user
   logout() {
     return this.http.post<Session>(this.logoutUrl, null)
       .pipe(catchError(this.errorHandler.handleError));
   }
+
+  // Save session auth in session storage
+  setSessionInStorage(auth: boolean) {
+    localStorage.setItem(this.authKey, String(auth));
+  }
+
+  // Get session auth from session storage
+  getSessionFromStorage(): boolean {
+    console.log(`Get session from storage -> service...`);
+    console.log('key -> ' + localStorage.getItem(this.authKey));
+    return Boolean(localStorage.getItem(this.authKey));
+  }
+
+  // Clear session auth
+  clearSessionFromStorage() {
+    localStorage.removeItem(this.authKey);
+  }
+
 }
 
 

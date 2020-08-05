@@ -19,7 +19,7 @@ module.exports = (service) => {
 
     async function saveUserStatisticsConfigs(req, res) {
         const createdProfile = await service.saveUserStatisticsConfigs({
-            userId: req.params.id,
+            userId: req.user.id,
             name: req.body.name,
             configs: req.body.report
         })
@@ -33,14 +33,14 @@ module.exports = (service) => {
 
     async function getUserStatisticsConfigs(req, res) {
         const userConfigs = await service.getUserStatisticsConfigs({
-            userId: req.params.id
+            userId: req.user.id
         })
         res.status(200).send(userConfigs)
     }
 
     async function getUserStatisticsConfigsDetails(req, res) {
         const userConfigs = await service.getUserStatisticsConfigsDetails({
-            userId: req.params.id,
+            userId: req.user.id,
             profileName: req.params.name
         })
         res.status(200).send(userConfigs)

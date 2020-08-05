@@ -18,37 +18,39 @@ const httpOptions = {
 export class StatisticsService {
 
   baseUrl = `/hd`;
-  constructor(private http: HttpClient, private errorHandler: ErrorHandler) { }
 
-  getConfigProfiles(userId: number) {
-    return this.http.get<ConfigProfilesDao>(`${this.baseUrl}/users/${userId}/statistics/configs/`, httpOptions)
+  constructor(private http: HttpClient, private errorHandler: ErrorHandler) {
+  }
+
+  getUserConfigProfiles() {
+    return this.http.get<ConfigProfilesDao>(`${this.baseUrl}/statistics/configs/`, httpOptions)
       .pipe(data => {
-        return data;
-      },
+          return data;
+        },
         catchError(this.errorHandler.handleError));
   }
 
-  getConfigProfileDetails(userId: number, profileName: string) {
+  getUserConfigProfileDetails(profileName: string) {
     const url = new HttpUrlEncodingCodec().encodeValue(profileName);
-    return this.http.get<ConfigProfileDao>(`${this.baseUrl}/users/${userId}/statistics/configs/${url}`, httpOptions)
+    return this.http.get<ConfigProfileDao>(`${this.baseUrl}/statistics/configs/${url}`, httpOptions)
       .pipe(data => {
-        return data;
-      },
+          return data;
+        },
         catchError(this.errorHandler.handleError));
   }
 
-  saveConfigProfile(userId: number, requestBody) {
-    return this.http.post<SuccessPostDao>(`${this.baseUrl}/users/${userId}/statistics/configs`, requestBody, httpOptions)
+  saveUserConfigProfiles(requestBody) {
+    return this.http.post<SuccessPostDao>(`${this.baseUrl}/statistics/configs`, requestBody, httpOptions)
       .pipe(data => {
-        return data;
-      },
+          return data;
+        },
         catchError(this.errorHandler.handleError));
   }
 
   getStatistics() {
     return this.http.get<any>(`${this.baseUrl}/statistics`, httpOptions)
       .pipe(data => {
-        return data;
+          return data;
       },
         catchError(this.errorHandler.handleError));
   }

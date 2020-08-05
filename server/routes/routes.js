@@ -27,14 +27,16 @@ module.exports = function (router, controllers, authModule, upload, validator) {
     const workflows = 'workflows'
     const months = 'months'
 
-    router.get('/auth/session', verifyIfAuthenticated, handle(controllers.auth.getSession))
+    // All endpoints should need the user to be authenticated?
+
+    router.get('/auth/session', handle(controllers.auth.getSession))
 
     router.get('/auth/azure', authModule.authenticate.usingOffice365)
 
     router.get('/auth/azure/callback', authModule.authenticate.usingOffice365Callback, (req, res) => {
+        // TODO -> Before redirect take into account req.referer ??
         res.redirect("http://localhost:4200/")
     })
-
 
     router.post('/auth/logout', authModule.authenticate.logout, handle(controllers.auth.getSession))
 
@@ -42,6 +44,7 @@ module.exports = function (router, controllers, authModule, upload, validator) {
      * Get all requests + query filter
      */
     router.get(`/${requests}`, [
+        verifyIfAuthenticated,
         query('skill').optional().isString(),
         query('state').optional().isString(),
         query('stateCsl').optional().isString(),
@@ -53,14 +56,14 @@ module.exports = function (router, controllers, authModule, upload, validator) {
         query('minProgress').optional().isInt(),
         query('maxProgress').optional().isInt(),
         query('targetDate').optional().isString(),
-        query('userId').optional().isInt(),
-        query('roleId').optional().isInt()
+        query('currentUser').optional().isBoolean(),
     ], handle(controllers.request.getRequests))
 
     /**
      * Get request by id
      */
     router.get(`/${requests}/:id`, [
+        verifyIfAuthenticated,
         param('id').isInt().withMessage("Request Id must be of int type")
     ], handle(controllers.request.getRequestById))
 
@@ -68,6 +71,7 @@ module.exports = function (router, controllers, authModule, upload, validator) {
      * Create request
      */
     router.post(`/${requests}`, [
+        verifyIfAuthenticated,
         body('quantity').exists().withMessage("Request must have a quantity"),
         body('description').exists().withMessage("Request must have a description"),
         body('targetDate').exists().withMessage("Request must have a target date"),
@@ -84,14 +88,27 @@ module.exports = function (router, controllers, authModule, upload, validator) {
     /**
      * Get statistics of all requests
      */
-    router.get(`/${statistics}`, handle(controllers.statistics.getStatistics))
+    router.get(`/${statistics}`, verifyIfAuthenticated, handle(controllers.statistics.getStatistics))
+
+    /**
+     * Get user's statistics configs
+     */
+    router.get(`/${statistics}/configs`, verifyIfAuthenticated, handle(controllers.statistics.getUserStatisticsConfigs))
 
     /**
      * Save user's statistics configs
      */
-    router.post(`/${users}/:id/${statistics}/configs`, [
-        param('id').isInt().withMessage("User Id must be of int type")
-    ], handle(controllers.statistics.saveUserStatisticsConfigs))
+    router.post(`/${statistics}/configs`, verifyIfAuthenticated, handle(controllers.statistics.saveUserStatisticsConfigs))
+
+    /**
+     * Get user's statistics configs details
+     */
+    router.get(`${statistics}/configs/:name`, [
+        verifyIfAuthenticated,
+        param('name').isString().withMessage("Profile name must be of string type")
+    ], handle(controllers.statistics.getUserStatisticsConfigsDetails))
+
+    // TODO -> DELETE USER STATISTICS CONFIGS PROFILE MISSING!!
 
     /**
      * Get all users + query filter
@@ -109,21 +126,6 @@ module.exports = function (router, controllers, authModule, upload, validator) {
     ], handle(controllers.user.getRoleByName))
 
     /**
-     * Get user's statistics configs
-     */
-    router.get(`/${users}/:id/${statistics}/configs`, [
-        param('id').isInt().withMessage("User Id must be of int type")
-    ], handle(controllers.statistics.getUserStatisticsConfigs))
-
-    /**
-     * Get user's statistics configs details
-     */
-    router.get(`/${users}/:id/${statistics}/configs/:name`, [
-        param('id').isInt().withMessage("User Id must be of int type"),
-        param('name').isString().withMessage("Profiel Name must be of string type")
-    ], handle(controllers.statistics.getUserStatisticsConfigsDetails))
-
-    /**
      * Process endpoints common validators
      */
     const processValidators = [
@@ -135,6 +137,7 @@ module.exports = function (router, controllers, authModule, upload, validator) {
      * Get all request processes
      */
     router.get(`/${requests}/:id/processes`, [
+        verifyIfAuthenticated,
         param('id').isInt().withMessage("Request id must be of int type")
     ], handle(controllers.process.getProcessesByRequestId))
 
@@ -142,23 +145,27 @@ module.exports = function (router, controllers, authModule, upload, validator) {
     /**
      * Get process detail
      */
-    router.get(`/${requests}/:requestId/${candidates}/:candidateId/${process}`,
-        processValidators,
+    router.get(`/${requests}/:requestId/${candidates}/:candidateId/${process}`, [
+            verifyIfAuthenticated,
+            ...processValidators
+        ],
         handle(controllers.process.getProcessDetail))
 
     /**
      * Create process
      */
     //TODO -> should be -> /process
-    router.post(`/${requests}/:requestId/${candidates}/:candidateId/${process}`,
-        processValidators,
-        handle(controllers.process.createProcess))
+    router.post(`/${requests}/:requestId/${candidates}/:candidateId/${process}`, [
+        verifyIfAuthenticated,
+        ...processValidators
+    ], handle(controllers.process.createProcess))
 
     /**
      * Update process
      */
     //TODO -> maybe change
     router.put(`/${requests}/:requestId/${candidates}/:candidateId/${process}`, [
+        verifyIfAuthenticated,
         ...processValidators,
         body('infos').optional().isArray()
             .custom(infosArray => infosArray.every(info => info.name && info.value != null))
@@ -172,6 +179,7 @@ module.exports = function (router, controllers, authModule, upload, validator) {
      * Add User to Request
      */
     router.post(`/${requests}/:id/${users}`, [
+        verifyIfAuthenticated,
         body('userId').exists().isInt().withMessage("User Id must exist and be of int type"),
         body('roleId').exists().isInt().withMessage("Role Id must exist and be of int type")
     ], handle(controllers.request.postUser))
@@ -180,6 +188,7 @@ module.exports = function (router, controllers, authModule, upload, validator) {
      * Update process phase notes
      */
     router.put(`/${requests}/:requestId/${candidates}/:candidateId/${process}/${phases}/:phase`, [
+        verifyIfAuthenticated,
         ...processValidators,
         param('phase').isString().withMessage("phase must be of string type"),
         body('notes').isString().withMessage("Phase notes must be of string type")
@@ -189,75 +198,78 @@ module.exports = function (router, controllers, authModule, upload, validator) {
      * Get workflow detail
      */
     router.get(`/${workflows}/:workflow`, [
+        verifyIfAuthenticated,
         param('workflow').isString().withMessage("Workflow must be of string type")
     ], handle(controllers.requestProps.getWorkflow))
 
     /**
      * Get all phases
      */
-    router.get(`/${phases}`, handle(controllers.phase.getPhases))
+    router.get(`/${phases}`, verifyIfAuthenticated, handle(controllers.phase.getPhases))
 
 
     /**
      * Get phase detail
      */
     router.get(`/${phases}/:phase`, [
+        verifyIfAuthenticated,
         param('phase').isString().withMessage("Phase must be of string type")
     ], handle(controllers.phase.getPhase))
 
     /**
      * Get all skills
      */
-    router.get(`/${requestAttributes}/${skills}`,
+    router.get(`/${requestAttributes}/${skills}`, verifyIfAuthenticated,
         handle(controllers.requestProps.getSkills))
 
     /**
      * Get all states
      */
-    router.get(`/${requestAttributes}/${states}`,
+    router.get(`/${requestAttributes}/${states}`, verifyIfAuthenticated,
         handle(controllers.requestProps.getStates))
 
     /**
      * Get all states-csl
      */
-    router.get(`/${requestAttributes}/${statesCsl}`,
+    router.get(`/${requestAttributes}/${statesCsl}`, verifyIfAuthenticated,
         handle(controllers.requestProps.getStatesCsl))
 
     /**
      * Get all projects
      */
-    router.get(`/${requestAttributes}/${projects}`,
+    router.get(`/${requestAttributes}/${projects}`, verifyIfAuthenticated,
         handle(controllers.requestProps.getProjects))
 
     /**
      * Get all profiles
      */
-    router.get(`/${requestAttributes}/${profiles}`,
+    router.get(`/${requestAttributes}/${profiles}`, verifyIfAuthenticated,
         handle(controllers.requestProps.getProfiles))
 
     /**
      * Get all languages
      */
-    router.get(`/${requestAttributes}/${languages}`,
+    router.get(`/${requestAttributes}/${languages}`, verifyIfAuthenticated,
         handle(controllers.requestProps.getLanguages))
 
     /**
      * Get all workflows
      */
     //TODO -> not consistent -> should be /workflows, instead of /requests-properties/workflows
-    router.get(`/${requestAttributes}/${workflows}`,
+    router.get(`/${requestAttributes}/${workflows}`, verifyIfAuthenticated,
         handle(controllers.requestProps.getWorkflows))
 
     /**
      * Get all months
      */
-    router.get(`/${requestAttributes}/${months}`,
+    router.get(`/${requestAttributes}/${months}`, verifyIfAuthenticated,
         handle(controllers.requestProps.getMonths))
 
     /**
      * Get all candidates
      */
     router.get(`/${candidates}`, [
+        verifyIfAuthenticated,
         query('available').optional().isBoolean().withMessage("Available must be of boolean type"),
         query('profiles').optional().isString().withMessage("Profiles must be of string type separated by ','")
     ], handle(controllers.candidate.getCandidates))
@@ -265,17 +277,18 @@ module.exports = function (router, controllers, authModule, upload, validator) {
     /**
      * Get candidate by id
      */
-    router.get(`/${candidates}/:id`, handle(controllers.candidate.getCandidateById))
+    router.get(`/${candidates}/:id`, verifyIfAuthenticated, handle(controllers.candidate.getCandidateById))
 
     /**
      * Download candidate's CV
      */
-    router.get(`/${candidates}/:id/download-cv`, handle(controllers.candidate.downloadCandidateCv))
+    router.get(`/${candidates}/:id/download-cv`, verifyIfAuthenticated, handle(controllers.candidate.downloadCandidateCv))
 
     /**
      * Update Candidate Info
      */
     router.patch(`/${candidates}/:id`, [
+        verifyIfAuthenticated,
         upload.single('cv'),
         body('profileInfo').optional().isString().withMessage("Profile information must be of string type"),
         body('available').optional().isString().withMessage("Available must be of string type"),
@@ -286,6 +299,7 @@ module.exports = function (router, controllers, authModule, upload, validator) {
      * Delete Candidate Profile
      */
     router.delete(`/${candidates}/:id/profiles/:profile`, [
+        verifyIfAuthenticated,
         param('profile').isString().withMessage('Profile must be of type string')
     ], handle(controllers.candidate.removeCandidateProfile))
 
@@ -297,6 +311,7 @@ module.exports = function (router, controllers, authModule, upload, validator) {
     TODO -> Validators missing -> name and cv need to exist
      */
     router.post(`/${candidates}`, [
+        verifyIfAuthenticated,
         upload.single('cv'),
         body('name').exists().isString().withMessage("Candidate Name must exist and be of string type"),
         body('profileInfo').optional().isString().withMessage("Candidate profile info must be of string type"),
@@ -322,9 +337,9 @@ module.exports = function (router, controllers, authModule, upload, validator) {
      */
 
     //TODO -> CHANGE ROUTES
-    router.get(`/process/reasons`, handle(controllers.process.getUnavailableReasons))
+    router.get(`/process/reasons`, verifyIfAuthenticated, handle(controllers.process.getUnavailableReasons))
 
-    router.get(`/process/status`, handle(controllers.process.getAllStatus))
+    router.get(`/process/status`, verifyIfAuthenticated, handle(controllers.process.getAllStatus))
 
     return router
 }

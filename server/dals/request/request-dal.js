@@ -17,7 +17,7 @@ module.exports = (query) => {
                                    profile = null, project = null, workflow = null,
                                    minQuantity = null, maxQuantity = null,
                                    minProgress = null, maxProgress = null, targetDate = null,
-                                   userId = null, roleId = null
+                                   userId = null
                                }) {
         const statement = {
             name: 'Get Requests',
@@ -35,12 +35,11 @@ module.exports = (query) => {
                 `((R.${requestSchema.quantity} BETWEEN $7 AND $8) OR ($7 is null) OR ($8 is null)) AND ` +
                 `((R.${requestSchema.progress} BETWEEN $9 AND $10) OR ($9 is null) OR ($10 is null)) AND ` +
                 `(R.${requestSchema.targetDate} = $11 OR $11 is null) AND ` +
-                `(URR.${userRoleReqSchema.userId} = $12 OR $12 is null) AND ` +
-                `(URR.${userRoleReqSchema.roleId} = $13 OR $13 is null);`,
+                `(URR.${userRoleReqSchema.userId} = $12 OR $12 is null);`,
             values: [
                 skill, state, stateCsl, profile,
                 project, workflow, minQuantity, maxQuantity,
-                minProgress, maxProgress, targetDate, userId, roleId
+                minProgress, maxProgress, targetDate, userId
             ]
         }
 

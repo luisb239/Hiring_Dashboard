@@ -1,26 +1,16 @@
 'use strict'
 
-module.exports = (service) => {
+module.exports = () => {
     return {
-        getSession,
-        getUserInfo
+        getSession
     }
 
     async function getSession(req, res) {
+        console.log(`Session: ${new Date()}`)
         const userId = req.isAuthenticated() ? req.user.id : undefined
-        // console.log(req.isAuthenticated());
         res.send({
             auth: req.isAuthenticated(),
             userId: userId
-        })
-    }
-
-    async function getUserInfo(req, res) {
-        const user = await service.createUserIfNotPresent({id: req.user.id, email: req.user.username})
-        const roles = await service.getUserRoles({id: req.user.id})
-        res.send({
-            user: user,
-            roles: roles
         })
     }
 

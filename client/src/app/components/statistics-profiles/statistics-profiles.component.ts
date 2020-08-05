@@ -13,7 +13,6 @@ import {AlertService} from '../../services/alert/alert.service';
 })
 export class StatisticsProfilesComponent implements OnInit {
 
-  @Input() userId: number;
   @Input() isSave: boolean;
   @Input() inputReport: any;
   @Output() profileChosen = new EventEmitter<ConfigProfile>();
@@ -27,19 +26,9 @@ export class StatisticsProfilesComponent implements OnInit {
     ) { }
 
   ngOnInit(): void {
-    // this.requestService.getRequest(this.request.id)
-    //   .pipe(map(dao => {
-    //     return dao.processes
-    //       .map(processDao => processDao.candidate.id);
-    //   }))
-    //   .subscribe(result => {
-    //     this.existingCandidates = result;
-    //     this.getAllCandidates();
-    //   }, error => console.log(error));
-
-    this.statisticsService.getConfigProfiles(this.userId)
+    this.statisticsService.getUserConfigProfiles()
       .subscribe(daos => {
-        this.properties.configProfiles = daos.configs.map(configDao => new ConfigProfile(configDao.userId, configDao.profileName));
+        this.properties.configProfiles = daos.configs.map(configDao => new ConfigProfile(configDao.profileName));
       }, error => {
         console.log(error);
       });
@@ -66,7 +55,7 @@ export class StatisticsProfilesComponent implements OnInit {
       name: value.createProfileForm,
       report: this.inputReport
     };
-    this.statisticsService.saveConfigProfile(this.userId, body)
+    this.statisticsService.saveUserConfigProfiles(body)
       .subscribe(result => {
         this.alertService.success(`Profile ${result.id.profileName} created.`);
         this.activeModal.close('Close click');
@@ -78,10 +67,10 @@ export class StatisticsProfilesComponent implements OnInit {
 
   chooseProfile() {
     const value = this.properties.form.value;
-    this.statisticsService.getConfigProfileDetails(this.userId, value.getProfileForm)
+    this.statisticsService.getUserConfigProfileDetails(value.getProfileForm)
       .subscribe(configDao => {
         this.properties.currentProfile =
-          new ConfigProfile(configDao.userId, configDao.profileName, configDao.configs);
+          new ConfigProfile(configDao.profileName, configDao.configs);
         this.activeModal.close('Close click');
         this.profileChosen.emit(this.properties.currentProfile);
       }, error => {

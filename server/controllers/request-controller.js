@@ -22,8 +22,7 @@ module.exports = (service) => {
             minProgress: req.query.minProgress,
             maxProgress: req.query.maxProgress,
             targetDate: req.query.targetDate,
-            userId: req.query.userId,
-            roleId: req.query.roleId
+            userId: req.query.currentUser ? req.user.id : null
         })
         res.status(200).send(requests)
     }

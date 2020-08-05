@@ -14,12 +14,12 @@ import { saveAs } from 'file-saver';
   templateUrl: './statistics.component.html',
   styleUrls: ['./statistics.component.css']
 })
-export class StatisticsComponent implements OnInit {
+export class StatisticsComponent {
   @ViewChild('pivot1') child: WebDataRocksPivotComponent;
   properties: StatisticsProps = new StatisticsProps();
 
   onPivotReady(pivot: WebDataRocks.Pivot): void {
-    console.log('[ready] WebDataRocksPivot', this.child);
+    // console.log('[ready] WebDataRocksPivot', this.child);
   }
 
   onCustomizeCell(cell: WebDataRocks.CellBuilder, data: WebDataRocks.CellData): void {
@@ -39,7 +39,7 @@ export class StatisticsComponent implements OnInit {
     this.child.webDataRocks.setReport({
       dataSource: {
         dataSourceType: 'json',
-        filename: 'http://localhost:8080/hd/statistics'
+        filename: '/hd/statistics'
       },
       options: {
         grid: {
@@ -104,9 +104,6 @@ export class StatisticsComponent implements OnInit {
       return tabs;
     };
   }
-  ngOnInit(): void {
-    this.properties.userId = this.authService.userId;
-  }
 
   saveLocallyHandler() {
     this.statisticsService.getStatistics()
@@ -125,14 +122,12 @@ export class StatisticsComponent implements OnInit {
 
   saveRemotelyHandler() {
     const modalRef = this.modalService.open(StatisticsProfilesComponent);
-    modalRef.componentInstance.userId = this.properties.userId;
     modalRef.componentInstance.isSave = true;
     modalRef.componentInstance.inputReport = this.child.webDataRocks.getReport();
   }
 
   openRemotelyHandler() {
     const modalRef = this.modalService.open(StatisticsProfilesComponent);
-    modalRef.componentInstance.userId = this.properties.userId;
     modalRef.componentInstance.isSave = false;
     modalRef.componentInstance.profileChosen.subscribe(
       (profile) => {

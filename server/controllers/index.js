@@ -14,7 +14,7 @@ module.exports = (services) => {
 
     const process = require('./process-controller.js')(services.process)
 
-    const auth = require('./auth-controller.js')(services.auth)
+    const auth = require('./auth-controller.js')()
 
     const statistics = require('./statistics-controller.js')(services.statistics)
 

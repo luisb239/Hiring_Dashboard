@@ -35,12 +35,12 @@ module.exports = (requestDb, processDb, requestLanguagesDb, authModule, candidat
                                    profile = null, project = null, workflow = null,
                                    minQuantity = null, maxQuantity = null,
                                    minProgress = null, maxProgress = null,
-                                   targetDate = null, userId = null, roleId = null
+                                   targetDate = null, userId = null
                                }) {
         return {
             requests: await requestDb.getRequests({
                 skill, state, stateCsl, profile, project, workflow, minQuantity,
-                maxQuantity, minProgress, maxProgress, targetDate, userId, roleId
+                maxQuantity, minProgress, maxProgress, targetDate, userId
             })
         }
     }

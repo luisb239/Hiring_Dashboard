@@ -13,7 +13,7 @@ export class AnonymousGuardService implements CanActivate {
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot):
     Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
     // If Anonymous, can access the page
-    if (!this.authService.isAuthenticated) {
+    if (!this.authService.getSessionFromStorage()) {
       return true;
     }
     // Else force redirect to Dashboard
