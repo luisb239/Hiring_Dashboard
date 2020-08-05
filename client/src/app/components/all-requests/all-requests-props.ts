@@ -1,5 +1,6 @@
 import {RequestList} from '../../model/request/request-list';
 import {Options} from 'ng5-slider';
+import { MatTableDataSource } from '@angular/material/table';
 
 export class AllRequestsProps {
   requests: RequestList[];
@@ -25,4 +26,5 @@ export class AllRequestsProps {
   };
 
   requestId: number;
+  dataSource: MatTableDataSource<RequestList>;
 }

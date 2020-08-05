@@ -53,31 +53,104 @@
           <option *ngFor="let month of properties.targetDates">{{month}}</option>
         </select>
       </div>
-        <div class="custom-slider un-sm">
-          <label for="quantityBar">Quantity</label>
-          <ng5-slider [(value)]="properties.minValueQuantity" [(highValue)]="properties.maxValueQuantity"
-                      [options]="properties.optionsQuantity"
-                      id="quantityBar" name="quantity" #quantity='ngModel' ngModel></ng5-slider>
-        </div>
-        <div class="custom-slider un-sm">
-          <label for="progressBar">Progress</label>
-          <ng5-slider [(value)]="properties.minValueProgress" [(highValue)]="properties.maxValueProgress"
-                      [options]="properties.optionsProgress"
-                      id="progressBar" name="progress" #progress='ngModel' ngModel></ng5-slider>
-        </div>
+      <div class="custom-slider un-sm">
+        <label for="quantityBar">Quantity</label>
+        <ng5-slider [(value)]="properties.minValueQuantity" [(highValue)]="properties.maxValueQuantity"
+          [options]="properties.optionsQuantity" id="quantityBar" name="quantity" #quantity='ngModel' ngModel>
+        </ng5-slider>
+      </div>
+      <div class="custom-slider un-sm">
+        <label for="progressBar">Progress</label>
+        <ng5-slider [(value)]="properties.minValueProgress" [(highValue)]="properties.maxValueProgress"
+          [options]="properties.optionsProgress" id="progressBar" name="progress" #progress='ngModel' ngModel>
+        </ng5-slider>
+      </div>
 
-        <button id="createRequestSubmit" class="btn btn-primary" type="submit">Filter</button>
-        <button id="resetRequestTable" class="btn btn-secondary reset-button" type="button" (click)="resetForms(form)">
-          Reset
-        </button>
+      <button id="createRequestSubmit" class="btn btn-primary" type="submit">Filter</button>
+      <button id="resetRequestTable" class="btn btn-secondary reset-button" type="button" (click)="resetForms(form)">
+        Reset
+      </button>
     </form>
   </div>
-  <table class="table table-hover">
-    <!--  <table class="table table-hover p-2">-->
+
+
+  <div class="mat-elevation-z8">
+    <table mat-table [dataSource]="properties.dataSource">
+
+      <ng-container matColumnDef="Workflow">
+        <th class="col-un-sm" mat-header-cell *matHeaderCellDef> Workflow </th>
+        <td class="col-un-sm" mat-cell *matCellDef="let request"> {{request.workflow}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="Description">
+        <th mat-header-cell *matHeaderCellDef> Description </th>
+        <td mat-cell *matCellDef="let request"> {{request.description}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="Progress">
+        <th class="col-un-sm" mat-header-cell *matHeaderCellDef> Progress </th>
+        <td class="col-un-sm" mat-cell *matCellDef="let request">
+          <ngb-progressbar type=" blue" textType="white" [value]="request.progress" [showValue]="true">
+          </ngb-progressbar>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="Project">
+        <th mat-header-cell *matHeaderCellDef> Project </th>
+        <td mat-cell *matCellDef="let request"> {{request.project}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="Quantity">
+        <th class="col-un-sm" mat-header-cell *matHeaderCellDef> Quantity </th>
+        <td class="col-un-sm"  mat-cell *matCellDef="let request"> {{request.quantity}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="RequestDate">
+        <th class="col-un-sm" mat-header-cell *matHeaderCellDef> Request Date </th>
+        <td class="col-un-sm" mat-cell *matCellDef="let request"> {{request.requestDate}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="SkillCenter">
+        <th class="col-un-sm col-un-md" mat-header-cell *matHeaderCellDef> Skill Center </th>
+        <td class="col-un-sm col-un-md" mat-cell *matCellDef="let request"> {{request.skill}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="CSLState">
+        <th class="col-un-sm col-un-md" mat-header-cell *matHeaderCellDef> CSL State </th>
+        <td class="col-un-sm col-un-md" mat-cell *matCellDef="let request"> {{request.stateCSL}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="State">
+        <th class="col-un-sm col-un-md" mat-header-cell *matHeaderCellDef> State </th>
+        <td class="col-un-sm col-un-md" mat-cell *matCellDef="let request"> {{request.state}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="TargetDate">
+        <th class="col-un-sm col-un-md" mat-header-cell *matHeaderCellDef> Target Date </th>
+        <td class="col-un-sm col-un-md" mat-cell *matCellDef="let request"> {{request.targetDate}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="Profile">
+        <th mat-header-cell *matHeaderCellDef> Profile </th>
+        <td mat-cell *matCellDef="let request"> {{request.profile}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="DateToSendProfile">
+        <th class="col-un-sm col-un-md" mat-header-cell *matHeaderCellDef> Date To Send Profile </th>
+        <td class="col-un-sm col-un-md" mat-cell *matCellDef="let request"> {{request.dateToSendProfile}} </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+
+    <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+  </div>
+
+  <!-- <table class="table table-hover">
     <caption style="display: none">All requests</caption>
     <thead>
     <tr>
-      <!--      <th scope="col">#</th>-->
       <th scope="col" class="col-un-sm">Workflow</th>
       <th scope="col">Description</th>
       <th scope="col" class="col-un-sm">Progress</th>
@@ -96,7 +169,6 @@
     <tr *ngFor="let request of properties.requests; index as i"
         [routerLink]="['/request-detail', request.id]"
         [state]="{requestId: request.id}">
-      <!--      <th scope="row">{{ i + 1 }}</th>-->
       <td class="col-un-sm">{{request.workflow}}</td>
       <td>{{request.description}}</td>
       <td class="col-un-sm">
@@ -114,5 +186,5 @@
       <td class="col-un-sm col-un-md">{{request.dateToSendProfile || 'Not Defined'}}</td>
     </tr>
     </tbody>
-  </table>
+  </table> -->
 </div>
