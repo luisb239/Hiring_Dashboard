@@ -24,7 +24,10 @@ DROP TABLE request_skill;
 DROP TABLE request_state;
 DROP TABLE months;
 DROP TABLE role_type;
+<<<<<<< HEAD
 
+=======
+>>>>>>> 07451ff6db0e797cbec35e28bdbf3afa27655271
 
 DROP TABLE public."Sessions";
 DROP TABLE public."User_History";
@@ -37,19 +40,3 @@ DROP TABLE public."RolePermission";
 DROP TABLE public."Permission";
 DROP TABLE public."Role";
 DROP TABLE public."User";
-
-/*
-DROP TABLE public."User_Session";
-DROP TABLE public."User_History";
-DROP TABLE public."UserRoles";
-DROP TABLE public."UserList";
-DROP TABLE public."RolePermission";
-
-DROP TABLE public."Protocols";
-DROP TABLE public."Idp";
-DROP TABLE public."List";
-DROP TABLE public."Role";
-DROP TABLE public."Permission";
-DROP TABLE public."Session";
-DROP TABLE public."User";
-*/

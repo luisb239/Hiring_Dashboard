@@ -1,4 +1,3 @@
-
 /* User Statistics Configs */
 CREATE TABLE statistics_configs(
 user_id INT,
@@ -198,6 +197,3 @@ FOREIGN KEY (candidate_id) REFERENCES candidate(candidate_id),
 FOREIGN KEY (profile) REFERENCES request_profile(request_profile),
 PRIMARY KEY (candidate_id, profile)
 );
-
-
-

@@ -31,7 +31,6 @@ module.exports = (requestDb, processDb, requestLanguagesDb, authModule, candidat
      * @param maxProgress : ?number
      * @param targetDate : String
      * @param userId : ?number
-     * @param roleId : ?number
      */
     async function getRequests({
                                    skill = null, state = null, stateCsl = null,
@@ -63,19 +62,6 @@ module.exports = (requestDb, processDb, requestLanguagesDb, authModule, candidat
         // TODO -> CALL user_roles_db instead
         // Get users (and their roles) in current request
         const userRoles = await requestDb.getUserRolesInRequest({requestId: id})
-
-        /*
-        const userRoles = await Promise.all(requestUserRoles.map(async userRole => {
-            const userInfo = await authModule.user.getById(userRole.userId)
-            const roleInfo = await authModule.role.getSpecificById(userRole.roleId)
-            return {
-                userId: userRole.userId,
-                email: userInfo.username,
-                roleId: userRole.roleId,
-                role: roleInfo.role
-            }
-        }))
-         */
 
         const candidates = await candidateDb.getCandidatesByRequestId({requestId: id});
 
@@ -140,11 +126,21 @@ module.exports = (requestDb, processDb, requestLanguagesDb, authModule, candidat
             await requestLanguagesDb.createLanguageRequirement({requestId, language: l, isMandatory})))
     }
 
+    // The current user is either a job owner or an admin, or both
+    // TODO -> Middlewares constraints needed!!
     async function addRequestToUser({userId, requestId}) {
-        // get user roles
-        // TODO -> which role do we choose? job owner or admin, or other in between??
         const userRoles = await authModule.userRole.getUserActiveRoles(userId);
-        await requestDb.addUserAndRoleToRequest({userId: userId, roleId: userRoles[0].RoleId, requestId: requestId})
+        let userRoleToAddToRequest;
+        const adminRole = await authModule.role.getByName("admin")
+        if (userRoles.find(userRole => userRole.RoleId === adminRole.id)) {
+            // user has admin permissions
+            userRoleToAddToRequest = adminRole.id;
+        } else {
+            // user does not have admin permissions, so the role left is job owner
+            const jobOwner = await authModule.role.getByName("jobOwner")
+            userRoleToAddToRequest = jobOwner.id;
+        }
+        await requestDb.addUserAndRoleToRequest({userId: userId, roleId: userRoleToAddToRequest, requestId: requestId})
     }
 
     async function addUserToRequest({requestId, userId, roleId, currentUsername}) {
