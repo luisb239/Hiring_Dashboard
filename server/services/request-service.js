@@ -147,10 +147,10 @@ module.exports = (requestDb, processDb, requestLanguagesDb, authModule, candidat
         await requestDb.addUserAndRoleToRequest({userId: userId, roleId: userRoles[0].RoleId, requestId: requestId})
     }
 
-    async function addUserToRequest({requestId, userId, roleId}) {
+    async function addUserToRequest({requestId, userId, roleId, currentUsername}) {
         await requestDb.addUserAndRoleToRequest({userId, roleId, requestId})
-        const request = requestDb.getRequestById({id: requestId})
-        await emailService.notifyAssigned({userId, request})
+        const request = await requestDb.getRequestById({id: requestId})
+        await emailService.notifyAssigned({userId, request, currentUsername})
     }
 
     async function updateRequestLanguages({requestId, languages, isMandatory}) {
