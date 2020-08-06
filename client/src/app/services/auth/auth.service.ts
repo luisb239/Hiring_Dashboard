@@ -1,9 +1,8 @@
-import {Injectable} from '@angular/core';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
-import {catchError} from 'rxjs/operators';
-import {Router} from '@angular/router';
-import {Observable} from 'rxjs';
-import {Session} from '../../model/session/session';
+import { Injectable } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { Session } from '../../model/session/session';
+import { Role } from 'src/app/model/user/user';
 
 const httpOptions = {
   headers: new HttpHeaders({
@@ -18,6 +17,7 @@ export class AuthService {
 
   // store the URL so we can redirect after logging in
   redirectUrl: string;
+  userRoles: Role[];
   private authUrl = `/hd/auth`;
   public azureAuthenticationUrl = `${this.authUrl}/azure`;
   private authSession = `${this.authUrl}/session`;
@@ -52,6 +52,18 @@ export class AuthService {
   clearSessionFromStorage() {
     localStorage.removeItem(this.authKey);
   }
+
+  isRecruiter() {
+    return this.userRoles.find(r => r.role.toLowerCase() === 'admin') ||
+      this.userRoles.find(r => r.role.toLowerCase() === 'recruiter');
+  }
+  isJobOwner() {
+    return this.userRoles.find(r => r.role.toLowerCase() === 'admin') ||
+      this.userRoles.find(r => r.role.toLowerCase() === 'jobowner');
+  }
+
+  // TODO isTeamLeader()
+
 
 }
 

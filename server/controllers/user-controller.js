@@ -20,5 +20,4 @@ module.exports = (service) => {
         })
         res.status(200).send(role)
     }
-
 }

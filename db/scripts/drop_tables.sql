@@ -23,10 +23,7 @@ DROP TABLE request_state_csl;
 DROP TABLE request_skill;
 DROP TABLE request_state;
 DROP TABLE months;
-DROP TABLE user_role;
 DROP TABLE role_type;
-DROP TABLE role;
-DROP TABLE user_profile;
 
 
 DROP TABLE public."Sessions";

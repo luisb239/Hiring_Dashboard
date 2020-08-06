@@ -2,7 +2,7 @@
 
 module.exports = (db, authModule, transporter) => {
 
-    const user = require('./user-service.js')(db.user, authModule)
+    const user = require('./user-service.js')(db.user, db.role, authModule)
 
     const email = require('./email-service.js')(db.user, transporter)
 

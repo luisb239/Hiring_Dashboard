@@ -1,6 +1,6 @@
 'use strict'
 
-module.exports = () => {
+module.exports = (userService) => {
     return {
         getSession
     }
@@ -8,9 +8,11 @@ module.exports = () => {
     async function getSession(req, res) {
         console.log(`Session: ${new Date()}`)
         const userId = req.isAuthenticated() ? req.user.id : undefined
+        const roles = userId ? await userService.getCurrentUserRoles({userId}) : undefined
         res.send({
             auth: req.isAuthenticated(),
-            userId: userId
+            userId: userId,
+            userRoles: roles
         })
     }
 

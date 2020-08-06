@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { UsersDao } from '../../model/user/user-dao';
-import {RoleDao} from '../../model/role/role-dao';
+import { RoleDao } from '../../model/role/role-dao';
+import { Role } from 'src/app/model/user/user';
 
 const httpOptions = {
   headers: new HttpHeaders({
@@ -21,6 +22,7 @@ export class UserService {
   }
 
   baseUrl = `/hd`;
+  userRoles: Role[];
 
   /**
    * This function retrieves all the recruiters from the database.

@@ -1,6 +1,8 @@
-import {Component, OnInit} from '@angular/core';
-import {AuthService} from '../../services/auth/auth.service';
-import {Router} from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { AuthService } from '../../services/auth/auth.service';
+import { Router } from '@angular/router';
+import { Role } from 'src/app/model/user/user';
+import { UserService } from 'src/app/services/user/user.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -9,7 +11,11 @@ import {Router} from '@angular/router';
 })
 export class DashboardComponent implements OnInit {
 
-  constructor(private authService: AuthService, private router: Router) {
+  userRoles: Role[];
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    private userService: UserService) {
   }
 
   // Redirect Component
@@ -24,8 +30,8 @@ export class DashboardComponent implements OnInit {
         } else {
           this.router.navigate(['/home']);
         }
+        this.authService.userRoles = session.userRoles;
       });
     }
   }
-
 }
