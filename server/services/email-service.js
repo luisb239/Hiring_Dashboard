@@ -9,20 +9,20 @@ module.exports = (userDb, transporter) => {
     }
 
     async function notifyStatus({id, oldStatus, newStatus, candidate, request}) {
-        await sendMultipleEmails({id, emailTitle: "Candidate Status Changed - HIRING DASHBOARD",
+        await sendMultipleEmails({id, emailTitle: "Candidate Status Changed",
             emailContent: `The candidate "${candidate.name}" status, in the "${request.description}" request, has been changed. ` +
             `Changed from "${oldStatus}" to "${newStatus}".`})
     }
 
     async function notifyMoved({id, oldPhase, newPhase, candidate, request}) {
-        await sendMultipleEmails({id, emailTitle: "Moved Candidate - HIRING DASHBOARD",
+        await sendMultipleEmails({id, emailTitle: "Moved Candidate",
             emailContent: `The candidate "${candidate.name}" in the "${request.description}" request ` +
                 `has been moved from "${oldPhase}" to "${newPhase}".`})
     }
 
-    async function notifyAssigned({userId, request}) {
-        await sendSingularEmail({userId, emailTitle: "New Request Assignment - HIRING DASHBOARD",
-            emailContent: `You have been assigned to the "${request.description}" request.`})
+    async function notifyAssigned({userId, request, currentUsername}) {
+        await sendSingularEmail({userId, emailTitle: "New Request Assignment",
+            emailContent: `You have been assigned to the "${request.description}" request by the user ${currentUsername}.`})
     }
 
     async function sendMultipleEmails({id, emailTitle, emailContent}) {
@@ -31,7 +31,7 @@ module.exports = (userDb, transporter) => {
             sendMail({
                 from: 'hiring.dashboard.isel@gmail.com', // listed in rfc822 message header
                 cc: usersInRequest, // listed in rfc822 message header
-                subject: emailTitle,
+                subject: `${emailTitle} - HIRING DASHBOARD`,
                 text: emailContent
             })
         }

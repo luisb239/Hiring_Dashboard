@@ -46,3 +46,7 @@
   display: inline;
   margin-left: 1ex;
 }
+
+.UserRoles > .td {
+  vertical-align: center;
+}

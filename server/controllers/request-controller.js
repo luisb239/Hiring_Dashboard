@@ -75,7 +75,10 @@ module.exports = (service) => {
     }
 
     async function postUser(req, res) {
-        await service.addUserToRequest({requestId: req.params.id, userId: req.body.userId, roleId: req.body.roleId})
+        await service.addUserToRequest({requestId: req.params.id,
+            userId: req.body.userId,
+            roleId: req.body.roleId,
+            currentUsername: req.user.username})
         res.status(201).send({
             message: 'User added to the request successfully'
         })
