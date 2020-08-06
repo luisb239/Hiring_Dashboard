@@ -265,9 +265,8 @@ export class RequestDetailComponent implements OnInit {
     };
 
     this.requestService.updateRequest(this.properties.requestId, body)
-      .subscribe(dao => {
+      .subscribe(() => {
         this.alertService.success('Updated request details successfully!');
-      }, error => {
       });
   }
 

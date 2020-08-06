@@ -50,12 +50,12 @@ module.exports = (userDb, transporter) => {
     }
 
     function sendMail(message) {
-        transporter.sendMail(message, (error) => {
-            if (error) {
-                console.error("Message not sent. Error -> " + error)
-            } else {
-                console.log("Message Sent.")
-            }
-        })
+        // transporter.sendMail(message, (error) => {
+        //     if (error) {
+        //         console.error("Message not sent. Error -> " + error)
+        //     } else {
+        //         console.log("Message Sent.")
+        //     }
+        // })
     }
 }
