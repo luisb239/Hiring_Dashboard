@@ -106,7 +106,7 @@ export class RequestDetailComponent implements OnInit {
               return this.userService.getAllUsers(dao.id);
             }),
             map(dao => {
-              console.log(dao);
+              console.log('hello', dao);
               const existingUsers = this.properties.userRoles.map(u => u.userId);
               return dao.users
                 .filter(user => !existingUsers.includes(user.id))

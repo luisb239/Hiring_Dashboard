@@ -23,7 +23,7 @@ module.exports = (query) => {
         const statement = {
             name: 'Get Users',
             text:
-                `SELECT U.* FROM ${user.table} AS U ` +
+                `SELECT DISTINCT U.* FROM ${user.table} AS U ` +
                 `INNER JOIN ${userRole.table} AS UR ON ` +
                 `U.${user.id} = UR.${userRole.userId} ` +
                 `WHERE UR.${userRole.roleId} = $1;`,

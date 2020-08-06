@@ -150,8 +150,8 @@ module.exports = (query) => {
 
     function extractUserRole(row) {
         return {
-            userId: row[userRoleSchema.userId],
-            roleId: row[userRoleSchema.roleId],
+            userId: row[userRoleSchema.user_Id],
+            roleId: row[userRoleSchema.role_Id],
             email: row[user.email],
             role: row[role.role]
         }
