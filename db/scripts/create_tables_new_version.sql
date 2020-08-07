@@ -7,9 +7,19 @@ FOREIGN KEY (user_id) REFERENCES public."User"(id),
 PRIMARY KEY (user_id, profile_name)
 );
 
-/* Role Type */ 
+/* Role Type */
 CREATE TABLE role_type(
 role_type VARCHAR PRIMARY KEY
+);
+
+/* "UserRoles" + role_type */
+CREATE TABLE user_role_type(
+user_id INT,
+role_id INT,
+role_type VARCHAR,
+FOREIGN KEY (user_id, role_id) REFERENCES public."UserRoles"("UserId", "RoleId"),
+FOREIGN KEY (role_type) REFERENCES role_type(role_type),
+PRIMARY KEY (user_id, role_id)
 );
 
 /* Request Properties */

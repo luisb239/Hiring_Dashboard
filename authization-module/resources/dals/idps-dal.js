@@ -3,6 +3,12 @@ const
     tryCatch = require('../../common/util/functions-utils')
 
 module.exports = {
+
+    getByUserId: (userId) =>
+        tryCatch(() =>
+            Idp.findOne({where: {user_id: userId}})
+        ),
+
     /**
      *
      * @param idpId

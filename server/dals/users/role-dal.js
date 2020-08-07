@@ -1,7 +1,8 @@
 'use strict'
 
 const roleSchema = require('../../schemas/user-roles-schemas/role-schema.js')
-const userRoleSchema = require('../../schemas/user-roles-schemas/user-role-schema')
+const userRoleSchema = require('../../schemas/user-roles-schemas/user-role-schema.js')
+const userRoleTypeSchema = require('../../schemas/user-roles-schemas/user-role-type-schema.js')
 
 module.exports = (query) => {
 
@@ -9,14 +10,16 @@ module.exports = (query) => {
         getUserRoles: getUserRoles
     }
 
-    async function getUserRoles({ userId }) {
+    async function getUserRoles({userId}) {
         const statement = {
-            name: 'Get User Roles',
+            name: 'Get User Roles And Type',
             text:
                 `SELECT * FROM ${roleSchema.table} ` +
-                `INNER JOIN ${userRoleSchema.table} ON ` +
-                `${roleSchema.table}.${roleSchema.roleId} = ` +
-                `${userRoleSchema.table}.${userRoleSchema.roleId} ` +
+                `INNER JOIN ${userRoleSchema.table} AS UR ON ` +
+                `${roleSchema.table}.${roleSchema.roleId} = UR.${userRoleSchema.roleId} ` +
+                `LEFT JOIN ${userRoleTypeSchema.table} AS URT ON ` +
+                `UR.${userRoleSchema.userId} = URT.${userRoleTypeSchema.userId} AND ` +
+                `UR.${userRoleSchema.roleId} = URT.${userRoleTypeSchema.roleId} ` +
                 `WHERE ${userRoleSchema.userId} = $1;`,
             values: [userId]
         }
@@ -28,7 +31,8 @@ module.exports = (query) => {
         return {
             role: row[roleSchema.role],
             // roleType: row[roleSchema.],
-            roleId: row[roleSchema.roleId]
+            roleId: row[roleSchema.roleId],
+            roleType: row[userRoleTypeSchema.roleType]
         }
     }
 }

@@ -5,9 +5,12 @@
 
 // this should be a superclass to the functionalities classes...
 
+const path = require('path')
+
+require('dotenv').config({path: path.resolve(__dirname, './.env')})
+
 const
-    config = require('./common/config/config'),
-    sequelizeErrorsMapper = require('./common/errors/sequelize-errors-mapper')
+    config = require('./common/config/config')
 
 const getFunctionalities = () => {
 
@@ -92,7 +95,8 @@ module.exports = {
 
         if (app && db) {
 
-            const expressSession = require('express-session')
+            const
+                expressSession = require('express-session')
 
             config.database_opts = db;
 
@@ -106,6 +110,10 @@ module.exports = {
                     UserId: session.passport.user
                 };
             }
+
+            console.log(config.env === 'production')
+
+            app.set('trust proxy', 1)
 
             const
                 SessionStore = require('connect-session-sequelize')(expressSession.Store),
@@ -121,7 +129,11 @@ module.exports = {
                     store: sequelizeSessionStore,
                     secret: config.cookieSecret,
                     cookie: {
-                        maxAge: 1000 * 60 * 60 * 24
+                        maxAge: 1000 * 60 * 60 * 24,
+                        sameSite: 'none',
+                        //secure: true,
+                        secure: false
+                        // TODO -> NEEDED FOR HTTP
                     }
                 }
 
@@ -138,7 +150,7 @@ module.exports = {
 
     },
 
-    getFunctionalities
+    AuthizationRbac: require('./resources/authization-rbac').AuthizationRbac
 
 }
 

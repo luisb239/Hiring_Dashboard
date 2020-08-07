@@ -2,22 +2,39 @@
 const
     LocalStrategy = require('passport-local').Strategy,
     passportUtils = require('../../../util/passport-utils'),
-    { User } = require('../../../../resources/sequelize-model');
+    Idp = require('../../../../resources/dals/idps-dal'),
+    errors = require('../../../errors/app-errors'),
+    {User} = require('../../../../resources/sequelize-model');
 
-const strategy = new LocalStrategy(
-    async function (username, password, done) {
-        const user = await passportUtils.findCorrespondingUser(username);
+module.exports = () => {
 
-        if (await passportUtils.isBlackListed(user.id)) {
-            passportUtils.addNotification(user.id);
-            done(null, false, {message: 'User is BlackListed'});
-            return;
+    return new LocalStrategy(
+        async function (username, password, done) {
+            const user = await passportUtils.findCorrespondingUser(username);
+
+            const userIsFromIdp = await Idp.getByUserId(user.id)
+
+            if (userIsFromIdp) {
+                done(errors.IdpUserUnauthorized, false)
+                return
+            }
+
+            if (!user) {
+                done(null, false, {message: 'User isnt in database'});
+                return
+            }
+
+            if (await passportUtils.isBlackListed(user.id)) {
+                passportUtils.addNotification(user.id);
+                done(null, false, {message: 'User is BlackListed'});
+                return;
+            }
+
+            if (await User.correctPassword(password, user)) {
+                done(null, user);
+            }
         }
+    );
 
-        if (await User.correctPassword(password, user)) {
-            done(null, user);
-        }
-    }
-);
 
-module.exports = strategy;
+}

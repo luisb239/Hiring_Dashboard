@@ -9,7 +9,7 @@
     "reportFile": "test-reporter.xml",
     "indent": 4
   },
-  "version": "1.0.3",
+  "version": "1.0.36",
   "description": "Module for authentication and authorization",
   "main": "authization.js",
   "scripts": {
@@ -23,8 +23,7 @@
     "chalk": "^4.1.0",
     "connect-session-sequelize": "^6.1.1",
     "cookie-parser": "^1.4.5",
-    "cors": "^2.8.5",
-    "crypto": "^1.0.1",
+    "dotenv": "^8.2.0",
     "express-session": "^1.17.0",
     "express-session-sequelize": "^2.2.0",
     "jsonwebtoken": "^8.5.1",

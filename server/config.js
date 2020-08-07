@@ -58,7 +58,7 @@ module.exports = (app) => {
 
     const jsonObj = {
         "roles": ["admin", "recruiter", "jobOwner", "guest"],
-        // admin -> id = 1, recruiter -> id = 2,...
+        // id order not guaranteed
         "permissions": [
             {"resource": "auth", "action": "GET"},
             {"resource": "auth", "action": "POST"},

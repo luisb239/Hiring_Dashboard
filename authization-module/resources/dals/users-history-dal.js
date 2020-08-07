@@ -22,13 +22,38 @@ module.exports = {
      *
      * @returns {Promise<void>}
      */
-    get: () => tryCatch(() => UserHistory.findAll({ raw: true })),
+    get: () => tryCatch(() => UserHistory.findAll({raw: true})),
 
     /**
      *
      * @param userId
      * @returns {Promise<void>}
      */
-    getAllFromUser: (userId) => tryCatch(() => UserHistory.findByPk(userId))
+    getAllFromUser: (userId) => tryCatch(() => UserHistory.findByPk(userId)),
+
+    OLDsaveHistory: (req, res, next) => {
+        const resource = req.path.split("/")[2]
+        const action = req.method
+
+        const user = req.user
+        const from = req.connection.remoteAddress
+        if (req.user) {
+            UserHistory.create({
+                user_id: user.id,
+                date: new Date(),
+                success: 1,
+                action: action,
+                resource: resource,
+                from: from
+            })
+        }
+        next()
+    },
+
+    saveHistory: (req, res, next) => {
+        //TODO:create the saveHistory metho
+        next()
+    }
 
 }
+

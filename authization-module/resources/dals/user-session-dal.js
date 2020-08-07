@@ -5,6 +5,11 @@ const { Session } = require('../sequelize-model'),
 module.exports = {
     get: () => tryCatch(() => Session.findAll()),
     getUserSessions: (id) => tryCatch(() => Session.findAll({
-        where: { UserId: id }
-    }))
+        where: {UserId: id}
+    })),
+    update: async (sid, endDate) => tryCatch(() => Session.update({
+            expires: endDate,
+        },
+        {where: {sid: sid}})),
+    delete: (sid) => tryCatch(() => Session.destroy({where: {sid: sid}}))
 }

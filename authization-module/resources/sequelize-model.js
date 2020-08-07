@@ -43,7 +43,7 @@ const Role = defineTable('Role', { role: { type: STRING, allowNull: false, uniqu
 Role.belongsToMany(Permission, { through: 'RolePermission', timestamps: false }, false);
 Permission.belongsToMany(Role, { through: 'RolePermission', timestamps: false }, false);
 
-const RolePermission = defineTable('RolePermission', { },false)
+const RolePermission = defineTable('RolePermission', {}, false)
 RolePermission.removeAttribute('id');
 
 RolePermission.belongsTo(Role)
@@ -59,9 +59,16 @@ Permission.hasMany(RolePermission)
  * @type {Model}
  */
 const User = defineTable('User', {
-    username: { type: STRING, allowNull: false, unique: true },
-    password: { type: STRING, get() { return () => this.getDataValue('password') } }
+    username: {type: STRING, allowNull: false, unique: true},
+    password: {
+        type: STRING, get() {
+            return () => this.getDataValue('password')
+        }
+    },
+    updater: {type: INTEGER}
 }, false);
+
+User.belongsTo(User, {foreignKey: 'updater'})
 
 User.encryptPassword = async (password) => await bcrypt.hash(password, await bcrypt.genSalt(10))
 
@@ -73,6 +80,7 @@ const setSaltHashAndPassword = async user => {
     }
 }
 
+
 User.beforeCreate(setSaltHashAndPassword)
 User.beforeUpdate(setSaltHashAndPassword)
 
@@ -83,8 +91,13 @@ User.beforeUpdate(setSaltHashAndPassword)
  * - description: DefaultString)
  * @type {Model}
  */
-const UserHistory = defineTable('User_History', { date: { type: DATE, allowNull: false }, description: STRING }, false);
-User.hasMany(UserHistory, { foreignKey: 'user_id' })
+const UserHistory = defineTable('User_History', {
+    date: {type: DATE, allowNull: false},
+    description: STRING,
+    updater: INTEGER
+}, false);
+User.hasMany(UserHistory, {foreignKey: 'user_id'})
+UserHistory.belongsTo(User, {foreignKey: 'updater'})
 
 /**
  * List(
@@ -131,20 +144,85 @@ User.hasOne(Idp, { foreignKey: 'user_id' })
  */
 
 const UserRoles = UserAssociation('UserRoles');
-Role.belongsToMany(User, { through: UserRoles});
-User.belongsToMany(Role, { through: UserRoles});
+Role.belongsToMany(User, {through: UserRoles});
+User.belongsToMany(Role, {through: UserRoles});
 
-UserRoles.belongsTo(User, { foreignKey: 'updater' })
+UserRoles.belongsTo(User, {foreignKey: 'updater'})
 UserRoles.belongsTo(User)
 User.hasMany(UserRoles)
 
 UserRoles.belongsTo(Role)
 Role.hasMany(UserRoles)
 
-const Session = defineTable('Sessions', { sid: { type: STRING(36), primaryKey: true }, expires: DATE, data: TEXT }, true)
+const Session = defineTable('Sessions', {sid: {type: STRING(36), primaryKey: true}, expires: DATE, data: TEXT}, true)
 
 User.hasMany(Session)
 Session.belongsTo(User)
+
+const createHistory = async (obj, description) => {
+
+    UserHistory.create({date: obj.date, updater: obj.updater, description: description, user_id: obj.UserId})
+}
+
+const invalidateSessions = async (userList) => {
+    userList = userList.dataValues
+    console.log('correu hook 1')
+    const list = await List.findOne({where: {id: userList.ListId}})
+    if (list.list === 'BLACK') {
+        Session.destroy({where: {Userid: userList.UserId}})
+    }
+    createHistory(userList, `The list with the id:${userList.ListId} was added to the user`)
+}
+
+
+const createUserRoleHistory = async ({dataValues}) => {
+    createHistory(dataValues.start_date, dataValues.updater, `The role with the id:${dataValues.RoleId} was added to the user`, dataValues.UserId)
+}
+
+const createUserHistory = async ({dataValues}) => {
+    createHistory({date: new Date(), updater: dataValues.updater, UserId: dataValues.id}, `The user was created`)
+    //createHistory(new Date(),dataValues.updater,`The user was created`)
+}
+
+const deleteUserRoleHistory = async ({dataValues}) => {
+    createHistory(dataValues.start_date, dataValues.updater, `The role with the id:${dataValues.RoleId} was deleted from the user`, dataValues.UserId)
+}
+
+const deleteUserHistory = async ({dataValues}) => {
+    createHistory(new Date(), dataValues.updater, `The user was deleted`)
+}
+
+
+const deleteUserListHistory = async ({dataValues}) => {
+    createHistory(dataValues.start_date, dataValues.updater, `The list with the id:${dataValues.ListId} was removed from the user`, dataValues.UserId)
+}
+
+const updateUserRoleHistory = async ({dataValues}) => {
+    createHistory(dataValues.start_date, dataValues.updater, `The association with the Role with the id:${dataValues.RoleId} was updated`, dataValues.UserId)
+}
+
+const updateUserHistory = async ({dataValues}) => {
+    createHistory(new Date(), dataValues.updater, `The user was updated`)
+}
+
+
+const updateUserListHistory = async ({dataValues}) => {
+    createHistory(dataValues.start_date, dataValues.updater, `The association with the list with the id:${dataValues.ListId} was updated`, dataValues.UserId)
+}
+
+
+UserList.afterCreate(invalidateSessions)
+UserRoles.afterCreate(createUserRoleHistory)
+User.afterCreate(createUserHistory)
+
+UserList.afterDestroy(deleteUserListHistory)
+UserRoles.afterDestroy(deleteUserRoleHistory)
+User.afterDestroy(deleteUserHistory)
+
+UserList.afterUpdate(updateUserListHistory)
+UserRoles.afterUpdate(updateUserRoleHistory)
+User.afterUpdate(updateUserHistory)
+
 
 exports.Permission = Permission
 exports.Protocols = Protocols

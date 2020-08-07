@@ -13,14 +13,16 @@ VALUES
 	(2, 2, true, CURRENT_DATE, 1),
     (3, 1, true, CURRENT_DATE, 1),
 	(3, 2, true, CURRENT_DATE, 1),
-    (4, 1, true, CURRENT_DATE, 1),
     (4, 2, true, CURRENT_DATE, 1);
 	
-/* TODO Não está a ser usada atualmente */
 INSERT INTO role_type(role_type) 
-	VALUES
-	('Team Worker'),
+VALUES
 	('Team Leader');
+
+
+INSERT INTO user_role_type(user_id, role_id, role_type) 
+VALUES 
+	(4, 2, 'Team Leader');
 	
 INSERT INTO request_state
 	VALUES

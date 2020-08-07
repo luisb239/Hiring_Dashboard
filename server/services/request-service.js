@@ -91,14 +91,13 @@ module.exports = (requestDb, processDb, requestLanguagesDb, authModule, candidat
     }
 
     async function createRequest({
-                                     quantity, description, targetDate,
-                                     state = "Open", skill, stateCsl = "Asked",
+                                     quantity, description, targetDate, skill,
                                      project, profile, workflow, dateToSendProfile = null
                                  }) {
 
         const request = await requestDb.createRequest({
-            quantity, description, targetDate, state, skill, stateCsl,
-            project, profile, workflow, dateToSendProfile, requestDate: new Date().toDateString(), progress: 0
+            quantity, description, targetDate, state: "Open", skill, stateCsl: "Asked",
+            project, profile, workflow, dateToSendProfile, progress: 0
         })
 
         return {

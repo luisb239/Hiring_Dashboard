@@ -72,6 +72,7 @@ module.exports = {
      * @param next
      */
     usingSaml: (req, res, next) => {
+
         passport.authenticate('saml')(req, res, next)
 
     },

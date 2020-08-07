@@ -20,18 +20,14 @@ export class DashboardComponent implements OnInit {
 
   // Redirect Component
   ngOnInit(): void {
-    if (this.authService.getSessionFromStorage()) {
-      this.router.navigate(['/all-requests']);
-    } else {
       this.authService.getSession().subscribe(session => {
         this.authService.setSessionInStorage(session.auth);
+        this.authService.userRoles = session.userRoles;
         if (session.auth) {
           this.router.navigate(['/all-requests']);
         } else {
           this.router.navigate(['/home']);
         }
-        this.authService.userRoles = session.userRoles;
       });
-    }
   }
 }

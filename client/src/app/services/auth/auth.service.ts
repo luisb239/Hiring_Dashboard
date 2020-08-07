@@ -45,7 +45,7 @@ export class AuthService {
 
   // Get session auth from session storage
   getSessionFromStorage(): boolean {
-    return Boolean(localStorage.getItem(this.authKey));
+    return localStorage.getItem(this.authKey) === 'true';
   }
 
   // Clear session auth

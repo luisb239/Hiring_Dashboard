@@ -8,22 +8,21 @@ const { Role, RolePermission } = require('../sequelize-model'),
 module.exports = {
 
     /**
-  *
-  * @param method
-  * @param path
-  * @param description
-  * @returns {Promise<void>}
-  */
-    create: (action, resource) =>
-        tryCatch(() => {
-            config.rbac.createPermission(action, resource, true)
-            return Permission.findOrCreate({
-                where: {
-                    action: action,
-                    resource: resource
-                }
-            })
-        }),
+     *
+     * @param method
+     * @param path
+     * @param description
+     * @returns {Promise<void>}
+     */
+    create: async (action, resource) => tryCatch(async () => {
+        await config.rbac.createPermission(action, resource, true)
+        return await (Permission.findOrCreate({
+            where: {
+                action: action,
+                resource: resource
+            }
+        }))[0]
+    }),
 
     /**
      *
@@ -32,18 +31,21 @@ module.exports = {
      * @returns {Promise<void>}
      */
     delete: (id) =>
-        tryCatch(() =>
-            Permission.destroy({
+        tryCatch(async () => {
+            const permission = await require('./permissions-dal').getSpecificById(id)
+            config.rbac.removeByName(permission.action + '_' + permission.resource)
+            return Permission.destroy({
                 where: {
                     id: id
                 }
-            })),
+            })
+        }),
     /**
      *
      * @returns {Promise<void>}
      */
     get: () =>
-        tryCatch(() => Permission.findAll({ raw: true })),
+        tryCatch(() => Permission.findAll({raw: true})),
     /**
      *
      * @param id
@@ -65,8 +67,22 @@ module.exports = {
                 }
             })),
 
-    update: (id, action, resource) => tryCatch(() => Permission.update({ action: action, resource: resource }, { where: { id: id } })),
-    getRolesByPermission: (id) => tryCatch(() => RolePermission.findAll({ where: { PermissionId: id }, include: [Role], raw: true }))
+    update: async (id, action, resource) => Promise.resolve(
+        {
+            insertedRows: await tryCatch(() => Permission.update({
+                action: action,
+                resource: resource
+            }, {where: {id: id}})),
+            action,
+            resource
+        }),
+
+    //TODO: change fields from jointed query
+    getRolesByPermission: (id) => tryCatch(() => RolePermission.findAll({
+        where: {PermissionId: id},
+        include: [Role],
+        raw: true
+    }))
 
 }
 

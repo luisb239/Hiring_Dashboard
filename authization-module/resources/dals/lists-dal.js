@@ -20,12 +20,11 @@ module.exports = {
      * @param active
      * @returns {Promise<CustomError>}
      */
-    create: (list) =>
-        tryCatch(() =>
-            List.create({
-                list: list
-            })
-        ),
+    create: async (list) => tryCatch(() =>
+        List.create({
+            list: list
+        })
+    ),
 
 
     /**
@@ -35,7 +34,7 @@ module.exports = {
      */
     deactivate: (listId) =>
         tryCatch(
-            () => List.update({ active: 0 }, { where: { id: listId } })
+            () => List.update({active: 0}, {where: {id: listId}})
         ),
 
     /**
@@ -66,23 +65,28 @@ module.exports = {
     getActive: () => tryCatch(() => List.findAll({ where: { active: 1 } })),
 
     /**
-    * asks the database for all list entries that are active and associated with a specific user
-    * @param userId
-    * @returns {Promise<{end_date: *, active, id, list: *, user: *, start_date: *, updater}>}
-    */
-    getUsersActive: (userId) =>
+     * asks the database for all list entries that are active and associated with a specific user
+     * @param userId
+     * @returns {Promise<{end_date: *, active, id, list: *, user: *, start_date: *, updater}>}
+     */
+    getUsersLists: (userId) =>
         tryCatch(() =>
             UserList.findAll({
                 where: {
-                    active: 1,
                     UserId: userId
                 }
             })
         ),
 
-    update: (id, list) => tryCatch(() => List.update({ list: list }, { where: { id: id } })),
+    // update query doesn't return the updated resource for some reason
+    update: async (id, list) => Promise.resolve(
+        {
+            insertedRows: await tryCatch(() => List.update({list: list}, {where: {id: id}})),
+            list
+        }),
 
-    getUsersInThisList: (id) => tryCatch(() => UserList.findAll({ where: { ListId: id }, include: [User], raw: true })),
+    //TODO: change fields from jointed query
+    getUsersInThisList: (id) => tryCatch(() => UserList.findAll({where: {ListId: id}, include: [User], raw: true})),
 
     isUserBlackListed: (userId) =>
         tryCatch(() =>

@@ -4,7 +4,11 @@
 const { UserHistory, User, Idp, Role, List, Session } = require('../sequelize-model'),
     tryCatch = require('../../common/util/functions-utils')
 
-const getById = (id) => tryCatch(() => User.findByPk(id))
+const getById = (id) => tryCatch(async () => {
+    const user = await User.findByPk(id)
+    delete user.password
+    return user
+})
 
 module.exports = {
     /**
@@ -38,13 +42,24 @@ module.exports = {
      * @param password
      * @returns {Promise<{password: *, id: *, username: *}>}
      */
-    getByUsernameAndPassword: (username, password) => tryCatch(() => User.findOne({ where: { username: username, password: password } })),
+    getByUsernameAndPassword: (username, password) => tryCatch(() => User.findOne({
+        where: {
+            username: username,
+            password: password
+        }
+    })),
 
     /**
      * Requests the database for all existing users
      * @returns {Promise<*>}
      */
-    get: () => tryCatch(() => User.findAll({ raw: true })),
+    get: () => tryCatch(async () => {
+        const users = await User.findAll({raw: true})
+        return users.map(user => {
+            delete user.password
+            return user
+        })
+    }),
 
     /**
      * Requests the database for a new entry in the table users
@@ -53,8 +68,8 @@ module.exports = {
      * @param password
      * @returns {Promise<void>}
      */
-    create: (username, password) => tryCatch(() => User.create({ username: username, password: password })),
-
+    create: async (username, password) => tryCatch(() =>
+        User.create({username: username, password: password})),
 
     /**
      * update specific user's username
@@ -62,7 +77,11 @@ module.exports = {
      * @param id
      * @returns {Promise<void>}
      */
-    updateUsername: (username, id) => tryCatch(() => User.update({ username: username }, { where: { id: id } })),
+    updateUsername: async (username, id) => Promise.resolve(
+        {
+            insertedRows: await tryCatch(() => User.update({username: username}, {where: {id: id}})),
+            username
+        }),
 
     /**
      * update specific user's password
@@ -70,16 +89,19 @@ module.exports = {
      * @param id
      * @returns {Promise<void>}
      */
-    updatePassword: (password, id) => tryCatch(() => User.update({ password: password }, { where: { id: id } })),
+    updatePassword: (password, id) => tryCatch(() => User.update({password: password}, {where: {id: id}})),
 
     /**
      *delete user in the database with given id
      * @param userId
      * @returns {Promise<void>}
      */
-    delete: (userId) => tryCatch(() => User.destroy({ where: { id: userId } })),
+    delete: (userId) => tryCatch(() => User.destroy({where: {id: userId}})),
 
-    getUserRoles: (userId) => tryCatch(() => User.findAll({ where: { id: userId }, include: [Role], raw: true }))
+    // TODO: this method is a duplicate of the user-roles dal getUserRoles 
+    getUserRoles: (userId) => tryCatch(() => User.findAll({where: {id: userId}, include: [Role], raw: true})),
+
+    getUserHistory: (userId) => tryCatch(() => UserHistory.findAll({where: {user_id: userId}}))
 
 
 }

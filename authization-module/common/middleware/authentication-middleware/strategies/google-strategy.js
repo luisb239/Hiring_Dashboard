@@ -13,6 +13,7 @@ module.exports = () => {
         callbackURL: config.google.callbackUrl,
     },
         async function (accessToken, refreshToken, profile, done) {
+            console.log(profile)
             if (await passportUtils.checkProtocol(protocolName)) {
                 let user = await passportUtils.findUserByIdp(profile.id);
                 if (!user) {

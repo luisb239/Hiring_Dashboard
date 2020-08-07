@@ -63,7 +63,7 @@ module.exports = function (router, controllers, authModule, upload, validator) {
      * Get request by id
      */
     router.get(`/${requests}/:id`, [
-        verifyIfAuthenticated,
+        //verifyIfAuthenticated,
         param('id').isInt().withMessage("Request Id must be of int type")
     ], handle(controllers.request.getRequestById))
 
@@ -211,7 +211,6 @@ module.exports = function (router, controllers, authModule, upload, validator) {
     router.put(`/${requests}/:requestId/${candidates}/:candidateId/${process}/${phases}/:phase`, [
         verifyIfAuthenticated,
         ...processValidators,
-        param('phase').isString().withMessage("phase must be of string type"),
         body('notes').isString().withMessage("Phase notes must be of string type")
     ], handle(controllers.process.updateProcessPhaseNotes))
 

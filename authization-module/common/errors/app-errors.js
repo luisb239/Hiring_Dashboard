@@ -24,5 +24,11 @@ module.exports = {
         title: "Unauthorized",
         detail: `The current user cannot access this resource`,
         status: 401
+    }),
+
+    IdpUserUnauthorized: new CustomError({
+        title: "Unauthorized",
+        detail: 'User registered with an identity provider so he cannot authenticate via a local strategy',
+        status: 401
     })
 }

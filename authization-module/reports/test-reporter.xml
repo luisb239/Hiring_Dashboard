@@ -1,22 +1,149 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <testExecutions version="1">
-    <file path="C:\Users\Matias\Desktop\Nova pasta\Authentication-and-Authorization-Node-Component-\authization-module\__tests__\sequelize-model-tests.test.js">
-        <testCase name="Sequelize Testings Module Setup" duration="1"/>
-        <testCase name="Sequelize Testings Test UserDal without IDPs methods" duration="80">
-            <failure message="TypeError: Cannot read property &apos;create&apos; of undefined"><![CDATA[TypeError: Cannot read property 'create' of undefined
-    at Object.<anonymous> (C:\Users\Matias\Desktop\Nova pasta\Authentication-and-Authorization-Node-Component-\authization-module\__tests__\sequelize-model-tests.test.js:61:36)
+    <file path="/Users/diogo/Desktop/isel/ps/Authentication-and-Authorization-Node-Component-/authization-module/__tests__/sequelize-model-tests.test.js">
+        <testCase name="Sequelize Testings Module Setup" duration="210">
+            <failure
+                    message="TypeError: Cannot destructure property &apos;app&apos; of &apos;undefined&apos; as it is undefined.">
+                <![CDATA[TypeError: Cannot destructure property 'app' of 'undefined' as it is undefined.
+    at Object.setup (/Users/diogo/Desktop/isel/ps/Authentication-and-Authorization-Node-Component-/authization-module/authization.js:91:21)
+    at Object.<anonymous> (/Users/diogo/Desktop/isel/ps/Authentication-and-Authorization-Node-Component-/authization-module/__tests__/sequelize-model-tests.test.js:52:21)
+    at Object.asyncJestTest (/Users/diogo/Desktop/isel/ps/Authentication-and-Authorization-Node-Component-/authization-module/node_modules/jest-jasmine2/build/jasmineAsyncInstall.js:100:37)
+    at /Users/diogo/Desktop/isel/ps/Authentication-and-Authorization-Node-Component-/authization-module/node_modules/jest-jasmine2/build/queueRunner.js:47:12
+    at new Promise (<anonymous>)
+    at mapper (/Users/diogo/Desktop/isel/ps/Authentication-and-Authorization-Node-Component-/authization-module/node_modules/jest-jasmine2/build/queueRunner.js:30:19)
+    at /Users/diogo/Desktop/isel/ps/Authentication-and-Authorization-Node-Component-/authization-module/node_modules/jest-jasmine2/build/queueRunner.js:77:41
     at processTicksAndRejections (internal/process/task_queues.js:97:5)]]></failure>
         </testCase>
-        <testCase name="Sequelize Testings Test RoleDal methods" duration="0"/>
-        <testCase name="Sequelize Testings Check creation, obtaining and elimination of Idp" duration="0"/>
-        <testCase name="Sequelize Testings Check creation, obtaining and elimination of List" duration="0"/>
-        <testCase name="Sequelize Testings Check creation, obtaining and elimination of Permission" duration="0"/>
-        <testCase name="Sequelize Testings Check creation, obtaining and elimination of Protocols" duration="0"/>
-        <testCase name="Sequelize Testings Check creation, obtaining and elimination of Role" duration="0"/>
-        <testCase name="Sequelize Testings Check creation, obtaining and elimination of User History" duration="0"/>
-        <testCase name="Sequelize Testings Check creation, obtaining and elimination of User " duration="0"/>
-        <testCase name="Sequelize Testings Check join User with Role " duration="0"/>
-        <testCase name="Sequelize Testings Check join User with List " duration="0"/>
-        <testCase name="Sequelize Testings Check join Permission with Roles " duration="0"/>
+        <testCase name="Sequelize Testings Test UserDal without IDPs methods" duration="1">
+            <failure
+                    message="TypeError: Cannot destructure property &apos;app&apos; of &apos;undefined&apos; as it is undefined.">
+                <![CDATA[TypeError: Cannot destructure property 'app' of 'undefined' as it is undefined.
+    at Object.setup (/Users/diogo/Desktop/isel/ps/Authentication-and-Authorization-Node-Component-/authization-module/authization.js:91:21)
+    at Object.<anonymous> (/Users/diogo/Desktop/isel/ps/Authentication-and-Authorization-Node-Component-/authization-module/__tests__/sequelize-model-tests.test.js:58:35)
+    at Object.asyncJestTest (/Users/diogo/Desktop/isel/ps/Authentication-and-Authorization-Node-Component-/authization-module/node_modules/jest-jasmine2/build/jasmineAsyncInstall.js:100:37)
+    at /Users/diogo/Desktop/isel/ps/Authentication-and-Authorization-Node-Component-/authization-module/node_modules/jest-jasmine2/build/queueRunner.js:47:12
+    at new Promise (<anonymous>)
+    at mapper (/Users/diogo/Desktop/isel/ps/Authentication-and-Authorization-Node-Component-/authization-module/node_modules/jest-jasmine2/build/queueRunner.js:30:19)
+    at /Users/diogo/Desktop/isel/ps/Authentication-and-Authorization-Node-Component-/authization-module/node_modules/jest-jasmine2/build/queueRunner.js:77:41
+    at processTicksAndRejections (internal/process/task_queues.js:97:5)]]></failure>
+        </testCase>
+        <testCase name="Sequelize Testings Test RoleDal methods" duration="0">
+            <failure message="ReferenceError: roleDal is not defined"><![CDATA[ReferenceError: roleDal is not defined
+    at Object.<anonymous> (/Users/diogo/Desktop/isel/ps/Authentication-and-Authorization-Node-Component-/authization-module/__tests__/sequelize-model-tests.test.js:77:25)
+    at Object.asyncJestTest (/Users/diogo/Desktop/isel/ps/Authentication-and-Authorization-Node-Component-/authization-module/node_modules/jest-jasmine2/build/jasmineAsyncInstall.js:100:37)
+    at /Users/diogo/Desktop/isel/ps/Authentication-and-Authorization-Node-Component-/authization-module/node_modules/jest-jasmine2/build/queueRunner.js:47:12
+    at new Promise (<anonymous>)
+    at mapper (/Users/diogo/Desktop/isel/ps/Authentication-and-Authorization-Node-Component-/authization-module/node_modules/jest-jasmine2/build/queueRunner.js:30:19)
+    at /Users/diogo/Desktop/isel/ps/Authentication-and-Authorization-Node-Component-/authization-module/node_modules/jest-jasmine2/build/queueRunner.js:77:41
+    at processTicksAndRejections (internal/process/task_queues.js:97:5)]]></failure>
+        </testCase>
+        <testCase name="Sequelize Testings Check creation, obtaining and elimination of Idp" duration="1">
+            <failure message="ReferenceError: Idp is not defined"><![CDATA[ReferenceError: Idp is not defined
+    at Object.<anonymous> (/Users/diogo/Desktop/isel/ps/Authentication-and-Authorization-Node-Component-/authization-module/__tests__/sequelize-model-tests.test.js:96:30)
+    at Object.asyncJestTest (/Users/diogo/Desktop/isel/ps/Authentication-and-Authorization-Node-Component-/authization-module/node_modules/jest-jasmine2/build/jasmineAsyncInstall.js:100:37)
+    at /Users/diogo/Desktop/isel/ps/Authentication-and-Authorization-Node-Component-/authization-module/node_modules/jest-jasmine2/build/queueRunner.js:47:12
+    at new Promise (<anonymous>)
+    at mapper (/Users/diogo/Desktop/isel/ps/Authentication-and-Authorization-Node-Component-/authization-module/node_modules/jest-jasmine2/build/queueRunner.js:30:19)
+    at /Users/diogo/Desktop/isel/ps/Authentication-and-Authorization-Node-Component-/authization-module/node_modules/jest-jasmine2/build/queueRunner.js:77:41
+    at processTicksAndRejections (internal/process/task_queues.js:97:5)]]></failure>
+        </testCase>
+        <testCase name="Sequelize Testings Check creation, obtaining and elimination of List" duration="0">
+            <failure message="ReferenceError: List is not defined"><![CDATA[ReferenceError: List is not defined
+    at Object.<anonymous> (/Users/diogo/Desktop/isel/ps/Authentication-and-Authorization-Node-Component-/authization-module/__tests__/sequelize-model-tests.test.js:105:29)
+    at Object.asyncJestTest (/Users/diogo/Desktop/isel/ps/Authentication-and-Authorization-Node-Component-/authization-module/node_modules/jest-jasmine2/build/jasmineAsyncInstall.js:100:37)
+    at /Users/diogo/Desktop/isel/ps/Authentication-and-Authorization-Node-Component-/authization-module/node_modules/jest-jasmine2/build/queueRunner.js:47:12
+    at new Promise (<anonymous>)
+    at mapper (/Users/diogo/Desktop/isel/ps/Authentication-and-Authorization-Node-Component-/authization-module/node_modules/jest-jasmine2/build/queueRunner.js:30:19)
+    at /Users/diogo/Desktop/isel/ps/Authentication-and-Authorization-Node-Component-/authization-module/node_modules/jest-jasmine2/build/queueRunner.js:77:41
+    at processTicksAndRejections (internal/process/task_queues.js:97:5)]]></failure>
+        </testCase>
+        <testCase name="Sequelize Testings Check creation, obtaining and elimination of Permission" duration="0">
+            <failure message="ReferenceError: Permission is not defined"><![CDATA[ReferenceError: Permission is not defined
+    at Object.<anonymous> (/Users/diogo/Desktop/isel/ps/Authentication-and-Authorization-Node-Component-/authization-module/__tests__/sequelize-model-tests.test.js:112:31)
+    at Object.asyncJestTest (/Users/diogo/Desktop/isel/ps/Authentication-and-Authorization-Node-Component-/authization-module/node_modules/jest-jasmine2/build/jasmineAsyncInstall.js:100:37)
+    at /Users/diogo/Desktop/isel/ps/Authentication-and-Authorization-Node-Component-/authization-module/node_modules/jest-jasmine2/build/queueRunner.js:47:12
+    at new Promise (<anonymous>)
+    at mapper (/Users/diogo/Desktop/isel/ps/Authentication-and-Authorization-Node-Component-/authization-module/node_modules/jest-jasmine2/build/queueRunner.js:30:19)
+    at /Users/diogo/Desktop/isel/ps/Authentication-and-Authorization-Node-Component-/authization-module/node_modules/jest-jasmine2/build/queueRunner.js:77:41
+    at processTicksAndRejections (internal/process/task_queues.js:97:5)]]></failure>
+        </testCase>
+        <testCase name="Sequelize Testings Check creation, obtaining and elimination of Protocols" duration="1">
+            <failure message="ReferenceError: Protocols is not defined"><![CDATA[ReferenceError: Protocols is not defined
+    at Object.<anonymous> (/Users/diogo/Desktop/isel/ps/Authentication-and-Authorization-Node-Component-/authization-module/__tests__/sequelize-model-tests.test.js:117:32)
+    at Object.asyncJestTest (/Users/diogo/Desktop/isel/ps/Authentication-and-Authorization-Node-Component-/authization-module/node_modules/jest-jasmine2/build/jasmineAsyncInstall.js:100:37)
+    at /Users/diogo/Desktop/isel/ps/Authentication-and-Authorization-Node-Component-/authization-module/node_modules/jest-jasmine2/build/queueRunner.js:47:12
+    at new Promise (<anonymous>)
+    at mapper (/Users/diogo/Desktop/isel/ps/Authentication-and-Authorization-Node-Component-/authization-module/node_modules/jest-jasmine2/build/queueRunner.js:30:19)
+    at /Users/diogo/Desktop/isel/ps/Authentication-and-Authorization-Node-Component-/authization-module/node_modules/jest-jasmine2/build/queueRunner.js:77:41
+    at processTicksAndRejections (internal/process/task_queues.js:97:5)]]></failure>
+        </testCase>
+        <testCase name="Sequelize Testings Check creation, obtaining and elimination of Role" duration="0">
+            <failure message="ReferenceError: Role is not defined"><![CDATA[ReferenceError: Role is not defined
+    at Object.<anonymous> (/Users/diogo/Desktop/isel/ps/Authentication-and-Authorization-Node-Component-/authization-module/__tests__/sequelize-model-tests.test.js:122:31)
+    at Object.asyncJestTest (/Users/diogo/Desktop/isel/ps/Authentication-and-Authorization-Node-Component-/authization-module/node_modules/jest-jasmine2/build/jasmineAsyncInstall.js:100:37)
+    at /Users/diogo/Desktop/isel/ps/Authentication-and-Authorization-Node-Component-/authization-module/node_modules/jest-jasmine2/build/queueRunner.js:47:12
+    at new Promise (<anonymous>)
+    at mapper (/Users/diogo/Desktop/isel/ps/Authentication-and-Authorization-Node-Component-/authization-module/node_modules/jest-jasmine2/build/queueRunner.js:30:19)
+    at /Users/diogo/Desktop/isel/ps/Authentication-and-Authorization-Node-Component-/authization-module/node_modules/jest-jasmine2/build/queueRunner.js:77:41
+    at processTicksAndRejections (internal/process/task_queues.js:97:5)]]></failure>
+        </testCase>
+        <testCase name="Sequelize Testings Check creation, obtaining and elimination of User History" duration="0">
+            <failure message="ReferenceError: UserHistory is not defined"><![CDATA[ReferenceError: UserHistory is not defined
+    at Object.<anonymous> (/Users/diogo/Desktop/isel/ps/Authentication-and-Authorization-Node-Component-/authization-module/__tests__/sequelize-model-tests.test.js:126:35)
+    at Object.asyncJestTest (/Users/diogo/Desktop/isel/ps/Authentication-and-Authorization-Node-Component-/authization-module/node_modules/jest-jasmine2/build/jasmineAsyncInstall.js:100:37)
+    at /Users/diogo/Desktop/isel/ps/Authentication-and-Authorization-Node-Component-/authization-module/node_modules/jest-jasmine2/build/queueRunner.js:47:12
+    at new Promise (<anonymous>)
+    at mapper (/Users/diogo/Desktop/isel/ps/Authentication-and-Authorization-Node-Component-/authization-module/node_modules/jest-jasmine2/build/queueRunner.js:30:19)
+    at /Users/diogo/Desktop/isel/ps/Authentication-and-Authorization-Node-Component-/authization-module/node_modules/jest-jasmine2/build/queueRunner.js:77:41
+    at processTicksAndRejections (internal/process/task_queues.js:97:5)]]></failure>
+        </testCase>
+        <testCase name="Sequelize Testings Check creation, obtaining and elimination of User " duration="1">
+            <failure message="ReferenceError: User is not defined"><![CDATA[ReferenceError: User is not defined
+    at Object.<anonymous> (/Users/diogo/Desktop/isel/ps/Authentication-and-Authorization-Node-Component-/authization-module/__tests__/sequelize-model-tests.test.js:131:37)
+    at Object.asyncJestTest (/Users/diogo/Desktop/isel/ps/Authentication-and-Authorization-Node-Component-/authization-module/node_modules/jest-jasmine2/build/jasmineAsyncInstall.js:100:37)
+    at /Users/diogo/Desktop/isel/ps/Authentication-and-Authorization-Node-Component-/authization-module/node_modules/jest-jasmine2/build/queueRunner.js:47:12
+    at new Promise (<anonymous>)
+    at mapper (/Users/diogo/Desktop/isel/ps/Authentication-and-Authorization-Node-Component-/authization-module/node_modules/jest-jasmine2/build/queueRunner.js:30:19)
+    at /Users/diogo/Desktop/isel/ps/Authentication-and-Authorization-Node-Component-/authization-module/node_modules/jest-jasmine2/build/queueRunner.js:77:41
+    at processTicksAndRejections (internal/process/task_queues.js:97:5)]]></failure>
+        </testCase>
+        <testCase name="Sequelize Testings Check join User with Role " duration="0">
+            <failure message="ReferenceError: User is not defined"><![CDATA[ReferenceError: User is not defined
+    at Object.<anonymous> (/Users/diogo/Desktop/isel/ps/Authentication-and-Authorization-Node-Component-/authization-module/__tests__/sequelize-model-tests.test.js:135:10)
+    at Object.asyncJestTest (/Users/diogo/Desktop/isel/ps/Authentication-and-Authorization-Node-Component-/authization-module/node_modules/jest-jasmine2/build/jasmineAsyncInstall.js:100:37)
+    at /Users/diogo/Desktop/isel/ps/Authentication-and-Authorization-Node-Component-/authization-module/node_modules/jest-jasmine2/build/queueRunner.js:47:12
+    at new Promise (<anonymous>)
+    at mapper (/Users/diogo/Desktop/isel/ps/Authentication-and-Authorization-Node-Component-/authization-module/node_modules/jest-jasmine2/build/queueRunner.js:30:19)
+    at /Users/diogo/Desktop/isel/ps/Authentication-and-Authorization-Node-Component-/authization-module/node_modules/jest-jasmine2/build/queueRunner.js:77:41
+    at processTicksAndRejections (internal/process/task_queues.js:97:5)]]></failure>
+        </testCase>
+        <testCase name="Sequelize Testings Check join User with List " duration="0">
+            <failure message="ReferenceError: User is not defined"><![CDATA[ReferenceError: User is not defined
+    at Object.<anonymous> (/Users/diogo/Desktop/isel/ps/Authentication-and-Authorization-Node-Component-/authization-module/__tests__/sequelize-model-tests.test.js:139:9)
+    at Object.asyncJestTest (/Users/diogo/Desktop/isel/ps/Authentication-and-Authorization-Node-Component-/authization-module/node_modules/jest-jasmine2/build/jasmineAsyncInstall.js:100:37)
+    at /Users/diogo/Desktop/isel/ps/Authentication-and-Authorization-Node-Component-/authization-module/node_modules/jest-jasmine2/build/queueRunner.js:47:12
+    at new Promise (<anonymous>)
+    at mapper (/Users/diogo/Desktop/isel/ps/Authentication-and-Authorization-Node-Component-/authization-module/node_modules/jest-jasmine2/build/queueRunner.js:30:19)
+    at /Users/diogo/Desktop/isel/ps/Authentication-and-Authorization-Node-Component-/authization-module/node_modules/jest-jasmine2/build/queueRunner.js:77:41
+    at processTicksAndRejections (internal/process/task_queues.js:97:5)]]></failure>
+        </testCase>
+        <testCase name="Sequelize Testings Check join Permission with Roles " duration="0">
+            <failure message="ReferenceError: Role is not defined"><![CDATA[ReferenceError: Role is not defined
+    at Object.<anonymous> (/Users/diogo/Desktop/isel/ps/Authentication-and-Authorization-Node-Component-/authization-module/__tests__/sequelize-model-tests.test.js:143:9)
+    at Object.asyncJestTest (/Users/diogo/Desktop/isel/ps/Authentication-and-Authorization-Node-Component-/authization-module/node_modules/jest-jasmine2/build/jasmineAsyncInstall.js:100:37)
+    at /Users/diogo/Desktop/isel/ps/Authentication-and-Authorization-Node-Component-/authization-module/node_modules/jest-jasmine2/build/queueRunner.js:47:12
+    at new Promise (<anonymous>)
+    at mapper (/Users/diogo/Desktop/isel/ps/Authentication-and-Authorization-Node-Component-/authization-module/node_modules/jest-jasmine2/build/queueRunner.js:30:19)
+    at /Users/diogo/Desktop/isel/ps/Authentication-and-Authorization-Node-Component-/authization-module/node_modules/jest-jasmine2/build/queueRunner.js:77:41
+    at processTicksAndRejections (internal/process/task_queues.js:97:5)]]></failure>
+        </testCase>
+    </file>
+    <file path="/Users/diogo/Desktop/isel/ps/Authentication-and-Authorization-Node-Component-/authization-module/__tests__/authization_rbac.test.js">
+        <testCase name="AuthizationRbac testing setup Authization Rbac" duration="3"/>
+        <testCase name="AuthizationRbac testing Authization Rbac can method testing" duration="4"/>
+        <testCase name="AuthizationRbac testing Authization Rbac canAll method testing" duration="0"/>
+        <testCase name="AuthizationRbac testing Authization Rbac canAny method testing" duration="0"/>
+    </file>
+    <file path="/Users/diogo/Desktop/isel/ps/Authentication-and-Authorization-Node-Component-/authization-module/__tests__/module-setup.test.js">
     </file>
 </testExecutions>

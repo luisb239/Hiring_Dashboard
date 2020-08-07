@@ -94,7 +94,8 @@ module.exports = (query) => {
 
     async function createRequest({
                                      quantity, description, targetDate, state, skill, stateCsl,
-                                     project, profile, workflow, dateToSendProfile, requestDate, progress
+                                     project, profile, workflow, dateToSendProfile, progress,
+                                     requestDate = new Date().toDateString()
                                  }) {
         const statement = {
             name: 'Create Request',
