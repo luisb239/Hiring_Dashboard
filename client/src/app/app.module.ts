@@ -30,6 +30,7 @@ import {DashboardComponent} from './components/dashboard/dashboard.component';
 import {HttpErrorInterceptor} from './services/htttp-error-interceptor';
 import {MatTableModule} from '@angular/material/table';
 import {MatPaginatorModule} from '@angular/material/paginator';
+import {MatAutocompleteModule} from '@angular/material/autocomplete';
 
 @NgModule({
   declarations: [
@@ -65,7 +66,8 @@ import {MatPaginatorModule} from '@angular/material/paginator';
     MatSelectModule,
     AlertModule,
     MatTableModule,
-    MatPaginatorModule
+    MatPaginatorModule,
+    MatAutocompleteModule
   ],
   providers: [{
     provide: HTTP_INTERCEPTORS,

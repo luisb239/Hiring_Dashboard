@@ -1,11 +1,42 @@
-.root {
+#root {
   width: 100%;
 }
 
-.board {
+#flex-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+#grid {
+  display: grid;
+  place-items: center;
+}
+
+#board {
   width: fit-content;
   flex-direction: column;
   min-width: 0;
+}
+
+#filter {
+  width: fit-content;
+}
+
+form {
+  display: flex;
+  flex-direction: row;
+  margin-top: 20px;
+}
+
+input {
+  width: 300px;
+}
+
+#reset {
+  display: inline;
+  width: fit-content;
+  margin-left: 20px;
 }
 
 .full-table {
@@ -110,11 +141,11 @@
 }
 
 .cdk-drag-animating {
-  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+  transition: transform 150ms cubic-bezier(0, 0, 0.2, 1);
 }
 
 .tasks-container.cdk-drop-list-dragging .task:not(.cdk-drag-placeholder) {
-  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+  transition: transform 150ms cubic-bezier(0, 0, 0.2, 1);
 }
 
 .hidden-task {
@@ -153,6 +184,31 @@ td {
 
 .candidate-status {
   margin-bottom: 0;
+}
+
+@media only screen and (min-width: 360px) and (max-width: 767px) {
+  #grid {
+    display: inline-block;
+  }
+
+  .dropdown-toggle {
+    width: fit-content;
+    margin-left: 25px;
+  }
+
+  input {
+    width: 200px;
+  }
+
+  #reset {
+    display: inline;
+    width: fit-content;
+    margin-left: 20px;
+  }
+
+  #dropdown {
+    display: none;
+  }
 }
 
 @media only screen and (min-width: 768px) and (max-width: 991px) {

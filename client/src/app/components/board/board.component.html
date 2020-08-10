@@ -1,55 +1,86 @@
-<div class="root table-responsive-xl">
-  <div class="board">
-    <div *ngFor="let workflow of properties.workflows" class="full-table">
-      <table #tableContainer class="header-table">
-        <caption style="display: none">Board Header</caption>
-        <tr>
-          <th [colSpan]=workflow.phases.length id="workflow-header">
-            <div class="workflow-header bg-dark text-white"><h3>{{workflow.workflow}}</h3></div>
-          </th>
-          <th><div></div></th>
-        </tr>
-        <tr class="phase-row">
-          <td *ngFor="let phase of workflow.phases" class="phase-cell">
-            <div class="phase bg-light text-dark">
-              <h4 class="phase-name">{{phase.name}}</h4>
-            </div>
-          </td>
-        </tr>
-      </table>
-      <table *ngFor="let request of workflow.requests" [width]="tableContainer.offsetWidth">
-        <caption style="display: none">Board Content</caption>
-        <tr><th id="non-visible"></th></tr>
-        <tr>
-          <td class="title-data swim-lane bg-dark text-white" [colSpan]=workflow.phases.length-1
-              [routerLink]="['/request-detail', request.id]">
-            <h5 class="swim-lane-title">{{request.description}} [Placed: {{request.placedCandidates}}/{{request.quantity}}]</h5>
-          </td>
-          <td class="fraction-data swim-lane bg-dark text-white">
-            <h5 class="swim-lane-minus" (click)="hide($event, request)">&minus;</h5>
-          </td>
-        </tr>
-        <tr cdkDropListGroup [hidden]=request.hidden class="list">
-          <td class="tasks-container"
-              cdkDropList
-              [width]="tableContainer.offsetWidth/request.phases.length"
-              *ngFor="let phase of request.phases; index as i"
-              [cdkDropListData]="phase.candidates"
-              (cdkDropListDropped)="drop($event, request.id, phase.name)">
-            <div class="task bg-light text-dark" *ngFor="let candidate of phase.candidates"
-                 [cdkDragData]="candidate"
-                 cdkDrag
-                 (click)="onClick(candidate.id, request, phase.name)">
-              <h6>{{ candidate.name }}</h6>
-              <p class="candidate-status">{{ candidate.status }}</p>
-            </div>
-            <div (click)="addCandidate(request)" *ngIf="i==0" class="hidden-task">
-              <div class="hidden-text"><h6><span>...</span></h6></div>
-            </div>
-          </td>
-        </tr>
-      </table>
+<div id="root" class="table-responsive-xl">
+  <div id="grid">
+    <form>
+      <div class="input-group" id="filter">
+        <div class="input-group-prepend">
+          <button class="btn btn-primary dropdown-toggle" type="submit" data-toggle="dropdown" aria-haspopup="true"
+                  aria-expanded="false"><span id="dropdown">Search By {{properties.content.name}}</span></button>
+          <div class="dropdown-menu">
+            <a class="dropdown-item" (click)="setContent(0)">Workflow</a>
+            <a class="dropdown-item" (click)="setContent(1)">Description</a>
+          </div>
+        </div>
+        <input type="text"
+               (keydown.enter)="filter()"
+               placeholder="Search By {{properties.content.name}}"
+               [formControl]="properties.control"
+               [matAutocomplete]="auto">
+        <mat-autocomplete #auto="matAutocomplete">
+          <mat-option *ngFor="let option of properties.filteredOptions | async" [value]="option">
+            {{option}}
+          </mat-option>
+        </mat-autocomplete>
+      </div>
+      <button id="reset" class="btn btn-secondary reset-button" type="button" (click)="getAllRequests()">
+        Reset
+      </button>
+    </form>
+    <div id="board">
+      <div *ngFor="let workflow of properties.workflows" class="full-table">
+        <table #tableContainer class="header-table">
+          <caption style="display: none">Board Header</caption>
+          <tr>
+            <th [colSpan]=workflow.phases.length id="workflow-header">
+              <div class="workflow-header bg-dark text-white"><h3>{{workflow.workflow}}</h3></div>
+            </th>
+            <th>
+              <div></div>
+            </th>
+          </tr>
+          <tr class="phase-row">
+            <td *ngFor="let phase of workflow.phases" class="phase-cell">
+              <div class="phase bg-light text-dark">
+                <h4 class="phase-name">{{phase.name}}</h4>
+              </div>
+            </td>
+          </tr>
+        </table>
+        <table *ngFor="let request of workflow.requests" [width]="tableContainer.offsetWidth">
+          <caption style="display: none">Board Content</caption>
+          <tr>
+            <th id="non-visible"></th>
+          </tr>
+          <tr>
+            <td class="title-data swim-lane bg-dark text-white" [colSpan]=workflow.phases.length-1
+                [routerLink]="['/request-detail', request.id]">
+              <h5 class="swim-lane-title">{{request.description}} [Placed: {{request.placedCandidates}}
+                /{{request.quantity}}]</h5>
+            </td>
+            <td class="fraction-data swim-lane bg-dark text-white">
+              <h5 class="swim-lane-minus" (click)="hide($event, request)">&minus;</h5>
+            </td>
+          </tr>
+          <tr cdkDropListGroup [hidden]=request.hidden class="list">
+            <td class="tasks-container"
+                cdkDropList
+                [width]="tableContainer.offsetWidth/request.phases.length"
+                *ngFor="let phase of request.phases; index as i"
+                [cdkDropListData]="phase.candidates"
+                (cdkDropListDropped)="drop($event, request.id, phase.name)">
+              <div class="task bg-light text-dark" *ngFor="let candidate of phase.candidates"
+                   [cdkDragData]="candidate"
+                   cdkDrag
+                   (click)="onClick(candidate.id, request, phase.name)">
+                <h6>{{ candidate.name }}</h6>
+                <p class="candidate-status">{{ candidate.status }}</p>
+              </div>
+              <div (click)="addCandidate(request)" *ngIf="i==0" class="hidden-task">
+                <div class="hidden-text"><h6><span>...</span></h6></div>
+              </div>
+            </td>
+          </tr>
+        </table>
+      </div>
     </div>
   </div>
 </div>
-
