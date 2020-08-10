@@ -139,7 +139,8 @@
               </tbody>
             </table>
           </div>
-          <form [formGroup]="properties.userForm" (submit)="onSubmit()">
+          <form [formGroup]="properties.userForm" (submit)="onSubmit()"
+                *ngIf='authService.userRoles && authService.isTeamLeader()'>
             <table class="table-responsive-xl">
               <caption style="display: none">Available Candidates Table</caption>
               <thead>
@@ -156,7 +157,7 @@
                   {{user.userEmail}}
                 </td>
                 <td class="form-check assign td">
-                    <input class="form-check-input" type="checkbox" (change)="onChange(i, $event)">
+                  <input class="form-check-input" type="checkbox" (change)="onChange(i, $event)">
                 </td>
               </tr>
             </table>

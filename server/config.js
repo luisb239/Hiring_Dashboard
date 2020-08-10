@@ -57,7 +57,7 @@ module.exports = (app) => {
     }
 
     const jsonObj = {
-        "roles": ["admin", "recruiter", "jobOwner", "guest"],
+        "roles": ["admin", "recruiter", "jobOwner", "guest", "teamLeader"],
         // id order not guaranteed
         "permissions": [
             {"resource": "auth", "action": "GET"},
@@ -109,12 +109,15 @@ module.exports = (app) => {
                 {"resource": "roles", "action": "GET"},
             ],
             "recruiter": [
-                {"role": "guest"}
+                {"role": "teamLeader"}
             ],
             "jobOwner": [
                 {"role": "guest"}
             ],
             "admin": [
+                {"role": "guest"}
+            ],
+            "teamLeader": [
                 {"role": "guest"}
             ]
         }

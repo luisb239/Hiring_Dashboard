@@ -61,8 +61,11 @@ export class AuthService {
     return this.userRoles.find(r => r.role.toLowerCase() === 'admin') ||
       this.userRoles.find(r => r.role.toLowerCase() === 'jobowner');
   }
-
   // TODO isTeamLeader()
+  isTeamLeader() {
+    return this.userRoles.find(r => r.role.toLowerCase() === 'admin') ||
+      this.userRoles.find(r => r.role.toLowerCase() === 'teamleader');
+  }
 
 
 }

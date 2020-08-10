@@ -12,6 +12,7 @@ import {UserService} from '../../services/user/user.service';
 import {User} from '../../model/user/user';
 import {RequestPropsService} from '../../services/requestProps/requestProps.service';
 import {LanguageCheckbox} from '../../model/requestProps/language-checkbox';
+import {AuthService} from '../../services/auth/auth.service';
 
 @Component({
   selector: 'app-request-detail',
@@ -29,7 +30,8 @@ export class RequestDetailComponent implements OnInit {
     private formBuilder: FormBuilder,
     private reqPropsService: RequestPropsService,
     private userService: UserService,
-    private alertService: AlertService) {
+    private alertService: AlertService,
+    public authService: AuthService) {
     this.properties.updateForm = this.formBuilder.group({});
   }
 
