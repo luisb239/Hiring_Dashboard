@@ -7,14 +7,30 @@ const pool = new Pool()
 const errors = require('./errors/db-errors.js')
 const DbError = require('./errors/db-access-error.js')
 
-async function query(text, params) {
+async function query(text, params, client) {
     try {
-        return await pool.query(text, params)
+        if(client)
+            return await client.query(text, params)
+        else
+            return await pool.query(text, params)
     } catch (e) {
         // log the error
         console.log(e)
         // check the pg error code and throw respective exception to alert layer
         checkAndThrowError(e)
+    }
+}
+
+async function transaction(bodyFunction) {
+    const client = await pool.connect()
+    try {
+        await client.query('BEGIN')
+        return await bodyFunction(client)
+    } catch (e) {
+        await client.query('ROLLBACK')
+        throw e
+    } finally {
+        client.release()
     }
 }
 
