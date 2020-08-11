@@ -46,9 +46,6 @@ export class BoardComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // this.properties.filter = this.formBuilder.group({
-    //   optionValue: this.formBuilder.control('')
-    // });
     this.getAllRequests();
   }
 

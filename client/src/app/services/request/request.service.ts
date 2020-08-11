@@ -13,9 +13,6 @@ const httpOptions = {
   })
 };
 
-const singleParams: string[] = ['skill', 'state', 'stateCsl', 'project', 'profile',
-  'workflow', 'targetDate'];
-
 @Injectable({
   providedIn: 'root'
 })
@@ -42,7 +39,6 @@ export class RequestService {
     pageSize: number,
     args: any
   ): Observable<RequestDetailsDao[]> {
-    // TODO -> Change the way the method handles skills, states, stateCsl...
     let params = new HttpParams()
       .set('pageNumber', pageNumber.toString())
       .set('pageSize', pageSize.toString());
@@ -60,7 +56,6 @@ export class RequestService {
 
   /**
    *  This function queries the server for all the requests associated with a user-role.
-   * @param userId is used to specify a user's requests.
    */
   getUserCurrentRequests() {
     const params = new HttpParams().set('currentUser', String(true));
@@ -70,45 +65,6 @@ export class RequestService {
           'Content-Type': 'application/json'
         }), params
       });
-  }
-
-  /**
-   * This function queries the server for all the existing requests in the system.
-   */
-  getAllRequests() {
-    return this.http.get<RequestsDao>(`${this.baseUrl}/requests`, httpOptions);
-  }
-
-  /**
-   * This function queries the server for all the existing requests, with the possibility to filter the
-   * response.
-   * @param parameters are used to filter the values that are retrieved from the database.
-   */
-  getAllRequestsWithQuery(parameters: any) {
-    let params = new HttpParams();
-    singleParams.forEach(p => {
-      if (parameters[p] !== null && parameters[p] !== '') {
-        params = params.set(p, parameters[p]);
-      }
-    });
-
-    if (parameters.progress[0]) {
-      params = params.set('minProgress', String(parameters.progress[0]));
-    }
-    if (parameters.progress[1]) {
-      params = params.set('maxProgress', String(parameters.progress[1]));
-    }
-    if (parameters.quantity[0]) {
-      params = params.set('minQuantity', String(parameters.quantity[0]));
-    }
-    if (parameters.quantity[1]) {
-      params = params.set('maxQuantity', String(parameters.quantity[1]));
-    }
-    return this.http.get<RequestsDao>(`${this.baseUrl}/requests`, {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json'
-      }), params
-    });
   }
 
   /**

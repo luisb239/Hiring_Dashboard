@@ -46,16 +46,11 @@ table {
 .mat-cell {
   padding-right: 10px;
 }
-/* td {
-  margin-left: 5px;
-  margin-right: 5px;
-} */
 
 ::ng-deep .custom-slider .ng5-slider .ng5-slider-bar {
   height: 2px;
 }
 ::ng-deep .custom-slider .ng5-slider .ng5-slider-selection {
-  /*background: dodgerblue;*/
   background: rgb(244, 148, 4);
 }
 ::ng-deep .custom-slider .ng5-slider .ng5-slider-pointer {
@@ -87,7 +82,6 @@ table {
   top: -1px;
 }
 ::ng-deep .custom-slider .ng5-slider .ng5-slider-tick.ng5-slider-selected {
-  /*background: dodgerblue;*/
   background: rgb(244, 148, 4);
 }
 

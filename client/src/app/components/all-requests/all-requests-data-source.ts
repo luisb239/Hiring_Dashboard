@@ -7,9 +7,6 @@ import {catchError, finalize} from 'rxjs/operators';
 export class AllRequestsDataSource implements DataSource<RequestDetailsDao> {
 
   private requestsSubject = new BehaviorSubject<RequestDetailsDao[]>([]);
-  private loadingSubject = new BehaviorSubject<boolean>(false);
-
-  public loading = this.loadingSubject.asObservable();
 
   public constructor(private service: RequestService) {
   }
@@ -20,18 +17,15 @@ export class AllRequestsDataSource implements DataSource<RequestDetailsDao> {
 
   disconnect(collectionViewer: CollectionViewer): void {
     this.requestsSubject.complete();
-    this.loadingSubject.complete();
   }
 
   public loadRequests(pageIndex: number = 0,
                       pageSize: number = 10,
                       args: any = {}) {
-    this.loadingSubject.next(true);
 
     this.service.find(pageIndex, pageSize, args)
       .pipe(
-        catchError(() => of([])),
-        finalize(() => this.loadingSubject.next(false))
+        catchError(() => of([]))
       )
       .subscribe(requests => {
         console.log('load requests ->', requests);
