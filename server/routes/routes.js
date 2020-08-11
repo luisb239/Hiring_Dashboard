@@ -40,11 +40,29 @@ module.exports = function (router, controllers, authModule, upload, validator) {
 
     router.post('/auth/logout', authModule.authenticate.logout, handle(controllers.auth.getSession))
 
+    router.get('/count', [
+        verifyIfAuthenticated,
+        query('skill').optional().isString(),
+        query('state').optional().isString(),
+        query('stateCsl').optional().isString(),
+        query('profile').optional().isString(),
+        query('project').optional().isString(),
+        query('workflow').optional().isString(),
+        query('minQuantity').optional().isInt(),
+        query('maxQuantity').optional().isInt(),
+        query('minProgress').optional().isInt(),
+        query('maxProgress').optional().isInt(),
+        query('targetDate').optional().isString(),
+        query('currentUser').optional().isBoolean(),
+    ], handle(controllers.request.countRequests))
+
     /**
      * Get all requests + query filter
      */
     router.get(`/${requests}`, [
         verifyIfAuthenticated,
+        query('pageNumber').optional().isInt(),
+        query('pageSize').optional().isInt(),
         query('skill').optional().isString(),
         query('state').optional().isString(),
         query('stateCsl').optional().isString(),

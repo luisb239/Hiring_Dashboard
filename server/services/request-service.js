@@ -14,11 +14,14 @@ module.exports = (requestDb, processDb, requestLanguagesDb, authModule, candidat
         addUserToRequest: addUserToRequest,
         updateRequest: updateRequest,
         updateRequestLanguages: updateRequestLanguages,
-        deleteLanguage: deleteLanguage
+        deleteLanguage: deleteLanguage,
+        countRequests: countRequests
     }
 
     /**
      * Get requests info based on filters passed
+     * @param pageNumber
+     * @param pageSize
      * @param skill : String
      * @param state : String
      * @param stateCsl : String
@@ -33,6 +36,7 @@ module.exports = (requestDb, processDb, requestLanguagesDb, authModule, candidat
      * @param userId : ?number
      */
     async function getRequests({
+                                   pageNumber = null, pageSize = null,
                                    skill = null, state = null, stateCsl = null,
                                    profile = null, project = null, workflow = null,
                                    minQuantity = null, maxQuantity = null,
@@ -41,6 +45,7 @@ module.exports = (requestDb, processDb, requestLanguagesDb, authModule, candidat
                                }) {
         return {
             requests: await requestDb.getRequests({
+                pageNumber, pageSize,
                 skill, state, stateCsl, profile, project, workflow, minQuantity,
                 maxQuantity, minProgress, maxProgress, targetDate, userId
             })
@@ -157,4 +162,17 @@ module.exports = (requestDb, processDb, requestLanguagesDb, authModule, candidat
         await requestLanguagesDb.deleteLanguage({requestId, language, isMandatory})
     }
 
+    async function countRequests({
+                                     skill = null, state = null, stateCsl = null,
+                                     profile = null, project = null, workflow = null,
+                                     minQuantity = null, maxQuantity = null,
+                                     minProgress = null, maxProgress = null,
+                                     targetDate = null, userId = null
+                                 }) {
+        const result = await requestDb.countRequests({
+                skill, state, stateCsl, profile, project, workflow, minQuantity,
+                maxQuantity, minProgress, maxProgress, targetDate, userId
+            })
+        return {count: result.count};
+    }
 }

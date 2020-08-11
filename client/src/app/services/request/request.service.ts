@@ -3,6 +3,9 @@ import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 import {SuccessPostDao} from '../../model/common/successPost-dao';
 import {RequestDao} from 'src/app/model/request/request-dao';
 import {RequestsDao} from 'src/app/model/request/requests-dao';
+import {RequestDetailsDao} from 'src/app/model/request/request-details-dao';
+import {Observable} from 'rxjs';
+import {map} from 'rxjs/operators';
 
 const httpOptions = {
   headers: new HttpHeaders({
@@ -32,6 +35,27 @@ export class RequestService {
    */
   getRequest(requestId: number) {
     return this.http.get<RequestDao>(`${this.baseUrl}/requests/${requestId}`, httpOptions);
+  }
+
+  find(
+    pageNumber: number,
+    pageSize: number,
+    args: any
+  ): Observable<RequestDetailsDao[]> {
+    // TODO -> Change the way the method handles skills, states, stateCsl...
+    let params = new HttpParams()
+      .set('pageNumber', pageNumber.toString())
+      .set('pageSize', pageSize.toString());
+
+    Object.keys(args).forEach(arg => {
+      if (args[arg] !== null && args[arg] !== undefined) {
+        params = params.set(arg, args[arg]);
+      }
+    });
+
+    return this.http.get<RequestsDao>(`${this.baseUrl}/requests`, {
+      params
+    }).pipe(map(r => r.requests));
   }
 
   /**
@@ -119,4 +143,21 @@ export class RequestService {
       headers: new HttpHeaders({'Content-Type': 'application/json'}), params
     });
   }
+
+  // count the number of requests with the filters applied..
+  count(args: any) {
+
+    let params = new HttpParams();
+
+    Object.keys(args).forEach(arg => {
+      if (args[arg]) {
+        params = params.set(arg, args[arg]);
+      }
+    });
+
+    return this.http.get<any>(`${this.baseUrl}/count`, {
+      params
+    });
+  }
+
 }

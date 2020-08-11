@@ -236,4 +236,9 @@ export class BoardComponent implements OnInit {
           });
         });
   }
+
+  reset() {
+    this.properties.control.reset();
+    this.getAllRequests();
+  }
 }

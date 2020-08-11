@@ -3,71 +3,71 @@
   <div class="filter-drawer">
     <!--  <div class="p-2 filter-drawer">-->
     <h3>Filters</h3>
-    <form #form="ngForm" (ngSubmit)="onSubmit(form)" novalidate class="form">
+    <form [formGroup]="formGroup" novalidate class="form" (submit)="onSubmit()">
       <div class="form-group un-sm un-md">
         <label for="inputSkill">Skill Center</label>
-        <select class="custom-select" id="inputSkill" name="skill" #skill='ngModel' ngModel>
+        <select class="custom-select" id="inputSkill" name="skill" formControlName="skill">
           <option disabled value=""></option>
           <option *ngFor="let skill of properties.skills" [value]="skill">{{skill}}</option>
         </select>
       </div>
       <div class="form-group un-sm un-md">
         <label for="inputState">State</label>
-        <select class="custom-select" id="inputState" name="state" #state='ngModel' ngModel>
+        <select class="custom-select" id="inputState" name="state" formControlName="state">
           <option disabled value=""></option>
-          <option *ngFor="let state of properties.states">{{state}}</option>
+          <option *ngFor="let state of properties.states" [value]="state">{{state}}</option>
         </select>
       </div>
       <div class="form-group un-sm un-md">
         <label for="inputStateCsl">CSL State</label>
-        <select class="custom-select" id="inputStateCsl" name="stateCsl" #stateCsl='ngModel' ngModel>
+        <select class="custom-select" id="inputStateCsl" name="stateCsl" formControlName="stateCsl">
           <option disabled value=""></option>
-          <option *ngFor="let stateCsl of properties.statesCsl">{{stateCsl}}</option>
+          <option *ngFor="let stateCsl of properties.statesCsl" [value]="stateCsl">{{stateCsl}}</option>
         </select>
       </div>
       <div class="form-group">
         <label for="inputProject">Project</label>
-        <select class="custom-select" id="inputProject" name="project" #project='ngModel' ngModel>
+        <select class="custom-select" id="inputProject" name="project" formControlName="project">
           <option disabled value=""></option>
-          <option *ngFor="let project of properties.projects">{{project}}</option>
+          <option *ngFor="let project of properties.projects" [value]="project">{{project}}</option>
         </select>
       </div>
       <div class="form-group">
         <label for="inputProfile">Profile</label>
-        <select class="custom-select" id="inputProfile" name="profile" #profile='ngModel' ngModel>
+        <select class="custom-select" id="inputProfile" name="profile" formControlName="profile">
           <option disabled value=""></option>
-          <option *ngFor="let profile of properties.profiles">{{profile}}</option>
+          <option *ngFor="let profile of properties.profiles" [value]="profile">{{profile}}</option>
         </select>
       </div>
       <div class="form-group un-sm">
         <label for="inputWorkflow">Workflow</label>
-        <select class="custom-select" id="inputWorkflow" name="workflow" #workflow='ngModel' ngModel>
+        <select class="custom-select" id="inputWorkflow" name="workflow" formControlName="workflow">
           <option disabled value=""></option>
-          <option *ngFor="let workflow of properties.workflows">{{workflow}}</option>
+          <option *ngFor="let workflow of properties.workflows" [value]="workflow">{{workflow}}</option>
         </select>
       </div>
       <div class="form-group un-sm un-md">
         <label for="inputTargetDate">Target Month</label>
-        <select class="custom-select" id="inputTargetDate" name="targetDate" #targetDate='ngModel' ngModel>
+        <select class="custom-select" id="inputTargetDate" name="targetDate" formControlName="month">
           <option disabled value=""></option>
-          <option *ngFor="let month of properties.targetDates">{{month}}</option>
+          <option *ngFor="let month of properties.targetDates" [value]="month">{{month}}</option>
         </select>
       </div>
       <div class="custom-slider un-sm">
         <label for="quantityBar">Quantity</label>
         <ng5-slider [(value)]="properties.minValueQuantity" [(highValue)]="properties.maxValueQuantity"
-          [options]="properties.optionsQuantity" id="quantityBar" name="quantity" #quantity='ngModel' ngModel>
+                    [options]="properties.optionsQuantity" id="quantityBar" name="quantity" formControlName="quantityValues">
         </ng5-slider>
       </div>
       <div class="custom-slider un-sm">
         <label for="progressBar">Progress</label>
         <ng5-slider [(value)]="properties.minValueProgress" [(highValue)]="properties.maxValueProgress"
-          [options]="properties.optionsProgress" id="progressBar" name="progress" #progress='ngModel' ngModel>
+                    [options]="properties.optionsProgress" id="progressBar" name="progress" formControlName="progressValues" >
         </ng5-slider>
       </div>
 
       <button id="createRequestSubmit" class="btn btn-primary" type="submit">Filter</button>
-      <button id="resetRequestTable" class="btn btn-secondary reset-button" type="button" (click)="resetForms(form)">
+      <button id="resetRequestTable" class="btn btn-secondary reset-button" type="button" (click)="resetForms()">
         Reset
       </button>
     </form>
@@ -75,7 +75,7 @@
 
 
   <div class="mat-elevation-z8">
-    <table mat-table [dataSource]="properties.dataSource">
+    <table mat-table [dataSource]="dataSource">
 
       <ng-container matColumnDef="Workflow">
         <th class="col-un-sm" mat-header-cell *matHeaderCellDef> Workflow </th>
@@ -90,7 +90,8 @@
       <ng-container matColumnDef="Progress">
         <th class="col-un-sm" mat-header-cell *matHeaderCellDef> Progress </th>
         <td class="col-un-sm" mat-cell *matCellDef="let request">
-          <ngb-progressbar type=" blue" textType="white" [value]="request.progress" [showValue]="true">
+          <ngb-progressbar
+            type=" blue" textType="white" [value]="request.progress" [showValue]="true">
           </ngb-progressbar>
         </td>
       </ng-container>
@@ -117,7 +118,7 @@
 
       <ng-container matColumnDef="CSLState">
         <th class="col-un-sm col-un-md" mat-header-cell *matHeaderCellDef> CSL State </th>
-        <td class="col-un-sm col-un-md" mat-cell *matCellDef="let request"> {{request.stateCSL}} </td>
+        <td class="col-un-sm col-un-md" mat-cell *matCellDef="let request"> {{request.stateCsl}} </td>
       </ng-container>
 
       <ng-container matColumnDef="State">
@@ -147,7 +148,13 @@
       ></tr>
     </table>
 
-    <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+    <mat-paginator
+      [length]="listSize"
+      [pageIndex]="0"
+      [pageSize]="DEFAULT_PAGE_SIZE"
+      [pageSizeOptions]="[5, 10, 25, 50]"
+      showFirstLastButtons>
+    </mat-paginator>
   </div>
 
   <!-- <table class="table table-hover">

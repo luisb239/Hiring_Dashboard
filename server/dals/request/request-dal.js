@@ -12,10 +12,11 @@ module.exports = (query) => {
 
     return {
         getRequests, getRequestById, createRequest,
-        getUserRolesInRequest, updateRequest, addUserAndRoleToRequest
+        getUserRolesInRequest, updateRequest, addUserAndRoleToRequest, countRequests
     }
 
     async function getRequests({
+                                   pageNumber = null, pageSize = null,
                                    skill = null, state = null, stateCsl = null,
                                    profile = null, project = null, workflow = null,
                                    minQuantity = null, maxQuantity = null,
@@ -38,14 +39,15 @@ module.exports = (query) => {
                 `((R.${requestSchema.quantity} BETWEEN $7 AND $8) OR ($7 is null) OR ($8 is null)) AND ` +
                 `((R.${requestSchema.progress} BETWEEN $9 AND $10) OR ($9 is null) OR ($10 is null)) AND ` +
                 `(R.${requestSchema.targetDate} = $11 OR $11 is null) AND ` +
-                `(URR.${userRoleReqSchema.userId} = $12 OR $12 is null);`,
+                `(URR.${userRoleReqSchema.userId} = $12 OR $12 is null) ` +
+                `ORDER BY R.${requestSchema.id} LIMIT $13 OFFSET $14;`,
             values: [
                 skill, state, stateCsl, profile,
                 project, workflow, minQuantity, maxQuantity,
-                minProgress, maxProgress, targetDate, userId
+                minProgress, maxProgress, targetDate, userId, pageSize,
+                pageSize && pageNumber ? pageNumber * pageSize : 0
             ]
         }
-
         const result = await query(statement)
         return result.rows.map(row => extractRequest(row))
     }
@@ -189,5 +191,45 @@ module.exports = (query) => {
 
         await query(statement)
         //TODO -> Check if insert was successful
+    }
+
+    async function countRequests({
+                                     skill = null, state = null, stateCsl = null,
+                                     profile = null, project = null, workflow = null,
+                                     minQuantity = null, maxQuantity = null,
+                                     minProgress = null, maxProgress = null, targetDate = null,
+                                     userId = null
+                                 }) {
+        const statement = {
+            name: 'Count Requests',
+            text:
+                `SELECT COUNT(DISTINCT R.*) FROM ${requestSchema.table} AS R ` +
+                `LEFT JOIN ${userRoleReqSchema.table} AS URR ` +
+                `ON R.${requestSchema.id} = URR.${userRoleReqSchema.requestId} ` +
+                `WHERE ` +
+                `(R.${requestSchema.skill} = $1 OR $1 is null) AND ` +
+                `(R.${requestSchema.state} = $2 OR $2 is null) AND ` +
+                `(R.${requestSchema.stateCsl} = $3 OR $3 is null) AND ` +
+                `(R.${requestSchema.profile} = $4 OR $4 is null) AND ` +
+                `(R.${requestSchema.project} = $5 OR $5 is null) AND ` +
+                `(R.${requestSchema.workflow} = $6 OR $6 is null) AND ` +
+                `((R.${requestSchema.quantity} BETWEEN $7 AND $8) OR ($7 is null) OR ($8 is null)) AND ` +
+                `((R.${requestSchema.progress} BETWEEN $9 AND $10) OR ($9 is null) OR ($10 is null)) AND ` +
+                `(R.${requestSchema.targetDate} = $11 OR $11 is null) AND ` +
+                `(URR.${userRoleReqSchema.userId} = $12 OR $12 is null) `
+                ,
+                // `GROUP BY R.${requestSchema.id};`,
+            values: [
+                skill, state, stateCsl, profile,
+                project, workflow, minQuantity, maxQuantity,
+                minProgress, maxProgress, targetDate, userId
+            ]
+        }
+        const result = await query(statement)
+        return extractCount(result.rows[0]);
+    }
+
+    function extractCount(row) {
+        return {count: row.count}
     }
 }

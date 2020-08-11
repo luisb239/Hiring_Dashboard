@@ -8,11 +8,14 @@ module.exports = (service) => {
         getRequestById: getRequestById,
         postUser: postUser,
         patchRequest: patchRequest,
-        deleteLanguage: deleteLanguage
+        deleteLanguage: deleteLanguage,
+        countRequests: countRequests
     }
 
     async function getRequests(req, res) {
         const requests = await service.getRequests({
+            pageNumber: req.query.pageNumber,
+            pageSize: req.query.pageSize,
             skill: req.query.skill,
             state: req.query.state,
             stateCsl: req.query.stateCsl,
@@ -128,4 +131,21 @@ module.exports = (service) => {
         })
     }
 
+    async function countRequests(req, res) {
+        const count = await service.countRequests({
+            skill: req.query.skill,
+            state: req.query.state,
+            stateCsl: req.query.stateCsl,
+            profile: req.query.profile,
+            project: req.query.project,
+            workflow: req.query.workflow,
+            minQuantity: req.query.minQuantity,
+            maxQuantity: req.query.maxQuantity,
+            minProgress: req.query.minProgress,
+            maxProgress: req.query.maxProgress,
+            targetDate: req.query.targetDate,
+            userId: req.query.currentUser ? req.user.id : null
+        })
+        res.status(200).send(count)
+    }
 }
