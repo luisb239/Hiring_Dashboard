@@ -5,6 +5,5 @@ module.exports = {
     requestId: 'request_id',
     candidateId: 'candidate_id',
     name: 'info_name',
-    value: 'info_value',
-    timestamp: 'temp',
+    value: 'info_value'
 }

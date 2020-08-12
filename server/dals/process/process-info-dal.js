@@ -62,19 +62,17 @@ module.exports = (query) => {
         await query(statement, client)
     }
 
-    async function updateProcessInfoValue({requestId, candidateId, infoName, infoValue, client, timestamp}) {
+    async function updateProcessInfoValue({requestId, candidateId, infoName, infoValue, client}) {
         const statement = {
             name: 'Update Process Info',
             text:
-                `UPDATE ${schema.table} SET ${schema.value} = $1, ` +
-                `${schema.timestamp} = $2 ` +
+                `UPDATE ${schema.table} SET ${schema.value} = $1 ` +
                 `WHERE ${schema.requestId} = $2 AND ` +
-                `${schema.candidateId} = $3 AND ${schema.name} = $4 AND ${schema.timestamp} < $2;`,
-            values: [infoValue, timestamp, requestId, candidateId, infoName]
+                `${schema.candidateId} = $3 AND ${schema.name} = $4;`,
+            values: [infoValue, requestId, candidateId, infoName]
         }
 
-        const result = await query(statement, client)
-        return result.rowCount
+       await query(statement, client)
     }
 
 }

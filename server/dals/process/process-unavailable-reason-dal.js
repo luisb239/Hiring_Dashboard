@@ -48,20 +48,16 @@ module.exports = (query) => {
         return result.rowCount > 0
     }
 
-    async function updateProcessUnavailableReason({requestId, candidateId, reason, client, timestamp}) {
+    async function updateProcessUnavailableReason({requestId, candidateId, reason, client}) {
         const statement = {
             name: 'Update Process Unavailable Reason',
             text:
                 `UPDATE ${schema.table} ` +
-                `SET ${schema.reason} = $1, ` +
-                `${schema.timestamp} = $2, ` +
-                `WHERE ${schema.requestId} = $3 AND ${schema.candidateId} = $4 AND ` +
-                `${schema.timestamp} < $2;`,
-            values: [requestId, timestamp, candidateId, reason]
+                `SET ${schema.reason} = $1 ` +
+                `WHERE ${schema.requestId} = $2 AND ${schema.candidateId} = $3;`,
+            values: [requestId, candidateId, reason]
         }
-        const result = await query(statement, client)
-
-        return result.rowCount
+        await query(statement, client)
     }
 
 }

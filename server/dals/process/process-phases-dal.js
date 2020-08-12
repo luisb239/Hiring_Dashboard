@@ -55,16 +55,14 @@ module.exports = (query) => {
 
 
     // TODO -> CHANGE DAL FUNCTIONS TO NEW MODULE PROCESS-CURRENT-PHASE-DAL
-    async function updateProcessCurrentPhase({requestId, candidateId, phase, client, timestamp}) {
+    async function updateProcessCurrentPhase({requestId, candidateId, phase, client}) {
         const statement = {
             name: 'Update Process Current Phase',
             text:
                 `UPDATE ${processCurrPhase.table} ` +
-                `SET ${processCurrPhase.currentPhase} = $1, ` +
-                `${processCurrPhase.timestamp} = $2 ` +
-                `WHERE ${processCurrPhase.requestId} = $3 AND ${processCurrPhase.candidateId} = $4 AND ` +
-                `${processCurrPhase.timestamp} < $2;`,
-            values: [phase, timestamp, requestId, candidateId]
+                `SET ${processCurrPhase.currentPhase} = $1 `
+                `WHERE ${processCurrPhase.requestId} = $2 AND ${processCurrPhase.candidateId} = $3;`,
+            values: [phase, requestId, candidateId]
         }
         const result = query(statement, client)
         return result.rowCount

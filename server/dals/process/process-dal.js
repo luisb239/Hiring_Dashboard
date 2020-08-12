@@ -34,13 +34,13 @@ module.exports = (query) => {
         }
     }
 
-    async function updateProcessStatus({requestId, candidateId, status, client, timestamp}) {
+    async function updateProcessStatus({requestId, candidateId, status, client}) {
         const statement = {
             name: 'Update Process Status',
             text:
-                `UPDATE ${process.table} SET ${process.status} = $1, ${process.timestamp} = $2 ` +
-                `WHERE ${process.requestId} = $3 AND ${process.candidateId} = $4 AND ${process.timestamp} < $2;`,
-            values: [status, timestamp, requestId, candidateId]
+                `UPDATE ${process.table} SET ${process.status} = $1 ` +
+                `WHERE ${process.requestId} = $2 AND ${process.candidateId} = $3;`,
+            values: [status, requestId, candidateId]
         }
 
         const result = await query(statement, client)

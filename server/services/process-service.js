@@ -180,13 +180,8 @@ module.exports = (requestDb, candidateDb, processDb, phaseDb, infoDb, processUna
                 requestId,
                 candidateId,
                 status,
-                client,
-                timestamp
+                client
             })
-            if(statusRowCount === 0)
-                throw new AppError(errors.preconditionFailed,
-                    "Process not updated",
-                    `Update timestamp was older than the latest timestamp.`)
             if (oldStatus.status === 'Placed' || status === 'Placed') {
                 const rowCount = await updateRequestProgress({requestId, client, timestamp})
                 if(rowCount === 0)
@@ -237,17 +232,13 @@ module.exports = (requestDb, candidateDb, processDb, phaseDb, infoDb, processUna
             })
         } else {
             if (currentReason.unavailableReason !== unavailableReason) {
-                const rowCount = await processUnavailableReasonDb.updateProcessUnavailableReason({
+                await processUnavailableReasonDb.updateProcessUnavailableReason({
                     requestId,
                     candidateId,
                     reason: unavailableReason,
                     client,
                     timestamp
                 })
-                if (rowCount === 0)
-                    throw new AppError(errors.preconditionFailed,
-                        "Process not updated",
-                        `Update timestamp was older than the latest timestamp.`)
             }
         }
     }
@@ -298,17 +289,12 @@ module.exports = (requestDb, candidateDb, processDb, phaseDb, infoDb, processUna
                 startDate: new Date()
             })
         }
-        const phaseRowCount = await processPhaseDb.updateProcessCurrentPhase({
+        await processPhaseDb.updateProcessCurrentPhase({
             requestId,
             candidateId,
             phase: newPhase,
-            client,
-            timestamp
+            client
         })
-        if (phaseRowCount === 0)
-            throw new AppError(errors.preconditionFailed,
-                "Process not updated",
-                `Update timestamp was older than the latest timestamp.`)
 
         const candidate = await candidateDb.getCandidateById({id: candidateId, client})
         const request = await requestDb.getRequestById({id: requestId, client})
@@ -348,18 +334,13 @@ module.exports = (requestDb, candidateDb, processDb, phaseDb, infoDb, processUna
                 })
             } else {
                 if (infoFound.value.value !== info.value) {
-                    const rowCount = await processInfoDb.updateProcessInfoValue({
+                    await processInfoDb.updateProcessInfoValue({
                         requestId,
                         candidateId,
                         infoName: info.name,
                         infoValue: `{"value" : "${info.value}"}`,
-                        client,
-                        timestamp
+                        client
                     })
-                    if (rowCount === 0)
-                        throw new AppError(errors.preconditionFailed,
-                            "Process not updated",
-                            `Update timestamp was older than the latest timestamp.`)
                 }
             }
         }))
