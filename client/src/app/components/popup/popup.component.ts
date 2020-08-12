@@ -1,16 +1,16 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { ProcessPhase } from '../../model/process/process-phase';
-import { PhaseAttribute } from '../../model/phase/phase-attribute';
-import { Candidate } from 'src/app/model/candidate/candidate';
-import { Process } from '../../model/process/process';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
-import { ProcessService } from '../../services/process/process.service';
-import { CandidateService } from '../../services/candidate/candidate.service';
-import { PhaseService } from '../../services/phase/phase.service';
-import { ProcessPhaseService } from '../../services/process-phase/process-phase.service';
-import { map } from 'rxjs/operators';
-import { AlertService } from '../../services/alert/alert.service';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
+import {ProcessPhase} from '../../model/process/process-phase';
+import {PhaseAttribute} from '../../model/phase/phase-attribute';
+import {Candidate} from 'src/app/model/candidate/candidate';
+import {Process} from '../../model/process/process';
+import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
+import {ProcessService} from '../../services/process/process.service';
+import {CandidateService} from '../../services/candidate/candidate.service';
+import {PhaseService} from '../../services/phase/phase.service';
+import {ProcessPhaseService} from '../../services/process-phase/process-phase.service';
+import {map} from 'rxjs/operators';
+import {AlertService} from '../../services/alert/alert.service';
 
 @Component({
   selector: 'app-popup',
@@ -54,17 +54,7 @@ export class PopupComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.candidateService.getCandidateById(this.candidateId)
-      .pipe(map(dao => new Candidate(dao.candidate.name,
-        dao.candidate.id,
-        dao.candidate.profileInfo,
-        dao.candidate.available,
-        dao.candidate.cvFileName)))
-      .subscribe(result => {
-        this.candidate = result;
-      }, error => {
-        console.log(error);
-      });
+    this.getCandidate();
 
     this.processService.getProcess(this.requestId, this.candidateId)
       .subscribe(dao => {
@@ -106,7 +96,7 @@ export class PopupComponent implements OnInit {
             this.updateForm.addControl(pi.name, new FormControl());
             this.attributeTemplates.push(new PhaseAttribute(pi.name, pi.value.name, pi.value.type));
           }
-          );
+        );
 
         this.processService.getProcess(this.requestId, this.candidateId)
           .subscribe(processDao => {
@@ -125,11 +115,11 @@ export class PopupComponent implements OnInit {
   updateCandidate() {
     const attributeArray = [];
     this.attributeTemplates.forEach(att => {
-      const res = this.updateForm.value[att.name];
-      if (res !== null && res !== att.value) {
-        attributeArray.push({ name: att.name, value: res });
+        const res = this.updateForm.value[att.name];
+        if (res !== null && res !== att.value) {
+          attributeArray.push({name: att.name, value: res});
+        }
       }
-    }
     );
     const body: { status?: string, unavailableReason?: string, infos?: any[] } = {};
 
@@ -148,12 +138,12 @@ export class PopupComponent implements OnInit {
     if (body !== {}) {
       this.processService.updateProcess(this.requestId, this.candidateId, body)
         .subscribe(() => {
-          this.alertService.success('Updated Candidate successfully!');
-          this.activeModal.close('Close click');
-          this.candidateProcessChanged.emit(`Candidate ${this.candidateId} process has been updated`);
-        }, error => {
-          console.log(error);
-        }
+            this.alertService.success('Updated Candidate successfully!');
+            this.activeModal.close('Close click');
+            this.candidateProcessChanged.emit(`Candidate ${this.candidateId} process has been updated`);
+          }, error => {
+            console.log(error);
+          }
         );
     }
     if (this.phase.notes !== this.updateForm.value.phaseNotes) {
@@ -167,36 +157,46 @@ export class PopupComponent implements OnInit {
         console.log(error);
       });
     }
-
-    const updateBody = {
-      id: this.candidateId,
-      cv: null,
-      profileInfo: this.candidate.profileInfo,
-      available: this.candidate.available
-    };
-    this.candidateService.updateCandidate(updateBody)
-      .subscribe(dao => {
-      }, error => {
-        console.log(error);
-      });
   }
 
   downloadCv() {
     this.candidateService.downloadCandidateCv(this.candidateId)
       .subscribe(data => {
-        const blob = new Blob([data], { type: 'application/pdf' });
+        const blob = new Blob([data], {type: 'application/pdf'});
         const downloadURL = window.URL.createObjectURL(blob);
         const link = document.createElement('a');
         link.href = downloadURL;
         link.download = this.candidate.cv;
         link.click();
-        /*
-        let pwa = window.open(url);
-        if (!pwa || pwa.closed || typeof pwa.closed == 'undefined') {
-            component( 'Please disable your Pop-up blocker and try again.');
-        }
-         */
       });
   }
 
+  changeAvailable() {
+    const updateBody = {
+      id: this.candidateId,
+      cv: null,
+      profileInfo: this.candidate.profileInfo,
+      available: !this.candidate.available
+    };
+    this.candidateService.updateCandidate(updateBody)
+      .subscribe(dao => {
+        this.getCandidate();
+      }, error => {
+        console.log(error);
+      });
+  }
+
+  getCandidate() {
+    this.candidateService.getCandidateById(this.candidateId)
+      .pipe(map(dao => new Candidate(dao.candidate.name,
+        dao.candidate.id,
+        dao.candidate.profileInfo,
+        dao.candidate.available,
+        dao.candidate.cvFileName)))
+      .subscribe(result => {
+        this.candidate = result;
+      }, error => {
+        console.log(error);
+      });
+  }
 }
