@@ -97,7 +97,7 @@ module.exports = (query) => {
                 `${candidate.cvMimeType} = COALESCE($3, ${candidate.cvMimeType}), ` +
                 `${candidate.cvEncoding} = COALESCE($4, ${candidate.cvEncoding}), ` +
                 `${candidate.profileInfo} = COALESCE($5, ${candidate.profileInfo}), ` +
-                `${candidate.available} = COALESCE($6, ${candidate.available}) ` +
+                `${candidate.available} = COALESCE($6, ${candidate.available}), ` +
                 `${candidate.timestamp} = $8 ` +
                 `WHERE ${candidate.id} = $7 AND ${candidate.timestamp} < $8;`,
             values: [cvBuffer, cvFileName, cvMimeType, cvEncoding, profileInfo, available, id, timestamp]

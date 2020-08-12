@@ -60,11 +60,11 @@ module.exports = (query) => {
             name: 'Update Process Current Phase',
             text:
                 `UPDATE ${processCurrPhase.table} ` +
-                `SET ${processCurrPhase.currentPhase} = $1 `
+                `SET ${processCurrPhase.currentPhase} = $1 ` +
                 `WHERE ${processCurrPhase.requestId} = $2 AND ${processCurrPhase.candidateId} = $3;`,
             values: [phase, requestId, candidateId]
         }
-        const result = query(statement, client)
+        const result = await query(statement, client)
         return result.rowCount
     }
 

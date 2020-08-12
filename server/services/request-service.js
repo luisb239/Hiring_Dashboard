@@ -173,14 +173,14 @@ module.exports = (requestDb, processDb, requestLanguagesDb, authModule, candidat
         await requestDb.addUserAndRoleToRequest({userId: userId, roleId: userRoleToAddToRequest, requestId: requestId})
     }
 
-    async function addUserToRequest({requestId, userId, roleId, currentUsername, timeStamp}) {
+    async function addUserToRequest({requestId, userId, roleId, currentUsername, timestamp}) {
         const success = await transaction(async (client) => {
             const success = await requestDb.addUserAndRoleToRequest({userId, roleId, requestId}, client)
             // TODO
             // throw error, could not add user to request
             // check reason for failure..
             // request not found, user not found... other reason..
-            if (!await requestDb.updateRequest({id: requestId, timestamp: timeStamp})) {
+            if (!await requestDb.updateRequest({id: requestId, timestamp: timestamp, client})) {
                 // TODO -> could not update request.. request id not found or timestamp
                 throw new AppError(errors.preconditionFailed,
                     'Could not add user to request',

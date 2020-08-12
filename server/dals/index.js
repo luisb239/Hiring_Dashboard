@@ -25,7 +25,9 @@ async function transaction(bodyFunction) {
     const client = await pool.connect()
     try {
         await client.query('BEGIN')
-        return await bodyFunction(client)
+        const result = await bodyFunction(client)
+        await client.query('COMMIT')
+        return result
     } catch (e) {
         await client.query('ROLLBACK')
         throw e

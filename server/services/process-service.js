@@ -105,6 +105,11 @@ module.exports = (requestDb, candidateDb, processDb, phaseDb, infoDb, processUna
                                      unavailableReason, infoArray, timestamp
                                  }) {
         transaction(async (client) => {
+            const rowCount = await processDb.updateProcess({requestId, candidateId, timestamp, client})
+            if(rowCount === 0)
+                throw new AppError(errors.preconditionFailed,
+                    "Process not updated",
+                    `Update timestamp was older than the latest timestamp.`)
             if (newPhase) {
                 await updateProcessCurrentPhase({requestId, candidateId, newPhase, client, timestamp})
             }
@@ -114,7 +119,7 @@ module.exports = (requestDb, candidateDb, processDb, phaseDb, infoDb, processUna
             }
 
             if (unavailableReason) {
-                await updateUnavailableReason({requestId, candidateId, unavailableReason, client, timestamp})
+                await updateUnavailableReason({requestId, candidateId, unavailableReason, client})
             }
 
             if(infoArray) {
@@ -217,7 +222,7 @@ module.exports = (requestDb, candidateDb, processDb, phaseDb, infoDb, processUna
     }
 
 
-    async function updateUnavailableReason({requestId, candidateId, unavailableReason, client, timestamp}) {
+    async function updateUnavailableReason({requestId, candidateId, unavailableReason, client}) {
         const currentReason = await processUnavailableReasonDb.getProcessUnavailableReason({
             requestId,
             candidateId,
@@ -236,8 +241,7 @@ module.exports = (requestDb, candidateDb, processDb, phaseDb, infoDb, processUna
                     requestId,
                     candidateId,
                     reason: unavailableReason,
-                    client,
-                    timestamp
+                    client
                 })
             }
         }

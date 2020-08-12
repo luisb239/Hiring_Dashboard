@@ -96,43 +96,43 @@ INSERT INTO months
 	
 INSERT INTO request(quantity, description, target_date, request_state, 
 request_skill, request_state_csl, request_project, request_profile, 
-workflow, request_date, date_to_send_profile, progress)
+workflow, request_date, date_to_send_profile, progress, temp)
 	VALUES
-	(2, 'Xamarin', 'October', 'Open', 'IS', 'Asked', 'Not defined yet', '.Net', 'Software Development', CURRENT_DATE, NULL, 50),
-	(3, 'Experiência em Testes', 'December', 'Open', 'SWAT', 'Asked', 'XPO', 'Tester', 'Software Testing', CURRENT_DATE, NULL, 0),
+	(2, 'Xamarin', 'October', 'Open', 'IS', 'Asked', 'Not defined yet', '.Net', 'Software Development', CURRENT_DATE, NULL, 50, CURRENT_TIMESTAMP),
+	(3, 'Experiência em Testes', 'December', 'Open', 'SWAT', 'Asked', 'XPO', 'Tester', 'Software Testing', CURRENT_DATE, NULL, 0, CURRENT_TIMESTAMP),
 	
-	(3, 'Software Testing - Example 1', 'December', 'Open', 'SWAT', 'Asked', 'XPO', 'Tester', 'Software Testing', CURRENT_DATE, NULL, 0),
-	(3, 'Software Testing - Example 2', 'December', 'Open', 'SWAT', 'Asked', 'XPO', 'Tester', 'Software Testing', CURRENT_DATE, NULL, 0),
-	(3, 'Software Testing - Example 3', 'December', 'Open', 'SWAT', 'Asked', 'XPO', 'Tester', 'Software Testing', CURRENT_DATE, NULL, 0),
-	(3, 'Software Testing - Example 4', 'December', 'Open', 'SWAT', 'Asked', 'XPO', 'Tester', 'Software Testing', CURRENT_DATE, NULL, 0),
-	(3, 'Software Testing - Example 5', 'December', 'Open', 'SWAT', 'Asked', 'XPO', 'Tester', 'Software Testing', CURRENT_DATE, NULL, 0),
-	(3, 'Software Testing - Example 6', 'December', 'Open', 'SWAT', 'Asked', 'XPO', 'Tester', 'Software Testing', CURRENT_DATE, NULL, 0),
-	(3, 'Software Testing - Example 7', 'December', 'Open', 'SWAT', 'Asked', 'XPO', 'Tester', 'Software Testing', CURRENT_DATE, NULL, 0),
-	(3, 'Software Testing - Example 8', 'December', 'Open', 'SWAT', 'Asked', 'XPO', 'Tester', 'Software Testing', CURRENT_DATE, NULL, 0),
-	(3, 'Software Testing - Example 9', 'December', 'Open', 'SWAT', 'Asked', 'XPO', 'Tester', 'Software Testing', CURRENT_DATE, NULL, 0),
-	(3, 'Software Testing - Example 10', 'December', 'Open', 'SWAT', 'Asked', 'XPO', 'Tester', 'Software Testing', CURRENT_DATE, NULL, 0),
+	(3, 'Software Testing - Example 1', 'December', 'Open', 'SWAT', 'Asked', 'XPO', 'Tester', 'Software Testing', CURRENT_DATE, NULL, 0, CURRENT_TIMESTAMP),
+	(3, 'Software Testing - Example 2', 'December', 'Open', 'SWAT', 'Asked', 'XPO', 'Tester', 'Software Testing', CURRENT_DATE, NULL, 0, CURRENT_TIMESTAMP),
+	(3, 'Software Testing - Example 3', 'December', 'Open', 'SWAT', 'Asked', 'XPO', 'Tester', 'Software Testing', CURRENT_DATE, NULL, 0, CURRENT_TIMESTAMP),
+	(3, 'Software Testing - Example 4', 'December', 'Open', 'SWAT', 'Asked', 'XPO', 'Tester', 'Software Testing', CURRENT_DATE, NULL, 0, CURRENT_TIMESTAMP),
+	(3, 'Software Testing - Example 5', 'December', 'Open', 'SWAT', 'Asked', 'XPO', 'Tester', 'Software Testing', CURRENT_DATE, NULL, 0, CURRENT_TIMESTAMP),
+	(3, 'Software Testing - Example 6', 'December', 'Open', 'SWAT', 'Asked', 'XPO', 'Tester', 'Software Testing', CURRENT_DATE, NULL, 0, CURRENT_TIMESTAMP),
+	(3, 'Software Testing - Example 7', 'December', 'Open', 'SWAT', 'Asked', 'XPO', 'Tester', 'Software Testing', CURRENT_DATE, NULL, 0, CURRENT_TIMESTAMP),
+	(3, 'Software Testing - Example 8', 'December', 'Open', 'SWAT', 'Asked', 'XPO', 'Tester', 'Software Testing', CURRENT_DATE, NULL, 0, CURRENT_TIMESTAMP),
+	(3, 'Software Testing - Example 9', 'December', 'Open', 'SWAT', 'Asked', 'XPO', 'Tester', 'Software Testing', CURRENT_DATE, NULL, 0, CURRENT_TIMESTAMP),
+	(3, 'Software Testing - Example 10', 'December', 'Open', 'SWAT', 'Asked', 'XPO', 'Tester', 'Software Testing', CURRENT_DATE, NULL, 0, CURRENT_TIMESTAMP),
 	
-	(3, 'Software Development - Example 1', 'December', 'Open', 'IS', 'Asked', 'XPO', 'Tester', 'Software Testing', CURRENT_DATE, NULL, 0),
-	(3, 'Software Development - Example 2', 'December', 'Open', 'IS', 'Asked', 'XPO', 'Tester', 'Software Testing', CURRENT_DATE, NULL, 0),
-	(3, 'Software Development - Example 3', 'December', 'Open', 'IS', 'Asked', 'XPO', 'Tester', 'Software Testing', CURRENT_DATE, NULL, 0),
-	(3, 'Software Development - Example 4', 'December', 'Open', 'IS', 'Asked', 'XPO', 'Tester', 'Software Testing', CURRENT_DATE, NULL, 0),
-	(3, 'Software Development - Example 5', 'December', 'Open', 'IS', 'Asked', 'XPO', 'Tester', 'Software Testing', CURRENT_DATE, NULL, 0),
-	(3, 'Software Development - Example 6', 'December', 'Open', 'IS', 'Asked', 'XPO', 'Tester', 'Software Testing', CURRENT_DATE, NULL, 0),
-	(3, 'Software Development - Example 7', 'December', 'Open', 'IS', 'Asked', 'XPO', 'Tester', 'Software Testing', CURRENT_DATE, NULL, 0),
-	(3, 'Software Development - Example 8', 'December', 'Open', 'IS', 'Asked', 'XPO', 'Tester', 'Software Testing', CURRENT_DATE, NULL, 0),
-	(3, 'Software Development - Example 9', 'December', 'Open', 'IS', 'Asked', 'XPO', 'Tester', 'Software Testing', CURRENT_DATE, NULL, 0),
-	(3, 'Software Development - Example 10', 'December', 'Open', 'IS', 'Asked', 'XPO', 'Tester', 'Software Testing', CURRENT_DATE, NULL, 0),
+	(3, 'Software Development - Example 1', 'December', 'Open', 'IS', 'Asked', 'XPO', 'Tester', 'Software Testing', CURRENT_DATE, NULL, 0, CURRENT_TIMESTAMP),
+	(3, 'Software Development - Example 2', 'December', 'Open', 'IS', 'Asked', 'XPO', 'Tester', 'Software Testing', CURRENT_DATE, NULL, 0, CURRENT_TIMESTAMP),
+	(3, 'Software Development - Example 3', 'December', 'Open', 'IS', 'Asked', 'XPO', 'Tester', 'Software Testing', CURRENT_DATE, NULL, 0, CURRENT_TIMESTAMP),
+	(3, 'Software Development - Example 4', 'December', 'Open', 'IS', 'Asked', 'XPO', 'Tester', 'Software Testing', CURRENT_DATE, NULL, 0, CURRENT_TIMESTAMP),
+	(3, 'Software Development - Example 5', 'December', 'Open', 'IS', 'Asked', 'XPO', 'Tester', 'Software Testing', CURRENT_DATE, NULL, 0, CURRENT_TIMESTAMP),
+	(3, 'Software Development - Example 6', 'December', 'Open', 'IS', 'Asked', 'XPO', 'Tester', 'Software Testing', CURRENT_DATE, NULL, 0, CURRENT_TIMESTAMP),
+	(3, 'Software Development - Example 7', 'December', 'Open', 'IS', 'Asked', 'XPO', 'Tester', 'Software Testing', CURRENT_DATE, NULL, 0, CURRENT_TIMESTAMP),
+	(3, 'Software Development - Example 8', 'December', 'Open', 'IS', 'Asked', 'XPO', 'Tester', 'Software Testing', CURRENT_DATE, NULL, 0, CURRENT_TIMESTAMP),
+	(3, 'Software Development - Example 9', 'December', 'Open', 'IS', 'Asked', 'XPO', 'Tester', 'Software Testing', CURRENT_DATE, NULL, 0, CURRENT_TIMESTAMP),
+	(3, 'Software Development - Example 10', 'December', 'Open', 'IS', 'Asked', 'XPO', 'Tester', 'Software Testing', CURRENT_DATE, NULL, 0, CURRENT_TIMESTAMP),
 	
-	(3, 'Consulting - Example 1', 'December', 'Open', 'IS', 'Asked', 'XPO', 'Tester', 'Consulting', CURRENT_DATE, NULL, 0),
-	(3, 'Consulting - Example 2', 'December', 'Open', 'IS', 'Asked', 'XPO', 'Tester', 'Consulting', CURRENT_DATE, NULL, 0),
-	(3, 'Consulting - Example 3', 'December', 'Open', 'IS', 'Asked', 'XPO', 'Tester', 'Consulting', CURRENT_DATE, NULL, 0),
-	(3, 'Consulting - Example 4', 'December', 'Open', 'IS', 'Asked', 'XPO', 'Tester', 'Consulting', CURRENT_DATE, NULL, 0),
-	(3, 'Consulting - Example 5', 'December', 'Open', 'IS', 'Asked', 'XPO', 'Tester', 'Consulting', CURRENT_DATE, NULL, 0),
-	(3, 'Consulting - Example 6', 'December', 'Open', 'IS', 'Asked', 'XPO', 'Tester', 'Consulting', CURRENT_DATE, NULL, 0),
-	(3, 'Consulting - Example 7', 'December', 'Open', 'IS', 'Asked', 'XPO', 'Tester', 'Consulting', CURRENT_DATE, NULL, 0),
-	(3, 'Consulting - Example 8', 'December', 'Open', 'IS', 'Asked', 'XPO', 'Tester', 'Consulting', CURRENT_DATE, NULL, 0),
-	(3, 'Consulting - Example 9', 'December', 'Open', 'IS', 'Asked', 'XPO', 'Tester', 'Consulting', CURRENT_DATE, NULL, 0),
-	(3, 'Consulting - Example 10', 'December', 'Open', 'IS', 'Asked', 'XPO', 'Tester', 'Consulting', CURRENT_DATE, NULL, 0);
+	(3, 'Consulting - Example 1', 'December', 'Open', 'IS', 'Asked', 'XPO', 'Tester', 'Consulting', CURRENT_DATE, NULL, 0, CURRENT_TIMESTAMP),
+	(3, 'Consulting - Example 2', 'December', 'Open', 'IS', 'Asked', 'XPO', 'Tester', 'Consulting', CURRENT_DATE, NULL, 0, CURRENT_TIMESTAMP),
+	(3, 'Consulting - Example 3', 'December', 'Open', 'IS', 'Asked', 'XPO', 'Tester', 'Consulting', CURRENT_DATE, NULL, 0, CURRENT_TIMESTAMP),
+	(3, 'Consulting - Example 4', 'December', 'Open', 'IS', 'Asked', 'XPO', 'Tester', 'Consulting', CURRENT_DATE, NULL, 0, CURRENT_TIMESTAMP),
+	(3, 'Consulting - Example 5', 'December', 'Open', 'IS', 'Asked', 'XPO', 'Tester', 'Consulting', CURRENT_DATE, NULL, 0, CURRENT_TIMESTAMP),
+	(3, 'Consulting - Example 6', 'December', 'Open', 'IS', 'Asked', 'XPO', 'Tester', 'Consulting', CURRENT_DATE, NULL, 0, CURRENT_TIMESTAMP),
+	(3, 'Consulting - Example 7', 'December', 'Open', 'IS', 'Asked', 'XPO', 'Tester', 'Consulting', CURRENT_DATE, NULL, 0, CURRENT_TIMESTAMP),
+	(3, 'Consulting - Example 8', 'December', 'Open', 'IS', 'Asked', 'XPO', 'Tester', 'Consulting', CURRENT_DATE, NULL, 0, CURRENT_TIMESTAMP),
+	(3, 'Consulting - Example 9', 'December', 'Open', 'IS', 'Asked', 'XPO', 'Tester', 'Consulting', CURRENT_DATE, NULL, 0, CURRENT_TIMESTAMP),
+	(3, 'Consulting - Example 10', 'December', 'Open', 'IS', 'Asked', 'XPO', 'Tester', 'Consulting', CURRENT_DATE, NULL, 0, CURRENT_TIMESTAMP);
 	
 
 INSERT INTO user_role_request(user_id, role_id, request_id)
@@ -236,14 +236,14 @@ INSERT INTO workflow_phase(workflow, phase, phase_number)
 	('Consulting', 'Job Offer', 3),
 	('Consulting', 'Offer Accepted', 4);
 
-INSERT INTO candidate(name, available, cv, cv_mime_type, cv_filename, cv_encoding, profile_info)
-	VALUES
-	('Michael Corleone', TRUE, NULL, NULL, NULL, NULL, NULL),
-	('Travis Bickle', TRUE, NULL, NULL, NULL, NULL, NULL),
-	('Randle McMurphy', TRUE, NULL, NULL, NULL, NULL, NULL),
-	('Ellen Ripley', TRUE, NULL, NULL, NULL, NULL, NULL),
-	('Bob Belcher', TRUE, NULL, NULL, NULL, NULL, NULL),
-	('Troy Barnes', FALSE, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO candidate(name, available, cv, cv_mime_type, cv_filename, cv_encoding, profile_info, temp)
+    VALUES
+    ('Michael Corleone', TRUE, NULL, NULL, NULL, NULL, NULL, CURRENT_TIMESTAMP),
+    ('Travis Bickle', TRUE, NULL, NULL, NULL, NULL, NULL, CURRENT_TIMESTAMP),
+    ('Randle McMurphy', TRUE, NULL, NULL, NULL, NULL, NULL, CURRENT_TIMESTAMP),
+    ('Ellen Ripley', TRUE, NULL, NULL, NULL, NULL, NULL, CURRENT_TIMESTAMP),
+    ('Bob Belcher', TRUE, NULL, NULL, NULL, NULL, NULL, CURRENT_TIMESTAMP),
+    ('Troy Barnes', FALSE, NULL, NULL, NULL, NULL, NULL, CURRENT_TIMESTAMP);
 	
 INSERT INTO candidate_request_profile(candidate_id, profile)
 	VALUES
@@ -266,17 +266,17 @@ INSERT INTO process_status(status)
 	('Rejected HM'),
 	('Withdrawn');
 	
-INSERT INTO process(request_id, candidate_id, status)
+INSERT INTO process(request_id, candidate_id, status, temp)
 	VALUES
-	(1, 1, 'Placed'),
-	(1, 2, 'Onhold'),
-	(1, 3, 'Offer Rejected'),
-	(1, 4, 'Withdrawn'),
+	(1, 1, 'Placed', CURRENT_TIMESTAMP),
+	(1, 2, 'Onhold', CURRENT_TIMESTAMP),
+	(1, 3, 'Offer Rejected', CURRENT_TIMESTAMP),
+	(1, 4, 'Withdrawn', CURRENT_TIMESTAMP),
 	
-	(2, 1, 'Onhold'),
-	(2, 2, 'Withdrawn'),
-	(2, 3, 'Onhold'),
-	(2, 4, 'Onhold');
+	(2, 1, 'Onhold', CURRENT_TIMESTAMP),
+	(2, 2, 'Withdrawn', CURRENT_TIMESTAMP),
+	(2, 3, 'Onhold', CURRENT_TIMESTAMP),
+	(2, 4, 'Onhold', CURRENT_TIMESTAMP);
 	
 INSERT INTO unavailable_reason(reason)
 	VALUES
