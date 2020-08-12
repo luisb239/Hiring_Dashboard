@@ -10,7 +10,7 @@ module.exports = (query) => {
         updateProcessUnavailableReason
     }
 
-    async function getProcessUnavailableReason({requestId, candidateId}) {
+    async function getProcessUnavailableReason({requestId, candidateId, client}) {
         const statement = {
             name: 'Get Process Unavailable Reasons',
             text:
@@ -19,7 +19,7 @@ module.exports = (query) => {
             values: [requestId, candidateId]
         }
 
-        const result = await query(statement)
+        const result = await query(statement, client)
 
         if (result.rowCount) {
             return extractProcessUnavailableReason(result.rows[0])
@@ -34,7 +34,7 @@ module.exports = (query) => {
     }
 
 
-    async function setProcessInitialUnavailableReason({requestId, candidateId, reason}) {
+    async function setProcessInitialUnavailableReason({requestId, candidateId, reason, client}) {
         const statement = {
             name: 'Set Process Initial Unavailable Reason',
             text:
@@ -43,23 +43,25 @@ module.exports = (query) => {
                 `VALUES ($1, $2, $3);`,
             values: [requestId, candidateId, reason]
         }
-        const result = await query(statement)
+        const result = await query(statement, client)
 
         return result.rowCount > 0
     }
 
-    async function updateProcessUnavailableReason({requestId, candidateId, reason}) {
+    async function updateProcessUnavailableReason({requestId, candidateId, reason, client, timestamp}) {
         const statement = {
             name: 'Update Process Unavailable Reason',
             text:
                 `UPDATE ${schema.table} ` +
-                `SET ${schema.reason} = $1 ` +
-                `WHERE ${schema.requestId} = $2 AND ${schema.candidateId} = $3;`,
-            values: [requestId, candidateId, reason]
+                `SET ${schema.reason} = $1, ` +
+                `${schema.timestamp} = $2, ` +
+                `WHERE ${schema.requestId} = $3 AND ${schema.candidateId} = $4 AND ` +
+                `${schema.timestamp} < $2;`,
+            values: [requestId, timestamp, candidateId, reason]
         }
-        const result = await query(statement)
+        const result = await query(statement, client)
 
-        return result.rowCount > 0
+        return result.rowCount
     }
 
 }

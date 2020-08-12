@@ -18,7 +18,7 @@ module.exports = (db, authModule, transporter) => {
 
     const process = require('./process-service.js')(db.request, db.candidate,
         db.process, db.phase, db.info, db.processUnavailableReason, db.processPhases,
-        db.processInfo, db.reasons, db.status, email)
+        db.processInfo, db.reasons, db.status, email, db.transaction)
 
     const statistics = require('./statistics-service.js')(db.statistics)
 

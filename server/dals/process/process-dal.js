@@ -33,21 +33,21 @@ module.exports = (query) => {
         }
     }
 
-    async function updateProcessStatus({requestId, candidateId, status}) {
+    async function updateProcessStatus({requestId, candidateId, status, client, timestamp}) {
         const statement = {
             name: 'Update Process Status',
             text:
-                `UPDATE ${process.table} SET ${process.status} = $1 ` +
-                `WHERE ${process.requestId} = $2 AND ${process.candidateId} = $3;`,
-            values: [status, requestId, candidateId]
+                `UPDATE ${process.table} SET ${process.status} = $1, ${process.timestamp} = $2 ` +
+                `WHERE ${process.requestId} = $3 AND ${process.candidateId} = $4 AND ${process.timestamp} < $2;`,
+            values: [status, timestamp, requestId, candidateId]
         }
 
-        const result = await query(statement)
-        return result.rowCount > 0
+        const result = await query(statement, client)
+        return result.rowCount
     }
 
 
-    async function getAllProcessesStatusFromRequest({requestId}) {
+    async function getAllProcessesStatusFromRequest({requestId, client}) {
         const statement = {
             name: 'Get All Processes Status From Request',
             text:
@@ -57,11 +57,11 @@ module.exports = (query) => {
             values: [requestId]
         }
 
-        const result = await query(statement)
+        const result = await query(statement, client)
         return result.rows.map(row => extractProcessStatus(row))
     }
 
-    async function createProcess({requestId, candidateId, status}) {
+    async function createProcess({requestId, candidateId, status, client}) {
         const statement = {
             name: 'Create Process',
             text:
@@ -70,11 +70,11 @@ module.exports = (query) => {
             values: [requestId, candidateId, status]
         }
 
-        await query(statement)
+        await query(statement, client)
     }
 
 
-    async function getProcessStatus({requestId, candidateId}) {
+    async function getProcessStatus({requestId, candidateId, client}) {
         const statement = {
             name: 'Get Process Status',
             text:
@@ -83,7 +83,7 @@ module.exports = (query) => {
             values: [requestId, candidateId]
         }
 
-        const result = await query(statement)
+        const result = await query(statement, client)
 
         if (result.rowCount) {
             return extractProcessStatus(result.rows[0])

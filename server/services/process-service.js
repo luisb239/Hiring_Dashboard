@@ -4,17 +4,18 @@ const errors = require('./errors/common-errors.js')
 const AppError = require('./errors/app-error.js')
 
 module.exports = (requestDb, candidateDb, processDb, phaseDb, infoDb, processUnavailableReasonDb,
-                  processPhaseDb, processInfoDb, reasonsDb, statusDb, emailService) => {
+                  processPhaseDb, processInfoDb, reasonsDb, statusDb, emailService, transaction) => {
 
     return {
         getProcessDetail,
         getProcessesByRequestId,
+        updateProcess,
         updateProcessCurrentPhase,
         createProcess,
-        updateStatus,
-        updateUnavailableReason,
-        moveProcessToFirstPhase,
-        updateProcessInfoValues,
+        // updateStatus,
+        // updateUnavailableReason,
+        // moveProcessToFirstPhase,
+        // updateProcessInfoValues,
         getUnavailableReasons,
         getAllStatus,
         updateProcessPhaseNotes
@@ -33,24 +34,40 @@ module.exports = (requestDb, candidateDb, processDb, phaseDb, infoDb, processUna
     }
 
     async function createProcess({requestId, candidateId}) {
-        await processDb.createProcess({requestId, candidateId, status: "Onhold"})
+        transaction(async (client) => {
+            await processDb.createProcess({requestId, candidateId, status: "Onhold", client})
+
+            const {workflow} = await requestDb.getRequestById({id: requestId, client})
+
+            const workflowPhases = await phaseDb.getPhasesByWorkflow({workflow, client})
+
+            const firstPhase = workflowPhases.find(phase => phase.phaseNumber === 1)
+
+            await processPhaseDb.addPhaseToProcess({
+                requestId, candidateId, phase: firstPhase.phase, client, startDate: new Date()
+            })
+
+            await processPhaseDb.setProcessInitialPhase({
+                requestId, candidateId, initialPhase: firstPhase.phase, client
+            })
+        })
     }
 
-    async function moveProcessToFirstPhase({requestId, candidateId}) {
-        const {workflow} = await requestDb.getRequestById({id: requestId})
-
-        const workflowPhases = await phaseDb.getPhasesByWorkflow({workflow})
-
-        const firstPhase = workflowPhases.find(phase => phase.phaseNumber === 1)
-
-        await processPhaseDb.addPhaseToProcess({
-            requestId, candidateId, phase: firstPhase.phase, startDate: new Date()
-        })
-
-        await processPhaseDb.setProcessInitialPhase({
-            requestId, candidateId, initialPhase: firstPhase.phase
-        })
-    }
+    // async function moveProcessToFirstPhase({requestId, candidateId}) {
+    //     const {workflow} = await requestDb.getRequestById({id: requestId})
+    //
+    //     const workflowPhases = await phaseDb.getPhasesByWorkflow({workflow})
+    //
+    //     const firstPhase = workflowPhases.find(phase => phase.phaseNumber === 1)
+    //
+    //     await processPhaseDb.addPhaseToProcess({
+    //         requestId, candidateId, phase: firstPhase.phase, startDate: new Date()
+    //     })
+    //
+    //     await processPhaseDb.setProcessInitialPhase({
+    //         requestId, candidateId, initialPhase: firstPhase.phase
+    //     })
+    // }
 
 
     /**
@@ -81,6 +98,29 @@ module.exports = (requestDb, candidateDb, processDb, phaseDb, infoDb, processUna
         return {
             processes: processes
         }
+    }
+
+    async function updateProcess({
+                                     requestId, candidateId, newPhase, status,
+                                     unavailableReason, infoArray, timestamp
+                                 }) {
+        transaction(async (client) => {
+            if (newPhase) {
+                await updateProcessCurrentPhase({requestId, candidateId, newPhase, client, timestamp})
+            }
+
+            if (status) {
+                await updateStatus({requestId, candidateId, status, client, timestamp})
+            }
+
+            if (unavailableReason) {
+                await updateUnavailableReason({requestId, candidateId, unavailableReason, client, timestamp})
+            }
+
+            if(infoArray) {
+                await updateProcessInfoValues({requestId, candidateId, infoArray, client, timestamp})
+            }
+        })
     }
 
     /**
@@ -133,52 +173,82 @@ module.exports = (requestDb, candidateDb, processDb, phaseDb, infoDb, processUna
     }
 
 
-    async function updateStatus({requestId, candidateId, status}) {
-        const oldStatus = await processDb.getProcessStatus({requestId, candidateId})
+    async function updateStatus({requestId, candidateId, status, client, timestamp}) {
+        const oldStatus = await processDb.getProcessStatus({requestId, candidateId, client})
         if (oldStatus.status !== status) {
-            const success = await processDb.updateProcessStatus({requestId, candidateId, status})
+            const statusRowCount = await processDb.updateProcessStatus({
+                requestId,
+                candidateId,
+                status,
+                client,
+                timestamp
+            })
+            if(statusRowCount === 0)
+                throw new AppError(errors.preconditionFailed,
+                    "Process not updated",
+                    `Update timestamp was older than the latest timestamp.`)
             if (oldStatus.status === 'Placed' || status === 'Placed') {
-                await updateRequestProgress({requestId})
+                const rowCount = await updateRequestProgress({requestId, client, timestamp})
+                if(rowCount === 0)
+                    throw new AppError(errors.preconditionFailed,
+                        "Process not updated",
+                        `Update timestamp was older than the latest timestamp.`)
             }
-            if (success) {
-                const candidate = await candidateDb.getCandidateById({id: candidateId})
-                const request = await requestDb.getRequestById({id: requestId})
-                await emailService.notifyStatus({id: requestId, oldStatus: oldStatus.status, newStatus: status, candidate, request})
-                return {
-                    message: `Process status updated with success to ${status}`
-                }
+            if (statusRowCount > 0) {
+                const candidate = await candidateDb.getCandidateById({id: candidateId, client})
+                const request = await requestDb.getRequestById({id: requestId, client})
+                await emailService.notifyStatus({
+                    id: requestId,
+                    oldStatus: oldStatus.status,
+                    newStatus: status,
+                    candidate,
+                    request
+                })
             }
         }
     }
 
-    async function updateRequestProgress({requestId}) {
-        const request = await requestDb.getRequestById({id: requestId})
-        const processesStatus = await processDb.getAllProcessesStatusFromRequest({requestId})
+    async function updateRequestProgress({requestId, client, timestamp}) {
+        const request = await requestDb.getRequestById({id: requestId, client})
+        const processesStatus = await processDb.getAllProcessesStatusFromRequest({requestId, client})
         const numberOfPlacedCandidates = processesStatus.filter(status => status.status === 'Placed').length || 0
         const percentage = numberOfPlacedCandidates * 100 / request.quantity
-        await requestDb.updateRequest({id: requestId, progress: percentage > 100 ? 100 : percentage})
+        return requestDb.updateRequest({
+            id: requestId,
+            progress: percentage > 100 ? 100 : percentage,
+            client,
+            timestamp
+        });
     }
 
 
-    async function updateUnavailableReason({requestId, candidateId, unavailableReason}) {
-        const currentReason = await processUnavailableReasonDb.getProcessUnavailableReason({requestId, candidateId})
+    async function updateUnavailableReason({requestId, candidateId, unavailableReason, client, timestamp}) {
+        const currentReason = await processUnavailableReasonDb.getProcessUnavailableReason({
+            requestId,
+            candidateId,
+            client
+        })
         if (!currentReason) {
             await processUnavailableReasonDb.setProcessInitialUnavailableReason({
                 requestId,
                 candidateId,
-                reason: unavailableReason
+                reason: unavailableReason,
+                client
             })
-            return {message: `Process unavailable reasons set to ${unavailableReason}`}
         } else {
-            if (currentReason.unavailableReason === unavailableReason) {
-                return {message: `Process unavailable reason is already ${unavailableReason}`}
+            if (currentReason.unavailableReason !== unavailableReason) {
+                const rowCount = await processUnavailableReasonDb.updateProcessUnavailableReason({
+                    requestId,
+                    candidateId,
+                    reason: unavailableReason,
+                    client,
+                    timestamp
+                })
+                if (rowCount === 0)
+                    throw new AppError(errors.preconditionFailed,
+                        "Process not updated",
+                        `Update timestamp was older than the latest timestamp.`)
             }
-            await processUnavailableReasonDb.updateProcessUnavailableReason({
-                requestId,
-                candidateId,
-                reason: unavailableReason
-            })
-            return {message: `Process unavailable reasons updated to ${unavailableReason}`}
         }
     }
 
@@ -190,12 +260,14 @@ module.exports = (requestDb, candidateDb, processDb, phaseDb, infoDb, processUna
      * Represents the candidate id
      * @param newPhase : string
      * Represents the phase to be updated to
+     * @param client
+     * @param timestamp
      * @returns {Promise<{JSON}>}
      */
-    async function updateProcessCurrentPhase({requestId, candidateId, newPhase}) {
+    async function updateProcessCurrentPhase({requestId, candidateId, newPhase, client, timestamp}) {
         // Get process related workflow and the workflow's phases
-        const {workflow} = await requestDb.getRequestById({id: requestId})
-        const workflowPhases = await phaseDb.getPhasesByWorkflow({workflow})
+        const {workflow} = await requestDb.getRequestById({id: requestId, client})
+        const workflowPhases = await phaseDb.getPhasesByWorkflow({workflow, client})
 
         // Check if newPhase is valid in the current workflow
         const validPhase = workflowPhases.find(phase => phase.phase === newPhase)
@@ -206,30 +278,47 @@ module.exports = (requestDb, candidateDb, processDb, phaseDb, infoDb, processUna
         }
 
         // Get process current phase
-        const currentPhase = await processPhaseDb.getProcessCurrentPhase({requestId, candidateId})
+        const currentPhase = await processPhaseDb.getProcessCurrentPhase({requestId, candidateId, client})
 
         // Check process current phase
         if (currentPhase.currentPhase === newPhase) {
             return {message: `Process current phase is already ${newPhase}`}
         }
 
-        const processExistingPhases = await processPhaseDb.getProcessPhases({requestId, candidateId})
+        const processExistingPhases = await processPhaseDb.getProcessPhases({requestId, candidateId, client})
 
         // If phase to transition (newPhase) does not exist in the process list of phases, then
         // we must insert the newPhase in the list of process phases.
         if (!processExistingPhases.find(procPhase => procPhase.phase === newPhase)) {
-            await processPhaseDb.addPhaseToProcess({requestId, candidateId, phase: newPhase, startDate: new Date()})
+            await processPhaseDb.addPhaseToProcess({
+                requestId,
+                candidateId,
+                client,
+                phase: newPhase,
+                startDate: new Date()
+            })
         }
-        await processPhaseDb.updateProcessCurrentPhase({requestId, candidateId, phase: newPhase})
-        const candidate = await candidateDb.getCandidateById({id: candidateId})
-        const request = await requestDb.getRequestById({id: requestId})
-        await emailService.notifyMoved({id: requestId, oldPhase: currentPhase.currentPhase, newPhase, candidate, request})
+        const phaseRowCount = await processPhaseDb.updateProcessCurrentPhase({
+            requestId,
+            candidateId,
+            phase: newPhase,
+            client,
+            timestamp
+        })
+        if (phaseRowCount === 0)
+            throw new AppError(errors.preconditionFailed,
+                "Process not updated",
+                `Update timestamp was older than the latest timestamp.`)
 
-        return {
+        const candidate = await candidateDb.getCandidateById({id: candidateId, client})
+        const request = await requestDb.getRequestById({id: requestId, client})
+        await emailService.notifyMoved({
+            id: requestId,
             oldPhase: currentPhase.currentPhase,
-            newPhase: validPhase.phase,
-            message: `Process moved from ${currentPhase.currentPhase} to ${validPhase.phase}`
-        }
+            newPhase,
+            candidate,
+            request
+        })
     }
 
     /**
@@ -240,22 +329,37 @@ module.exports = (requestDb, candidateDb, processDb, phaseDb, infoDb, processUna
      * Candidate id
      * @param infoArray : Array
      * Info Array. Each element of the array has a name and a value property
+     * @param client
+     * @param timestamp
      * @returns {Promise<void>}
      */
-    async function updateProcessInfoValues({requestId, candidateId, infoArray}) {
-        const processInfos = await processInfoDb.getProcessInfos({requestId, candidateId})
+    async function updateProcessInfoValues({requestId, candidateId, infoArray, client, timestamp}) {
+        const processInfos = await processInfoDb.getProcessInfos({requestId, candidateId, client})
 
         await Promise.all(infoArray.map(async info => {
             const infoFound = processInfos.find(procInfo => procInfo.name === info.name)
             if (!infoFound) {
                 await processInfoDb.createProcessInfo({
-                    requestId, candidateId, infoName: info.name, infoValue: `{"value" : "${info.value}"}`
+                    requestId,
+                    candidateId,
+                    infoName: info.name,
+                    infoValue: `{"value" : "${info.value}"}`,
+                    client
                 })
             } else {
                 if (infoFound.value.value !== info.value) {
-                    await processInfoDb.updateProcessInfoValue({
-                        requestId, candidateId, infoName: info.name, infoValue: `{"value" : "${info.value}"}`
+                    const rowCount = await processInfoDb.updateProcessInfoValue({
+                        requestId,
+                        candidateId,
+                        infoName: info.name,
+                        infoValue: `{"value" : "${info.value}"}`,
+                        client,
+                        timestamp
                     })
+                    if (rowCount === 0)
+                        throw new AppError(errors.preconditionFailed,
+                            "Process not updated",
+                            `Update timestamp was older than the latest timestamp.`)
                 }
             }
         }))

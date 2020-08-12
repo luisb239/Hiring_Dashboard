@@ -27,10 +27,6 @@ module.exports = function (router, controllers, authModule, upload, validator) {
     const workflows = 'workflows'
     const months = 'months'
 
-    router.post('/teste',
-        // [header('If-Unmodified-Since').exists()],
-        handle(controllers.request.teste))
-
     // All endpoints should need the user to be authenticated?
 
     router.get('/auth/session', handle(controllers.auth.getSession))

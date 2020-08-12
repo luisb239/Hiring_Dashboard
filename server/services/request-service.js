@@ -13,7 +13,7 @@ module.exports = (requestDb, processDb, requestLanguagesDb, authModule, candidat
         addRequestToUser: addRequestToUser,
         addUserToRequest: addUserToRequest,
         updateRequest: updateRequest,
-        updateRequestLanguages: updateRequestLanguages,
+        // updateRequestLanguages: updateRequestLanguages,
         deleteLanguage: deleteLanguage,
         countRequests: countRequests,
         teste
@@ -116,12 +116,37 @@ module.exports = (requestDb, processDb, requestLanguagesDb, authModule, candidat
     async function updateRequest({
                                      id, quantity, targetDate,
                                      state, skill, stateCsl,
-                                     project, profile, dateToSendProfile
+                                     project, profile, dateToSendProfile,
+                                     mandatoryLanguages, valuedLanguages, timestamp
                                  }) {
+        return await transaction(async (client) => {
+            const rowCount = await requestDb.updateRequest({
+                id, timestamp, client, quantity, targetDate, state, skill,
+                stateCsl, project, profile, dateToSendProfile
+            })
 
-        await requestDb.updateRequest({
-            id, quantity, targetDate, state, skill,
-            stateCsl, project, profile, dateToSendProfile
+            if(rowCount === 0)
+                throw new AppError(errors.preconditionFailed,
+                    "Request not updated",
+                    `Update timestamp was older than the latest timestamp.`)
+
+            if (mandatoryLanguages && mandatoryLanguages.length > 0)
+                await Promise.all(mandatoryLanguages.map(async (l) =>
+                    await requestLanguagesDb.createLanguageRequirement({
+                        requestId: id,
+                        language: l,
+                        isMandatory: true,
+                        client
+                    })))
+
+            if (valuedLanguages && valuedLanguages.length > 0)
+                await Promise.all(valuedLanguages.map(async (l) =>
+                    await requestLanguagesDb.createLanguageRequirement({
+                        requestId: id,
+                        language: l,
+                        isMandatory: false,
+                        client
+                    })))
         })
     }
 
@@ -154,10 +179,10 @@ module.exports = (requestDb, processDb, requestLanguagesDb, authModule, candidat
         await emailService.notifyAssigned({userId, request, currentUsername})
     }
 
-    async function updateRequestLanguages({requestId, languages, isMandatory}) {
-        await Promise.all(languages.map(async (l) =>
-            await requestLanguagesDb.createLanguageRequirement({requestId, language: l, isMandatory})))
-    }
+    // async function updateRequestLanguages({requestId, languages, isMandatory}) {
+    //     await Promise.all(languages.map(async (l) =>
+    //         await requestLanguagesDb.createLanguageRequirement({requestId, language: l, isMandatory})))
+    // }
 
     async function deleteLanguage({requestId, language, isMandatory}) {
         await requestLanguagesDb.deleteLanguage({requestId, language, isMandatory})
@@ -171,9 +196,9 @@ module.exports = (requestDb, processDb, requestLanguagesDb, authModule, candidat
                                      targetDate = null, userId = null
                                  }) {
         const result = await requestDb.countRequests({
-                skill, state, stateCsl, profile, project, workflow, minQuantity,
-                maxQuantity, minProgress, maxProgress, targetDate, userId
-            })
+            skill, state, stateCsl, profile, project, workflow, minQuantity,
+            maxQuantity, minProgress, maxProgress, targetDate, userId
+        })
         return {count: result.count};
     }
 

@@ -38,7 +38,7 @@ module.exports = (query) => {
     }
 
     async function addPhaseToProcess({
-                                         requestId, candidateId, phase,
+                                         requestId, candidateId, phase, client,
                                          startDate = new Date(), updateDate = null,
                                          notes = null
                                      }) {
@@ -51,24 +51,27 @@ module.exports = (query) => {
                 `VALUES ($1, $2, $3, $4, $5, $6);`,
             values: [requestId, candidateId, phase, startDate, updateDate, notes]
         }
-        await query(statement)
+        await query(statement, client)
     }
 
 
     // TODO -> CHANGE DAL FUNCTIONS TO NEW MODULE PROCESS-CURRENT-PHASE-DAL
-    async function updateProcessCurrentPhase({requestId, candidateId, phase}) {
+    async function updateProcessCurrentPhase({requestId, candidateId, phase, client, timestamp}) {
         const statement = {
             name: 'Update Process Current Phase',
             text:
                 `UPDATE ${processCurrPhase.table} ` +
-                `SET ${processCurrPhase.currentPhase} = $1 ` +
-                `WHERE ${processCurrPhase.requestId} = $2 AND ${processCurrPhase.candidateId} = $3;`,
-            values: [phase, requestId, candidateId]
+                `SET ${processCurrPhase.currentPhase} = $1, ` +
+                `${processCurrPhase.timestamp} = $2 ` +
+                `WHERE ${processCurrPhase.requestId} = $3 AND ${processCurrPhase.candidateId} = $4 AND ` +
+                `${processCurrPhase.timestamp} < $2;`,
+            values: [phase, timestamp, requestId, candidateId]
         }
-        await query(statement)
+        const result = query(statement, client)
+        return result.rowCount
     }
 
-    async function setProcessInitialPhase({requestId, candidateId, initialPhase}) {
+    async function setProcessInitialPhase({requestId, candidateId, initialPhase, client}) {
         const statement = {
             name: 'Add Process Initial Phase',
             text:
@@ -77,10 +80,10 @@ module.exports = (query) => {
                 `VALUES ($1, $2, $3);`,
             values: [requestId, candidateId, initialPhase]
         }
-        await query(statement)
+        await query(statement, client)
     }
 
-    async function getProcessCurrentPhase({requestId, candidateId}) {
+    async function getProcessCurrentPhase({requestId, candidateId, client}) {
         const statement = {
             name: 'Get Process Current Phase',
             text:
@@ -90,7 +93,7 @@ module.exports = (query) => {
             values: [requestId, candidateId]
         }
 
-        const result = await query(statement)
+        const result = await query(statement, client)
 
         if (result.rowCount) {
             return extractProcessCurrentPhase(result.rows[0])
@@ -105,7 +108,7 @@ module.exports = (query) => {
     }
 
 
-    async function getProcessPhases({requestId, candidateId}) {
+    async function getProcessPhases({requestId, candidateId, client}) {
         const statement = {
             name: 'Get Phases Of Process',
             text:
@@ -117,7 +120,7 @@ module.exports = (query) => {
             values: [requestId, candidateId]
         }
 
-        const result = await query(statement)
+        const result = await query(statement, client)
         return result.rows.map(row => extractProcessPhase(row))
     }
 

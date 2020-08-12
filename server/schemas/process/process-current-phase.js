@@ -5,4 +5,5 @@ module.exports = {
     requestId: 'request_id',
     candidateId: 'candidate_id',
     currentPhase: 'current_phase',
+    timestamp: 'temp',
 }

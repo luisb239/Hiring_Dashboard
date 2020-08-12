@@ -9,8 +9,7 @@ module.exports = (service) => {
         postUser: postUser,
         patchRequest: patchRequest,
         deleteLanguage: deleteLanguage,
-        countRequests: countRequests,
-        teste
+        countRequests: countRequests
     }
 
     async function getRequests(req, res) {
@@ -97,22 +96,10 @@ module.exports = (service) => {
             project: req.body.project,
             profile: req.body.profile,
             dateToSendProfile: req.body.dateToSendProfile,
+            mandatoryLanguages: req.body.mandatoryLanguages,
+            valuedLanguages: req.body.mandatoryLanguages,
+            timestamp: new Date()
         })
-
-        if (req.body.mandatoryLanguages && req.body.mandatoryLanguages.length) {
-            await service.updateRequestLanguages({
-                requestId: req.params.id,
-                languages: req.body.mandatoryLanguages,
-                isMandatory: true
-            })
-        }
-        if (req.body.valuedLanguages && req.body.valuedLanguages.length) {
-            await service.updateRequestLanguages({
-                requestId: req.params.id,
-                languages: req.body.valuedLanguages,
-                isMandatory: false
-            })
-        }
 
         res.status(201).send({
             message: 'Request updated successfully',
@@ -148,10 +135,5 @@ module.exports = (service) => {
             userId: req.query.currentUser ? req.user.id : null
         })
         res.status(200).send(count)
-    }
-
-    async function teste(req, res) {
-        const result = await service.teste({char1: 'a', char2: 'b', int: 1, timestamp: req.headers['if-unmodified-since']})
-        res.status(200).send(result)
     }
 }

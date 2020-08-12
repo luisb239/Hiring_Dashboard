@@ -11,7 +11,7 @@ module.exports = (query) => {
         updateProcessInfoValue
     }
 
-    async function getProcessInfos({requestId, candidateId}) {
+    async function getProcessInfos({requestId, candidateId, client}) {
         const statement = {
             name: 'Get Process Infos',
             text:
@@ -20,7 +20,7 @@ module.exports = (query) => {
             values: [requestId, candidateId]
         }
 
-        const result = await query(statement)
+        const result = await query(statement, client)
         return result.rows.map(row => extractProcessInfo(row))
     }
 
@@ -49,7 +49,7 @@ module.exports = (query) => {
         return null
     }
 
-    async function createProcessInfo({requestId, candidateId, infoName, infoValue}) {
+    async function createProcessInfo({requestId, candidateId, infoName, infoValue, client}) {
         const statement = {
             name: 'Create Process Info',
             text:
@@ -59,20 +59,22 @@ module.exports = (query) => {
             values: [requestId, candidateId, infoName, infoValue]
         }
 
-        await query(statement)
+        await query(statement, client)
     }
 
-    async function updateProcessInfoValue({requestId, candidateId, infoName, infoValue}) {
+    async function updateProcessInfoValue({requestId, candidateId, infoName, infoValue, client, timestamp}) {
         const statement = {
             name: 'Update Process Info',
             text:
-                `UPDATE ${schema.table} SET ${schema.value} = $1 ` +
+                `UPDATE ${schema.table} SET ${schema.value} = $1, ` +
+                `${schema.timestamp} = $2 ` +
                 `WHERE ${schema.requestId} = $2 AND ` +
-                `${schema.candidateId} = $3 AND ${schema.name} = $4;`,
-            values: [infoValue, requestId, candidateId, infoName]
+                `${schema.candidateId} = $3 AND ${schema.name} = $4 AND ${schema.timestamp} < $2;`,
+            values: [infoValue, timestamp, requestId, candidateId, infoName]
         }
 
-        await query(statement)
+        const result = await query(statement, client)
+        return result.rowCount
     }
 
 }

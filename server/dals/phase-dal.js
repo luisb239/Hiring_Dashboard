@@ -42,7 +42,7 @@ module.exports = (query) => {
         }
     }
 
-    async function getPhasesByWorkflow({workflow}) {
+    async function getPhasesByWorkflow({workflow, client}) {
         const statement = {
             name: 'Get Phases By Workflow',
             text:
@@ -54,7 +54,7 @@ module.exports = (query) => {
             values: [workflow]
         }
 
-        const result = await query(statement)
+        const result = await query(statement, client)
         return result.rows.map(row => extract(row))
     }
 

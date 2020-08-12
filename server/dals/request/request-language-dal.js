@@ -17,7 +17,7 @@ module.exports = (query) => {
         }
     }
 
-    async function createLanguageRequirement({requestId, language, isMandatory}) {
+    async function createLanguageRequirement({requestId, language, isMandatory, client}) {
         const statement = {
             name: 'Create Language Requirement in Request',
             text:
@@ -27,7 +27,7 @@ module.exports = (query) => {
             values: [requestId, language, isMandatory]
         }
 
-        const result = await query(statement)
+        const result = await query(statement, client)
         return result.rows.map(row => extract(row))[0]
     }
 

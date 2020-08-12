@@ -31,7 +31,7 @@ module.exports = (query) => {
         return result.rows.map(row => extract(row))
     }
 
-    async function getCandidateById({ id }) {
+    async function getCandidateById({ id, client }) {
         const statement = {
             name: 'Get Candidate By Id',
             text:
@@ -40,7 +40,7 @@ module.exports = (query) => {
             values: [id]
         }
 
-        const result = await query(statement)
+        const result = await query(statement, client)
 
         if (result.rowCount) {
             return extract(result.rows[0])

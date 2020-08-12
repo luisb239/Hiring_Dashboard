@@ -12,7 +12,7 @@ module.exports = (query) => {
 
     return {
         getRequests, getRequestById, createRequest,
-        getUserRolesInRequest, updateRequest, addUserAndRoleToRequest, countRequests, insertA, insertB
+        getUserRolesInRequest, updateRequest, addUserAndRoleToRequest, countRequests
     }
 
     async function getRequests({
@@ -52,7 +52,7 @@ module.exports = (query) => {
         return result.rows.map(row => extractRequest(row))
     }
 
-    async function getRequestById({id}) {
+    async function getRequestById({id, client}) {
         const statement = {
             name: 'Get Request By Id',
             text:
@@ -60,7 +60,7 @@ module.exports = (query) => {
                 `WHERE ${requestSchema.id} = $1;`,
             values: [id]
         }
-        const result = await query(statement)
+        const result = await query(statement, client)
 
         if (result.rowCount) {
             return extractRequest(result.rows[0])
@@ -69,7 +69,7 @@ module.exports = (query) => {
     }
 
     async function updateRequest({
-                                     id, quantity = null, targetDate = null,
+                                     id, timestamp, client, quantity = null, targetDate = null,
                                      state = null, skill = null, stateCsl = null,
                                      project = null, profile = null,
                                      dateToSendProfile = null
@@ -85,13 +85,15 @@ module.exports = (query) => {
                 `${requestSchema.stateCsl} = COALESCE($5, ${requestSchema.stateCsl}), ` +
                 `${requestSchema.project} = COALESCE($6, ${requestSchema.project}), ` +
                 `${requestSchema.profile} = COALESCE($7, ${requestSchema.profile}), ` +
-                `${requestSchema.dateToSendProfile} = COALESCE($8, ${requestSchema.dateToSendProfile}) ` +
-                `WHERE ${requestSchema.id} = $9;`,
+                `${requestSchema.dateToSendProfile} = COALESCE($8, ${requestSchema.dateToSendProfile}), ` +
+                `${requestSchema.timestamp} = $9 ` +
+                `WHERE ${requestSchema.id} = $10 AND ${requestSchema.timestamp} < $9;`,
             values: [quantity, targetDate, state, skill, stateCsl,
-                project, profile, dateToSendProfile, id]
+                project, profile, dateToSendProfile, timestamp, id]
         }
 
-        await query(statement)
+        const result = await query(statement, client)
+        return result.rowCount;
     }
 
     async function createRequest({
@@ -231,28 +233,5 @@ module.exports = (query) => {
 
     function extractCount(row) {
         return {count: row.count}
-    }
-
-    async function insertA(char1, client, timestamp) {
-        const statement = {
-            name: 'INSERT TABLE A',
-            text:
-                `UPDATE A SET cenas = 'gfdg' WHERE tmp < $1;`,
-            values: [timestamp]
-        }
-
-        const result = await query(statement, client);
-        return result.rowCount;
-    }
-
-    async function insertB({char2, int}, client, timestamp) {
-        const statement = {
-            name: 'INSERT TABLE B',
-            text:
-                `INSERT INTO B (cenas, ex) VALUES ('gfdg', 1);`,
-            values: []
-        }
-
-        return await query(statement, client);
     }
 }
