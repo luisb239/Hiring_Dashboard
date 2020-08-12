@@ -4,49 +4,49 @@
     <form [formGroup]="formGroup" novalidate class="form" (submit)="onSubmit()">
       <div class="form-group un-sm un-md">
         <label for="inputSkill">Skill Center</label>
-        <select class="custom-select" id="inputSkill" name="skill" formControlName="skill">
+        <select class="custom-select" id="inputSkill" formControlName="skill">
           <option disabled value=""></option>
           <option *ngFor="let skill of properties.skills" [value]="skill">{{skill}}</option>
         </select>
       </div>
       <div class="form-group un-sm un-md">
         <label for="inputState">State</label>
-        <select class="custom-select" id="inputState" name="state" formControlName="state">
+        <select class="custom-select" id="inputState" formControlName="state">
           <option disabled value=""></option>
           <option *ngFor="let state of properties.states" [value]="state">{{state}}</option>
         </select>
       </div>
       <div class="form-group un-sm un-md">
         <label for="inputStateCsl">CSL State</label>
-        <select class="custom-select" id="inputStateCsl" name="stateCsl" formControlName="stateCsl">
+        <select class="custom-select" id="inputStateCsl" formControlName="stateCsl">
           <option disabled value=""></option>
           <option *ngFor="let stateCsl of properties.statesCsl" [value]="stateCsl">{{stateCsl}}</option>
         </select>
       </div>
       <div class="form-group">
         <label for="inputProject">Project</label>
-        <select class="custom-select" id="inputProject" name="project" formControlName="project">
+        <select class="custom-select" id="inputProject" formControlName="project">
           <option disabled value=""></option>
           <option *ngFor="let project of properties.projects" [value]="project">{{project}}</option>
         </select>
       </div>
       <div class="form-group">
         <label for="inputProfile">Profile</label>
-        <select class="custom-select" id="inputProfile" name="profile" formControlName="profile">
+        <select class="custom-select" id="inputProfile" formControlName="profile">
           <option disabled value=""></option>
           <option *ngFor="let profile of properties.profiles" [value]="profile">{{profile}}</option>
         </select>
       </div>
       <div class="form-group un-sm">
         <label for="inputWorkflow">Workflow</label>
-        <select class="custom-select" id="inputWorkflow" name="workflow" formControlName="workflow">
+        <select class="custom-select" id="inputWorkflow" formControlName="workflow">
           <option disabled value=""></option>
           <option *ngFor="let workflow of properties.workflows" [value]="workflow">{{workflow}}</option>
         </select>
       </div>
       <div class="form-group un-sm un-md">
         <label for="inputTargetDate">Target Month</label>
-        <select class="custom-select" id="inputTargetDate" name="targetDate" formControlName="month">
+        <select class="custom-select" id="inputTargetDate" formControlName="month">
           <option disabled value=""></option>
           <option *ngFor="let month of properties.targetDates" [value]="month">{{month}}</option>
         </select>
@@ -54,14 +54,14 @@
       <div class="custom-slider un-sm">
         <label for="quantityBar">Quantity</label>
         <ng5-slider [(value)]="properties.minValueQuantity" [(highValue)]="properties.maxValueQuantity"
-                    [options]="properties.optionsQuantity" id="quantityBar" name="quantity"
+                    [options]="properties.optionsQuantity" id="quantityBar"
                     formControlName="quantityValues">
         </ng5-slider>
       </div>
       <div class="custom-slider un-sm">
         <label for="progressBar">Progress</label>
         <ng5-slider [(value)]="properties.minValueProgress" [(highValue)]="properties.maxValueProgress"
-                    [options]="properties.optionsProgress" id="progressBar" name="progress"
+                    [options]="properties.optionsProgress" id="progressBar"
                     formControlName="progressValues">
         </ng5-slider>
       </div>

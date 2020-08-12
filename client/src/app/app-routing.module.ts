@@ -1,8 +1,8 @@
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
-import { BoardComponent } from './components/board/board.component';
-import { HomeComponent } from './components/home/home.component';
-import { CreateRequestComponent } from './components/create-request/create-request.component';
+import {NgModule} from '@angular/core';
+import {RouterModule, Routes} from '@angular/router';
+import {BoardComponent} from './components/board/board.component';
+import {HomeComponent} from './components/home/home.component';
+import {CreateRequestComponent} from './components/create-request/create-request.component';
 import {AllRequestsComponent} from './components/all-requests/all-requests.component';
 import {LogInComponent} from './components/log-in/log-in.component';
 import {CandidateDetailsComponent} from './components/candidate-details/candidate-details.component';
@@ -22,13 +22,23 @@ const routes: Routes = [
   {path: 'home', component: HomeComponent, canActivate: [AnonymousGuardService]},
   {path: 'log-in', component: LogInComponent, canActivate: [AnonymousGuardService]},
   {path: 'board', component: BoardComponent, canActivate: [AuthGuardService]},
-  {path: 'create-request', component: CreateRequestComponent, canActivate: [AuthGuardService]},
+  {
+    path: 'create-request',
+    component: CreateRequestComponent,
+    canActivate: [AuthGuardService],
+    data: {roles: ['admin', 'jobOwner']}
+  },
   {path: 'all-requests', component: AllRequestsComponent, canActivate: [AuthGuardService]},
   {path: 'candidates/:id', component: CandidateDetailsComponent, canActivate: [AuthGuardService]},
   {path: 'request-detail/:requestId ', component: RequestDetailComponent, canActivate: [AuthGuardService]},
   {path: 'statistics', component: StatisticsComponent, canActivate: [AuthGuardService]},
   {path: 'logout', component: LogoutComponent, canActivate: [AuthGuardService]},
-  {path: 'create-candidate', component: CreateCandidateComponent, canActivate: [AuthGuardService]},
+  {
+    path: 'create-candidate',
+    component: CreateCandidateComponent,
+    canActivate: [AuthGuardService],
+    data: {roles: ['admin', 'recruiter', 'teamLeader']}
+  },
   {path: 'search-candidate', component: SearchCandidateComponent, canActivate: [AuthGuardService]},
   // otherwise redirect to home
   {path: '**', redirectTo: ''}
@@ -38,4 +48,5 @@ const routes: Routes = [
   imports: [RouterModule.forRoot(routes), MatOptionModule],
   exports: [RouterModule]
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {
+}

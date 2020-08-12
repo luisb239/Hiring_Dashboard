@@ -13,19 +13,20 @@ export class AuthGuardService implements CanActivate {
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot):
     Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-    return this.checkLogin(state.url);
-  }
-
-  checkLogin(url: string): boolean {
     if (!this.authService.getSessionFromStorage()) {
       // Store the attempted URL for redirecting -> TODO -> We are not redirecting yet..
-      this.authService.redirectUrl = url;
+      this.authService.redirectUrl = state.url;
       // Alert the user
       this.alertService.warn('You need to be signed in order to perform that action');
-      // Navigate to the home page
-      this.router.navigate(['/home']);
-      return false;
+    } else if (this.checkRoles(route.data.roles)) {
+      return true;
     }
-    return true;
+    // Navigate to the home page
+    this.router.navigate(['/home']);
+    return false;
+  }
+
+  checkRoles(roles: any[]) {
+    return !roles || this.authService.userRoles.find(ur => roles.includes(ur.role));
   }
 }
