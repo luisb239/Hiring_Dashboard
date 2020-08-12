@@ -7,12 +7,12 @@ const pool = new Pool()
 const errors = require('./errors/db-errors.js')
 const DbError = require('./errors/db-access-error.js')
 
-async function query(text, params, client) {
+async function query(text, client) {
     try {
         if(client)
-            return await client.query(text, params)
+            return await client.query(text)
         else
-            return await pool.query(text, params)
+            return await pool.query(text)
     } catch (e) {
         // log the error
         console.log(e)
@@ -83,5 +83,5 @@ const statistics = require('./statistics-dal.js')(query)
 module.exports = {
     request, candidate, skill, state, stateCsl, project, profile,
     language, workflow, phase, months, process, user, role, info, requestLanguage,
-    processUnavailableReason, processPhases, processInfo, reasons, status, statistics
+    processUnavailableReason, processPhases, processInfo, reasons, status, statistics, transaction
 }

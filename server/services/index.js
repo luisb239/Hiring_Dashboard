@@ -7,7 +7,7 @@ module.exports = (db, authModule, transporter) => {
     const email = require('./email-service.js')(db.user, transporter)
 
     const request = require('./request-service.js')(db.request, db.process,
-        db.requestLanguage, authModule, db.candidate, email)
+        db.requestLanguage, authModule, db.candidate, email, db.transaction)
 
     const requestProps = require('./request-props-service.js')(db.language, db.months, db.profile,
         db.project, db.skill, db.state, db.stateCsl, db.workflow, db.phase)

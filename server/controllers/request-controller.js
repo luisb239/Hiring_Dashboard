@@ -9,7 +9,8 @@ module.exports = (service) => {
         postUser: postUser,
         patchRequest: patchRequest,
         deleteLanguage: deleteLanguage,
-        countRequests: countRequests
+        countRequests: countRequests,
+        teste
     }
 
     async function getRequests(req, res) {
@@ -147,5 +148,10 @@ module.exports = (service) => {
             userId: req.query.currentUser ? req.user.id : null
         })
         res.status(200).send(count)
+    }
+
+    async function teste(req, res) {
+        const result = await service.teste({char1: 'a', char2: 'b', int: 1, timestamp: req.headers['if-unmodified-since']})
+        res.status(200).send(result)
     }
 }

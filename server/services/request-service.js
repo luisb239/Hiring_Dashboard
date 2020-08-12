@@ -3,7 +3,7 @@
 const errors = require('./errors/common-errors.js')
 const AppError = require('./errors/app-error.js')
 
-module.exports = (requestDb, processDb, requestLanguagesDb, authModule, candidateDb, emailService) => {
+module.exports = (requestDb, processDb, requestLanguagesDb, authModule, candidateDb, emailService, transaction) => {
 
     return {
         getRequests: getRequests,
@@ -15,7 +15,8 @@ module.exports = (requestDb, processDb, requestLanguagesDb, authModule, candidat
         updateRequest: updateRequest,
         updateRequestLanguages: updateRequestLanguages,
         deleteLanguage: deleteLanguage,
-        countRequests: countRequests
+        countRequests: countRequests,
+        teste
     }
 
     /**
@@ -174,5 +175,14 @@ module.exports = (requestDb, processDb, requestLanguagesDb, authModule, candidat
                 maxQuantity, minProgress, maxProgress, targetDate, userId
             })
         return {count: result.count};
+    }
+
+    async function teste({char1, char2, int, timestamp}) {
+        return await transaction(async (client) => {
+            const res = await requestDb.insertA(char1, client, timestamp)
+            console.log(res)
+            await requestDb.insertB({char2, int}, client)
+            return {str: 'HELLO'}
+        })
     }
 }

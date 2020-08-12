@@ -12,7 +12,7 @@ module.exports = (query) => {
 
     return {
         getRequests, getRequestById, createRequest,
-        getUserRolesInRequest, updateRequest, addUserAndRoleToRequest, countRequests
+        getUserRolesInRequest, updateRequest, addUserAndRoleToRequest, countRequests, insertA, insertB
     }
 
     async function getRequests({
@@ -231,5 +231,28 @@ module.exports = (query) => {
 
     function extractCount(row) {
         return {count: row.count}
+    }
+
+    async function insertA(char1, client, timestamp) {
+        const statement = {
+            name: 'INSERT TABLE A',
+            text:
+                `UPDATE A SET cenas = 'gfdg' WHERE tmp < $1;`,
+            values: [timestamp]
+        }
+
+        const result = await query(statement, client);
+        return result.rowCount;
+    }
+
+    async function insertB({char2, int}, client, timestamp) {
+        const statement = {
+            name: 'INSERT TABLE B',
+            text:
+                `INSERT INTO B (cenas, ex) VALUES ('gfdg', 1);`,
+            values: []
+        }
+
+        return await query(statement, client);
     }
 }

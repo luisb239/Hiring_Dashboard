@@ -6,7 +6,7 @@ const verifyIfAuthenticated = require('../controllers/middlewares/verify_authent
 
 module.exports = function (router, controllers, authModule, upload, validator) {
 
-    const {body, param, query, checkSchema} = validator
+    const {body, param, query, checkSchema, header} = validator
 
     const users = 'users'
     const roles = 'roles'
@@ -26,6 +26,10 @@ module.exports = function (router, controllers, authModule, upload, validator) {
     const languages = 'languages'
     const workflows = 'workflows'
     const months = 'months'
+
+    router.post('/teste',
+        // [header('If-Unmodified-Since').exists()],
+        handle(controllers.request.teste))
 
     // All endpoints should need the user to be authenticated?
 
@@ -102,6 +106,8 @@ module.exports = function (router, controllers, authModule, upload, validator) {
         body('valuedLanguages').optional().isArray().withMessage("Valued Languages  must be an array of languages"),
     ], handle(controllers.request.postRequest))
 
+
+    // TODO - NEEDS TIMESTAMP
     /**
      * Update Request
      */
@@ -190,6 +196,7 @@ module.exports = function (router, controllers, authModule, upload, validator) {
         ],
         handle(controllers.process.getProcessDetail))
 
+    // TODO - NEEDS TIMESTAMP
     /**
      * Create process
      */
@@ -199,6 +206,8 @@ module.exports = function (router, controllers, authModule, upload, validator) {
         ...processValidators
     ], handle(controllers.process.createProcess))
 
+
+    // TODO - NEEDS TIMESTAMP
     /**
      * Update process
      */
@@ -214,6 +223,7 @@ module.exports = function (router, controllers, authModule, upload, validator) {
         body('unavailableReason').optional().isString().withMessage("unavailableReason must be of string type")
     ], handle(controllers.process.updateProcess))
 
+    // TODO - NEEDS TIMESTAMP
     /**
      * Add User to Request
      */
@@ -223,6 +233,7 @@ module.exports = function (router, controllers, authModule, upload, validator) {
         body('roleId').exists().isInt().withMessage("Role Id must exist and be of int type")
     ], handle(controllers.request.postUser))
 
+    // TODO - NEEDS TIMESTAMP
     /**
      * Update process phase notes
      */
@@ -322,6 +333,7 @@ module.exports = function (router, controllers, authModule, upload, validator) {
      */
     router.get(`/${candidates}/:id/download-cv`, verifyIfAuthenticated, handle(controllers.candidate.downloadCandidateCv))
 
+    // TODO - NEEDS TIMESTAMP
     /**
      * Update Candidate Info
      */

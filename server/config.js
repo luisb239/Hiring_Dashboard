@@ -60,6 +60,7 @@ module.exports = (app) => {
         "roles": ["admin", "recruiter", "jobOwner", "guest", "teamLeader"],
         // id order not guaranteed
         "permissions": [
+            {"resource": "teste", "action": "POST"},
             {"resource": "auth", "action": "GET"},
             {"resource": "auth", "action": "POST"},
 
@@ -89,6 +90,7 @@ module.exports = (app) => {
         "grants": {
             //TODO -> guest permissions
             "guest": [
+                {"resource": "teste", "action": "POST"},
                 {"resource": "auth", "action": "GET"},
                 {"resource": "auth", "action": "POST"},
 
