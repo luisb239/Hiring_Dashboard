@@ -122,7 +122,8 @@ module.exports = {
                     table: 'Sessions',
                     extendDefaultFields: extendDefaultFields
                 }),
-                session_opts = {// to keep session active instead of letting it change to the idle state
+                session_opts = {
+                    // to keep session active instead of letting it change to the idle state
                     resave: false,
                     //saveUninitialized to false to only create a session if a UA(User agent) made a login
                     saveUninitialized: false,
@@ -130,9 +131,9 @@ module.exports = {
                     secret: config.cookieSecret,
                     cookie: {
                         maxAge: 1000 * 60 * 60 * 24,
-                        sameSite: 'none',
+                        //sameSite: 'none',
                         //secure: true,
-                        secure: false
+                        //secure: false
                         // TODO -> NEEDED FOR HTTP
                     }
                 }

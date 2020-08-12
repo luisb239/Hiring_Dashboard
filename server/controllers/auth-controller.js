@@ -7,13 +7,11 @@ module.exports = (userService) => {
 
     async function getSession(req, res) {
         console.log(`Session: ${new Date()}`)
-        const userId = req.isAuthenticated() ? req.user.id : undefined
+        const isAuthenticated = req.isAuthenticated()
+        const userId = isAuthenticated ? req.user.id : undefined
         const roles = userId ? await userService.getCurrentUserRoles({userId}) : undefined
-        console.log(`userId: ${userId}`)
-        console.log('roles', roles);
-        console.log(req.isAuthenticated())
         res.send({
-            auth: req.isAuthenticated(),
+            auth: isAuthenticated,
             userId: userId,
             userRoles: roles
         })

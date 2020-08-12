@@ -14,5 +14,6 @@ module.exports = {
     profile: 'request_profile',
     workflow: 'workflow',
     dateToSendProfile: 'date_to_send_profile',
-    progress: 'progress'
+    progress: 'progress',
+    timestamp: 'temp'
 }

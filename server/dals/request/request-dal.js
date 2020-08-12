@@ -69,7 +69,7 @@ module.exports = (query) => {
     }
 
     async function updateRequest({
-                                     id, quantity = null, targetDate = null,
+                                     id, timestamp, client, quantity = null, targetDate = null,
                                      state = null, skill = null, stateCsl = null,
                                      project = null, profile = null,
                                      dateToSendProfile = null
@@ -85,13 +85,15 @@ module.exports = (query) => {
                 `${requestSchema.stateCsl} = COALESCE($5, ${requestSchema.stateCsl}), ` +
                 `${requestSchema.project} = COALESCE($6, ${requestSchema.project}), ` +
                 `${requestSchema.profile} = COALESCE($7, ${requestSchema.profile}), ` +
-                `${requestSchema.dateToSendProfile} = COALESCE($8, ${requestSchema.dateToSendProfile}) ` +
-                `WHERE ${requestSchema.id} = $9;`,
+                `${requestSchema.dateToSendProfile} = COALESCE($8, ${requestSchema.dateToSendProfile}), ` +
+                `${requestSchema.timestamp} = $9 ` +
+                `WHERE ${requestSchema.id} = $10 AND ${requestSchema.timestamp} < $9;`,
             values: [quantity, targetDate, state, skill, stateCsl,
-                project, profile, dateToSendProfile, id]
+                project, profile, dateToSendProfile, timestamp, id]
         }
 
-        await query(statement)
+        const result = await query(statement, client)
+        return result.rowCount;
     }
 
     async function createRequest({
@@ -179,7 +181,7 @@ module.exports = (query) => {
         }
     }
 
-    async function addUserAndRoleToRequest({userId, roleId, requestId}) {
+    async function addUserAndRoleToRequest({userId, roleId, requestId}, client) {
         const statement = {
             name: 'Add user and role to request',
             text:
@@ -189,8 +191,8 @@ module.exports = (query) => {
             values: [userId, roleId, requestId]
         }
 
-        await query(statement)
-        //TODO -> Check if insert was successful
+        const res = await query(statement, client)
+        return res.rowCount;
     }
 
     async function countRequests({
@@ -245,7 +247,7 @@ module.exports = (query) => {
         return result.rowCount;
     }
 
-    async function insertB({char2, int}, client, timestamp) {
+    async function insertB({char2, int}, client,) {
         const statement = {
             name: 'INSERT TABLE B',
             text:

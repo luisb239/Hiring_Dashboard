@@ -9,7 +9,8 @@ module.exports = (query) => {
         createProcess,
         getCandidateProcesses,
         updateProcessStatus,
-        getAllProcessesStatusFromRequest
+        getAllProcessesStatusFromRequest,
+        updateProcess
     }
 
     async function getCandidateProcesses({candidateId}) {
@@ -44,6 +45,20 @@ module.exports = (query) => {
 
         const result = await query(statement)
         return result.rowCount > 0
+    }
+
+    async function updateProcess({requestId, candidateId, status = null, timestamp, client}) {
+        const statement = {
+            name: 'Update Process',
+            text:
+                `UPDATE ${process.table} ` +
+                `SET ${process.status} = COALESCE($1, ${process.status}), ${process.timestamp} = $2 ` +
+                `WHERE ${process.requestId} = $3 AND ${process.candidateId} = $4 AND ${process.timestamp} < $2;`,
+            values: [status, timestamp, requestId, candidateId]
+        }
+
+        const result = await query(statement, client)
+        return result.rowCount
     }
 
 

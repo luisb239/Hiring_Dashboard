@@ -12,13 +12,13 @@ module.exports = (db, authModule, transporter) => {
     const requestProps = require('./request-props-service.js')(db.language, db.months, db.profile,
         db.project, db.skill, db.state, db.stateCsl, db.workflow, db.phase)
 
-    const candidate = require('./candidate-service.js')(db.candidate, db.profile, db.process)
+    const candidate = require('./candidate-service.js')(db.candidate, db.profile, db.process, db.transaction)
 
     const phase = require('./phase-service.js')(db.phase, db.info)
 
     const process = require('./process-service.js')(db.request, db.candidate,
         db.process, db.phase, db.info, db.processUnavailableReason, db.processPhases,
-        db.processInfo, db.reasons, db.status, email)
+        db.processInfo, db.reasons, db.status, email, db.transaction)
 
     const statistics = require('./statistics-service.js')(db.statistics)
 

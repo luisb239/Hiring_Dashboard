@@ -4,7 +4,7 @@ const errors = require('./errors/common-errors.js')
 const AppError = require('./errors/app-error.js')
 
 module.exports = (requestDb, candidateDb, processDb, phaseDb, infoDb, processUnavailableReasonDb,
-                  processPhaseDb, processInfoDb, reasonsDb, statusDb, emailService) => {
+                  processPhaseDb, processInfoDb, reasonsDb, statusDb, emailService, transaction) => {
 
     return {
         getProcessDetail,
@@ -143,7 +143,13 @@ module.exports = (requestDb, candidateDb, processDb, phaseDb, infoDb, processUna
             if (success) {
                 const candidate = await candidateDb.getCandidateById({id: candidateId})
                 const request = await requestDb.getRequestById({id: requestId})
-                await emailService.notifyStatus({id: requestId, oldStatus: oldStatus.status, newStatus: status, candidate, request})
+                await emailService.notifyStatus({
+                    id: requestId,
+                    oldStatus: oldStatus.status,
+                    newStatus: status,
+                    candidate,
+                    request
+                })
                 return {
                     message: `Process status updated with success to ${status}`
                 }
@@ -223,7 +229,13 @@ module.exports = (requestDb, candidateDb, processDb, phaseDb, infoDb, processUna
         await processPhaseDb.updateProcessCurrentPhase({requestId, candidateId, phase: newPhase})
         const candidate = await candidateDb.getCandidateById({id: candidateId})
         const request = await requestDb.getRequestById({id: requestId})
-        await emailService.notifyMoved({id: requestId, oldPhase: currentPhase.currentPhase, newPhase, candidate, request})
+        await emailService.notifyMoved({
+            id: requestId,
+            oldPhase: currentPhase.currentPhase,
+            newPhase,
+            candidate,
+            request
+        })
 
         return {
             oldPhase: currentPhase.currentPhase,
@@ -261,9 +273,21 @@ module.exports = (requestDb, candidateDb, processDb, phaseDb, infoDb, processUna
         }))
     }
 
-    async function updateProcessPhaseNotes({requestId, candidateId, phase, notes}) {
-        await processPhaseDb.updatePhaseOfProcess({
-            requestId, candidateId, phase, notes
+    async function updateProcessPhaseNotes({requestId, candidateId, phase, notes, timestamp}) {
+        await transaction(async (client) => {
+            await processPhaseDb.updatePhaseOfProcess({
+                requestId, candidateId, phase, notes, client
+            })
+
+            if (!await processDb.updateProcess({
+                requestId: requestId,
+                candidateId: candidateId,
+                timestamp: timestamp, client: client
+            })) {
+                throw new AppError(errors.preconditionFailed,
+                    'Could not Update Process Notes',
+                    'Timestamp of update is older than db timestamp')
+            }
         })
     }
 
