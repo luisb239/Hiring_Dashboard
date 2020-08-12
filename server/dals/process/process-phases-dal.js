@@ -18,7 +18,7 @@ module.exports = (query) => {
     async function updatePhaseOfProcess({
                                             requestId, candidateId, phase,
                                             startDate = null, updateDate = new Date(),
-                                            notes = null
+                                            notes = null, client = null
                                         }) {
         const statement = {
             name: 'Update Phase Of Process',
@@ -27,14 +27,13 @@ module.exports = (query) => {
                 `${processPhase.startDate} = COALESCE($1, ${processPhase.startDate}), ` +
                 `${processPhase.updateDate} = COALESCE($2, ${processPhase.updateDate}), ` +
                 `${processPhase.notes} = COALESCE($3, ${processPhase.notes}) ` +
-                `WHERE ` +
-                `${processPhase.requestId} = $4 AND ` +
-                `${processPhase.candidateId} = $5 AND ` +
-                `${processPhase.phase} = $6;`,
+                `WHERE ${processPhase.requestId} = $4 AND ${processPhase.candidateId} = $5 ` +
+                `AND ${processPhase.phase} = $6;`,
             values: [startDate, updateDate, notes, requestId, candidateId, phase]
         }
 
-        await query(statement)
+        const res = await query(statement, client)
+        return res.rowCount
     }
 
     async function addPhaseToProcess({

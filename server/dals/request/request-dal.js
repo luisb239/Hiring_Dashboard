@@ -181,7 +181,7 @@ module.exports = (query) => {
         }
     }
 
-    async function addUserAndRoleToRequest({userId, roleId, requestId}) {
+    async function addUserAndRoleToRequest({userId, roleId, requestId}, client) {
         const statement = {
             name: 'Add user and role to request',
             text:
@@ -191,8 +191,8 @@ module.exports = (query) => {
             values: [userId, roleId, requestId]
         }
 
-        await query(statement)
-        //TODO -> Check if insert was successful
+        const res = await query(statement, client)
+        return res.rowCount;
     }
 
     async function countRequests({

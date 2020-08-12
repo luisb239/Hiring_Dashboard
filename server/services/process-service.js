@@ -365,9 +365,21 @@ module.exports = (requestDb, candidateDb, processDb, phaseDb, infoDb, processUna
         }))
     }
 
-    async function updateProcessPhaseNotes({requestId, candidateId, phase, notes}) {
-        await processPhaseDb.updatePhaseOfProcess({
-            requestId, candidateId, phase, notes
+    async function updateProcessPhaseNotes({requestId, candidateId, phase, notes, timestamp}) {
+        await transaction(async (client) => {
+            await processPhaseDb.updatePhaseOfProcess({
+                requestId, candidateId, phase, notes, client
+            })
+
+            if (!await processDb.updateProcess({
+                requestId: requestId,
+                candidateId: candidateId,
+                timestamp: timestamp, client: client
+            })) {
+                throw new AppError(errors.preconditionFailed,
+                    'Could not Update Process Notes',
+                    'Timestamp of update is older than db timestamp')
+            }
         })
     }
 

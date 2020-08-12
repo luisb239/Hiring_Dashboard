@@ -10,4 +10,5 @@ module.exports = {
     cvEncoding: 'cv_encoding',
     available: 'available',
     profileInfo: 'profile_info',
+    timestamp: 'temp'
 }

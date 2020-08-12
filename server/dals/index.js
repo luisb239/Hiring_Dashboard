@@ -16,7 +16,7 @@ async function query(text, client) {
     } catch (e) {
         // log the error
         console.log(e)
-        // check the pg error code and throw respective exception to alert layer
+        // check the pg error code and throw respective exception to service layer
         checkAndThrowError(e)
     }
 }
@@ -83,5 +83,6 @@ const statistics = require('./statistics-dal.js')(query)
 module.exports = {
     request, candidate, skill, state, stateCsl, project, profile,
     language, workflow, phase, months, process, user, role, info, requestLanguage,
-    processUnavailableReason, processPhases, processInfo, reasons, status, statistics, transaction
+    processUnavailableReason, processPhases, processInfo, reasons, status, statistics,
+    transaction
 }

@@ -3,7 +3,7 @@
 const AppError = require('./errors/app-error.js')
 const errors = require('./errors/common-errors.js')
 
-module.exports = (candidateDb, profilesDb, processDb) => {
+module.exports = (candidateDb, profilesDb, processDb, transaction) => {
 
     return {
         getCandidates: getCandidates,
@@ -42,8 +42,8 @@ module.exports = (candidateDb, profilesDb, processDb) => {
 
     async function updateCandidate({
                                        id, cvFileName = null, cvMimeType = null,
-                                       cvFileBuffer = null, cvEncoding = null, profileInfo = null, available = null,
-                                       profiles = null
+                                       cvFileBuffer = null, cvEncoding = null, profileInfo = null,
+                                       available = null, profiles = null, timestamp = new Date()
                                    }) {
         // Convert string to boolean
         if (available)
@@ -52,19 +52,31 @@ module.exports = (candidateDb, profilesDb, processDb) => {
         if (profiles)
             profiles = JSON.parse(profiles)
 
-        await candidateDb.updateCandidate({
-            id: id,
-            profileInfo: profileInfo,
-            available: available,
-            cvFileName: cvFileName,
-            cvMimeType: cvMimeType,
-            cvBuffer: cvFileBuffer,
-            cvEncoding: cvEncoding
-        })
+        await transaction(async (client) => {
+            await candidateDb.updateCandidate({
+                id: id,
+                profileInfo: profileInfo,
+                available: available,
+                cvFileName: cvFileName,
+                cvMimeType: cvMimeType,
+                cvBuffer: cvFileBuffer,
+                cvEncoding: cvEncoding,
+                timestamp: timestamp,
+                client: client
+            })
+            // or -> await addCandidateProfiles({id, profiles})
+            if (profiles && profiles.length > 0) {
+                await Promise.all(profiles.map(async prof => {
+                    await profilesDb.addProfileToCandidate({
+                        candidateId: id,
+                        profile: prof,
+                        client: client
+                    })
+                }))
+            }
 
-        if (profiles && profiles.length > 0) {
-            await addCandidateProfiles({id, profiles})
-        }
+
+        })
     }
 
     async function createCandidate({ name, profileInfo = null, cvFileName, cvMimeType, cvFileBuffer, cvEncoding }) {

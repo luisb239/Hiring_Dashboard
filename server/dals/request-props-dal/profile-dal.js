@@ -5,7 +5,12 @@ const candidateProfileSchema = require('../../schemas/candidate-profile-schema.j
 
 module.exports = (query) => {
 
-    return { getProfiles, getCandidateProfiles, addProfileToCandidate, deleteProfileFromCandidate }
+    return {
+        getProfiles,
+        getCandidateProfiles,
+        addProfileToCandidate,
+        deleteProfileFromCandidate
+    }
 
     async function getProfiles() {
         const statement = {
@@ -40,7 +45,7 @@ module.exports = (query) => {
         }
     }
 
-    async function addProfileToCandidate({ candidateId, profile }) {
+    async function addProfileToCandidate({candidateId, profile, client = null}) {
         const statement = {
             name: 'Add Profile To Candidate',
             text:
@@ -50,7 +55,7 @@ module.exports = (query) => {
             values: [candidateId, profile]
         }
 
-        await query(statement)
+        return (await query(statement, client)).rowCount
     }
 
     async function deleteProfileFromCandidate({ candidateId, profile }) {

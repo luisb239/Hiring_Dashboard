@@ -6,7 +6,7 @@ const verifyIfAuthenticated = require('../controllers/middlewares/verify_authent
 
 module.exports = function (router, controllers, authModule, upload, validator) {
 
-    const {body, param, query, checkSchema, header} = validator
+    const {body, param, query, checkSchema} = validator
 
     const users = 'users'
     const roles = 'roles'
@@ -223,11 +223,13 @@ module.exports = function (router, controllers, authModule, upload, validator) {
     /**
      * Add User to Request
      */
+    // TODO -> Change route to /requests/id (no need for /users)
     router.post(`/${requests}/:id/${users}`, [
         verifyIfAuthenticated,
         body('userId').exists().isInt().withMessage("User Id must exist and be of int type"),
         body('roleId').exists().isInt().withMessage("Role Id must exist and be of int type")
-    ], handle(controllers.request.postUser))
+    ], handle(controllers.request.addUserToRequest))
+
 
     // TODO - NEEDS TIMESTAMP
     /**
@@ -322,14 +324,18 @@ module.exports = function (router, controllers, authModule, upload, validator) {
     /**
      * Get candidate by id
      */
-    router.get(`/${candidates}/:id`, verifyIfAuthenticated, handle(controllers.candidate.getCandidateById))
+    router.get(`/${candidates}/:id`,
+        verifyIfAuthenticated,
+        handle(controllers.candidate.getCandidateById))
 
     /**
      * Download candidate's CV
      */
-    router.get(`/${candidates}/:id/download-cv`, verifyIfAuthenticated, handle(controllers.candidate.downloadCandidateCv))
+    router.get(`/${candidates}/:id/download-cv`,
+        verifyIfAuthenticated,
+        handle(controllers.candidate.downloadCandidateCv))
 
-    // TODO - NEEDS TIMESTAMP
+
     /**
      * Update Candidate Info
      */
@@ -351,10 +357,6 @@ module.exports = function (router, controllers, authModule, upload, validator) {
 
     /**
      * Create candidate
-     */
-
-    /*
-    TODO -> Validators missing -> name and cv need to exist
      */
     router.post(`/${candidates}`, [
         verifyIfAuthenticated,
@@ -382,7 +384,8 @@ module.exports = function (router, controllers, authModule, upload, validator) {
 
      */
 
-    //TODO -> CHANGE ROUTES
+    //TODO -> Change routes names, maybe /reasons and /status..
+    // or /process-unavailable-reasons and /process-status
     router.get(`/process/reasons`, verifyIfAuthenticated, handle(controllers.process.getUnavailableReasons))
 
     router.get(`/process/status`, verifyIfAuthenticated, handle(controllers.process.getAllStatus))

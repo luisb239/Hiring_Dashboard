@@ -173,10 +173,26 @@ module.exports = (requestDb, processDb, requestLanguagesDb, authModule, candidat
         await requestDb.addUserAndRoleToRequest({userId: userId, roleId: userRoleToAddToRequest, requestId: requestId})
     }
 
-    async function addUserToRequest({requestId, userId, roleId, currentUsername}) {
-        await requestDb.addUserAndRoleToRequest({userId, roleId, requestId})
-        const request = await requestDb.getRequestById({id: requestId})
-        await emailService.notifyAssigned({userId, request, currentUsername})
+    async function addUserToRequest({requestId, userId, roleId, currentUsername, timeStamp}) {
+        const success = await transaction(async (client) => {
+            const success = await requestDb.addUserAndRoleToRequest({userId, roleId, requestId}, client)
+            // TODO
+            // throw error, could not add user to request
+            // check reason for failure..
+            // request not found, user not found... other reason..
+            if (!await requestDb.updateRequest({id: requestId, timestamp: timeStamp})) {
+                // TODO -> could not update request.. request id not found or timestamp
+                throw new AppError(errors.preconditionFailed,
+                    'Could not add user to request',
+                    'Update timestamp was older than latest timestamp')
+            } else return success
+        })
+
+        if (success) {
+            const request = await requestDb.getRequestById({id: requestId})
+            await emailService.notifyAssigned({userId, request, currentUsername})
+        }
+        // TODO
     }
 
     // async function updateRequestLanguages({requestId, languages, isMandatory}) {

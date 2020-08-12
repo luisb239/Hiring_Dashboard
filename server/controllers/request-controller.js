@@ -6,7 +6,7 @@ module.exports = (service) => {
         getRequests: getRequests,
         postRequest: postRequest,
         getRequestById: getRequestById,
-        postUser: postUser,
+        addUserToRequest: addUserToRequest,
         patchRequest: patchRequest,
         deleteLanguage: deleteLanguage,
         countRequests: countRequests
@@ -77,11 +77,15 @@ module.exports = (service) => {
         })
     }
 
-    async function postUser(req, res) {
-        await service.addUserToRequest({requestId: req.params.id,
+    async function addUserToRequest(req, res) {
+        await service.addUserToRequest({
+            requestId: req.params.id,
             userId: req.body.userId,
             roleId: req.body.roleId,
-            currentUsername: req.user.username})
+            currentUsername: req.user.username,
+            timestamp: new Date()
+        })
+
         res.status(201).send({
             message: 'User added to the request successfully'
         })

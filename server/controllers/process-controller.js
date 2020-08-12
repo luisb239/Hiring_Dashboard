@@ -68,7 +68,8 @@ module.exports = (processService) => {
             requestId: req.params.requestId,
             candidateId: req.params.candidateId,
             phase: req.params.phase,
-            notes: req.body.notes
+            notes: req.body.notes,
+            timestamp: new Date()
         })
         res.status(200).send({message: `Phase ${req.params.phase} notes of process updated with success`})
     }
