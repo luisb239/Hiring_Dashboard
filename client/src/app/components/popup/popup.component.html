@@ -7,13 +7,13 @@
 <div class="modal-body" *ngIf="candidate && process">
   <div class="property">
     <h5 class="inline">CV:</h5>
-    <h6 class="inline cv" (click)="downloadCv()">{{candidate.cv}}</h6>
+    <h6 class="inline" id="cv" (click)="downloadCv()">{{candidate.cv}}</h6>
   </div>
   <form [formGroup]="updateForm" (submit)="updateCandidate()">
     <div>
       <div class="property">
         <h5>Available?</h5>
-        <div (click)="changeAvailable()" class="click-box">
+        <div (click)="changeAvailable()" id="click-box">
           <div *ngIf="candidate.available" class="circle available"></div>
           <div *ngIf="!candidate.available" class="circle not_available"></div>
         </div>

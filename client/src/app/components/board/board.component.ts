@@ -34,7 +34,7 @@ export class BoardComponent implements OnInit {
               private candidateService: CandidateService,
               private phaseService: PhaseService,
               private processPhaseService: ProcessPhaseService,
-              public alertService: AlertService
+              private alertService: AlertService
   ) {
   }
 
@@ -83,7 +83,8 @@ export class BoardComponent implements OnInit {
       );
       this.processPhaseService.updateProcessPhase(requestId, event.container.data[event.currentIndex].id,
         newPhase, this.properties.timestamp)
-        .subscribe(() => {}, () => {
+        .subscribe(() => {
+        }, () => {
           this.alertService.error('This card has already been moved by another user.');
           this.alertService.info('Fetching requests again...');
           this.getAllRequests();

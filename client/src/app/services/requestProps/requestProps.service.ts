@@ -1,13 +1,12 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
-import {catchError} from 'rxjs/operators';
-import { StatesDao } from 'src/app/model/requestProps/state-dao';
-import { StatesCslDao } from 'src/app/model/requestProps/statesCsl-dao';
-import { ProfilesDao } from 'src/app/model/requestProps/profiles-dao';
-import { ProjectsDao } from 'src/app/model/requestProps/project-dao';
-import { SkillsDao } from 'src/app/model/requestProps/skills-dao';
-import { LanguagesDao } from 'src/app/model/requestProps/language-dao';
-import { TargetDatesDao } from 'src/app/model/requestProps/targetDates-dao';
+import {StatesDao} from 'src/app/model/requestProps/state-dao';
+import {StatesCslDao} from 'src/app/model/requestProps/statesCsl-dao';
+import {ProfilesDao} from 'src/app/model/requestProps/profiles-dao';
+import {ProjectsDao} from 'src/app/model/requestProps/project-dao';
+import {SkillsDao} from 'src/app/model/requestProps/skills-dao';
+import {LanguagesDao} from 'src/app/model/requestProps/language-dao';
+import {TargetDatesDao} from 'src/app/model/requestProps/targetDates-dao';
 
 const httpOptions = {
   headers: new HttpHeaders({

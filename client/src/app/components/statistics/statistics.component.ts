@@ -1,13 +1,12 @@
-import { Component, OnInit } from '@angular/core';
-import { ViewChild } from '@angular/core';
-import { WebDataRocksPivotComponent } from '../../webdatarocks/webdatarocks.angular4';
+import {Component, ViewChild} from '@angular/core';
+import {WebDataRocksPivotComponent} from '../../webdatarocks/webdatarocks.angular4';
 import * as WebDataRocks from 'webdatarocks';
-import { AuthService } from '../../services/auth/auth.service';
-import { StatisticsProps } from './statistics-props';
-import { StatisticsProfilesComponent } from '../statistics-profiles/statistics-profiles.component';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { StatisticsService } from 'src/app/services/statistics/statistics.service';
-import { saveAs } from 'file-saver';
+import {AuthService} from '../../services/auth/auth.service';
+import {StatisticsProps} from './statistics-props';
+import {StatisticsProfilesComponent} from '../statistics-profiles/statistics-profiles.component';
+import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {StatisticsService} from 'src/app/services/statistics/statistics.service';
+import {saveAs} from 'file-saver';
 
 @Component({
   selector: 'app-statistics',
@@ -17,10 +16,6 @@ import { saveAs } from 'file-saver';
 export class StatisticsComponent {
   @ViewChild('pivot1') child: WebDataRocksPivotComponent;
   properties: StatisticsProps = new StatisticsProps();
-
-  onPivotReady(pivot: WebDataRocks.Pivot): void {
-    // console.log('[ready] WebDataRocksPivot', this.child);
-  }
 
   onCustomizeCell(cell: WebDataRocks.CellBuilder, data: WebDataRocks.CellData): void {
     if (data.isClassicTotalRow) {
@@ -50,7 +45,7 @@ export class StatisticsComponent {
       },
       slice: {
         rows: [
-          { uniqueName: 'project' }, { uniqueName: 'profile' }
+          {uniqueName: 'project'}, {uniqueName: 'profile'}
         ],
         columns: [
           {
@@ -100,7 +95,8 @@ export class StatisticsComponent {
           icon: this.properties.save_remote
         },
       ];
-      tabs[1].handler = () => { };
+      tabs[1].handler = () => {
+      };
       return tabs;
     };
   }
@@ -112,7 +108,7 @@ export class StatisticsComponent {
         this.properties.myReport.dataSource.data = statistics;
         // delete this.properties.myReport.dataSource.filename;
         const st = JSON.stringify(this.properties.myReport);
-        const blob = new Blob([st], { type: 'application/json' });
+        const blob = new Blob([st], {type: 'application/json'});
         saveAs(blob, `My_configs.json`);
       }, (error) => {
         console.log(error);

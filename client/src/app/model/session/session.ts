@@ -1,4 +1,4 @@
-import { Role } from '../user/user';
+import {Role} from '../user/user';
 
 export class Session {
   constructor(public auth: boolean,

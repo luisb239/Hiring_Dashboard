@@ -1,8 +1,8 @@
-.Request-Detail {
+#Request-Detail {
     margin: 10px;
 }
 
-.Request ul{
+#Request ul{
     margin: 10px;
     background-color: rgb(235, 235, 235);
     border-radius: 15px;
@@ -10,13 +10,13 @@
     width: 100%;
 }
 
-.Request li{
+#Request li{
     background-color: rgb(235, 235, 235);
     border-color: white;
     width: 100%;
 }
 
-.Request-Detail h3 {
+#Request-Detail h3 {
     margin: 10px;
     text-align: center;
     background-color: rgb(235, 235, 235);
@@ -25,11 +25,11 @@
     width: 100%;
 }
 
-.Request-Detail h2 {
+#Request-Detail h2 {
     margin: 10px;
 }
 
-.Request-Detail table {
+#Request-Detail table {
     margin: 10px;
     background-color: rgb(235, 235, 235);
     border-radius: 15px;
@@ -38,7 +38,7 @@
     width: 100%;
 }
 
-.Request-Detail > input, select {
+#Request-Detail > input, select {
   width: 180px;
 }
 

@@ -1,14 +1,8 @@
-import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { UsersDao } from '../../model/user/user-dao';
-import { RoleDao } from '../../model/role/role-dao';
-import { Role } from 'src/app/model/user/user';
-
-const httpOptions = {
-  headers: new HttpHeaders({
-    'Content-Type': 'application/json'
-  })
-};
+import {Injectable} from '@angular/core';
+import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
+import {UsersDao} from '../../model/user/user-dao';
+import {RoleDao} from '../../model/role/role-dao';
+import {Role} from 'src/app/model/user/user';
 
 @Injectable({
   providedIn: 'root'

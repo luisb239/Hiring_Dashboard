@@ -113,7 +113,7 @@ export class CreateRequestComponent implements OnInit {
       dateToSendProfile: value.dateToSendProfile
     };
     this.requestService.createRequest(body)
-      .subscribe(success => {
+      .subscribe(() => {
           this.alertService.success('Request Created Successfully!');
           this.router.navigate(['/all-requests']);
         },

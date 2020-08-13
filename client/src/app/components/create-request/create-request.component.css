@@ -1,12 +1,12 @@
-.form{
+#root {
+  margin: 1.5ex;
+}
+
+.form {
   margin-left: 20px;
   width: fit-content;
-}
-.CreateRequest {
-  /* font-family: Arial, Helvetica, sans-serif; */
-  margin: 1.5ex;
 }
 
 input[type=checkbox] {
   margin-right: 1ex;
-  }
+}

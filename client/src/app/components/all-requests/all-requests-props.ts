@@ -1,6 +1,7 @@
 import {RequestList} from '../../model/request/request-list';
 import {Options} from 'ng5-slider';
-import { MatTableDataSource } from '@angular/material/table';
+import {AllRequestsDataSource} from './all-requests-data-source';
+import {FormBuilder, FormGroup} from '@angular/forms';
 
 export class AllRequestsProps {
   requests: RequestList[];
@@ -26,5 +27,10 @@ export class AllRequestsProps {
   };
 
   requestId: number;
-  dataSource: MatTableDataSource<RequestList>;
+  dataSource: AllRequestsDataSource;
+
+  formGroup: FormGroup;
+  formBuilder: FormBuilder;
+  DEFAULT_PAGE_SIZE = 10;
+  listSize: number;
 }

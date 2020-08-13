@@ -1,7 +1,7 @@
-import { ConfigProfileDao } from './config-profile-dao';
+import {ConfigProfileDao} from './config-profile-dao';
 
 export class ConfigProfilesDao {
-    constructor(
-        public configs: ConfigProfileDao[]) {
-    }
+  constructor(
+    public configs: ConfigProfileDao[]) {
+  }
 }

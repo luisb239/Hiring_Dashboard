@@ -1,6 +1,10 @@
+.property {
+  display: block;
+  margin-top: 10px;
+  max-width: fit-content;
+}
 
-  .property {
-    display: block;
-    margin-top: 10px;
-    max-width: fit-content;
-  }
+.inline {
+  display: inline;
+  margin-right: 10px;
+}

@@ -1,6 +1,5 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders, HttpUrlEncodingCodec} from '@angular/common/http';
-import {catchError} from 'rxjs/operators';
 import {ConfigProfilesDao} from 'src/app/model/statistics/config-profiles-dao';
 import {ConfigProfileDao} from 'src/app/model/statistics/config-profile-dao';
 import {SuccessPostDao} from 'src/app/model/common/successPost-dao';

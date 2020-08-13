@@ -1,9 +1,8 @@
-import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { catchError } from 'rxjs/operators';
-import { CandidateDao } from 'src/app/model/candidate/candidate-dao';
-import { CandidatesDao } from '../../model/candidate/candidates-dao';
-import { SuccessPostDao } from 'src/app/model/common/successPost-dao';
+import {Injectable} from '@angular/core';
+import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
+import {CandidateDao} from 'src/app/model/candidate/candidate-dao';
+import {CandidatesDao} from '../../model/candidate/candidates-dao';
+import {SuccessPostDao} from 'src/app/model/common/successPost-dao';
 
 const httpOptions = {
   headers: new HttpHeaders({

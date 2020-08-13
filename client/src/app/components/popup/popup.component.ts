@@ -155,7 +155,7 @@ export class PopupComponent implements OnInit {
         this.phase.phase,
         this.updateForm.value.phaseNotes,
         this.timestamp
-      ).subscribe(dao => {
+      ).subscribe(() => {
       }, error => {
         console.log(error);
       });
@@ -182,7 +182,7 @@ export class PopupComponent implements OnInit {
       available: !this.candidate.available
     };
     this.candidateService.updateCandidate(updateBody)
-      .subscribe(dao => {
+      .subscribe(() => {
         this.getCandidate();
       }, error => {
         console.log(error);

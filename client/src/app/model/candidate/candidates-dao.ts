@@ -1,5 +1,5 @@
-import { CandidateDetailsDao } from './candidate-details-dao';
+import {CandidateDetailsDao} from './candidate-details-dao';
 
 export class CandidatesDao {
-    candidates: CandidateDetailsDao[];
+  candidates: CandidateDetailsDao[];
 }

@@ -1,8 +1,7 @@
-
 export class UnavailableReasonsDao {
-    unavailableReasons: UnavailableReasonDao[];
+  unavailableReasons: UnavailableReasonDao[];
 }
 
 class UnavailableReasonDao {
-    unavailableReason: string;
+  unavailableReason: string;
 }

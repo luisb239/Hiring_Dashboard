@@ -4,8 +4,8 @@ import {RequestLanguageDao} from './request-language-dao';
 import {RequestProcessDao} from './request-process-dao';
 
 export class RequestDao {
-    request: RequestDetailsDao;
-    userRoles: UserRoleDao[];
-    processes: RequestProcessDao[];
-    languages: RequestLanguageDao[];
+  request: RequestDetailsDao;
+  userRoles: UserRoleDao[];
+  processes: RequestProcessDao[];
+  languages: RequestLanguageDao[];
 }

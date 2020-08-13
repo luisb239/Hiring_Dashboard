@@ -12,13 +12,13 @@
         <mat-option *ngFor="let profile of profiles" [value]="profile">{{profile}}</mat-option>
       </mat-select>
     </mat-form-field>
-    <div class="form-check form-check-inline filter-box">
+    <div class="form-check form-check-inline" id="filter-box">
       <input class="form-check-input" type="checkbox" id="available" formControlName="available">
       <label class="form-check-label" for="available">
         Select Only Available
       </label>
     </div>
-    <button type="submit" class="btn btn-primary filter" style="display: block">Filter</button>
+    <button type="submit" class="btn btn-primary" id="filter" style="display: block">Filter</button>
     <button id="resetRequestTable" class="btn btn-secondary reset-button reset" type="reset"
             (click)="getAllCandidates()">Reset Filter
     </button>
@@ -55,7 +55,7 @@
         </td>
       </tr>
     </table>
-    <button type="submit" class="btn btn-primary add">Add Candidates</button>
+    <button type="submit" class="btn btn-primary" id="add">Add Candidates</button>
   </form>
   <a [routerLink]="['/create-candidate/']" (click)="activeModal.close('Close click')"><h6>Create Candidate</h6></a>
 </div>
