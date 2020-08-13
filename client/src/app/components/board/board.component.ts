@@ -79,9 +79,15 @@ export class BoardComponent implements OnInit {
       transferArrayItem(event.previousContainer.data,
         event.container.data,
         event.previousIndex,
-        event.currentIndex);
-      this.processPhaseService.updateProcessPhase(requestId, event.container.data[event.currentIndex].id, newPhase)
-        .subscribe();
+        event.currentIndex
+      );
+      this.processPhaseService.updateProcessPhase(requestId, event.container.data[event.currentIndex].id,
+        newPhase, this.properties.timestamp)
+        .subscribe(() => {}, () => {
+          this.alertService.error('This card has already been moved by another user.');
+          this.alertService.info('Fetching requests again...');
+          this.getAllRequests();
+        });
     }
   }
 
@@ -207,6 +213,7 @@ export class BoardComponent implements OnInit {
     this.requestService.getUserCurrentRequests()
       .subscribe(
         requestsDao => {
+          this.properties.timestamp = new Date();
           this.properties.requests = requestsDao.requests.map(r => new RequestList(r.id, r.workflow, r.progress,
             r.state, r.description, r.quantity));
           this.properties.workflows = [...new Set(this.properties.requests.map(r => r.workflow))].map(w => new Workflow(w));

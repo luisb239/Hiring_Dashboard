@@ -216,7 +216,8 @@ module.exports = function (router, controllers, authModule, upload, validator) {
             .withMessage('Infos must be an array, with each element containing a name and a value property'),
         body('newPhase').optional().isString().withMessage("newPhase must be of string type"),
         body('status').optional().isString().withMessage("status must be of string type"),
-        body('unavailableReason').optional().isString().withMessage("unavailableReason must be of string type")
+        body('unavailableReason').optional().isString().withMessage("unavailableReason must be of string type"),
+        body('timestamp').exists().withMessage("timestamp must exist and must be of date type")
     ], handle(controllers.process.updateProcess))
 
     // TODO - NEEDS TIMESTAMP
@@ -238,7 +239,8 @@ module.exports = function (router, controllers, authModule, upload, validator) {
     router.put(`/${requests}/:requestId/${candidates}/:candidateId/${process}/${phases}/:phase`, [
         verifyIfAuthenticated,
         ...processValidators,
-        body('notes').isString().withMessage("Phase notes must be of string type")
+        body('notes').isString().withMessage("Phase notes must be of string type"),
+        body('timestamp').exists().withMessage("timestamp must exist and must be of date type")
     ], handle(controllers.process.updateProcessPhaseNotes))
 
     /**

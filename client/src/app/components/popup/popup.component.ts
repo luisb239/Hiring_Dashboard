@@ -35,6 +35,7 @@ export class PopupComponent implements OnInit {
   candidate: Candidate;
   attributeTemplates: PhaseAttribute[] = [];
   updateForm: FormGroup;
+  timestamp: Date;
 
   constructor(
     public activeModal: NgbActiveModal,
@@ -121,7 +122,7 @@ export class PopupComponent implements OnInit {
         }
       }
     );
-    const body: { status?: string, unavailableReason?: string, infos?: any[] } = {};
+    const body: { status?: string, unavailableReason?: string, infos?: any[], timestamp?: Date } = {};
 
     if (this.process.status !== this.updateForm.value.status) {
       body.status = this.updateForm.value.status;
@@ -136,6 +137,7 @@ export class PopupComponent implements OnInit {
     }
 
     if (body !== {}) {
+      body.timestamp = this.timestamp;
       this.processService.updateProcess(this.requestId, this.candidateId, body)
         .subscribe(() => {
             this.alertService.success('Updated Candidate successfully!');
@@ -151,7 +153,8 @@ export class PopupComponent implements OnInit {
         this.requestId,
         this.candidateId,
         this.phase.phase,
-        this.updateForm.value.phaseNotes
+        this.updateForm.value.phaseNotes,
+        this.timestamp
       ).subscribe(dao => {
       }, error => {
         console.log(error);
@@ -194,6 +197,7 @@ export class PopupComponent implements OnInit {
         dao.candidate.available,
         dao.candidate.cvFileName)))
       .subscribe(result => {
+        this.timestamp = new Date();
         this.candidate = result;
       }, error => {
         console.log(error);

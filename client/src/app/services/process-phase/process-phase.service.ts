@@ -17,13 +17,13 @@ export class ProcessPhaseService {
 
   baseUrl = `/hd`;
 
-  updateProcessPhase(requestId: number, candidateId: number, newPhase: string) {
+  updateProcessPhase(requestId: number, candidateId: number, newPhase: string, timestamp: Date) {
     return this.http.put(`${this.baseUrl}/requests/${requestId}/candidates/${candidateId}/process`,
-      {newPhase}, httpOptions);
+      {newPhase, timestamp}, httpOptions);
   }
 
-  updateProcessPhaseNotes(requestId: number, candidateId: number, phase: string, notes: string) {
+  updateProcessPhaseNotes(requestId: number, candidateId: number, phase: string, notes: string, timestamp: Date) {
     return this.http.put(`${this.baseUrl}/requests/${requestId}/candidates/${candidateId}/process/phases/${phase}`,
-      {notes}, httpOptions);
+      {notes, timestamp}, httpOptions);
   }
 }

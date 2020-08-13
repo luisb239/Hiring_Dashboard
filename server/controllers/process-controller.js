@@ -48,7 +48,7 @@ module.exports = (processService) => {
             status: req.body.status,
             unavailableReason: req.body.unavailableReason,
             infoArray: req.body.infos,
-            timestamp: new Date()
+            timestamp: req.body.timestamp,
         })
 
         res.status(200).send({message: 'Process updated with success'})
@@ -69,7 +69,7 @@ module.exports = (processService) => {
             candidateId: req.params.candidateId,
             phase: req.params.phase,
             notes: req.body.notes,
-            timestamp: new Date()
+            timestamp: req.body.timestamp
         })
         res.status(200).send({message: `Phase ${req.params.phase} notes of process updated with success`})
     }
