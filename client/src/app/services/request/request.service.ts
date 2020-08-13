@@ -80,10 +80,11 @@ export class RequestService {
    * @param requestId is used to specify a request.
    * @param userId is used to specify a user.
    * @param roleId is used to specify a role.
+   * @param timestamp is used to specify the user's time of arrival
    */
-  addUser(requestId: number, userId: number, roleId: number) {
+  addUser(requestId: number, userId: number, roleId: number, timestamp: Date) {
     return this.http.post<SuccessPostDao>(`${this.baseUrl}/requests/${requestId}/users`,
-      {userId, roleId}, httpOptions);
+      {userId, roleId, timestamp}, httpOptions);
   }
 
   updateRequest(requestId: number, body: any) {

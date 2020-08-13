@@ -9,9 +9,7 @@ export class RequestDetailProps {
   requestId: number;
   requestList: RequestList;
   userRoles: UserRole[];
-  // mandatoryLanguages: string;
   mandatoryLanguages: LanguageCheckbox[];
-  // valuedLanguages: string;
   valuedLanguages: LanguageCheckbox[];
   processes: ProcessList[];
   requestAttrs: string[];
@@ -25,6 +23,5 @@ export class RequestDetailProps {
   states: string[];
   statesCsl: string[];
   updateForm: FormGroup;
-  otherMandatory: string[];
-  otherValued: string[];
+  timestamp: Date;
 }

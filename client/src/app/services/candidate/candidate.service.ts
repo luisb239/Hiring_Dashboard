@@ -74,6 +74,7 @@ export class CandidateService {
       formData.append('profiles', JSON.stringify(body.profiles));
     }
     formData.append('available', String(body.available));
+    formData.append('timestamp', String(body.timestamp));
     return this.http.patch<CandidatesDao>(`${this.baseUrl}/candidates/${body.id}`,
       formData, {
         headers: new HttpHeaders({enctype: 'multipart/form-data'})

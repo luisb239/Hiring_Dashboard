@@ -10,12 +10,11 @@ export class CandidateDetailsProps {
   currentRequest: Request;
   currentProcess: Process;
   profiles: string[];
-  allProfiles: string[];
-  filteredProfiles: string[];
   allProcesses: Process[] = [];
   allRequests: Request[] = [];
   fileToUpload: File = null;
   updateForm: FormGroup;
   infoForm: FormControl;
   profilesForm: FormControl;
+  timestamp: Date;
 }

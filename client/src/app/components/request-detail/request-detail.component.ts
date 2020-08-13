@@ -91,6 +91,7 @@ export class RequestDetailComponent implements OnInit {
         this.properties.processes = result.processes;
         this.properties.mandatoryLanguages = result.mandatory;
         this.properties.valuedLanguages = result.valued;
+        this.properties.timestamp = new Date();
 
 
         this.properties.updateForm.addControl('project', new FormControl(result.requests.project));
@@ -236,7 +237,8 @@ export class RequestDetailComponent implements OnInit {
     this.userService.getRoleIdByName('recruiter').subscribe(dao => {
         const roleId = dao.id;
         values.forEach(idx => {
-          this.requestService.addUser(this.properties.requestId, this.properties.users[idx].userId, roleId)
+          this.requestService.addUser(this.properties.requestId, this.properties.users[idx].userId,
+            roleId, this.properties.timestamp)
             .subscribe(() => {
                 this.alertService.success('Recruiters added to this request successfully!');
                 this.getRequestAndUsers(this.properties.requestId);

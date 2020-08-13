@@ -228,7 +228,8 @@ module.exports = function (router, controllers, authModule, upload, validator) {
     router.post(`/${requests}/:id/${users}`, [
         verifyIfAuthenticated,
         body('userId').exists().isInt().withMessage("User Id must exist and be of int type"),
-        body('roleId').exists().isInt().withMessage("Role Id must exist and be of int type")
+        body('roleId').exists().isInt().withMessage("Role Id must exist and be of int type"),
+        body('timestamp').exists().withMessage("timestamp must exist and must be of date type")
     ], handle(controllers.request.addUserToRequest))
 
 
@@ -346,7 +347,8 @@ module.exports = function (router, controllers, authModule, upload, validator) {
         upload.single('cv'),
         body('profileInfo').optional().isString().withMessage("Profile information must be of string type"),
         body('available').optional().isString().withMessage("Available must be of string type"),
-        body('profiles').optional().isString().withMessage("Added profiles must be of string type")
+        body('profiles').optional().isString().withMessage("Added profiles must be of string type"),
+        body('timestamp').exists().withMessage("timestamp must exist and must be of date type")
     ], handle(controllers.candidate.updateCandidate))
 
     /**

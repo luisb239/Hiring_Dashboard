@@ -1,21 +1,21 @@
-import { Component, OnInit } from '@angular/core';
-import { CandidateService } from '../../services/candidate/candidate.service';
-import { Router } from '@angular/router';
-import { Candidate } from 'src/app/model/candidate/candidate';
-import { ProcessService } from '../../services/process/process.service';
-import { Process } from '../../model/process/process';
-import { ProcessPhase } from '../../model/process/process-phase';
-import { RequestService } from '../../services/request/request.service';
-import { Request } from '../../model/request/request';
-import { RequestList } from '../../model/request/request-list';
-import { PhaseInfo } from '../../model/phase/phase-info';
-import { CandidateProcess } from '../../model/candidate/candidate-process';
-import { CandidateDetailsProps } from './candidate-details-props';
-import { map } from 'rxjs/operators';
-import { RequestPropsService } from '../../services/requestProps/requestProps.service';
-import { FormBuilder } from '@angular/forms';
-import { AlertService } from 'src/app/services/alert/alert.service';
-import { Buffer } from 'buffer';
+import {Component, OnInit} from '@angular/core';
+import {CandidateService} from '../../services/candidate/candidate.service';
+import {Router} from '@angular/router';
+import {Candidate} from 'src/app/model/candidate/candidate';
+import {ProcessService} from '../../services/process/process.service';
+import {Process} from '../../model/process/process';
+import {ProcessPhase} from '../../model/process/process-phase';
+import {RequestService} from '../../services/request/request.service';
+import {Request} from '../../model/request/request';
+import {RequestList} from '../../model/request/request-list';
+import {PhaseInfo} from '../../model/phase/phase-info';
+import {CandidateProcess} from '../../model/candidate/candidate-process';
+import {CandidateDetailsProps} from './candidate-details-props';
+import {map} from 'rxjs/operators';
+import {RequestPropsService} from '../../services/requestProps/requestProps.service';
+import {FormBuilder} from '@angular/forms';
+import {AlertService} from 'src/app/services/alert/alert.service';
+import {Buffer} from 'buffer';
 
 @Component({
   selector: 'app-candidate-details',
@@ -43,6 +43,7 @@ export class CandidateDetailsComponent implements OnInit {
 
     this.candidateService.getCandidateById(this.properties.candidateId)
       .subscribe(dao => {
+        this.properties.timestamp = new Date();
         const result = dao.candidate;
         this.properties.candidate = new Candidate(result.name,
           result.id,
@@ -67,30 +68,23 @@ export class CandidateDetailsComponent implements OnInit {
 
             this.processService.getProcess(process.requestId, this.properties.candidateId)
               .subscribe(processDao => {
-                this.properties.allProcesses.push(new Process(processDao.status,
-                  processDao.unavailableReason,
-                  processDao.phases.map(phase => new ProcessPhase(
-                    phase.phase,
-                    phase.startDate,
-                    phase.updateDate,
-                    phase.notes,
-                    phase.infos.map(info => new PhaseInfo(info.name, info.value))
-                  )))
-                );
-              },
+                  this.properties.allProcesses.push(new Process(processDao.status,
+                    processDao.unavailableReason,
+                    processDao.phases.map(phase => new ProcessPhase(
+                      phase.phase,
+                      phase.startDate,
+                      phase.updateDate,
+                      phase.notes,
+                      phase.infos.map(info => new PhaseInfo(info.name, info.value))
+                    )))
+                  );
+                },
                 error => {
                   console.log(error);
                 });
           });
 
-        this.requestPropsService.getRequestProfiles()
-          .pipe(map(profDao => profDao.profiles.map(p => p.profile)))
-          .subscribe(profs => {
-            this.properties.profiles =
-              profs.filter(p => !this.properties.candidate.profiles.some(profile => profile === p));
-          }, error => {
-            console.log(error);
-          });
+        this.getRequestProfiles();
 
         this.properties.infoForm = this.formBuilder.control(this.properties.candidate.profileInfo);
         this.properties.profilesForm = this.formBuilder.control('');
@@ -135,7 +129,8 @@ export class CandidateDetailsComponent implements OnInit {
       cv: null,
       profileInfo: this.properties.candidate.profileInfo,
       available: this.properties.candidate.available,
-      profiles: []
+      profiles: [],
+      timestamp: this.properties.timestamp
     };
     body.id = this.properties.candidateId;
     if (this.properties.fileToUpload !== null) {
@@ -149,7 +144,7 @@ export class CandidateDetailsComponent implements OnInit {
     }
     body.available = this.properties.candidate.available;
     this.candidateService.updateCandidate(body)
-      .subscribe(dao => {
+      .subscribe(() => {
         this.alertService.success('Candidate Updated Successfully');
         this.updateCandidateComponent();
         this.properties.profilesForm.setValue('');
@@ -160,8 +155,8 @@ export class CandidateDetailsComponent implements OnInit {
 
   handleProfileDelete(profile: string) {
     const encodedProfile = Buffer.from(profile, 'binary').toString('base64');
-    this.candidateService.removeCandidateProfile({ id: this.properties.candidateId, profile: encodedProfile })
-      .subscribe(data => {
+    this.candidateService.removeCandidateProfile({id: this.properties.candidateId, profile: encodedProfile})
+      .subscribe(() => {
         this.alertService.success('Profile removed successfully');
         this.updateCandidateComponent();
         this.properties.profilesForm.setValue('');
@@ -179,6 +174,7 @@ export class CandidateDetailsComponent implements OnInit {
     this.candidateService.getCandidateById(this.properties.candidateId)
       .subscribe(candidateDao => {
         const result = candidateDao.candidate;
+        this.properties.timestamp = new Date();
         this.properties.candidate = new Candidate(result.name,
           result.id,
           result.profileInfo,
@@ -186,14 +182,7 @@ export class CandidateDetailsComponent implements OnInit {
           result.cvFileName,
           candidateDao.profiles.map(pi => pi.profile),
           candidateDao.processes.map(proc => new CandidateProcess(proc.status, proc.requestId)));
-        this.requestPropsService.getRequestProfiles()
-          .pipe(map(profDao => profDao.profiles.map(p => p.profile)))
-          .subscribe(profs => {
-            this.properties.profiles =
-              profs.filter(p => !this.properties.candidate.profiles.some(profile => profile === p));
-          }, error => {
-            console.log(error);
-          });
+        this.getRequestProfiles();
       }, error => {
         console.log(error);
       });
@@ -202,12 +191,23 @@ export class CandidateDetailsComponent implements OnInit {
   downloadCv() {
     this.candidateService.downloadCandidateCv(this.properties.candidateId)
       .subscribe(data => {
-        const blob = new Blob([data], { type: 'application/pdf' });
+        const blob = new Blob([data], {type: 'application/pdf'});
         const downloadURL = window.URL.createObjectURL(blob);
         const link = document.createElement('a');
         link.href = downloadURL;
         link.download = this.properties.candidate.cv;
         link.click();
+      });
+  }
+
+  getRequestProfiles() {
+    this.requestPropsService.getRequestProfiles()
+      .pipe(map(profDao => profDao.profiles.map(p => p.profile)))
+      .subscribe(profs => {
+        this.properties.profiles =
+          profs.filter(p => !this.properties.candidate.profiles.some(profile => profile === p));
+      }, error => {
+        console.log(error);
       });
   }
 
