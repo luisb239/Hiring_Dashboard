@@ -1,9 +1,9 @@
-import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { StatisticsService } from 'src/app/services/statistics/statistics.service';
-import { StatisticsProfilesProps } from './statistics-profiles-props';
-import { ConfigProfile } from 'src/app/model/statistics/config-profile';
-import { FormBuilder } from '@angular/forms';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
+import {StatisticsService} from 'src/app/services/statistics/statistics.service';
+import {StatisticsProfilesProps} from './statistics-profiles-props';
+import {ConfigProfile} from 'src/app/model/statistics/config-profile';
+import {FormBuilder} from '@angular/forms';
 import {AlertService} from '../../services/alert/alert.service';
 
 @Component({
@@ -23,12 +23,13 @@ export class StatisticsProfilesComponent implements OnInit {
     public statisticsService: StatisticsService,
     private formBuilder: FormBuilder,
     private alertService: AlertService
-    ) { }
+  ) {
+  }
 
   ngOnInit(): void {
     this.statisticsService.getUserConfigProfiles()
-      .subscribe(daos => {
-        this.properties.configProfiles = daos.configs.map(configDao => new ConfigProfile(configDao.profileName));
+      .subscribe(result => {
+        this.properties.configProfiles = result.configs.map(configDao => new ConfigProfile(configDao.profileName));
       }, error => {
         console.log(error);
       });
@@ -36,17 +37,6 @@ export class StatisticsProfilesComponent implements OnInit {
       createProfileForm: this.formBuilder.control(''),
       getProfileForm: this.formBuilder.control('')
     });
-    // this.statisticsService.getConfigProfiles(this.userId)
-    //   .subscribe(configDaos => {
-    //     this.properties.configProfiles =
-    //       configDaos.configs.map(dao => new ConfigProfile(dao.userId, dao.profileName));
-    //   }, error => {
-    //     console.log(error);
-    //   });
-    // this.properties.form = this.formBuilder.group({
-    //   createProfileForm: this.formBuilder.control(''),
-    //   getProfileForm: this.formBuilder.control('')
-    // });
   }
 
   createProfile() {

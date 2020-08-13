@@ -1,10 +1,14 @@
-.container {
-  margin-left: 20px;
-  margin-top: 10px;
-  background-color: #ffffff;
+#root {
+  width: 100%;
 }
 
-.props, .procs {
+#box {
+  width: fit-content;
+  flex-direction: column;
+  min-width: 0;
+}
+
+#props, #procs {
   background-color: rgb(235, 235, 235);
   border-radius: 15px;
   padding: 10px;
@@ -14,7 +18,7 @@
   margin-bottom: 10px;
 }
 
-.cv {
+#cv {
   color: dodgerblue;
   text-decoration: underline;
   cursor: pointer;
@@ -34,7 +38,7 @@
   margin-right: 10px;
 }
 
-.current {
+#current {
   color: black;
 }
 
@@ -61,7 +65,7 @@
   background-color: darkred;
 }
 
-.click-box {
+#click-box {
   width: fit-content;
 }
 
@@ -77,16 +81,6 @@ td {
   vertical-align: text-top;
 }
 
-.root {
-  width: 100%;
-}
-
-.box {
-  width: fit-content;
-  flex-direction: column;
-  min-width: 0;
-}
-
 .custom-file {
   display: block;
   margin-top: 5px;
@@ -95,7 +89,7 @@ td {
   max-width: 15rem;
 }
 
-.custom-file-label { 
+.custom-file-label {
   min-width: 0;
   max-width: 15rem;
 }
@@ -121,19 +115,6 @@ td {
 .assign {
   text-align: center;
 }
-
-
-/* #removeProfile {
-  display: flex;
-  flex-direction: row;
-  flex-grow: 1;
-}
-
-.candidateProfile {
-  display: flex;
-  flex-direction: row;
-  flex-grow: 1;
-} */
 
 #info {
   max-width: 20em;

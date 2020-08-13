@@ -1,7 +1,7 @@
 export class StatusListDao {
-    status: StatusDao[];
+  status: StatusDao[];
 }
 
 class StatusDao {
-    status: string;
+  status: string;
 }

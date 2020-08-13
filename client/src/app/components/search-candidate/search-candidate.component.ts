@@ -1,10 +1,9 @@
 import {Component, OnInit} from '@angular/core';
-import {FormControl, FormBuilder, FormGroup} from '@angular/forms';
+import {FormBuilder} from '@angular/forms';
 import {CandidateService} from '../../services/candidate/candidate.service';
-import {AlertService} from '../../services/alert/alert.service';
-import {CandidateDetailsDao} from '../../model/candidate/candidate-details-dao';
 import {RequestPropsService} from '../../services/requestProps/requestProps.service';
 import {map} from 'rxjs/operators';
+import {SearchCandidateProps} from './search-candidate-props';
 
 @Component({
   selector: 'app-search-candidate',
@@ -13,15 +12,11 @@ import {map} from 'rxjs/operators';
 })
 export class SearchCandidateComponent implements OnInit {
 
-  profiles: string[];
-  filterForm: FormGroup;
-  candidatesForm = new FormControl();
-  candidates: CandidateDetailsDao[];
+  properties: SearchCandidateProps = new SearchCandidateProps();
 
   constructor(private requestPropsService: RequestPropsService,
               private formBuilder: FormBuilder,
-              private candidateService: CandidateService,
-              private alertService: AlertService) {
+              private candidateService: CandidateService) {
   }
 
   ngOnInit(): void {
@@ -31,12 +26,12 @@ export class SearchCandidateComponent implements OnInit {
     this.requestPropsService.getRequestProfiles()
       .pipe(map(dao => dao.profiles.map(p => p.profile)))
       .subscribe(result => {
-        this.profiles = result;
+        this.properties.profiles = result;
       }, error => {
         console.log(error);
       });
     // Initialize filter form
-    this.filterForm = this.formBuilder.group(
+    this.properties.filterForm = this.formBuilder.group(
       {
         profiles: this.formBuilder.control([]),
         available: this.formBuilder.control(false)
@@ -45,9 +40,9 @@ export class SearchCandidateComponent implements OnInit {
   }
 
   filterCandidates() {
-    this.candidateService.getAllCandidatesWithQueries(this.filterForm.value.profiles, this.filterForm.value.available)
+    this.candidateService.getAllCandidatesWithQueries(this.properties.filterForm.value.profiles, this.properties.filterForm.value.available)
       .subscribe(result => {
-        this.candidates = result.candidates;
+        this.properties.candidates = result.candidates;
       }, error => {
         console.log(error);
       });
@@ -56,7 +51,7 @@ export class SearchCandidateComponent implements OnInit {
   fetchAllCandidates() {
     this.candidateService.getAllCandidates()
       .subscribe(result => {
-        this.candidates = result.candidates;
+        this.properties.candidates = result.candidates;
       }, error => {
         console.log(error);
       });

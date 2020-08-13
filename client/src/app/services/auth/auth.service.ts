@@ -1,8 +1,8 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {Session} from '../../model/session/session';
-import { Role } from 'src/app/model/user/user';
+import {Role} from 'src/app/model/user/user';
 
 const httpOptions = {
   headers: new HttpHeaders({
@@ -19,7 +19,6 @@ export class AuthService {
   private authUrl = `/hd/auth`;
   public azureAuthenticationUrl = `${this.authUrl}/azure`;
   private authSession = `${this.authUrl}/session`;
-  private sessionInfo = `${this.authSession}/info`;
   private logoutUrl = `${this.authUrl}/logout`;
   private authKey = 'auth';
 
@@ -60,11 +59,12 @@ export class AuthService {
     return this.currentUserRoles.find(r => r.role.toLowerCase() === 'admin') ||
       this.currentUserRoles.find(r => r.role.toLowerCase() === 'recruiter');
   }
+
   isJobOwner() {
     return this.currentUserRoles.find(r => r.role.toLowerCase() === 'admin') ||
       this.currentUserRoles.find(r => r.role.toLowerCase() === 'jobowner');
   }
-  // TODO isTeamLeader()
+
   isTeamLeader() {
     return this.currentUserRoles.find(r => r.role.toLowerCase() === 'admin') ||
       this.currentUserRoles.find(r => r.role.toLowerCase() === 'teamleader');

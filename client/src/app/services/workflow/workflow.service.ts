@@ -1,6 +1,6 @@
-import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { WorkflowsDao } from 'src/app/model/workflow/workflows-dao';
+import {Injectable} from '@angular/core';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {WorkflowsDao} from 'src/app/model/workflow/workflows-dao';
 import {WorkflowDao} from '../../model/workflow/workflow-dao';
 
 const httpOptions = {

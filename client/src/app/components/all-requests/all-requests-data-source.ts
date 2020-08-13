@@ -2,7 +2,7 @@ import {CollectionViewer, DataSource} from '@angular/cdk/collections';
 import {RequestDetailsDao} from '../../model/request/request-details-dao';
 import {BehaviorSubject, Observable, of} from 'rxjs';
 import {RequestService} from '../../services/request/request.service';
-import {catchError, finalize} from 'rxjs/operators';
+import {catchError} from 'rxjs/operators';
 
 export class AllRequestsDataSource implements DataSource<RequestDetailsDao> {
 

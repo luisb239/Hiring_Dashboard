@@ -1,7 +1,7 @@
 <div class="table-responsive-xl root">
-  <div class="filter-drawer">
+  <div id="filter-drawer">
     <h3>Filters</h3>
-    <form [formGroup]="formGroup" novalidate class="form" (submit)="onSubmit()">
+    <form [formGroup]="properties.formGroup" novalidate class="form" (submit)="onSubmit()">
       <div class="form-group un-sm un-md">
         <label for="inputSkill">Skill Center</label>
         <select class="custom-select" id="inputSkill" formControlName="skill">
@@ -66,15 +66,15 @@
         </ng5-slider>
       </div>
 
-      <button id="createRequestSubmit" class="btn btn-primary" type="submit">Filter</button>
-      <button id="resetRequestTable" class="btn btn-secondary reset-button" type="button" (click)="resetForms()">
+      <button class="btn btn-primary" type="submit">Filter</button>
+      <button id="resetRequestTable" class="btn btn-secondary" type="button" (click)="resetForms()">
         Reset
       </button>
     </form>
   </div>
 
   <div class="mat-elevation-z8">
-    <table mat-table [dataSource]="dataSource">
+    <table mat-table [dataSource]="properties.dataSource">
 
       <ng-container matColumnDef="Workflow">
         <th class="col-un-sm" mat-header-cell *matHeaderCellDef> Workflow</th>
@@ -148,9 +148,9 @@
     </table>
 
     <mat-paginator
-      [length]="listSize"
+      [length]="properties.listSize"
       [pageIndex]="0"
-      [pageSize]="DEFAULT_PAGE_SIZE"
+      [pageSize]="properties.DEFAULT_PAGE_SIZE"
       [pageSizeOptions]="[5, 10, 25, 50]"
       showFirstLastButtons>
     </mat-paginator>

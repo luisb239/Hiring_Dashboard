@@ -1,4 +1,4 @@
-<div class='Request-Detail'>
+<div id='Request-Detail'>
   <div class="container-fluid">
     <div *ngIf="properties.requestList">
       <div class='row'>
@@ -6,7 +6,7 @@
       </div>
       <div class="row">
         <div class='col'>
-          <div class='Request'>
+          <div id='Request'>
             <form [formGroup]="properties.updateForm" (submit)="onUpdate()">
               <ul class="list-group list-group-flush">
                 <li class="list-group-item">
