@@ -1,10 +1,10 @@
 'use strict'
 
-const requestSchema = require('../../schemas/request-schema.js')
-const userRoleReqSchema = require('../../schemas/user-roles-schemas/user-role-request-schema.js')
-const userRoleSchema = require('../../schemas/user-roles-schemas/user-role-schema.js')
-const user = require('../../schemas/user-roles-schemas/user-schema.js')
-const role = require('../../schemas/user-roles-schemas/role-schema.js')
+const requestSchema = require('../dal-schemas/request-schema.js')
+const userRoleReqSchema = require('../dal-schemas/user-roles-schemas/user-role-request-schema.js')
+const userRoleSchema = require('../dal-schemas/user-roles-schemas/user-role-schema.js')
+const user = require('../dal-schemas/user-roles-schemas/user-schema.js')
+const role = require('../dal-schemas/user-roles-schemas/role-schema.js')
 
 const dateFormat = require('dateformat');
 

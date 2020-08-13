@@ -3,7 +3,8 @@
 module.exports = (service) => {
 
     return {
-        getPhase, getPhases
+        getPhase: getPhase,
+        getPhases: getPhases
     }
 
     async function getPhase(req, res) {

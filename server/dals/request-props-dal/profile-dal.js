@@ -1,7 +1,7 @@
 'use strict'
 
-const schema = require('../../schemas/request-props-schemas/profile-schema.js')
-const candidateProfileSchema = require('../../schemas/candidate-profile-schema.js')
+const schema = require('../dal-schemas/request-props-schemas/profile-schema.js')
+const candidateProfileSchema = require('../dal-schemas/candidate-profile-schema.js')
 
 module.exports = (query) => {
 

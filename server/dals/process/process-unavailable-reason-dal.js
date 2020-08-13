@@ -1,6 +1,6 @@
 'use strict'
 
-const schema = require('../../schemas/process/process-unavailable-reasons-schema.js')
+const schema = require('../dal-schemas/process/process-unavailable-reasons-schema.js')
 
 module.exports = (query) => {
 

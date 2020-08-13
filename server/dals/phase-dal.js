@@ -1,7 +1,7 @@
 'use strict'
 
-const workflowPhase = require('../schemas/workflow-phases-schemas/workflow-phase-schema.js')
-const phaseSchema = require('../schemas/workflow-phases-schemas/phase-schema.js')
+const workflowPhase = require('./dal-schemas/workflow-phases-schemas/workflow-phase-schema.js')
+const phaseSchema = require('./dal-schemas/workflow-phases-schemas/phase-schema.js')
 
 module.exports = (query) => {
 

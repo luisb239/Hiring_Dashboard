@@ -3,13 +3,13 @@
 module.exports = (processService) => {
 
     return {
-        getProcessDetail,
-        getProcessesByRequestId,
-        updateProcess,
-        createProcess,
-        getUnavailableReasons,
-        getAllStatus,
-        updateProcessPhaseNotes
+        getProcessDetail: getProcessDetail,
+        getProcessesByRequestId: getProcessesByRequestId,
+        updateProcess: updateProcess,
+        createProcess: createProcess,
+        updateProcessPhaseNotes: updateProcessPhaseNotes,
+        getUnavailableReasons: getUnavailableReasons,
+        getAllStatus: getAllStatus,
     }
 
     async function getAllStatus(req, res) {

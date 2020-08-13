@@ -1,7 +1,7 @@
 'use strict'
 
-const infos = require('../schemas/workflow-phases-schemas/info-schema.js')
-const phaseInfos = require('../schemas/workflow-phases-schemas/phase-info-schema.js')
+const infos = require('./dal-schemas/workflow-phases-schemas/info-schema.js')
+const phaseInfos = require('./dal-schemas/workflow-phases-schemas/phase-info-schema.js')
 
 module.exports = (query) => {
     return {

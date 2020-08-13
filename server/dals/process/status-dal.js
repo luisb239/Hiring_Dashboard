@@ -1,6 +1,6 @@
 'use strict'
 
-const schema = require('../../schemas/process/status-schema.js')
+const schema = require('../dal-schemas/process/status-schema.js')
 
 module.exports = (query) => {
 

@@ -1,6 +1,6 @@
 'use strict'
 
-const schema = require('../../schemas/request-props-schemas/months-schema.js')
+const schema = require('../dal-schemas/request-props-schemas/months-schema.js')
 
 module.exports = (query) => {
 

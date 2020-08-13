@@ -1,6 +1,6 @@
 'use strict'
 
-const schema = require('../../schemas/request-props-schemas/workflow-schema.js')
+const schema = require('../dal-schemas/request-props-schemas/workflow-schema.js')
 
 module.exports = (query) => {
 

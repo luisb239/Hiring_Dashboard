@@ -116,7 +116,7 @@ export class RequestService {
       }
     });
 
-    return this.http.get<any>(`${this.baseUrl}/count`, {
+    return this.http.get<any>(`${this.baseUrl}/requests/count`, {
       params
     });
   }

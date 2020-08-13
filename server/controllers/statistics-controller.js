@@ -1,14 +1,12 @@
 'use strict'
 
-const configSuffix = 'configs:'
-
 module.exports = (service) => {
 
     return {
-        getStatistics,
-        saveUserStatisticsConfigs,
-        getUserStatisticsConfigs,
-        getUserStatisticsConfigsDetails
+        getStatistics: getStatistics,
+        saveUserStatisticsConfigs: saveUserStatisticsConfigs,
+        getUserStatisticsConfigs: getUserStatisticsConfigs,
+        getUserStatisticsConfigsDetails: getUserStatisticsConfigsDetails
     }
 
 

@@ -1,8 +1,8 @@
 'use strict'
 
-const candidate = require('../schemas/candidate-schema.js')
-const process = require('../schemas/process/process-schema.js')
-const candidateProfiles = require('../schemas/candidate-profile-schema.js')
+const candidate = require('./dal-schemas/candidate-schema.js')
+const process = require('./dal-schemas/process/process-schema.js')
+const candidateProfiles = require('./dal-schemas/candidate-profile-schema.js')
 
 module.exports = (query) => {
 

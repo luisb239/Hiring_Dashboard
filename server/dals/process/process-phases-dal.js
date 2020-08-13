@@ -1,8 +1,8 @@
 'use strict'
 
-const process = require('../../schemas/process/process-schema.js')
-const processPhase = require('../../schemas/process/process-phase-schema.js')
-const processCurrPhase = require('../../schemas/process/process-current-phase.js')
+const process = require('../dal-schemas/process/process-schema.js')
+const processPhase = require('../dal-schemas/process/process-phase-schema.js')
+const processCurrPhase = require('../dal-schemas/process/process-current-phase.js')
 
 module.exports = (query) => {
 

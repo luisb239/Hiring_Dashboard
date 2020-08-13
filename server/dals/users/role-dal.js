@@ -1,7 +1,7 @@
 'use strict'
 
-const roleSchema = require('../../schemas/user-roles-schemas/role-schema.js')
-const userRoleSchema = require('../../schemas/user-roles-schemas/user-role-schema.js')
+const roleSchema = require('../dal-schemas/user-roles-schemas/role-schema.js')
+const userRoleSchema = require('../dal-schemas/user-roles-schemas/user-role-schema.js')
 
 module.exports = (query) => {
 

@@ -1,16 +1,16 @@
 'use strict'
 
-const requestSchema = require('../schemas/request-schema.js')
-const userRoleReqSchema = require('../schemas/user-roles-schemas/user-role-request-schema.js')
-const userRoleSchema = require('../schemas/user-roles-schemas/user-role-schema.js')
-const user = require('../schemas/user-roles-schemas/user-schema.js')
-const role = require('../schemas/user-roles-schemas/role-schema.js')
-const processSchema = require('../schemas/process/process-schema.js')
-const candidateSchema = require('../schemas/candidate-schema')
-const currentPhaseSchema = require('../schemas/process/process-current-phase.js')
-const reqLanguagesSchema = require('../schemas/request-language-schema')
+const requestSchema = require('./dal-schemas/request-schema.js')
+const userRoleReqSchema = require('./dal-schemas/user-roles-schemas/user-role-request-schema.js')
+const userRoleSchema = require('./dal-schemas/user-roles-schemas/user-role-schema.js')
+const user = require('./dal-schemas/user-roles-schemas/user-schema.js')
+const role = require('./dal-schemas/user-roles-schemas/role-schema.js')
+const processSchema = require('./dal-schemas/process/process-schema.js')
+const candidateSchema = require('./dal-schemas/candidate-schema')
+const currentPhaseSchema = require('./dal-schemas/process/process-current-phase.js')
+const reqLanguagesSchema = require('./dal-schemas/request-language-schema')
 
-const statisticsConfigs = require('../schemas/statistics-configs-schema')
+const statisticsConfigs = require('./dal-schemas/statistics-configs-schema')
 
 module.exports = (query) => {
 
