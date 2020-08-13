@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { Session } from '../../model/session/session';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {BehaviorSubject, Observable} from 'rxjs';
+import {Session} from '../../model/session/session';
 import { Role } from 'src/app/model/user/user';
 
 const httpOptions = {
@@ -15,9 +15,7 @@ const httpOptions = {
 })
 export class AuthService {
 
-  // store the URL so we can redirect after logging in
-  redirectUrl: string;
-  userRoles: Role[];
+  public userRoles: BehaviorSubject<Role[]>;
   private authUrl = `/hd/auth`;
   public azureAuthenticationUrl = `${this.authUrl}/azure`;
   private authSession = `${this.authUrl}/session`;
@@ -26,6 +24,11 @@ export class AuthService {
   private authKey = 'auth';
 
   constructor(private http: HttpClient) {
+    this.userRoles = new BehaviorSubject<Role[]>([]);
+  }
+
+  public get currentUserRoles(): Role[] {
+    return this.userRoles.value;
   }
 
   // Get current session
@@ -54,17 +57,17 @@ export class AuthService {
   }
 
   isRecruiter() {
-    return this.userRoles.find(r => r.role.toLowerCase() === 'admin') ||
-      this.userRoles.find(r => r.role.toLowerCase() === 'recruiter');
+    return this.currentUserRoles.find(r => r.role.toLowerCase() === 'admin') ||
+      this.currentUserRoles.find(r => r.role.toLowerCase() === 'recruiter');
   }
   isJobOwner() {
-    return this.userRoles.find(r => r.role.toLowerCase() === 'admin') ||
-      this.userRoles.find(r => r.role.toLowerCase() === 'jobowner');
+    return this.currentUserRoles.find(r => r.role.toLowerCase() === 'admin') ||
+      this.currentUserRoles.find(r => r.role.toLowerCase() === 'jobowner');
   }
   // TODO isTeamLeader()
   isTeamLeader() {
-    return this.userRoles.find(r => r.role.toLowerCase() === 'admin') ||
-      this.userRoles.find(r => r.role.toLowerCase() === 'teamleader');
+    return this.currentUserRoles.find(r => r.role.toLowerCase() === 'admin') ||
+      this.currentUserRoles.find(r => r.role.toLowerCase() === 'teamleader');
   }
 
 

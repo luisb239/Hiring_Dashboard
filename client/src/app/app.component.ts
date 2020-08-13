@@ -1,5 +1,6 @@
 import {Component} from '@angular/core';
 import {AuthService} from './services/auth/auth.service';
+import {Role} from './model/user/user';
 
 @Component({
   selector: 'app-root',
@@ -8,6 +9,9 @@ import {AuthService} from './services/auth/auth.service';
 })
 export class AppComponent {
 
+  userRoles: Role[];
+
   constructor(public authService: AuthService) {
+    this.authService.userRoles.subscribe(roles => this.userRoles = roles);
   }
 }

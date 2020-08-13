@@ -48,7 +48,7 @@
             <a [routerLinkActive]="['active']" [routerLink]="['/all-requests']" class="dropdown-item">
               All Requests
             </a>
-            <a *ngIf='authService.userRoles && authService.isJobOwner()' [routerLinkActive]="['active']"
+            <a *ngIf='userRoles && authService.isJobOwner()' [routerLinkActive]="['active']"
                [routerLink]="['/create-request']" class="dropdown-item">
               Create Request
             </a>
@@ -63,7 +63,7 @@
             <a [routerLinkActive]="['active']" [routerLink]="['/search-candidate']" class="dropdown-item">
               Search Candidates
             </a>
-            <a *ngIf='authService.userRoles && authService.isRecruiter()' [routerLinkActive]="['active']"
+            <a *ngIf='userRoles && authService.isRecruiter()' [routerLinkActive]="['active']"
                [routerLink]="['/create-candidate']" class="dropdown-item">
               Create Candidate
             </a>

@@ -8,25 +8,23 @@ import {AlertService} from '../../alert/alert.service';
   providedIn: 'root'
 })
 export class AuthGuardService implements CanActivate {
-  constructor(private authService: AuthService, private router: Router, private alertService: AlertService) {
+  constructor(private authService: AuthService, private router: Router) {
   }
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot):
     Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-    if (!this.authService.getSessionFromStorage()) {
-      // Store the attempted URL for redirecting -> TODO -> We are not redirecting yet..
-      this.authService.redirectUrl = state.url;
-      // Alert the user
-      this.alertService.warn('You need to be signed in order to perform that action');
-    } else if (this.checkRoles(route.data.roles)) {
+    if (this.authService.getSessionFromStorage() && this.authService.currentUserRoles &&
+      this.authService.currentUserRoles.length > 0 && this.checkRoles(route.data.roles)) {
       return true;
     }
-    // Navigate to the home page
-    this.router.navigate(['/home']);
+    this.router.navigate(['/'], {queryParams: {returnUrl: state.url}});
     return false;
   }
 
   checkRoles(roles: any[]) {
-    return !roles || this.authService.userRoles.find(ur => roles.includes(ur.role));
+    if (!roles || roles.length === 0) {
+      return true;
+    }
+    return this.authService.currentUserRoles.find(ur => roles.includes(ur.role));
   }
 }
