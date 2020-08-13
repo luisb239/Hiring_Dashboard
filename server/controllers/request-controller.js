@@ -102,12 +102,11 @@ module.exports = (service) => {
             dateToSendProfile: req.body.dateToSendProfile,
             mandatoryLanguages: req.body.mandatoryLanguages,
             valuedLanguages: req.body.mandatoryLanguages,
-            timestamp: new Date()
+            timestamp: req.body.timestamp
         })
 
         res.status(201).send({
-            message: 'Request updated successfully',
-            id: req.params.id
+            message: 'Request updated successfully'
         })
     }
 

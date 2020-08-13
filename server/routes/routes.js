@@ -108,6 +108,7 @@ module.exports = function (router, controllers, authModule, upload, validator) {
      * Update Request
      */
     router.patch(`/${requests}/:id`, [
+        body('timestamp').exists().withMessage('timestamp must exist and be of date type'),
         body('quantity').exists().withMessage("Request must have a quantity"),
         body('targetDate').exists().withMessage("Request must have a target date"),
         body('skill').exists().withMessage("Request must have a skill"),
@@ -115,7 +116,7 @@ module.exports = function (router, controllers, authModule, upload, validator) {
         body('profile').exists().withMessage("Request must have a profile"),
         body('dateToSendProfile').optional().isAfter().toDate().withMessage("Date to send profile must be a date after today"),
         body('mandatoryLanguages').optional().isArray().withMessage("Mandatory Languages must be an array of languages"),
-        body('valuedLanguages').optional().isArray().withMessage("Valued Languages must be an array of languages"),
+        body('valuedLanguages').optional().isArray().withMessage("Valued Languages must be an array of languages")
     ], handle(controllers.request.patchRequest))
 
     /**
@@ -192,11 +193,9 @@ module.exports = function (router, controllers, authModule, upload, validator) {
         ],
         handle(controllers.process.getProcessDetail))
 
-    // TODO - NEEDS TIMESTAMP
     /**
      * Create process
      */
-    //TODO -> should be -> /process
     router.post(`/${requests}/:requestId/${candidates}/:candidateId/${process}`, [
         verifyIfAuthenticated,
         ...processValidators

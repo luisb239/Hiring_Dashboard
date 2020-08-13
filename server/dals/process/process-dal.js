@@ -76,16 +76,18 @@ module.exports = (query) => {
         return result.rows.map(row => extractProcessStatus(row))
     }
 
-    async function createProcess({requestId, candidateId, status, client}) {
+    async function createProcess({requestId, candidateId, status, timestamp = new Date(), client}) {
         const statement = {
             name: 'Create Process',
             text:
-                `INSERT INTO ${process.table} (${process.requestId}, ${process.candidateId}, ${process.status}) ` +
-                `VALUES ($1, $2, $3);`,
-            values: [requestId, candidateId, status]
+                `INSERT INTO ${process.table} (${process.requestId}, ` +
+                `${process.candidateId}, ${process.status}, ${process.timestamp}) ` +
+                `VALUES ($1, $2, $3, $4);`,
+            values: [requestId, candidateId, status, timestamp]
         }
 
-        await query(statement, client)
+        const res = await query(statement, client)
+        return res.rowCount
     }
 
 

@@ -64,19 +64,19 @@ module.exports = (query) => {
     }
 
     async function createCandidate({
-        name, available = true, profileInfo = null,
-        cvBuffer, cvMimeType, cvFileName, cvEncoding
-    }) {
+                                       name, available = true, profileInfo = null,
+                                       cvBuffer, cvMimeType, cvFileName, cvEncoding, timestamp = new Date()
+                                   }) {
         const statement = {
             name: 'Create Candidate',
             text:
                 `INSERT INTO ${candidate.table} ` +
                 `(${candidate.name}, ${candidate.cv}, ${candidate.cvMimeType}, ${candidate.cvFileName}, ` +
-                `${candidate.cvEncoding}, ${candidate.available}, ${candidate.profileInfo}) ` +
-                `VALUES ($1, $2, $3, $4, $5, $6, $7) ` +
+                `${candidate.cvEncoding}, ${candidate.available}, ${candidate.profileInfo}, ${candidate.timestamp}) ` +
+                `VALUES ($1, $2, $3, $4, $5, $6, $7, $8) ` +
                 `RETURNING ${candidate.id}, ${candidate.name}, ${candidate.available}, ` +
                 `${candidate.profileInfo}, ${candidate.cvFileName};`,
-            values: [name, cvBuffer, cvMimeType, cvFileName, cvEncoding, available, profileInfo]
+            values: [name, cvBuffer, cvMimeType, cvFileName, cvEncoding, available, profileInfo, timestamp]
         }
 
         const result = await query(statement)

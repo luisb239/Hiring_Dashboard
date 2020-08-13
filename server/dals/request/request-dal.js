@@ -110,10 +110,10 @@ module.exports = (query) => {
                 `${requestSchema.skill}, ${requestSchema.stateCsl}, ` +
                 `${requestSchema.project}, ${requestSchema.profile}, ` +
                 `${requestSchema.workflow}, ${requestSchema.dateToSendProfile}, ` +
-                `${requestSchema.request_date}, ${requestSchema.progress}) ` +
-                `VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12) RETURNING *;`,
+                `${requestSchema.request_date}, ${requestSchema.progress}, ${requestSchema.timestamp}) ` +
+                `VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13) RETURNING *;`,
             values: [quantity, description, targetDate, state, skill,
-                stateCsl, project, profile, workflow, dateToSendProfile, requestDate, progress]
+                stateCsl, project, profile, workflow, dateToSendProfile, requestDate, progress, requestDate]
         }
 
         // TODO
