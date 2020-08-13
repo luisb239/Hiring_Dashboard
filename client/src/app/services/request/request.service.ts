@@ -6,6 +6,7 @@ import {RequestsDao} from 'src/app/model/request/requests-dao';
 import {RequestDetailsDao} from 'src/app/model/request/request-details-dao';
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
+import {AuthService} from '../auth/auth.service';
 
 const httpOptions = {
   headers: new HttpHeaders({
@@ -21,7 +22,7 @@ const httpOptions = {
  * This class supplies all the functions needed to manage requests.
  */
 export class RequestService {
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private authService: AuthService) {
   }
 
   baseUrl = `/hd`;
@@ -55,10 +56,13 @@ export class RequestService {
   }
 
   /**
-   *  This function queries the server for all the requests associated with a user-role.
+   *  This function queries the server for all the requests associated with a user.
    */
   getUserCurrentRequests() {
-    const params = new HttpParams().set('currentUser', String(true));
+    let params = new HttpParams();
+    if (!this.authService.currentUserRoles.find(r => r.role === 'admin' || r.role === 'teamLeader')) {
+      params = params.set('currentUser', String(true));
+    }
     return this.http.get<RequestsDao>(`${this.baseUrl}/requests`,
       {
         headers: new HttpHeaders({

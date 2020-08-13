@@ -2,7 +2,6 @@
 
 const roleSchema = require('../../schemas/user-roles-schemas/role-schema.js')
 const userRoleSchema = require('../../schemas/user-roles-schemas/user-role-schema.js')
-const userRoleTypeSchema = require('../../schemas/user-roles-schemas/user-role-type-schema.js')
 
 module.exports = (query) => {
 
@@ -17,9 +16,6 @@ module.exports = (query) => {
                 `SELECT * FROM ${roleSchema.table} ` +
                 `INNER JOIN ${userRoleSchema.table} AS UR ON ` +
                 `${roleSchema.table}.${roleSchema.roleId} = UR.${userRoleSchema.roleId} ` +
-                `LEFT JOIN ${userRoleTypeSchema.table} AS URT ON ` +
-                `UR.${userRoleSchema.userId} = URT.${userRoleTypeSchema.userId} AND ` +
-                `UR.${userRoleSchema.roleId} = URT.${userRoleTypeSchema.roleId} ` +
                 `WHERE ${userRoleSchema.userId} = $1;`,
             values: [userId]
         }
@@ -30,9 +26,7 @@ module.exports = (query) => {
     function extractRole(row) {
         return {
             role: row[roleSchema.role],
-            // roleType: row[roleSchema.],
-            roleId: row[roleSchema.roleId],
-            roleType: row[userRoleTypeSchema.roleType]
+            roleId: row[roleSchema.roleId]
         }
     }
 }

@@ -44,12 +44,15 @@ module.exports = (requestDb, processDb, requestLanguagesDb, authModule, candidat
                                    minProgress = null, maxProgress = null,
                                    targetDate = null, userId = null
                                }) {
+
+
+        const requests = await requestDb.getRequests({
+            pageNumber, pageSize,
+            skill, state, stateCsl, profile, project, workflow, minQuantity,
+            maxQuantity, minProgress, maxProgress, targetDate, userId
+        })
         return {
-            requests: await requestDb.getRequests({
-                pageNumber, pageSize,
-                skill, state, stateCsl, profile, project, workflow, minQuantity,
-                maxQuantity, minProgress, maxProgress, targetDate, userId
-            })
+            requests
         }
     }
 
