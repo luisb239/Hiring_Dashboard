@@ -5,7 +5,7 @@
       <mat-form-field id="profile">
         <mat-label>Possible Profiles</mat-label>
         <mat-select formControlName="profiles" multiple>
-          <mat-option *ngFor="let profile of properties." [value]="profile">{{profile}}</mat-option>
+          <mat-option *ngFor="let profile of properties.profiles" [value]="profile">{{profile}}</mat-option>
         </mat-select>
       </mat-form-field>
       <div class="form-check form-check-inline" id="filter-box">

@@ -72,8 +72,6 @@ export class CandidateDetailsComponent implements OnInit {
                     processDao.unavailableReason,
                     processDao.phases.map(phase => new ProcessPhase(
                       phase.phase,
-                      phase.startDate,
-                      phase.updateDate,
                       phase.notes,
                       phase.infos.map(info => new PhaseInfo(info.name, info.value))
                     )))
@@ -113,8 +111,6 @@ export class CandidateDetailsComponent implements OnInit {
         .subscribe(dao => {
           this.properties.currentProcess = new Process(dao.status, dao.unavailableReason,
             dao.phases.map(phase => new ProcessPhase(phase.phase,
-              phase.startDate,
-              phase.updateDate,
               phase.notes,
               phase.infos.map(info => new PhaseInfo(info.name, info.value)))));
         }, error => {

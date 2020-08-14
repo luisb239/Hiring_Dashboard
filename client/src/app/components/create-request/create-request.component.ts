@@ -37,48 +37,48 @@ export class CreateRequestComponent implements OnInit {
       .subscribe(dao => {
           this.properties.skills = dao.skills.map(s => s.skill);
         },
-        error => {
-          console.log(error);
+        () => {
+          this.alertService.error('Unexpected server error. Refresh and try again.');
         });
 
     this.reqPropsService.getRequestProjects()
       .subscribe(dao => {
           this.properties.projects = dao.projects.map(p => p.project);
         },
-        error => {
-          console.log(error);
+        () => {
+          this.alertService.error('Unexpected server error. Refresh and try again.');
         });
 
     this.reqPropsService.getRequestProfiles()
       .subscribe(dao => {
           this.properties.profiles = dao.profiles.map(p => p.profile);
         },
-        error => {
-          console.log(error);
+        () => {
+          this.alertService.error('Unexpected server error. Refresh and try again.');
         });
 
     this.reqPropsService.getRequestLanguages()
       .subscribe(dao => {
           this.properties.languages = dao.languages.map(l => l.language);
         },
-        error => {
-          console.log(error);
+        () => {
+          this.alertService.error('Unexpected server error. Refresh and try again.');
         });
 
     this.reqPropsService.getTargetDates()
       .subscribe(dao => {
           this.properties.targetDates = dao.months.map(m => m.month);
         },
-        error => {
-          console.log(error);
+        () => {
+          this.alertService.error('Unexpected server error. Refresh and try again.');
         });
 
     this.workflowService.getAllWorkflows()
       .subscribe(dao => {
           this.properties.workflows = dao.workflows.map(w => w.workflow);
         },
-        error => {
-          console.log(error);
+        () => {
+          this.alertService.error('Unexpected server error. Refresh and try again.');
         });
     this.properties.form = this.formBuilder.group({
       description: this.formBuilder.control(''),
@@ -117,8 +117,8 @@ export class CreateRequestComponent implements OnInit {
           this.alertService.success('Request Created Successfully!');
           this.router.navigate(['/all-requests']);
         },
-        error => {
-          console.log(error);
+        () => {
+          this.alertService.error('Unexpected server error. Unable to create request.');
         });
   }
 

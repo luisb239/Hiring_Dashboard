@@ -265,7 +265,8 @@ export class RequestDetailComponent implements OnInit {
         .map(l => l.language),
       valuedLanguages: this.properties.valuedLanguages
         .filter(l => l.checked && !l.initialCheck)
-        .map(l => l.language)
+        .map(l => l.language),
+      timestamp: this.properties.timestamp
     };
 
     this.requestService.updateRequest(this.properties.requestId, body)

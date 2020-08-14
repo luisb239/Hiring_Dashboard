@@ -83,8 +83,6 @@ export class PopupComponent implements OnInit {
 
         const phaseDetails = dao.phases.find(p => p.phase === dao.currentPhase);
         this.phase = new ProcessPhase(phaseDetails.phase,
-          phaseDetails.startDate,
-          phaseDetails.updateDate,
           phaseDetails.notes === null ? '' : phaseDetails.notes);
       }, error => {
         console.log(error);

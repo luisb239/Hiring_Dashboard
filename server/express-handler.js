@@ -35,6 +35,9 @@ function handleError(res, error) {
     } else if (error.commonError === commonErrors.alreadyExists) {
         // Conflict
         res.status(409).send(format(error.title, error.detail))
+    } else if (error.commonError === commonErrors.preconditionFailed) {
+        // Precondition Failed
+        res.status(412).send(format(error.title, error.detail))
     } else {
         // Internal Server Error
         console.log(error)

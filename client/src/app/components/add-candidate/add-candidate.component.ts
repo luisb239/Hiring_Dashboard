@@ -9,6 +9,7 @@ import {map} from 'rxjs/operators';
 import {RequestService} from '../../services/request/request.service';
 import {RequestList} from '../../model/request/request-list';
 import {AlertService} from '../../services/alert/alert.service';
+import {ErrorType} from '../../services/common-error';
 
 @Component({
   selector: 'app-add-candidate',
@@ -36,22 +37,14 @@ export class AddCandidateComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.requestService.getRequest(this.request.id)
-      .pipe(map(dao => {
-        return dao.processes
-          .map(processDao => processDao.candidate.id);
-      }))
-      .subscribe(result => {
-        this.existingCandidates = result;
-        this.getAllCandidates();
-      }, error => console.log(error));
+    this.getRequestProcesses();
 
     this.requestPropsService.getRequestProfiles()
       .pipe(map(dao => dao.profiles.map(p => p.profile)))
       .subscribe(result => {
         this.profiles = result;
-      }, error => {
-        console.log(error);
+      }, () => {
+        this.alertService.error('Unexpected server error. Refresh and try again.');
       });
 
     this.candidateForm = this.formBuilder.group({
@@ -86,7 +79,13 @@ export class AddCandidateComponent implements OnInit {
             this.activeModal.close('Close click');
             this.candidateAdded.emit();
           }, error => {
-            console.log(error);
+            if (error === ErrorType.CONFLICT) {
+              this.alertService.error('This candidate has already been added to this request by another user.');
+              this.alertService.info('Refreshing...');
+              this.getRequestProcesses();
+            } else {
+              this.alertService.error('Unexpected server error. Refresh and try again.');
+            }
           }
         );
     });
@@ -99,13 +98,12 @@ export class AddCandidateComponent implements OnInit {
         new Candidate(c.name, c.id, c.profileInfo, c.available, c.cvFileName))))
       .subscribe(result => {
         this.candidates = result;
-      }, error => {
-        console.log(error);
+      }, () => {
+        this.alertService.error('Unexpected server error. Refresh and try again.');
       });
   }
 
   getAllCandidates() {
-    console.log(this.filterForm);
     this.candidateService.getAllCandidates()
       .pipe(
         map(dao => dao.candidates.filter(
@@ -117,8 +115,22 @@ export class AddCandidateComponent implements OnInit {
       )
       .subscribe(result => {
         this.candidates = result;
-      }, error => {
-        console.log(error);
+      }, () => {
+        this.alertService.error('Unexpected server error. Refresh and try again.');
+      });
+  }
+
+  getRequestProcesses() {
+    this.requestService.getRequest(this.request.id)
+      .pipe(map(dao => {
+        return dao.processes
+          .map(processDao => processDao.candidate.id);
+      }))
+      .subscribe(result => {
+        this.existingCandidates = result;
+        this.getAllCandidates();
+      }, () => {
+        this.alertService.error('Unexpected server error. Refresh and try again.');
       });
   }
 }

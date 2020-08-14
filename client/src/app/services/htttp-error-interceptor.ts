@@ -5,6 +5,7 @@ import {Router} from '@angular/router';
 import {AlertService} from './alert/alert.service';
 import {Injectable} from '@angular/core';
 import {AuthService} from './auth/auth.service';
+import {CommonError, ErrorType} from './common-error';
 
 @Injectable()
 export class HttpErrorInterceptor implements HttpInterceptor {
@@ -21,16 +22,33 @@ export class HttpErrorInterceptor implements HttpInterceptor {
             this.authService.clearSessionFromStorage();
             this.router.navigate(['/home']);
           } else {
-            let errorMessage = '';
+            let errorMessage;
+            let errorType: ErrorType;
             if (error.error instanceof ErrorEvent) {
               // client-side error
               errorMessage = `Error: ${error.error.message}`;
+              console.log(errorMessage);
+              return throwError(errorMessage);
             } else {
               // server-side error
               errorMessage = `Error Code: ${error.status}\nTitle: ${error.error.title}\nDetail: ${error.error.detail}`;
+              switch (error.status) {
+                case 404:
+                  errorType = ErrorType.NOT_FOUND;
+                  break;
+                case 409:
+                  errorType = ErrorType.CONFLICT;
+                  break;
+                case 412:
+                  errorType = ErrorType.PRECONDITION_FAILED;
+                  break;
+                default:
+                  errorType = ErrorType.INTERNAL_SERVER;
+                  break;
+              }
+              console.log(errorMessage);
+              return throwError(errorType);
             }
-            // window.alert(errorMessage);
-            return throwError(errorMessage);
           }
         })
       );
