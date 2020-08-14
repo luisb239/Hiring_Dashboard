@@ -75,12 +75,12 @@ module.exports = function (router, requestsController, processController, valida
      * Update Request
      */
     router.patch(`/${root}/:id`, [
-        body('timestamp').exists().withMessage('timestamp must exist and be of date type'),
-        body('quantity').exists().withMessage("Request must have a quantity"),
-        body('targetDate').exists().withMessage("Request must have a target date"),
-        body('skill').exists().withMessage("Request must have a skill"),
-        body('project').exists().withMessage("Request must have a project"),
-        body('profile').exists().withMessage("Request must have a profile"),
+        body('timestamp').optional().withMessage('timestamp must exist and be of date type'),
+        body('quantity').optional().withMessage("Request must have a quantity"),
+        body('targetDate').optional().withMessage("Request must have a target date"),
+        body('skill').optional().withMessage("Request must have a skill"),
+        body('project').optional().withMessage("Request must have a project"),
+        body('profile').optional().withMessage("Request must have a profile"),
         body('dateToSendProfile').optional().isAfter().toDate().withMessage("Date to send profile must be a date after today"),
         body('mandatoryLanguages').optional().isArray().withMessage("Mandatory Languages must be an array of languages"),
         body('valuedLanguages').optional().isArray().withMessage("Valued Languages must be an array of languages")

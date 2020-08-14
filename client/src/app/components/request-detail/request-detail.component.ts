@@ -13,6 +13,7 @@ import {User} from '../../model/user/user';
 import {RequestPropsService} from '../../services/requestProps/requestProps.service';
 import {LanguageCheckbox} from '../../model/requestProps/language-checkbox';
 import {AuthService} from '../../services/auth/auth.service';
+import {ErrorType} from '../../services/common-error';
 
 @Component({
   selector: 'app-request-detail',
@@ -35,6 +36,54 @@ export class RequestDetailComponent implements OnInit {
     this.properties.updateForm = this.formBuilder.group({});
   }
 
+  onSubmit() {
+    const values = this.properties.userForm.value.userIdx;
+    this.userService.getRoleIdByName('recruiter')
+      .subscribe(dao => {
+          const roleId = dao.id;
+          values.forEach(idx => {
+            this.requestService.addUser(this.properties.requestId, this.properties.users[idx].userId,
+              roleId, this.properties.timestamp)
+              .subscribe(() => {
+                  this.alertService.success('Recruiters added to this request successfully!');
+                  this.getRequestAndUsers(this.properties.requestId);
+                }, error => {
+                  if (error === ErrorType.CONFLICT) {
+                    this.alertService.error('The user you were trying to add to the request has already been added by another user.');
+                    this.alertService.info('Refreshing request details...');
+                    this.getRequestAndUsers(this.properties.requestId);
+                  }
+                }
+              );
+          });
+        }
+      );
+  }
+
+  /**
+   * This function will fetch the request's id either through the state passed from the component
+   * all-requests or from the url, if the view isn't forwarded by the previous component.
+   * Then it calls the function getRequest with the id obtained.
+   */
+  ngOnInit() {
+    this.properties.requestId = history.state.requestId || this.router.url.split('/')[2];
+    this.getRequestAndUsers(this.properties.requestId);
+    this.properties.userForm = this.formBuilder.group({
+      userIdx: this.formBuilder.array([])
+    });
+  }
+
+  onChange(idx: number, event: any) {
+    const array = this.properties.userForm.controls.userIdx as FormArray;
+
+    if (event.target.checked) {
+      array.push(new FormControl(idx));
+    } else {
+      const index = array.controls.findIndex(x => x.value === idx);
+      array.removeAt(index);
+    }
+  }
+
   /**
    * This function fetches all the attributes inherent to a request. Used for the view Request Details.
    * @param requestId is used to get a specific request from the database.
@@ -43,7 +92,7 @@ export class RequestDetailComponent implements OnInit {
     this.requestService.getRequest(requestId)
       .pipe(
         map(dao => {
-            const requests = new RequestList(
+          const requests = new RequestList(
               dao.request.id,
               dao.request.workflow,
               dao.request.progress,
@@ -93,7 +142,6 @@ export class RequestDetailComponent implements OnInit {
         this.properties.valuedLanguages = result.valued;
         this.properties.timestamp = new Date();
 
-
         this.properties.updateForm.addControl('project', new FormControl(result.requests.project));
         this.properties.updateForm.addControl('skill', new FormControl(result.requests.skill));
         this.properties.updateForm.addControl('stateCsl', new FormControl(result.requests.stateCSL));
@@ -104,86 +152,58 @@ export class RequestDetailComponent implements OnInit {
 
         this.userService.getRoleIdByName('recruiter')
           .pipe(
-            switchMap(dao => {
-              console.log(dao);
-              return this.userService.getAllUsers(dao.id);
-            }),
+            switchMap(dao => this.userService.getAllUsers(dao.id)),
             map(dao => {
-              console.log('hello', dao);
               const existingUsers = this.properties.userRoles.map(u => u.userId);
               return dao.users
                 .filter(user => !existingUsers.includes(user.id))
                 .map(user => new User(user.id, user.email));
             })
           )
-          .subscribe(users => {
-              this.properties.users = users;
-              console.log(this.properties.users);
-            }
-          );
+          .subscribe(users => this.properties.users = users);
         this.reqPropsService.getRequestStates()
           .pipe(map(dao => dao.states
             .filter(s => s.state !== result.requests.state)
             .map(s => s.state)))
-          .subscribe(s => {
-              this.properties.states = s;
-            },
-            error => {
-              console.log(error);
+          .subscribe(s => this.properties.states = s,
+            () => {
+              this.alertService.error('Unexpected server error. Refresh and try again.');
             });
         this.reqPropsService.getRequestStatesCsl()
           .pipe(map(dao => dao.statesCsl
             .filter(s => s.stateCsl !== result.requests.stateCSL)
             .map(s => s.stateCsl)))
-          .subscribe(s => {
-              this.properties.statesCsl = s;
-            },
-            error => {
-              console.log(error);
+          .subscribe(s => this.properties.statesCsl = s,
+            () => {
+              this.alertService.error('Unexpected server error. Refresh and try again.');
             });
         this.reqPropsService.getRequestProjects()
           .pipe(map(dao => dao.projects
             .filter(p => p.project !== result.requests.project)
             .map(p => p.project)))
-          .subscribe(p => {
-              this.properties.projects = p;
-            },
-            error => {
-              console.log(error);
-            });
+          .subscribe(p => this.properties.projects = p,
+            () => this.alertService.error('Unexpected server error. Refresh and try again.'));
 
         this.reqPropsService.getRequestSkills()
           .pipe(map(dao => dao.skills
             .filter(s => s.skill !== result.requests.skill)
             .map(s => s.skill)))
-          .subscribe(s => {
-              this.properties.skills = s;
-            },
-            error => {
-              console.log(error);
-            });
+          .subscribe(s => this.properties.skills = s,
+            () => this.alertService.error('Unexpected server error. Refresh and try again.'));
 
         this.reqPropsService.getRequestProfiles()
           .pipe(map(dao => dao.profiles
             .filter(p => p.profile !== result.requests.profile)
             .map(p => p.profile)))
-          .subscribe(p => {
-              this.properties.profiles = p;
-            },
-            error => {
-              console.log(error);
-            });
+          .subscribe(p => this.properties.profiles = p,
+            () => this.alertService.error('Unexpected server error. Refresh and try again.'));
 
         this.reqPropsService.getTargetDates()
           .pipe(map(dao => dao.months
             .filter(m => m.month !== result.requests.targetDate)
             .map(m => m.month)))
-          .subscribe(t => {
-              this.properties.targetDates = t;
-            },
-            error => {
-              console.log(error);
-            });
+          .subscribe(t => this.properties.targetDates = t,
+            () => this.alertService.error('Unexpected server error. Refresh and try again.'));
 
         this.reqPropsService.getRequestLanguages()
           .pipe(map(dao => dao.languages
@@ -201,54 +221,8 @@ export class RequestDetailComponent implements OnInit {
                 .map(l => new LanguageCheckbox(l, false, false))
               );
             },
-            error => {
-              console.log(error);
-            });
+            () => this.alertService.error('Unexpected server error. Refresh and try again.'));
       });
-  }
-
-  /**
-   * This function will fetch the request's id either through the state passed from the component
-   * all-requests or from the url, if the view isn't forwarded by the previous component.
-   * Then it calls the function getRequest with the id obtained.
-   */
-  ngOnInit() {
-    this.properties.requestId = history.state.requestId || this.router.url.split('/')[2];
-    this.getRequestAndUsers(this.properties.requestId);
-    this.properties.userForm = this.formBuilder.group({
-      userIdx: this.formBuilder.array([])
-    });
-  }
-
-  onChange(idx: number, event: any) {
-    const array = this.properties.userForm.controls.userIdx as FormArray;
-
-    if (event.target.checked) {
-      array.push(new FormControl(idx));
-    } else {
-      const index = array.controls.findIndex(x => x.value === idx);
-      array.removeAt(index);
-    }
-  }
-
-  onSubmit() {
-    const values = this.properties.userForm.value.userIdx;
-    console.log(values);
-    this.userService.getRoleIdByName('recruiter').subscribe(dao => {
-        const roleId = dao.id;
-        values.forEach(idx => {
-          this.requestService.addUser(this.properties.requestId, this.properties.users[idx].userId,
-            roleId, this.properties.timestamp)
-            .subscribe(() => {
-                this.alertService.success('Recruiters added to this request successfully!');
-                this.getRequestAndUsers(this.properties.requestId);
-              }, error => {
-                console.log(error);
-              }
-            );
-        });
-      }
-    );
   }
 
   onUpdate() {

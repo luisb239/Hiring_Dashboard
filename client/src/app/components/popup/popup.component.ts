@@ -11,6 +11,7 @@ import {PhaseService} from '../../services/phase/phase.service';
 import {ProcessPhaseService} from '../../services/process-phase/process-phase.service';
 import {map} from 'rxjs/operators';
 import {AlertService} from '../../services/alert/alert.service';
+import {ErrorType} from '../../services/common-error';
 
 @Component({
   selector: 'app-popup',
@@ -54,9 +55,11 @@ export class PopupComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.getCandidateAndProcessInfo();
+  }
 
-    this.getCandidate();
-
+  getCandidateAndProcessInfo() {
+    this.getCandidateInfo();
     this.processService.getProcess(this.requestId, this.candidateId)
       .subscribe(dao => {
         this.updateForm.addControl('status', new FormControl(dao.status));
@@ -68,8 +71,8 @@ export class PopupComponent implements OnInit {
             this.reasons = reasonDao.unavailableReasons
               .filter(res => res.unavailableReason !== this.process.unavailableReason)
               .map(res => res.unavailableReason);
-          }, error => {
-            console.log(error);
+          }, () => {
+            this.alertService.error('Unexpected server error. Refresh and try again.');
           });
 
         this.processService.getStatus()
@@ -77,15 +80,15 @@ export class PopupComponent implements OnInit {
             this.statusList = statusDao.status
               .filter(stat => stat.status !== this.process.status)
               .map(stat => stat.status);
-          }, error => {
-            console.log(error);
+          }, () => {
+            this.alertService.error('Unexpected server error. Refresh and try again.');
           });
 
         const phaseDetails = dao.phases.find(p => p.phase === dao.currentPhase);
         this.phase = new ProcessPhase(phaseDetails.phase,
           phaseDetails.notes === null ? '' : phaseDetails.notes);
-      }, error => {
-        console.log(error);
+      }, () => {
+        this.alertService.error('Unexpected server error. Refresh and try again.');
       });
 
     this.phaseService.getPhase(this.phaseName)
@@ -103,11 +106,11 @@ export class PopupComponent implements OnInit {
               .forEach(at => at.value = processDao.phases
                 .find(phase => phase.phase === this.phaseName).infos
                 .find(i => i.name === at.name).value);
-          }, error => {
-            console.log(error);
+          }, () => {
+            this.alertService.error('Unexpected server error. Refresh and try again.');
           });
-      }, error => {
-        console.log(error);
+      }, () => {
+        this.alertService.error('Unexpected server error. Refresh and try again.');
       });
   }
 
@@ -142,7 +145,13 @@ export class PopupComponent implements OnInit {
             this.activeModal.close('Close click');
             this.candidateProcessChanged.emit(`Candidate ${this.candidateId} process has been updated`);
           }, error => {
-            console.log(error);
+            if (error === ErrorType.PRECONDITION_FAILED) {
+              this.alertService.error('This process has already been updated by another user.');
+              this.alertService.info('Refreshing process details...');
+              this.getCandidateAndProcessInfo();
+            } else {
+              this.alertService.error('Unexpected server error. Refresh and try again.');
+            }
           }
         );
     }
@@ -152,11 +161,17 @@ export class PopupComponent implements OnInit {
         this.candidateId,
         this.phase.phase,
         this.updateForm.value.phaseNotes,
-        this.timestamp
-      ).subscribe(() => {
-      }, error => {
-        console.log(error);
-      });
+        this.timestamp)
+        .subscribe(() => {
+        }, error => {
+          if (error === ErrorType.PRECONDITION_FAILED) {
+            this.alertService.error('This process has already been updated by another user.');
+            this.alertService.info('Refreshing process details...');
+            this.getCandidateAndProcessInfo();
+          } else {
+            this.alertService.error('Unexpected server error. Refresh and try again.');
+          }
+        });
     }
   }
 
@@ -169,6 +184,8 @@ export class PopupComponent implements OnInit {
         link.href = downloadURL;
         link.download = this.candidate.cv;
         link.click();
+      }, () => {
+        this.alertService.error('Unexpected server error. Refresh and try again.');
       });
   }
 
@@ -181,15 +198,16 @@ export class PopupComponent implements OnInit {
     };
     this.candidateService.updateCandidate(updateBody)
       .subscribe(() => {
-        this.getCandidate();
-      }, error => {
-        console.log(error);
+        this.getCandidateInfo();
+      }, () => {
+        this.alertService.error('Unexpected server error. Refresh and try again.');
       });
   }
 
-  getCandidate() {
+  getCandidateInfo() {
     this.candidateService.getCandidateById(this.candidateId)
-      .pipe(map(dao => new Candidate(dao.candidate.name,
+      .pipe(map(dao => new Candidate(
+        dao.candidate.name,
         dao.candidate.id,
         dao.candidate.profileInfo,
         dao.candidate.available,
@@ -198,7 +216,11 @@ export class PopupComponent implements OnInit {
         this.timestamp = new Date();
         this.candidate = result;
       }, error => {
-        console.log(error);
+        if (error === ErrorType.NOT_FOUND) {
+          this.alertService.error('Candidate does not exist.');
+        } else {
+          this.alertService.error('Unexpected server error. Refresh and try again.');
+        }
       });
   }
 }
