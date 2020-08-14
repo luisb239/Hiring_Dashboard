@@ -19,6 +19,7 @@ import {AddCandidateComponent} from '../add-candidate/add-candidate.component';
 import {AlertService} from '../../services/alert/alert.service';
 import {Content} from './content';
 import {map, startWith} from 'rxjs/operators';
+import {ErrorType} from '../../services/common-error';
 
 @Component({
   selector: 'app-board',
@@ -67,8 +68,8 @@ export class BoardComponent implements OnInit {
             });
         });
         request.placedCandidates = dao.processes.filter(proc => proc.status === 'Placed').length || 0;
-      }, error => {
-        console.log(error);
+      }, () => {
+        this.alertService.error('Unexpected server error. Refresh and try again.');
       });
   }
 
@@ -84,11 +85,16 @@ export class BoardComponent implements OnInit {
       this.processPhaseService.updateProcessPhase(requestId, event.container.data[event.currentIndex].id,
         newPhase, this.properties.timestamp)
         .subscribe(() => {
-        }, () => {
-          this.alertService.error('This card has already been moved by another user.');
-          this.alertService.info('Fetching requests again...');
-          this.getAllRequests();
-        });
+          },
+          error => {
+            if (error === ErrorType.PRECONDITION_FAILED) {
+              this.alertService.error('This card has already been moved by another user.');
+              this.alertService.info('Fetching requests again...');
+              this.getAllRequests();
+            } else {
+              this.alertService.error('Unexpected server error. Refresh and try again.');
+            }
+          });
     }
   }
 
@@ -118,26 +124,10 @@ export class BoardComponent implements OnInit {
   setContent(idx: number) {
     switch (idx) {
       case 0:
-        // this.requestService.getUserCurrentRequests()
-        //   .subscribe(
-        //     requestsDao => {
-        //       const workflows = requestsDao.requests.map(r => r.workflow);
-        //
-        //     });
         this.properties.content.options = this.properties.allWorkflows;
         this.properties.content.name = 'Workflow';
         break;
       case 1:
-        // this.requestService.getUserCurrentRequests()
-        //   .subscribe(
-        //     requestsDao => {
-        //       this.properties.content.options = requestsDao.requests.map(r => r.description);
-        //       this.properties.filteredOptions = this.properties.control.valueChanges.pipe(
-        //         startWith(''),
-        //         map(value => {
-        //           return this._filter(value);
-        //         }));
-        //     });
         this.properties.content.options = this.properties.allRequests;
         this.properties.content.name = 'Description';
         break;
@@ -177,8 +167,8 @@ export class BoardComponent implements OnInit {
                   workflow.phases.forEach(p => request.phases.push(new Phase(p.name, [])));
                   this.fetchProcessesInRequest(request);
                 });
-              }, error => {
-                console.log(error);
+              }, () => {
+                this.alertService.error('Unexpected server error. Refresh and try again.');
               });
           });
         });
@@ -204,8 +194,8 @@ export class BoardComponent implements OnInit {
                 this.properties.workflows[0].phases.forEach(p => request.phases.push(new Phase(p.name, [])));
                 this.fetchProcessesInRequest(request);
               });
-            }, error => {
-              console.log(error);
+            }, () => {
+              this.alertService.error('Unexpected server error. Refresh and try again.');
             });
         });
   }
@@ -235,8 +225,8 @@ export class BoardComponent implements OnInit {
                   workflow.phases.forEach(p => request.phases.push(new Phase(p.name, [])));
                   this.fetchProcessesInRequest(request);
                 });
-              }, error => {
-                console.log(error);
+              }, () => {
+                this.alertService.error('Unexpected server error. Refresh and try again.');
               });
           });
         });

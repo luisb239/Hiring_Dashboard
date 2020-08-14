@@ -28,8 +28,8 @@ export class CreateCandidateComponent implements OnInit {
       .pipe(map(dao => dao.profiles.map(p => p.profile)))
       .subscribe(result => {
         this.properties.profiles = result;
-      }, error => {
-        console.log(error);
+      }, () => {
+        this.alertService.error('Unexpected server error. Refresh and try again.');
       });
     this.properties.createForm = this.formBuilder.group({
       name: this.formBuilder.control(''),
@@ -61,8 +61,8 @@ export class CreateCandidateComponent implements OnInit {
         .subscribe(dao => {
           this.alertService.success('Candidate added to the system');
           this.router.navigate(['/candidates', dao.id]);
-        }, error => {
-          console.log(error);
+        }, () => {
+          this.alertService.error('Unexpected server error. Refresh and try again.');
         });
     }
   }

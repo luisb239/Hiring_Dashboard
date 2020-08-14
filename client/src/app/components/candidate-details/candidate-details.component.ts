@@ -16,6 +16,7 @@ import {RequestPropsService} from '../../services/requestProps/requestProps.serv
 import {FormBuilder} from '@angular/forms';
 import {AlertService} from 'src/app/services/alert/alert.service';
 import {Buffer} from 'buffer';
+import {ErrorType} from '../../services/common-error';
 
 @Component({
   selector: 'app-candidate-details',
@@ -64,7 +65,7 @@ export class CandidateDetailsComponent implements OnInit {
                   request.state,
                   request.description
                 ), [], []));
-              }, error => console.log(error));
+              }, () => this.alertService.error('Unexpected server error. Refresh and try again.'));
 
             this.processService.getProcess(process.requestId, this.properties.candidateId)
               .subscribe(processDao => {
@@ -77,9 +78,7 @@ export class CandidateDetailsComponent implements OnInit {
                     )))
                   );
                 },
-                error => {
-                  console.log(error);
-                });
+                () => this.alertService.error('Unexpected server error. Refresh and try again.'));
           });
 
         this.getRequestProfiles();
@@ -90,8 +89,8 @@ export class CandidateDetailsComponent implements OnInit {
           info: this.properties.infoForm,
           profiles: this.properties.profilesForm
         });
-      }, error => {
-        console.log(error);
+      }, () => {
+        this.alertService.error('Unexpected server error. Refresh and try again.');
       });
 
     if (this.properties.requestId) {
@@ -105,7 +104,7 @@ export class CandidateDetailsComponent implements OnInit {
             requestDao.state,
             requestDao.description
           ), [], []);
-        }, error => console.log(error));
+        }, () => this.alertService.error('Unexpected server error. Refresh and try again.'));
 
       this.processService.getProcess(this.properties.requestId, this.properties.candidateId)
         .subscribe(dao => {
@@ -113,8 +112,8 @@ export class CandidateDetailsComponent implements OnInit {
             dao.phases.map(phase => new ProcessPhase(phase.phase,
               phase.notes,
               phase.infos.map(info => new PhaseInfo(info.name, info.value)))));
-        }, error => {
-          console.log(error);
+        }, () => {
+          this.alertService.error('Unexpected server error. Refresh and try again.');
         });
     }
   }
@@ -122,30 +121,27 @@ export class CandidateDetailsComponent implements OnInit {
   onSubmit() {
     const body = {
       id: this.properties.candidateId,
-      cv: null,
-      profileInfo: this.properties.candidate.profileInfo,
+      cv: this.properties.fileToUpload !== null ? this.properties.fileToUpload : null,
+      profileInfo: this.properties.updateForm.value.info !== '' ?
+        this.properties.updateForm.value.info : this.properties.candidate.profileInfo,
       available: this.properties.candidate.available,
-      profiles: [],
+      profiles: this.properties.updateForm.value.profiles.length > 0 ?
+        this.properties.updateForm.value.profiles : [],
       timestamp: this.properties.timestamp
     };
-    body.id = this.properties.candidateId;
-    if (this.properties.fileToUpload !== null) {
-      body.cv = this.properties.fileToUpload;
-    }
-    if (this.properties.updateForm.value.info !== '') {
-      body.profileInfo = this.properties.updateForm.value.info;
-    }
-    if (this.properties.updateForm.value.profiles.length > 0) {
-      body.profiles = this.properties.updateForm.value.profiles;
-    }
-    body.available = this.properties.candidate.available;
     this.candidateService.updateCandidate(body)
       .subscribe(() => {
         this.alertService.success('Candidate Updated Successfully');
-        this.updateCandidateComponent();
         this.properties.profilesForm.setValue('');
+        this.updateCandidateComponent();
       }, error => {
-        this.alertService.error(error);
+        if (error === ErrorType.PRECONDITION_FAILED) {
+          this.alertService.error('This candidate has already been updated by another user.');
+          this.alertService.info('Refreshing...');
+          this.updateCandidateComponent();
+        } else {
+          this.alertService.error('Unexpected server error. Refresh and try again.');
+        }
       });
   }
 
@@ -157,7 +153,13 @@ export class CandidateDetailsComponent implements OnInit {
         this.updateCandidateComponent();
         this.properties.profilesForm.setValue('');
       }, error => {
-        console.log(error);
+        if (error === ErrorType.NOT_FOUND) {
+          this.alertService.error('This profile has already been deleted.');
+          this.alertService.info('Refreshing...');
+          this.updateCandidateComponent();
+        } else {
+          this.alertService.error('Unexpected server error. Refresh and try again.');
+        }
       });
   }
 
@@ -179,8 +181,8 @@ export class CandidateDetailsComponent implements OnInit {
           candidateDao.profiles.map(pi => pi.profile),
           candidateDao.processes.map(proc => new CandidateProcess(proc.status, proc.requestId)));
         this.getRequestProfiles();
-      }, error => {
-        console.log(error);
+      }, () => {
+        this.alertService.error('Unexpected server error. Refresh and try again.');
       });
   }
 
@@ -202,8 +204,8 @@ export class CandidateDetailsComponent implements OnInit {
       .subscribe(profs => {
         this.properties.profiles =
           profs.filter(p => !this.properties.candidate.profiles.some(profile => profile === p));
-      }, error => {
-        console.log(error);
+      }, () => {
+        this.alertService.error('Unexpected server error. Refresh and try again.');
       });
   }
 
