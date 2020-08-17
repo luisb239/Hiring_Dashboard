@@ -11,27 +11,27 @@ module.exports = (candidateDb, profilesDb, processDb, transaction) => {
         createCandidate: createCandidate,
         updateCandidate: updateCandidate,
         getCandidateCv: getCandidateCv,
-        addCandidateProfiles: addCandidateProfiles,
+        addCandidateProfile: addCandidateProfile,
         removeCandidateProfile: removeCandidateProfile
     }
 
-    async function getCandidates({available = null, profiles = null}) {
+    async function getCandidates({ available = null, profiles = null }) {
         return {
-            candidates: await candidateDb.getCandidates({available, profiles}),
+            candidates: await candidateDb.getCandidates({ available, profiles }),
         }
     }
 
-    async function getCandidateById({id}) {
+    async function getCandidateById({ id }) {
 
-        const candidateFound = await candidateDb.getCandidateById({id})
+        const candidateFound = await candidateDb.getCandidateById({ id })
 
         if (!candidateFound)
             throw new AppError(errors.notFound,
                 "Candidate not found", `Candidate with id ${id} does not exist`)
 
-        const profiles = await profilesDb.getCandidateProfiles({candidateId: id})
+        const profiles = await profilesDb.getCandidateProfiles({ candidateId: id })
 
-        const processes = await processDb.getCandidateProcesses({candidateId: id})
+        const processes = await processDb.getCandidateProcesses({ candidateId: id })
 
         return {
             candidate: candidateFound,
@@ -41,10 +41,10 @@ module.exports = (candidateDb, profilesDb, processDb, transaction) => {
     }
 
     async function updateCandidate({
-                                       id, cvFileName = null, cvMimeType = null,
-                                       cvFileBuffer = null, cvEncoding = null, profileInfo = null,
-                                       available = null, profiles = null, timestamp
-                                   }) {
+        id, cvFileName = null, cvMimeType = null,
+        cvFileBuffer = null, cvEncoding = null, profileInfo = null,
+        available = null, profiles = null, timestamp
+    }) {
         // Convert string to boolean
         if (available)
             available = (available === 'true')
@@ -83,7 +83,7 @@ module.exports = (candidateDb, profilesDb, processDb, transaction) => {
         })
     }
 
-    async function createCandidate({name, profileInfo = null, cvFileName, cvMimeType, cvFileBuffer, cvEncoding}) {
+    async function createCandidate({ name, profileInfo = null, cvFileName, cvMimeType, cvFileBuffer, cvEncoding }) {
         const candidate = await candidateDb.createCandidate({
             name: name,
             profileInfo: profileInfo,
@@ -98,18 +98,16 @@ module.exports = (candidateDb, profilesDb, processDb, transaction) => {
     }
 
     /**
-     * Add profiles to candidate info
+     * Add profile to candidate info
      * @param id : number
-     * @param profiles : [String]
+     * @param profile : String
      * @returns {Promise<void>}
      */
-    async function addCandidateProfiles({id, profiles}) {
-        await Promise.all(profiles.map(async prof => {
-            await profilesDb.addProfileToCandidate({
-                candidateId: id,
-                profile: prof
-            })
-        }))
+    async function addCandidateProfile({ id, profile }) {
+        await profilesDb.addProfileToCandidate({
+            candidateId: id,
+            profile: profile
+        })
     }
 
     /**
@@ -118,15 +116,15 @@ module.exports = (candidateDb, profilesDb, processDb, transaction) => {
      * @param profile : String
      * @returns {Promise<void>}
      */
-    async function removeCandidateProfile({id, profile}) {
+    async function removeCandidateProfile({ id, profile }) {
         await profilesDb.deleteProfileFromCandidate({
             candidateId: id,
             profile: profile
         })
     }
 
-    async function getCandidateCv({id}) {
-        const cvFileInfo = await candidateDb.getCandidateCvInfo({id})
+    async function getCandidateCv({ id }) {
+        const cvFileInfo = await candidateDb.getCandidateCvInfo({ id })
 
         if (!cvFileInfo) {
             throw new AppError(errors.notFound,

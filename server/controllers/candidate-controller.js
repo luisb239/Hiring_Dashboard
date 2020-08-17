@@ -7,6 +7,7 @@ module.exports = (service) => {
         getCandidateById: getCandidateById,
         postCandidate: postCandidate,
         updateCandidate: updateCandidate,
+        addCandidateProfile: addCandidateProfile,
         removeCandidateProfile: removeCandidateProfile,
         downloadCandidateCv: downloadCandidateCv
     }
@@ -38,7 +39,6 @@ module.exports = (service) => {
                 cvEncoding: fileInfo.encoding,
                 profileInfo: req.body.profileInfo,
                 available: req.body.available,
-                profiles: req.body.profiles,
                 timestamp: req.body.timestamp
             })
         } else {
@@ -46,11 +46,18 @@ module.exports = (service) => {
                 id: req.params.id,
                 profileInfo: req.body.profileInfo,
                 available: req.body.available,
-                profiles: req.body.profiles,
                 timestamp: req.body.timestamp
             })
         }
         res.status(200).send({message: 'Candidate updated successfully'})
+    }
+
+    async function addCandidateProfile(req, res) {
+        const success = await service.addCandidateProfile({
+            id: req.params.id,
+            profile: req.body.profile
+        })
+        res.status(200).send(success)
     }
 
     async function removeCandidateProfile(req, res) {

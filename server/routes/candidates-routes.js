@@ -4,7 +4,7 @@ module.exports = function (router, candidatesController, validator, upload, hand
 
     const root = 'candidates'
 
-    const {body, query, checkSchema} = validator
+    const { body, query, checkSchema } = validator
 
     /**
      * Get all candidates
@@ -34,15 +34,16 @@ module.exports = function (router, candidatesController, validator, upload, hand
         upload.single('cv'),
         body('profileInfo').optional().isString().withMessage("Profile information must be of string type"),
         body('available').optional().isString().withMessage("Available must be of string type"),
-        // body('profiles').optional().isString().withMessage("Added profiles must be of string type"),
         body('timestamp').exists().toDate().withMessage("timestamp must exist and must be of date type")
     ], handle(candidatesController.updateCandidate))
 
-    /* // TODO
-     router.post(`/${root}/:id/profiles`, [
-         verifyIfAuthenticated,
-         body('profile').exists().isString().withMessage('...')
-         ], handle(..);*/
+    /**
+     * Add Candidate Profile
+     */
+    router.post(`/${root}/:id/profiles`, [
+        verifyIfAuthenticated,
+        body('profile').exists().isString().withMessage('Added profile must be of string type')
+    ], handle(candidatesController.addCandidateProfile));
 
     /**
      * Delete Candidate Profile
@@ -58,7 +59,7 @@ module.exports = function (router, candidatesController, validator, upload, hand
         checkSchema({
             'cv': {
                 custom: {
-                    options: (value, {req}) => !!req.file,
+                    options: (value, { req }) => !!req.file,
                     errorMessage: 'Cv file needs to be uploaded',
                 }
             }
