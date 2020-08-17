@@ -34,9 +34,15 @@ module.exports = function (router, candidatesController, validator, upload, hand
         upload.single('cv'),
         body('profileInfo').optional().isString().withMessage("Profile information must be of string type"),
         body('available').optional().isString().withMessage("Available must be of string type"),
-        body('profiles').optional().isString().withMessage("Added profiles must be of string type"),
-        body('timestamp').exists().withMessage("timestamp must exist and must be of date type")
+        // body('profiles').optional().isString().withMessage("Added profiles must be of string type"),
+        body('timestamp').exists().toDate().withMessage("timestamp must exist and must be of date type")
     ], handle(candidatesController.updateCandidate))
+
+    /* // TODO
+     router.post(`/${root}/:id/profiles`, [
+         verifyIfAuthenticated,
+         body('profile').exists().isString().withMessage('...')
+         ], handle(..);*/
 
     /**
      * Delete Candidate Profile
@@ -59,7 +65,7 @@ module.exports = function (router, candidatesController, validator, upload, hand
         }),
         body('name').exists().isString().withMessage("Candidate name must exist and be of string type"),
         body('profileInfo').optional().isString().withMessage("Candidate profile info must be of string type"),
-        body('profiles').optional().isString().withMessage("Candidates profiles must be an array of profiles"),
+        /* body('profiles').optional().isString().withMessage("Candidates profiles must be an array of profiles"), */
     ], handle(candidatesController.postCandidate))
 
 }

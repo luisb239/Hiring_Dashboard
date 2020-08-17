@@ -75,15 +75,15 @@ module.exports = function (router, requestsController, processController, valida
      * Update Request
      */
     router.patch(`/${root}/:id`, [
-        body('timestamp').optional().withMessage('timestamp must exist and be of date type'),
-        body('quantity').optional().withMessage("Request must have a quantity"),
-        body('targetDate').optional().withMessage("Request must have a target date"),
-        body('skill').optional().withMessage("Request must have a skill"),
-        body('project').optional().withMessage("Request must have a project"),
-        body('profile').optional().withMessage("Request must have a profile"),
-        body('dateToSendProfile').optional().isAfter().toDate().withMessage("Date to send profile must be a date after today"),
-        body('mandatoryLanguages').optional().isArray().withMessage("Mandatory Languages must be an array of languages"),
-        body('valuedLanguages').optional().isArray().withMessage("Valued Languages must be an array of languages")
+        body('timestamp').exists().toDate().withMessage("Timestamp must exist and be of date type"),
+        body('quantity').optional(),
+        body('targetDate').optional(),
+        body('skill').optional(),
+        body('project').optional(),
+        body('profile').optional(),
+        body('dateToSendProfile').optional().toDate(),
+        body('mandatoryLanguages').optional().isArray(),
+        body('valuedLanguages').optional().isArray()
     ], handle(requestsController.patchRequest))
 
     /**
@@ -102,7 +102,7 @@ module.exports = function (router, requestsController, processController, valida
         verifyIfAuthenticated,
         body('userId').exists().isInt().withMessage("User Id must exist and be of int type"),
         body('roleId').exists().isInt().withMessage("Role Id must exist and be of int type"),
-        body('timestamp').exists().withMessage("timestamp must exist and must be of date type")
+        body('timestamp').exists().toDate().withMessage("timestamp must exist and must be of date type")
     ], handle(requestsController.addUserToRequest))
 
     // TODO -> DELETE USER FROM REQUEST ENDPOINT MISSING
@@ -139,7 +139,7 @@ module.exports = function (router, requestsController, processController, valida
         body('newPhase').optional().isString().withMessage("newPhase must be of string type"),
         body('status').optional().isString().withMessage("status must be of string type"),
         body('unavailableReason').optional().isString().withMessage("unavailableReason must be of string type"),
-        body('timestamp').exists().withMessage("timestamp must exist and must be of date type")
+        body('timestamp').exists().toDate().withMessage("timestamp must exist and must be of date type")
     ], handle(processController.updateProcess))
 
     /**
@@ -148,6 +148,6 @@ module.exports = function (router, requestsController, processController, valida
     router.put(`/${root}/:requestId/${candidates}/:candidateId/${process}/${phases}/:phase`, [
         verifyIfAuthenticated,
         body('notes').isString().withMessage("Phase notes must be of string type"),
-        body('timestamp').exists().withMessage("timestamp must exist and must be of date type")
+        body('timestamp').exists().toDate().withMessage("timestamp must exist and must be of date type")
     ], handle(processController.updateProcessPhaseNotes))
 }

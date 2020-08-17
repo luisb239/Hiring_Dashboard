@@ -34,7 +34,7 @@ module.exports = (requestDb, candidateDb, processDb, phaseDb, infoDb, processUna
     }
 
     async function createProcess({requestId, candidateId}) {
-        transaction(async (client) => {
+        return transaction(async (client) => {
             await processDb.createProcess({requestId, candidateId, status: "Onhold", client})
 
             const {workflow} = await requestDb.getRequestById({id: requestId, client})
@@ -104,26 +104,26 @@ module.exports = (requestDb, candidateDb, processDb, phaseDb, infoDb, processUna
                                      requestId, candidateId, newPhase, status,
                                      unavailableReason, infoArray, timestamp
                                  }) {
-        transaction(async (client) => {
+        await transaction(async (client) => {
             const rowCount = await processDb.updateProcess({requestId, candidateId, timestamp, client})
-            if(rowCount === 0)
+            if (rowCount === 0)
                 throw new AppError(errors.preconditionFailed,
                     "Process not updated",
                     `Update timestamp was older than the latest timestamp.`)
             if (newPhase) {
-                await updateProcessCurrentPhase({requestId, candidateId, newPhase, client, timestamp})
+                await updateProcessCurrentPhase({requestId, candidateId, newPhase, client})
             }
 
             if (status) {
-                await updateStatus({requestId, candidateId, status, client, timestamp})
+                await updateStatus({requestId, candidateId, status, client})
             }
 
             if (unavailableReason) {
                 await updateUnavailableReason({requestId, candidateId, unavailableReason, client})
             }
 
-            if(infoArray) {
-                await updateProcessInfoValues({requestId, candidateId, infoArray, client, timestamp})
+            if (infoArray) {
+                await updateProcessInfoValues({requestId, candidateId, infoArray, client})
             }
         })
     }
@@ -189,7 +189,7 @@ module.exports = (requestDb, candidateDb, processDb, phaseDb, infoDb, processUna
             })
             if (oldStatus.status === 'Placed' || status === 'Placed') {
                 const rowCount = await updateRequestProgress({requestId, client, timestamp})
-                if(rowCount === 0)
+                if (rowCount === 0)
                     throw new AppError(errors.preconditionFailed,
                         "Process not updated",
                         `Update timestamp was older than the latest timestamp.`)
@@ -259,7 +259,7 @@ module.exports = (requestDb, candidateDb, processDb, phaseDb, infoDb, processUna
      * @param timestamp
      * @returns {Promise<{JSON}>}
      */
-    async function updateProcessCurrentPhase({requestId, candidateId, newPhase, client, timestamp}) {
+    async function updateProcessCurrentPhase({requestId, candidateId, newPhase, client}) {
         // Get process related workflow and the workflow's phases
         const {workflow} = await requestDb.getRequestById({id: requestId, client})
         const workflowPhases = await phaseDb.getPhasesByWorkflow({workflow, client})
