@@ -22,6 +22,16 @@
                   <p>{{properties.requestList.requestDate}}</p>
                 </li>
                 <li class="list-group-item">
+                  <h5>State: </h5>
+                  <label>
+                    <select formControlName="state">
+                      <option [selected]="true"
+                              [value]="properties.requestList.state">{{properties.requestList.state}}</option>
+                      <option *ngFor="let state of properties.states" [value]="state">{{state}}</option>
+                    </select>
+                  </label>
+                </li>
+                <li class="list-group-item">
                   <h5>Project: </h5>
                   <label>
                     <select formControlName="project">

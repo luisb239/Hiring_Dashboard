@@ -69,27 +69,29 @@ module.exports = (query) => {
     }
 
     async function updateRequest({
-                                     id, timestamp, client, quantity = null, targetDate = null,
-                                     state = null, skill = null, stateCsl = null,
-                                     project = null, profile = null,
-                                     dateToSendProfile = null, newTimestamp = new Date()
+                                     id, state = null, stateCsl = null,
+                                     description = null, quantity = null,
+                                     targetDate = null, skill = null, project = null,
+                                     profile = null, dateToSendProfile = null,
+                                     observedTimestamp, newTimestamp = new Date(), client = null
                                  }) {
         const statement = {
             name: 'Update Request',
             text:
                 `UPDATE ${requestSchema.table} SET ` +
-                `${requestSchema.quantity} = COALESCE($1, ${requestSchema.quantity}), ` +
-                `${requestSchema.targetDate} = COALESCE($2, ${requestSchema.targetDate}), ` +
-                `${requestSchema.state} = COALESCE($3, ${requestSchema.state}), ` +
-                `${requestSchema.skill} = COALESCE($4, ${requestSchema.skill}), ` +
-                `${requestSchema.stateCsl} = COALESCE($5, ${requestSchema.stateCsl}), ` +
-                `${requestSchema.project} = COALESCE($6, ${requestSchema.project}), ` +
-                `${requestSchema.profile} = COALESCE($7, ${requestSchema.profile}), ` +
-                `${requestSchema.dateToSendProfile} = COALESCE($8, ${requestSchema.dateToSendProfile}), ` +
-                `${requestSchema.timestamp} = $11 ` +
-                `WHERE ${requestSchema.id} = $10 AND ${requestSchema.timestamp} < $9;`,
-            values: [quantity, targetDate, state, skill, stateCsl,
-                project, profile, dateToSendProfile, timestamp, id, newTimestamp]
+                `${requestSchema.state} = COALESCE($2, ${requestSchema.state}), ` +
+                `${requestSchema.stateCsl} = COALESCE($3, ${requestSchema.stateCsl}), ` +
+                `${requestSchema.description} = COALESCE($4, ${requestSchema.description}), ` +
+                `${requestSchema.quantity} = COALESCE($5, ${requestSchema.quantity}), ` +
+                `${requestSchema.targetDate} = COALESCE($6, ${requestSchema.targetDate}), ` +
+                `${requestSchema.skill} = COALESCE($7, ${requestSchema.skill}), ` +
+                `${requestSchema.project} = COALESCE($8, ${requestSchema.project}), ` +
+                `${requestSchema.profile} = COALESCE($9, ${requestSchema.profile}), ` +
+                `${requestSchema.dateToSendProfile} = COALESCE($10, ${requestSchema.dateToSendProfile}), ` +
+                `${requestSchema.timestamp} = $12 ` +
+                `WHERE ${requestSchema.id} = $1 AND ${requestSchema.timestamp} < $11;`,
+            values: [id, state, stateCsl, description, quantity, targetDate, skill,
+                project, profile, dateToSendProfile, observedTimestamp, newTimestamp]
         }
 
         const result = await query(statement, client)
@@ -175,7 +177,7 @@ module.exports = (query) => {
             project: obj[requestSchema.project],
             profile: obj[requestSchema.profile],
             workflow: obj[requestSchema.workflow],
-            dateToSendProfile: obj[requestSchema.workflow] ?
+            dateToSendProfile: obj[requestSchema.dateToSendProfile] ?
                 dateFormat(new Date(obj[requestSchema.dateToSendProfile]), "yyyy-mm-dd") : null,
             progress: obj[requestSchema.progress]
         }

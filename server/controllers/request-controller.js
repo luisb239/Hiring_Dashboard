@@ -48,7 +48,7 @@ module.exports = (service) => {
             project: req.body.project,
             profile: req.body.profile,
             workflow: req.body.workflow,
-            dateToSendProfile: req.body.dateToSendProfile || null,
+            dateToSendProfile: req.body.dateToSendProfile,
         })
 
         if (req.body.mandatoryLanguages && req.body.mandatoryLanguages.length) {
@@ -94,6 +94,9 @@ module.exports = (service) => {
     async function patchRequest(req, res) {
         await service.updateRequest({
             id: req.params.id,
+            state: req.body.state,
+            stateCsl: req.body.stateCsl,
+            description: req.body.description,
             quantity: req.body.quantity,
             targetDate: req.body.targetDate,
             skill: req.body.skill,

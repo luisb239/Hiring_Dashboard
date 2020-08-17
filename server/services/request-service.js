@@ -15,8 +15,7 @@ module.exports = (requestDb, processDb, requestLanguagesDb, authModule, candidat
         updateRequest: updateRequest,
         // updateRequestLanguages: updateRequestLanguages,
         deleteLanguage: deleteLanguage,
-        countRequests: countRequests,
-        teste
+        countRequests: countRequests
     }
 
     /**
@@ -115,17 +114,16 @@ module.exports = (requestDb, processDb, requestLanguagesDb, authModule, candidat
 
     }
 
-    // TODO -> Check if successful ...
     async function updateRequest({
-                                     id, quantity, targetDate,
-                                     state, skill, stateCsl,
+                                     id, state, stateCsl, description, quantity, targetDate, skill,
                                      project, profile, dateToSendProfile,
                                      mandatoryLanguages, valuedLanguages, timestamp
                                  }) {
         return await transaction(async (client) => {
             const rowCount = await requestDb.updateRequest({
-                id, timestamp, client, quantity, targetDate, state, skill,
-                stateCsl, project, profile, dateToSendProfile
+                id, state, stateCsl, description, quantity,
+                targetDate, skill, project, profile, dateToSendProfile,
+                observedTimestamp: timestamp, client
             })
 
             if(rowCount === 0)
@@ -221,12 +219,4 @@ module.exports = (requestDb, processDb, requestLanguagesDb, authModule, candidat
         return {count: result.count};
     }
 
-    async function teste({char1, char2, int, timestamp}) {
-        return await transaction(async (client) => {
-            const res = await requestDb.insertA(char1, client, timestamp)
-            console.log(res)
-            await requestDb.insertB({char2, int}, client)
-            return {str: 'HELLO'}
-        })
-    }
 }

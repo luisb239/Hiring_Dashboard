@@ -68,7 +68,7 @@ module.exports = function (router, requestsController, processController, valida
         body('workflow').exists().withMessage("Request must have a workflow"),
         body('dateToSendProfile').optional().isAfter().toDate().withMessage("Date to send profile a date be after today"),
         body('mandatoryLanguages').optional().isArray().withMessage("Mandatory Languages must be an array of languages"),
-        body('valuedLanguages').optional().isArray().withMessage("Valued Languages  must be an array of languages"),
+        body('valuedLanguages').optional().isArray().withMessage("Valued Languages must be an array of languages"),
     ], handle(requestsController.postRequest))
 
     /**
@@ -76,6 +76,9 @@ module.exports = function (router, requestsController, processController, valida
      */
     router.patch(`/${root}/:id`, [
         body('timestamp').exists().toDate().withMessage("Timestamp must exist and be of date type"),
+        body('state').optional(),
+        body('stateCsl').optional(),
+        body('description').optional(),
         body('quantity').optional(),
         body('targetDate').optional(),
         body('skill').optional(),

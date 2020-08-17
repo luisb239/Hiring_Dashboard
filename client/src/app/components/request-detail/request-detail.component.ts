@@ -14,6 +14,7 @@ import {RequestPropsService} from '../../services/requestProps/requestProps.serv
 import {LanguageCheckbox} from '../../model/requestProps/language-checkbox';
 import {AuthService} from '../../services/auth/auth.service';
 import {ErrorType} from '../../services/common-error';
+import {Observable} from "rxjs";
 
 @Component({
   selector: 'app-request-detail',
@@ -24,6 +25,8 @@ import {ErrorType} from '../../services/common-error';
 export class RequestDetailComponent implements OnInit {
 
   properties: RequestDetailProps = new RequestDetailProps();
+  patchObj: any = {};
+  private initialValues: any;
 
   constructor(
     private router: Router,
@@ -84,30 +87,66 @@ export class RequestDetailComponent implements OnInit {
     }
   }
 
+  onUpdate() {
+    Object.keys(this.properties.updateForm.controls).forEach((key) => {
+      const form = this.properties.updateForm.get(key);
+      if (form.dirty) {
+        this.patchObj[key] = form.value;
+      }
+    });
+
+    const mandatoryLanguages = this.properties.mandatoryLanguages
+      .filter(l => l.checked && !l.initialCheck)
+      .map(l => l.language);
+
+    const valuedLanguages = this.properties.valuedLanguages
+      .filter(l => l.checked && !l.initialCheck)
+      .map(l => l.language);
+
+    if (mandatoryLanguages && mandatoryLanguages.length) {
+      this.patchObj.mandatoryLanguages = mandatoryLanguages;
+    }
+
+    if (valuedLanguages && valuedLanguages.length) {
+      this.patchObj.valuedLanguages = valuedLanguages;
+    }
+
+    if (this.patchObj && Object.keys(this.patchObj).length) {
+      this.patchObj.timestamp = this.properties.timestamp;
+      this.requestService.updateRequest(this.properties.requestId, this.patchObj)
+        .subscribe(() => {
+          this.patchObj = {};
+          this.initialValues = this.properties.updateForm.value;
+          this.properties.updateForm.reset(this.initialValues);
+          this.alertService.success('Updated request details successfully!');
+          this.getRequestAndUsers(this.properties.requestId);
+        });
+    }
+  }
+
   /**
    * This function fetches all the attributes inherent to a request. Used for the view Request Details.
    * @param requestId is used to get a specific request from the database.
    */
   private getRequestAndUsers(requestId: number) {
     this.requestService.getRequest(requestId)
-      .pipe(
-        map(dao => {
+      .pipe(map(dao => {
           const requests = new RequestList(
-              dao.request.id,
-              dao.request.workflow,
-              dao.request.progress,
-              dao.request.state,
-              dao.request.description,
-              dao.request.quantity,
-              dao.request.dateToSendProfile,
-              dao.request.project,
-              dao.request.requestDate,
-              dao.request.skill,
-              dao.request.stateCsl,
-              dao.request.targetDate,
-              dao.request.profile);
-            return {dao, requests};
-          }
+            dao.request.id,
+            dao.request.workflow,
+            dao.request.progress,
+            dao.request.state,
+            dao.request.description,
+            dao.request.quantity,
+            dao.request.dateToSendProfile,
+            dao.request.project,
+            dao.request.requestDate,
+            dao.request.skill,
+            dao.request.stateCsl,
+            dao.request.targetDate,
+            dao.request.profile);
+          return {dao, requests};
+        }
         ),
         map(data => {
           const userRoles = data.dao.userRoles
@@ -142,13 +181,16 @@ export class RequestDetailComponent implements OnInit {
         this.properties.valuedLanguages = result.valued;
         this.properties.timestamp = new Date();
 
-        this.properties.updateForm.addControl('project', new FormControl(result.requests.project));
-        this.properties.updateForm.addControl('skill', new FormControl(result.requests.skill));
+        // TODO -> also add description to update form
+        this.properties.updateForm.addControl('state', new FormControl(result.requests.state));
         this.properties.updateForm.addControl('stateCsl', new FormControl(result.requests.stateCSL));
+        this.properties.updateForm.addControl('description', new FormControl(result.requests.description));
+        this.properties.updateForm.addControl('quantity', new FormControl(result.requests.quantity));
         this.properties.updateForm.addControl('targetDate', new FormControl(result.requests.targetDate));
+        this.properties.updateForm.addControl('skill', new FormControl(result.requests.skill));
+        this.properties.updateForm.addControl('project', new FormControl(result.requests.project));
         this.properties.updateForm.addControl('profile', new FormControl(result.requests.profile));
         this.properties.updateForm.addControl('dateToSendProfile', new FormControl(result.requests.dateToSendProfile));
-        this.properties.updateForm.addControl('quantity', new FormControl(result.requests.quantity));
 
         this.userService.getRoleIdByName('recruiter')
           .pipe(
@@ -222,30 +264,6 @@ export class RequestDetailComponent implements OnInit {
               );
             },
             () => this.alertService.error('Unexpected server error. Refresh and try again.'));
-      });
-  }
-
-  onUpdate() {
-    const values = this.properties.updateForm.value;
-    const body = {
-      quantity: values.quantity,
-      targetDate: values.targetDate,
-      skill: values.skill,
-      project: values.project,
-      profile: values.profile,
-      dateToSendProfile: values.dateToSendProfile,
-      mandatoryLanguages: this.properties.mandatoryLanguages
-        .filter(l => l.checked && !l.initialCheck)
-        .map(l => l.language),
-      valuedLanguages: this.properties.valuedLanguages
-        .filter(l => l.checked && !l.initialCheck)
-        .map(l => l.language),
-      timestamp: this.properties.timestamp
-    };
-
-    this.requestService.updateRequest(this.properties.requestId, body)
-      .subscribe(() => {
-        this.alertService.success('Updated request details successfully!');
       });
   }
 
