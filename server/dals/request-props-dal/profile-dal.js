@@ -45,7 +45,7 @@ module.exports = (query) => {
         }
     }
 
-    async function addProfileToCandidate({candidateId, profile, client = null}) {
+    async function addProfileToCandidate({candidateId, profile}) {
         const statement = {
             name: 'Add Profile To Candidate',
             text:
@@ -55,7 +55,7 @@ module.exports = (query) => {
             values: [candidateId, profile]
         }
 
-        return (await query(statement, client)).rowCount
+        return await query(statement)
     }
 
     async function deleteProfileFromCandidate({ candidateId, profile }) {
