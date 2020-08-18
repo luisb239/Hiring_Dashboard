@@ -203,34 +203,42 @@ export class BoardComponent implements OnInit {
 
   getAllRequests() {
     this.requestService.getUserCurrentRequests()
-      .subscribe(
-        requestsDao => {
-          this.properties.timestamp = new Date();
-          this.properties.requests = requestsDao.requests.map(r => new RequestList(r.id, r.workflow, r.progress,
-            r.state, r.description, r.quantity));
-          this.properties.workflows = [...new Set(this.properties.requests.map(r => r.workflow))].map(w => new Workflow(w));
-          this.properties.allRequests = this.properties.requests.map(r => r.description);
-          this.properties.allWorkflows = this.properties.workflows.map(w => w.workflow);
-          this.properties.content = new Content('Workflow', this.properties.allWorkflows);
-          this.properties.filteredOptions = this.properties.control.valueChanges.pipe(
-            startWith(''),
-            map(value => {
-              return this._filter(value);
-            }));
-          this.properties.workflows.forEach(workflow => {
-            this.workflowService.getWorkflowByName(workflow.workflow)
-              .subscribe(workflowDao => {
-                workflow.phases = workflowDao.phases.map(wp => new Phase(wp.phase));
-                workflow.requests = this.properties.requests.filter(req => req.workflow === workflow.workflow);
-                workflow.requests.forEach(request => {
-                  workflow.phases.forEach(p => request.phases.push(new Phase(p.name, [])));
-                  this.fetchProcessesInRequest(request);
-                });
-              }, () => {
-                this.alertService.error('Unexpected server error. Refresh and try again.');
+      .pipe(
+        map(dao => {
+          return {requests: dao.requests.map(r => new RequestList(r.id, r.workflow, r.progress,
+            r.state, r.description, r.quantity))};
+        }),
+        map(data => {
+          const workflows = [...new Set(data.requests.map(r => r.workflow))].map(w => new Workflow(w));
+          return {...data, workflows};
+        })
+      ).subscribe(
+      result => {
+        this.properties.timestamp = new Date();
+        this.properties.requests = result.requests;
+        this.properties.workflows = result.workflows;
+        this.properties.allRequests = this.properties.requests.map(r => r.description);
+        this.properties.allWorkflows = this.properties.workflows.map(w => w.workflow);
+        this.properties.content = new Content('Workflow', this.properties.allWorkflows);
+        this.properties.filteredOptions = this.properties.control.valueChanges.pipe(
+          startWith(''),
+          map(value => {
+            return this._filter(value);
+          }));
+        this.properties.workflows.forEach(workflow => {
+          this.workflowService.getWorkflowByName(workflow.workflow)
+            .subscribe(workflowDao => {
+              workflow.phases = workflowDao.phases.map(wp => new Phase(wp.phase));
+              workflow.requests = this.properties.requests.filter(req => req.workflow === workflow.workflow);
+              workflow.requests.forEach(request => {
+                workflow.phases.forEach(p => request.phases.push(new Phase(p.name, [])));
+                this.fetchProcessesInRequest(request);
               });
-          });
+            }, () => {
+              this.alertService.error('Unexpected server error. Refresh and try again.');
+            });
         });
+      });
   }
 
   reset() {
