@@ -139,7 +139,8 @@ export class BoardComponent implements OnInit {
       }));
   }
 
-  filter() {
+  filter(event: any) {
+    event.preventDefault();
     if (this.properties.content.name === 'Description') {
       this.filterByDescription();
     } else if (this.properties.content.name === 'Workflow') {

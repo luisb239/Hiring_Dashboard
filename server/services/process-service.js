@@ -12,10 +12,6 @@ module.exports = (requestDb, candidateDb, processDb, phaseDb, infoDb, processUna
         updateProcess,
         updateProcessCurrentPhase,
         createProcess,
-        // updateStatus,
-        // updateUnavailableReason,
-        // moveProcessToFirstPhase,
-        // updateProcessInfoValues,
         getUnavailableReasons,
         getAllStatus,
         updateProcessPhaseNotes
@@ -52,22 +48,6 @@ module.exports = (requestDb, candidateDb, processDb, phaseDb, infoDb, processUna
             })
         })
     }
-
-    // async function moveProcessToFirstPhase({requestId, candidateId}) {
-    //     const {workflow} = await requestDb.getRequestById({id: requestId})
-    //
-    //     const workflowPhases = await phaseDb.getPhasesByWorkflow({workflow})
-    //
-    //     const firstPhase = workflowPhases.find(phase => phase.phaseNumber === 1)
-    //
-    //     await processPhaseDb.addPhaseToProcess({
-    //         requestId, candidateId, phase: firstPhase.phase, startDate: new Date()
-    //     })
-    //
-    //     await processPhaseDb.setProcessInitialPhase({
-    //         requestId, candidateId, initialPhase: firstPhase.phase
-    //     })
-    // }
 
 
     /**
