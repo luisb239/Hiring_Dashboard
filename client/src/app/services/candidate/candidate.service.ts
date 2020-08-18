@@ -4,6 +4,8 @@ import { CandidateDao } from 'src/app/model/candidate/candidate-dao';
 import { CandidatesDao } from '../../model/candidate/candidates-dao';
 import { SuccessPostDao } from 'src/app/model/common/successPost-dao';
 import { forkJoin } from 'rxjs';
+import { map } from 'rxjs/internal/operators/map';
+import { take } from 'rxjs/operators';
 
 const httpOptions = {
   headers: new HttpHeaders({
@@ -52,38 +54,26 @@ export class CandidateService {
     if (body.info) {
       formData.append('profileInfo', body.info);
     }
-    if (body.profiles) {
-      // body.profiles.forEach(profile => formData.append('profiles', profile));
-      formData.append('profiles', JSON.stringify(body.profiles));
-    }
-    return this.http
-      .post<any>(`${this.baseUrl}/candidates`, formData, {
-        headers: new HttpHeaders({ enctype: 'multipart/form-data' }),
-      });
+    return this.http.post<SuccessPostDao>(`${this.baseUrl}/candidates`, formData, {
+      headers: new HttpHeaders({ enctype: 'multipart/form-data' })
+    });
   }
 
-  updateCandidate(body: any) {
+  updateCandidate(body: any, id: number) {
     const formData: FormData = new FormData();
     let allRequests: any;
     if (body.cv) {
       formData.append('cv', body.cv, body.cv.name);
     }
-    if (body.profileInfo) {
+    if (body.profileInfo !== undefined) {
       formData.append('profileInfo', body.profileInfo);
     }
     if (body.profiles) {
-      allRequests = body.profiles.map(p => {
-        const profileBody = {
-          id: body.id,
-          profile: p
-        };
-        return this.http.post<SuccessPostDao>(`${this.baseUrl}/candidates/${body.id}/profiles`,
-          profileBody, httpOptions);
-      });
+      allRequests = this.addCandidateProfiles(body, id);
     }
     formData.append('available', String(body.available));
     formData.append('timestamp', String(body.timestamp));
-    allRequests.push(this.http.patch<CandidatesDao>(`${this.baseUrl}/candidates/${body.id}`,
+    allRequests.push(this.http.patch<CandidatesDao>(`${this.baseUrl}/candidates/${id}`,
       formData, {
       headers: new HttpHeaders({ enctype: 'multipart/form-data' })
     }));
@@ -91,8 +81,20 @@ export class CandidateService {
   }
 
   removeCandidateProfile(body: any) {
-    return this.http.delete<SuccessPostDao>(`${this.baseUrl}/candidates/${body.id}/profiles/${body.profile}`,
+    return this.http.delete<any>(`${this.baseUrl}/candidates/${body.id}/profiles/${body.profile}`,
       httpOptions);
+  }
+
+  addCandidateProfiles(body, id) {
+    return body.profiles.map(p => {
+      const profileBody = {
+        id,
+        profile: p
+      };
+      return this.http.post<SuccessPostDao>(`${this.baseUrl}/candidates/${id}/profiles`,
+        profileBody, httpOptions);
+    });
+
   }
 
   downloadCandidateCv(candidateId: number): any {

@@ -43,14 +43,10 @@ module.exports = (candidateDb, profilesDb, processDb, transaction) => {
     async function updateCandidate({
         id, cvFileName = null, cvMimeType = null,
         cvFileBuffer = null, cvEncoding = null, profileInfo = null,
-        available = null, profiles = null, timestamp
-    }) {
+        available = null, timestamp }) {
         // Convert string to boolean
         if (available)
             available = (available === 'true')
-        // Convert string to array
-        if (profiles)
-            profiles = JSON.parse(profiles)
 
         await transaction(async (client) => {
             const rowCount = await candidateDb.updateCandidate({
@@ -61,25 +57,13 @@ module.exports = (candidateDb, profilesDb, processDb, transaction) => {
                 cvMimeType: cvMimeType,
                 cvBuffer: cvFileBuffer,
                 cvEncoding: cvEncoding,
-                timestamp: new Date(timestamp),
+                timestamp: timestamp,
                 client: client
             })
             if (rowCount === 0)
                 throw new AppError(errors.preconditionFailed,
                     "Candidate not updated",
                     `Update timestamp was older than the latest timestamp.`)
-            // or -> await addCandidateProfiles({id, profiles})
-            if (profiles && profiles.length > 0) {
-                await Promise.all(profiles.map(async prof => {
-                    await profilesDb.addProfileToCandidate({
-                        candidateId: id,
-                        profile: prof,
-                        client: client
-                    })
-                }))
-            }
-
-
         })
     }
 

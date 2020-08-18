@@ -1,22 +1,23 @@
-import {Component, OnInit} from '@angular/core';
-import {CandidateService} from '../../services/candidate/candidate.service';
-import {Router} from '@angular/router';
-import {Candidate} from 'src/app/model/candidate/candidate';
-import {ProcessService} from '../../services/process/process.service';
-import {Process} from '../../model/process/process';
-import {ProcessPhase} from '../../model/process/process-phase';
-import {RequestService} from '../../services/request/request.service';
-import {Request} from '../../model/request/request';
-import {RequestList} from '../../model/request/request-list';
-import {PhaseInfo} from '../../model/phase/phase-info';
-import {CandidateProcess} from '../../model/candidate/candidate-process';
-import {CandidateDetailsProps} from './candidate-details-props';
-import {map} from 'rxjs/operators';
-import {RequestPropsService} from '../../services/requestProps/requestProps.service';
-import {FormBuilder} from '@angular/forms';
-import {AlertService} from 'src/app/services/alert/alert.service';
-import {Buffer} from 'buffer';
-import {ErrorType} from '../../services/common-error';
+import { Component, OnInit } from '@angular/core';
+import { CandidateService } from '../../services/candidate/candidate.service';
+import { Router } from '@angular/router';
+import { Candidate } from 'src/app/model/candidate/candidate';
+import { ProcessService } from '../../services/process/process.service';
+import { Process } from '../../model/process/process';
+import { ProcessPhase } from '../../model/process/process-phase';
+import { RequestService } from '../../services/request/request.service';
+import { Request } from '../../model/request/request';
+import { RequestList } from '../../model/request/request-list';
+import { PhaseInfo } from '../../model/phase/phase-info';
+import { CandidateProcess } from '../../model/candidate/candidate-process';
+import { CandidateDetailsProps } from './candidate-details-props';
+import { map } from 'rxjs/operators';
+import { RequestPropsService } from '../../services/requestProps/requestProps.service';
+import { FormBuilder } from '@angular/forms';
+import { AlertService } from 'src/app/services/alert/alert.service';
+import { Buffer } from 'buffer';
+import { ErrorType } from '../../services/common-error';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-candidate-details',
@@ -44,7 +45,7 @@ export class CandidateDetailsComponent implements OnInit {
 
     this.candidateService.getCandidateById(this.properties.candidateId)
       .subscribe(dao => {
-        this.properties.timestamp = new Date();
+        this.properties.timestamp = moment().format('YYYY-MM-DDTHH:mm:ss.SSS');
         const result = dao.candidate;
         this.properties.candidate = new Candidate(result.name,
           result.id,
@@ -69,15 +70,15 @@ export class CandidateDetailsComponent implements OnInit {
 
             this.processService.getProcess(process.requestId, this.properties.candidateId)
               .subscribe(processDao => {
-                  this.properties.allProcesses.push(new Process(processDao.status,
-                    processDao.unavailableReason,
-                    processDao.phases.map(phase => new ProcessPhase(
-                      phase.phase,
-                      phase.notes,
-                      phase.infos.map(info => new PhaseInfo(info.name, info.value))
-                    )))
-                  );
-                },
+                this.properties.allProcesses.push(new Process(processDao.status,
+                  processDao.unavailableReason,
+                  processDao.phases.map(phase => new ProcessPhase(
+                    phase.phase,
+                    phase.notes,
+                    phase.infos.map(info => new PhaseInfo(info.name, info.value))
+                  )))
+                );
+              },
                 () => this.alertService.error('Unexpected server error. Refresh and try again.'));
           });
 
@@ -119,25 +120,29 @@ export class CandidateDetailsComponent implements OnInit {
   }
 
   onSubmit() {
+    this.properties.candidate.profileInfo = this.properties.updateForm.value.info;
     const body = {
-      id: this.properties.candidateId,
       cv: this.properties.fileToUpload !== null ? this.properties.fileToUpload : null,
-      profileInfo: this.properties.updateForm.value.info !== '' ?
-        this.properties.updateForm.value.info : this.properties.candidate.profileInfo,
+      profileInfo: this.properties.candidate.profileInfo,
+      // profileInfo: this.properties.updateForm.value.info !== '' ?
+      //   this.properties.updateForm.value.info : this.properties.candidate.profileInfo,
       available: this.properties.candidate.available,
       profiles: this.properties.updateForm.value.profiles.length > 0 ?
         this.properties.updateForm.value.profiles : [],
       timestamp: this.properties.timestamp
     };
-    this.candidateService.updateCandidate(body)
+    this.candidateService.updateCandidate(body, this.properties.candidateId)
       .subscribe(() => {
         this.alertService.success('Candidate Updated Successfully');
         this.properties.profilesForm.setValue('');
+        this.properties.fileToUpload = null;
+        console.log('Subscribe completed at = ', moment().format('YYYY-MM-DDTHH:mm:ss.SSS'));
         this.updateCandidateComponent();
       }, error => {
         if (error === ErrorType.PRECONDITION_FAILED) {
           this.alertService.error('This candidate has already been updated by another user.');
           this.alertService.info('Refreshing...');
+          console.log('Error completed at = ', moment().format('YYYY-MM-DDTHH:mm:ss.SSS'));
           this.updateCandidateComponent();
         } else {
           this.alertService.error('Unexpected server error. Refresh and try again.');
@@ -147,11 +152,10 @@ export class CandidateDetailsComponent implements OnInit {
 
   handleProfileDelete(profile: string) {
     const encodedProfile = Buffer.from(profile, 'binary').toString('base64');
-    this.candidateService.removeCandidateProfile({id: this.properties.candidateId, profile: encodedProfile})
+    this.candidateService.removeCandidateProfile({ id: this.properties.candidateId, profile: encodedProfile })
       .subscribe(() => {
         this.alertService.success('Profile removed successfully');
         this.updateCandidateComponent();
-        this.properties.profilesForm.setValue('');
       }, error => {
         if (error === ErrorType.NOT_FOUND) {
           this.alertService.error('This profile has already been deleted.');
@@ -172,7 +176,7 @@ export class CandidateDetailsComponent implements OnInit {
     this.candidateService.getCandidateById(this.properties.candidateId)
       .subscribe(candidateDao => {
         const result = candidateDao.candidate;
-        this.properties.timestamp = new Date();
+        this.properties.timestamp = moment().format('YYYY-MM-DDTHH:mm:ss.SSS');
         this.properties.candidate = new Candidate(result.name,
           result.id,
           result.profileInfo,
@@ -181,6 +185,9 @@ export class CandidateDetailsComponent implements OnInit {
           candidateDao.profiles.map(pi => pi.profile),
           candidateDao.processes.map(proc => new CandidateProcess(proc.status, proc.requestId)));
         this.getRequestProfiles();
+        this.properties.infoForm = this.formBuilder.control(this.properties.candidate.profileInfo);
+        this.properties.profilesForm = this.formBuilder.control('');
+        console.log('Updated Candidate Component');
       }, () => {
         this.alertService.error('Unexpected server error. Refresh and try again.');
       });
@@ -189,7 +196,7 @@ export class CandidateDetailsComponent implements OnInit {
   downloadCv() {
     this.candidateService.downloadCandidateCv(this.properties.candidateId)
       .subscribe(data => {
-        const blob = new Blob([data], {type: 'application/pdf'});
+        const blob = new Blob([data], { type: 'application/pdf' });
         const downloadURL = window.URL.createObjectURL(blob);
         const link = document.createElement('a');
         link.href = downloadURL;

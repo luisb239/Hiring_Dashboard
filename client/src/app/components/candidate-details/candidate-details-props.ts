@@ -16,5 +16,5 @@ export class CandidateDetailsProps {
   updateForm: FormGroup;
   infoForm: FormControl;
   profilesForm: FormControl;
-  timestamp: Date;
+  timestamp: string;
 }
