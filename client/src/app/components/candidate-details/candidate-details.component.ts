@@ -128,7 +128,7 @@ export class CandidateDetailsComponent implements OnInit {
       //   this.properties.updateForm.value.info : this.properties.candidate.profileInfo,
       available: this.properties.candidate.available,
       profiles: this.properties.updateForm.value.profiles.length > 0 ?
-        this.properties.updateForm.value.profiles : [],
+        this.properties.updateForm.value.profiles : null,
       timestamp: this.properties.timestamp
     };
     this.candidateService.updateCandidate(body, this.properties.candidateId)
@@ -185,8 +185,8 @@ export class CandidateDetailsComponent implements OnInit {
           candidateDao.profiles.map(pi => pi.profile),
           candidateDao.processes.map(proc => new CandidateProcess(proc.status, proc.requestId)));
         this.getRequestProfiles();
-        this.properties.infoForm = this.formBuilder.control(this.properties.candidate.profileInfo);
-        this.properties.profilesForm = this.formBuilder.control('');
+        this.properties.infoForm.setValue(this.properties.candidate.profileInfo);
+        this.properties.profilesForm.setValue('');
         console.log('Updated Candidate Component');
       }, () => {
         this.alertService.error('Unexpected server error. Refresh and try again.');

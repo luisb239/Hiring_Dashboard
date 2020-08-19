@@ -4,8 +4,6 @@ import { CandidateDao } from 'src/app/model/candidate/candidate-dao';
 import { CandidatesDao } from '../../model/candidate/candidates-dao';
 import { SuccessPostDao } from 'src/app/model/common/successPost-dao';
 import { forkJoin } from 'rxjs';
-import { map } from 'rxjs/internal/operators/map';
-import { take } from 'rxjs/operators';
 
 const httpOptions = {
   headers: new HttpHeaders({
@@ -61,7 +59,7 @@ export class CandidateService {
 
   updateCandidate(body: any, id: number) {
     const formData: FormData = new FormData();
-    let allRequests: any;
+    let allRequests = [];
     if (body.cv) {
       formData.append('cv', body.cv, body.cv.name);
     }
