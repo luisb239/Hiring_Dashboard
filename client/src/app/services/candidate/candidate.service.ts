@@ -4,8 +4,6 @@ import { CandidateDao } from 'src/app/model/candidate/candidate-dao';
 import { CandidatesDao } from '../../model/candidate/candidates-dao';
 import { SuccessPostDao } from 'src/app/model/common/successPost-dao';
 import { forkJoin } from 'rxjs';
-import { map } from 'rxjs/internal/operators/map';
-import { take } from 'rxjs/operators';
 
 const httpOptions = {
   headers: new HttpHeaders({

@@ -7,7 +7,7 @@
           <h5 class="inline">CV:</h5>
           <h6 class="inline" id="cv" (click)="downloadCv()">{{properties.candidate.cv}}</h6>
         </div>
-        <div *ngIf="!properties.candidate.cv">
+        <div *ngIf="!properties.candidate.cv" class="property">
           <h5 id="file-label" class="inline">Curriculum Vitae:</h5>
           <h6 class="inline">Missing CV!</h6>
         </div>
@@ -23,13 +23,13 @@
             <div *ngIf="!properties.candidate.available" class="circle not_available"></div>
           </div>
         </div>
-        <div>
+        <div class="property">
           <h5>Profile Information</h5>
           <textarea class="form-control" id="info" name="info"
                     formControlName="info">{{properties.candidate.profileInfo}}</textarea>
         </div>
         <h5>Profiles</h5>
-        <div *ngIf="properties.candidate.profiles.length > 0">
+        <div *ngIf="properties.candidate.profiles.length > 0" class="property">
           <table class="table-responsive-xl profileTable">
             <thead>
             <tr>
@@ -48,7 +48,7 @@
             </tr>
           </table>
         </div>
-        <div *ngIf="properties.candidate.profiles.length === 0">
+        <div *ngIf="properties.candidate.profiles.length === 0" class="property">
           <p>There are no profiles associated.</p>
         </div>
         <div class="form-group">

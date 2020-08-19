@@ -9,7 +9,7 @@ export class AlertService {
   private subject = new Subject<Alert>();
   private defaultId = 'default-alert';
   private options = {
-    autoClose: false,
+    autoClose: true,
     keepAfterRouteChange: true
   };
 

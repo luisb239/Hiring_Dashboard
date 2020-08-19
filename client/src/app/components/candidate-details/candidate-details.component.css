@@ -3,6 +3,11 @@
   margin: 10px;
 }
 
+.property {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
 #box {
   width: fit-content;
   flex-direction: column;
