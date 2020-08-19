@@ -11,7 +11,7 @@
           </div>
         </div>
         <input type="text"
-               (keydown.enter)="filter()"
+               (keydown.enter)="filter($event)"
                placeholder="Search By {{properties.content.name}}"
                [formControl]="properties.control"
                [matAutocomplete]="auto">

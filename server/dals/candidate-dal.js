@@ -64,9 +64,9 @@ module.exports = (query) => {
     }
 
     async function createCandidate({
-                                       name, available = true, profileInfo = null,
-                                       cvBuffer, cvMimeType, cvFileName, cvEncoding, timestamp = new Date()
-                                   }) {
+        name, available = true, profileInfo = null,
+        cvBuffer, cvMimeType, cvFileName, cvEncoding, timestamp = new Date()
+    }) {
         const statement = {
             name: 'Create Candidate',
             text:
@@ -83,11 +83,11 @@ module.exports = (query) => {
         return extract(result.rows[0])
     }
 
-    
+
     async function updateCandidate({
-                                       id, cvFileName, cvMimeType, cvBuffer,
-                                       cvEncoding, profileInfo, available, timestamp, client, newTimestamp = new Date()
-                                   }) {
+        id, cvFileName, cvMimeType, cvBuffer,
+        cvEncoding, profileInfo, available, timestamp, client, newTimestamp = new Date()
+    }) {
         const statement = {
             name: 'Update Candidate',
             text:

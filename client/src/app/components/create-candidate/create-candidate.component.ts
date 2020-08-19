@@ -1,11 +1,12 @@
-import {Component, OnInit} from '@angular/core';
-import {CandidateService} from '../../services/candidate/candidate.service';
-import {map} from 'rxjs/operators';
-import {RequestPropsService} from '../../services/requestProps/requestProps.service';
-import {FormBuilder} from '@angular/forms';
-import {Router} from '@angular/router';
-import {AlertService} from '../../services/alert/alert.service';
-import {CreateCandidateProps} from './create-candidate-props';
+import { Component, OnInit } from '@angular/core';
+import { CandidateService } from '../../services/candidate/candidate.service';
+import { map, mergeMap } from 'rxjs/operators';
+import { RequestPropsService } from '../../services/requestProps/requestProps.service';
+import { FormBuilder } from '@angular/forms';
+import { Router } from '@angular/router';
+import { AlertService } from '../../services/alert/alert.service';
+import { CreateCandidateProps } from './create-candidate-props';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-create-candidate',
@@ -16,11 +17,12 @@ export class CreateCandidateComponent implements OnInit {
 
   properties: CreateCandidateProps = new CreateCandidateProps();
 
-  constructor(private candidateService: CandidateService,
-              private requestPropsService: RequestPropsService,
-              private formBuilder: FormBuilder,
-              private router: Router,
-              private alertService: AlertService) {
+  constructor(
+    private candidateService: CandidateService,
+    private requestPropsService: RequestPropsService,
+    private formBuilder: FormBuilder,
+    private router: Router,
+    private alertService: AlertService) {
   }
 
   ngOnInit(): void {
@@ -58,12 +60,18 @@ export class CreateCandidateComponent implements OnInit {
         body.profiles = this.properties.createForm.value.profiles;
       }
       this.candidateService.addCandidate(body)
-        .subscribe(dao => {
+        .pipe(mergeMap(dao => {
+          if (body.profiles) {
+            const postProfilesRequests = this.candidateService.addCandidateProfiles(body, dao.id);
+            return forkJoin(postProfilesRequests).pipe(map(res => {
+              return dao;
+            }));
+          }
+        })).subscribe((res) => {
           this.alertService.success('Candidate added to the system');
-          this.router.navigate(['/candidates', dao.id]);
-        }, () => {
-          this.alertService.error('Unexpected server error. Refresh and try again.');
-        });
+          this.router.navigate(['/candidates', res.id]);
+        }, () =>
+          this.alertService.error('Unexpected server error. Refresh and try again.'));
     }
   }
 }
