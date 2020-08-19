@@ -105,6 +105,10 @@ export class RequestService {
     });
   }
 
+  addLanguageRequirementToRequest(requestId: number, language: string, isMandatory: boolean) {
+    return this.http.post(`${this.baseUrl}/requests/${requestId}/languages`, {language, isMandatory});
+  }
+
   // count the number of requests with the filters applied..
   count(args: any) {
 

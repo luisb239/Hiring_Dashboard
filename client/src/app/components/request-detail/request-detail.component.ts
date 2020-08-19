@@ -14,7 +14,6 @@ import {RequestPropsService} from '../../services/requestProps/requestProps.serv
 import {LanguageCheckbox} from '../../model/requestProps/language-checkbox';
 import {AuthService} from '../../services/auth/auth.service';
 import {ErrorType} from '../../services/common-error';
-import {Observable} from "rxjs";
 
 @Component({
   selector: 'app-request-detail',
@@ -39,30 +38,6 @@ export class RequestDetailComponent implements OnInit {
     this.properties.updateForm = this.formBuilder.group({});
   }
 
-  onSubmit() {
-    const values = this.properties.userForm.value.userIdx;
-    this.userService.getRoleIdByName('recruiter')
-      .subscribe(dao => {
-          const roleId = dao.id;
-          values.forEach(idx => {
-            this.requestService.addUser(this.properties.requestId, this.properties.users[idx].userId,
-              roleId, this.properties.timestamp)
-              .subscribe(() => {
-                  this.alertService.success('Recruiters added to this request successfully!');
-                  this.getRequestAndUsers(this.properties.requestId);
-                }, error => {
-                  if (error === ErrorType.CONFLICT) {
-                    this.alertService.error('The user you were trying to add to the request has already been added by another user.');
-                    this.alertService.info('Refreshing request details...');
-                    this.getRequestAndUsers(this.properties.requestId);
-                  }
-                }
-              );
-          });
-        }
-      );
-  }
-
   /**
    * This function will fetch the request's id either through the state passed from the component
    * all-requests or from the url, if the view isn't forwarded by the previous component.
@@ -70,7 +45,8 @@ export class RequestDetailComponent implements OnInit {
    */
   ngOnInit() {
     this.properties.requestId = history.state.requestId || this.router.url.split('/')[2];
-    this.getRequestAndUsers(this.properties.requestId);
+    this.getRequestProperties();
+    this.getRequestInfo(this.properties.requestId);
     this.properties.userForm = this.formBuilder.group({
       userIdx: this.formBuilder.array([])
     });
@@ -119,16 +95,137 @@ export class RequestDetailComponent implements OnInit {
           this.initialValues = this.properties.updateForm.value;
           this.properties.updateForm.reset(this.initialValues);
           this.alertService.success('Updated request details successfully!');
-          this.getRequestAndUsers(this.properties.requestId);
+          this.getRequestInfo(this.properties.requestId);
         });
     }
+  }
+
+  getRequestProperties() {
+    // Get recruiters
+    this.userService.getRoleIdByName('recruiter')
+      .pipe(
+        switchMap(dao => this.userService.getAllUsers(dao.id)),
+        map(dao => {
+          const existingUsers = this.properties.userRoles.map(u => u.userId);
+          return dao.users
+            .filter(user => !existingUsers.includes(user.id))
+            .map(user => new User(user.id, user.email));
+        })
+      )
+      .subscribe(users => this.properties.users = users);
+    // Get states from server
+    this.reqPropsService.getRequestStates()
+      .pipe(map(dao => dao.states
+        .map(s => s.state)))
+      .subscribe(s => this.properties.states = s,
+        () => {
+          this.alertService.error('Unexpected server error. Refresh and try again.');
+        });
+    // Get states csl from server
+    this.reqPropsService.getRequestStatesCsl()
+      .pipe(map(dao => dao.statesCsl
+        .map(s => s.stateCsl)))
+      .subscribe(s => this.properties.statesCsl = s,
+        () => {
+          this.alertService.error('Unexpected server error. Refresh and try again.');
+        });
+    // Get all projects from server
+    this.reqPropsService.getRequestProjects()
+      .pipe(map(dao => dao.projects
+        .map(p => p.project)))
+      .subscribe(p => this.properties.projects = p,
+        () => this.alertService.error('Unexpected server error. Refresh and try again.'));
+    // Get all skills from server
+    this.reqPropsService.getRequestSkills()
+      .pipe(map(dao => dao.skills
+        .map(s => s.skill)))
+      .subscribe(s => this.properties.skills = s,
+        () => this.alertService.error('Unexpected server error. Refresh and try again.'));
+    // Get all profiles from server
+    this.reqPropsService.getRequestProfiles()
+      .pipe(map(dao => dao.profiles
+        .map(p => p.profile)))
+      .subscribe(p => this.properties.profiles = p,
+        () => this.alertService.error('Unexpected server error. Refresh and try again.'));
+    // Get all target dates(months) from server
+    this.reqPropsService.getTargetDates()
+      .pipe(map(dao => dao.months
+        .map(m => m.month)))
+      .subscribe(t => this.properties.targetDates = t,
+        () => this.alertService.error('Unexpected server error. Refresh and try again.'));
+    // Get all languages from server
+    this.reqPropsService.getRequestLanguages()
+      .pipe(map(dao => dao.languages
+        .map(l => l.language)))
+      .subscribe(lang => {
+          this.properties.languages = lang;
+          const mandatory = this.properties.mandatoryLanguages.map(l => l.language);
+          const valued = this.properties.valuedLanguages.map(l => l.language);
+          this.properties.mandatoryLanguages = this.properties.mandatoryLanguages
+            .concat(lang.filter(l => !mandatory.includes(l))
+              .map(l => new LanguageCheckbox(l, false, false))
+            );
+          this.properties.valuedLanguages = this.properties.valuedLanguages
+            .concat(lang.filter(l => !valued.includes(l))
+              .map(l => new LanguageCheckbox(l, false, false))
+            );
+        },
+        () => this.alertService.error('Unexpected server error. Refresh and try again.'));
+  }
+
+  onSubmit() {
+    const values = this.properties.userForm.value.userIdx;
+    this.userService.getRoleIdByName('recruiter')
+      .subscribe(dao => {
+          const roleId = dao.id;
+          values.forEach(idx => {
+            this.requestService.addUser(this.properties.requestId, this.properties.users[idx].userId,
+              roleId, this.properties.timestamp)
+              .subscribe(() => {
+                  this.alertService.success('Recruiters added to this request successfully!');
+                  this.getRequestInfo(this.properties.requestId);
+                }, error => {
+                  if (error === ErrorType.CONFLICT) {
+                    this.alertService.error('The user you were trying to add to the request has already been added by another user.');
+                    this.alertService.info('Refreshing request details...');
+                    this.getRequestInfo(this.properties.requestId);
+                  }
+                }
+              );
+          });
+        }
+      );
+  }
+
+  getAvailableStates() {
+    return this.properties.states ? this.properties.states.filter(s => s !== this.properties.requestList.state) : [];
+  }
+
+  getAvailableStatesCsl() {
+    return this.properties.statesCsl ? this.properties.statesCsl.filter(s => s !== this.properties.requestList.stateCSL) : [];
+  }
+
+  getAvailableProjects() {
+    return this.properties.projects ? this.properties.projects.filter(s => s !== this.properties.requestList.project) : [];
+  }
+
+  getAvailableSkills() {
+    return this.properties.skills ? this.properties.skills.filter(s => s !== this.properties.requestList.skill) : [];
+  }
+
+  getAvailableTargetDates() {
+    return this.properties.targetDates ? this.properties.targetDates.filter(s => s !== this.properties.requestList.targetDate) : [];
+  }
+
+  getAvailableProfiles() {
+    return this.properties.profiles ? this.properties.profiles.filter(s => s !== this.properties.requestList.profile) : [];
   }
 
   /**
    * This function fetches all the attributes inherent to a request. Used for the view Request Details.
    * @param requestId is used to get a specific request from the database.
    */
-  private getRequestAndUsers(requestId: number) {
+  private getRequestInfo(requestId: number) {
     this.requestService.getRequest(requestId)
       .pipe(map(dao => {
           const requests = new RequestList(
@@ -191,79 +288,6 @@ export class RequestDetailComponent implements OnInit {
         this.properties.updateForm.addControl('project', new FormControl(result.requests.project));
         this.properties.updateForm.addControl('profile', new FormControl(result.requests.profile));
         this.properties.updateForm.addControl('dateToSendProfile', new FormControl(result.requests.dateToSendProfile));
-
-        this.userService.getRoleIdByName('recruiter')
-          .pipe(
-            switchMap(dao => this.userService.getAllUsers(dao.id)),
-            map(dao => {
-              const existingUsers = this.properties.userRoles.map(u => u.userId);
-              return dao.users
-                .filter(user => !existingUsers.includes(user.id))
-                .map(user => new User(user.id, user.email));
-            })
-          )
-          .subscribe(users => this.properties.users = users);
-        this.reqPropsService.getRequestStates()
-          .pipe(map(dao => dao.states
-            .filter(s => s.state !== result.requests.state)
-            .map(s => s.state)))
-          .subscribe(s => this.properties.states = s,
-            () => {
-              this.alertService.error('Unexpected server error. Refresh and try again.');
-            });
-        this.reqPropsService.getRequestStatesCsl()
-          .pipe(map(dao => dao.statesCsl
-            .filter(s => s.stateCsl !== result.requests.stateCSL)
-            .map(s => s.stateCsl)))
-          .subscribe(s => this.properties.statesCsl = s,
-            () => {
-              this.alertService.error('Unexpected server error. Refresh and try again.');
-            });
-        this.reqPropsService.getRequestProjects()
-          .pipe(map(dao => dao.projects
-            .filter(p => p.project !== result.requests.project)
-            .map(p => p.project)))
-          .subscribe(p => this.properties.projects = p,
-            () => this.alertService.error('Unexpected server error. Refresh and try again.'));
-
-        this.reqPropsService.getRequestSkills()
-          .pipe(map(dao => dao.skills
-            .filter(s => s.skill !== result.requests.skill)
-            .map(s => s.skill)))
-          .subscribe(s => this.properties.skills = s,
-            () => this.alertService.error('Unexpected server error. Refresh and try again.'));
-
-        this.reqPropsService.getRequestProfiles()
-          .pipe(map(dao => dao.profiles
-            .filter(p => p.profile !== result.requests.profile)
-            .map(p => p.profile)))
-          .subscribe(p => this.properties.profiles = p,
-            () => this.alertService.error('Unexpected server error. Refresh and try again.'));
-
-        this.reqPropsService.getTargetDates()
-          .pipe(map(dao => dao.months
-            .filter(m => m.month !== result.requests.targetDate)
-            .map(m => m.month)))
-          .subscribe(t => this.properties.targetDates = t,
-            () => this.alertService.error('Unexpected server error. Refresh and try again.'));
-
-        this.reqPropsService.getRequestLanguages()
-          .pipe(map(dao => dao.languages
-            .map(l => l.language)))
-          .subscribe(lang => {
-              this.properties.languages = lang;
-              const mandatory = this.properties.mandatoryLanguages.map(l => l.language);
-              const valued = this.properties.valuedLanguages.map(l => l.language);
-              this.properties.mandatoryLanguages = this.properties.mandatoryLanguages.concat(lang
-                .filter(l => !mandatory.includes(l))
-                .map(l => new LanguageCheckbox(l, false, false))
-              );
-              this.properties.valuedLanguages = this.properties.valuedLanguages.concat(lang
-                .filter(l => !valued.includes(l))
-                .map(l => new LanguageCheckbox(l, false, false))
-              );
-            },
-            () => this.alertService.error('Unexpected server error. Refresh and try again.'));
       });
   }
 

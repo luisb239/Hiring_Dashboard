@@ -6,7 +6,7 @@ module.exports = (query) => {
     return {
         createLanguageRequirement,
         getRequestLanguages,
-        deleteLanguage
+        deleteLanguageRequirement
     }
 
     function extract(row) {
@@ -17,18 +17,18 @@ module.exports = (query) => {
         }
     }
 
-    async function createLanguageRequirement({requestId, language, isMandatory, client}) {
+    async function createLanguageRequirement({requestId, language, isMandatory}) {
         const statement = {
             name: 'Create Language Requirement in Request',
             text:
                 `INSERT INTO ${schema.table} ` +
                 `(${schema.requestId}, ${schema.language}, ${schema.isMandatory}) ` +
-                `VALUES ($1, $2, $3) RETURNING *;`,
+                `VALUES ($1, $2, $3);`,
             values: [requestId, language, isMandatory]
         }
 
-        const result = await query(statement, client)
-        return result.rows.map(row => extract(row))[0]
+        const result = await query(statement)
+        return result.rowCount
     }
 
     async function getRequestLanguages({requestId}) {
@@ -44,7 +44,7 @@ module.exports = (query) => {
         return result.rows.map(row => extract(row))
     }
 
-    async function deleteLanguage({requestId, language, isMandatory}) {
+    async function deleteLanguageRequirement({requestId, language, isMandatory}) {
         const statement = {
             name: 'Delete Language Requirement in Request',
             text:
@@ -55,7 +55,8 @@ module.exports = (query) => {
             values: [requestId, language, isMandatory]
         }
 
-        await query(statement)
+        const res = await query(statement)
+        return res.rowCount
     }
 
 }

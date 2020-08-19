@@ -9,13 +9,12 @@ module.exports = (requestDb, processDb, requestLanguagesDb, authModule, candidat
         getRequests: getRequests,
         createRequest: createRequest,
         getRequestById: getRequestById,
-        addLanguagesToRequest: addLanguagesToRequest,
         addRequestToUser: addRequestToUser,
         addUserToRequest: addUserToRequest,
         updateRequest: updateRequest,
-        // updateRequestLanguages: updateRequestLanguages,
         deleteLanguage: deleteLanguage,
-        countRequests: countRequests
+        countRequests: countRequests,
+        addLanguageToRequest: addLanguageToRequest
     }
 
     /**
@@ -115,9 +114,8 @@ module.exports = (requestDb, processDb, requestLanguagesDb, authModule, candidat
     }
 
     async function updateRequest({
-                                     id, state, stateCsl, description, quantity, targetDate, skill,
-                                     project, profile, dateToSendProfile,
-                                     mandatoryLanguages, valuedLanguages, timestamp
+                                     id, state, stateCsl, description, quantity, targetDate,
+                                     skill, project, profile, dateToSendProfile, timestamp
                                  }) {
         return await transaction(async (client) => {
             const rowCount = await requestDb.updateRequest({
@@ -130,31 +128,7 @@ module.exports = (requestDb, processDb, requestLanguagesDb, authModule, candidat
                 throw new AppError(errors.preconditionFailed,
                     "Request not updated",
                     `Update timestamp was older than the latest timestamp.`)
-
-            if (mandatoryLanguages && mandatoryLanguages.length > 0)
-                await Promise.all(mandatoryLanguages.map(async (l) =>
-                    await requestLanguagesDb.createLanguageRequirement({
-                        requestId: id,
-                        language: l,
-                        isMandatory: true,
-                        client
-                    })))
-
-            if (valuedLanguages && valuedLanguages.length > 0)
-                await Promise.all(valuedLanguages.map(async (l) =>
-                    await requestLanguagesDb.createLanguageRequirement({
-                        requestId: id,
-                        language: l,
-                        isMandatory: false,
-                        client
-                    })))
         })
-    }
-
-    //TODO -> TRY CATCH..DUPLICATE, FOREIGN KEY, ...
-    async function addLanguagesToRequest({requestId, languages, isMandatory}) {
-        await Promise.all(languages.map(async (l) =>
-            await requestLanguagesDb.createLanguageRequirement({requestId, language: l, isMandatory})))
     }
 
     // The current user is either a job owner or an admin, or both
@@ -196,13 +170,19 @@ module.exports = (requestDb, processDb, requestLanguagesDb, authModule, candidat
         // TODO
     }
 
-    // async function updateRequestLanguages({requestId, languages, isMandatory}) {
-    //     await Promise.all(languages.map(async (l) =>
-    //         await requestLanguagesDb.createLanguageRequirement({requestId, language: l, isMandatory})))
-    // }
+    async function addLanguageToRequest({requestId, language, isMandatory}) {
+        // try catch -> db.conflict
+        await requestLanguagesDb.createLanguageRequirement({requestId, language, isMandatory})
+    }
 
     async function deleteLanguage({requestId, language, isMandatory}) {
-        await requestLanguagesDb.deleteLanguage({requestId, language, isMandatory})
+        const deleted = await requestLanguagesDb.deleteLanguageRequirement({requestId, language, isMandatory})
+        if (!deleted) {
+            throw new AppError(errors.gone,
+                "Could not delete language requirement from request",
+                isMandatory ? 'Mandatory' : 'Valued' +
+                    `${language} requirement on request ${requestId} not found`)
+        }
     }
 
     async function countRequests({

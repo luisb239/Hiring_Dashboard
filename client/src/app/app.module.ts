@@ -31,6 +31,7 @@ import {HttpErrorInterceptor} from './services/htttp-error-interceptor';
 import {MatTableModule} from '@angular/material/table';
 import {MatPaginatorModule} from '@angular/material/paginator';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
+import {LoadingBarHttpClientModule} from '@ngx-loading-bar/http-client';
 
 @NgModule({
   declarations: [
@@ -67,13 +68,15 @@ import {MatAutocompleteModule} from '@angular/material/autocomplete';
     AlertModule,
     MatTableModule,
     MatPaginatorModule,
-    MatAutocompleteModule
+    MatAutocompleteModule,
+    LoadingBarHttpClientModule,
   ],
   providers: [{
     provide: HTTP_INTERCEPTORS,
     useClass: HttpErrorInterceptor,
     multi: true
-  }],
+  },
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule {

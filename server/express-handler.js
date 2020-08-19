@@ -35,11 +35,15 @@ function handleError(res, error) {
     } else if (error.commonError === commonErrors.alreadyExists) {
         // Conflict
         res.status(409).send(format(error.title, error.detail))
+    } else if (error.commonError === commonErrors.gone) {
+        // Gone
+        res.status(410).send(format(error.title, error.detail))
     } else if (error.commonError === commonErrors.preconditionFailed) {
         // Precondition Failed
         res.status(412).send(format(error.title, error.detail))
     } else {
         // Internal Server Error
+        // TODO if error is not 500 print stack trace -> if there is one obviously
         console.log(error)
         res.status(500).send(format("Internal Server Error", "Something unexpected happened!"))
     }

@@ -67,8 +67,10 @@ module.exports = function (router, requestsController, processController, valida
         body('profile').exists().withMessage("Request must have a profile"),
         body('workflow').exists().withMessage("Request must have a workflow"),
         body('dateToSendProfile').optional().isAfter().toDate().withMessage("Date to send profile a date be after today"),
+        /*
         body('mandatoryLanguages').optional().isArray().withMessage("Mandatory Languages must be an array of languages"),
         body('valuedLanguages').optional().isArray().withMessage("Valued Languages must be an array of languages"),
+        */
     ], handle(requestsController.postRequest))
 
     /**
@@ -85,16 +87,28 @@ module.exports = function (router, requestsController, processController, valida
         body('project').optional(),
         body('profile').optional(),
         body('dateToSendProfile').optional().toDate(),
+        /*
         body('mandatoryLanguages').optional().isArray(),
         body('valuedLanguages').optional().isArray()
+        */
     ], handle(requestsController.patchRequest))
 
     /**
-     * Remove Language From Request
+     * Add language to request
+     */
+    router.post(`/${root}/:id/languages`, [
+        verifyIfAuthenticated,
+        body('language').exists().isString().withMessage("Language to add must exist and be of type string"),
+        body('isMandatory').exists().isBoolean().withMessage("IsMandatory must exist and be of boolean type")
+    ], handle(requestsController.addLanguageToRequest))
+
+    /**
+     * Remove languages from request
      */
     router.delete(`/${root}/:id/languages`, [
         query('language').exists().isString().withMessage("Language must exist and be a string"),
-        query('isMandatory').exists().isBoolean().withMessage("Language Mandatory must exist and be a boolean")
+        query('isMandatory').exists().isBoolean().withMessage("Language Mandatory boolean must exist on the query" +
+            " and be of type boolean")
     ], handle(requestsController.deleteLanguage))
 
     /**

@@ -48,7 +48,9 @@ module.exports = function (router, candidatesController, validator, upload, hand
     /**
      * Delete Candidate Profile
      */
-    router.delete(`/${root}/:id/profiles/:profile`, verifyIfAuthenticated, handle(candidatesController.removeCandidateProfile))
+    router.delete(`/${root}/:id/profiles/:profile`,
+        verifyIfAuthenticated,
+        handle(candidatesController.removeCandidateProfile))
 
     /**
      * Create candidate

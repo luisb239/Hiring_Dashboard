@@ -1,5 +1,5 @@
 <body>
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+<nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
   <a [routerLink]="['/home']">
     <img alt="" class="navbar-icon" src="assets/img/navbar.png">
   </a>
@@ -76,6 +76,7 @@
     </ng-template>
   </div>
 </nav>
+<ngx-loading-bar color="#f49404" height="5px"></ngx-loading-bar>
 <app-alert></app-alert>
 <router-outlet></router-outlet>
 </body>

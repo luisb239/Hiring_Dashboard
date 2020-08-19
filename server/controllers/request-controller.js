@@ -9,7 +9,8 @@ module.exports = (service) => {
         addUserToRequest: addUserToRequest,
         patchRequest: patchRequest,
         deleteLanguage: deleteLanguage,
-        countRequests: countRequests
+        countRequests: countRequests,
+        addLanguageToRequest: addLanguageToRequest
     }
 
     async function getRequests(req, res) {
@@ -51,31 +52,45 @@ module.exports = (service) => {
             dateToSendProfile: req.body.dateToSendProfile,
         })
 
-        if (req.body.mandatoryLanguages && req.body.mandatoryLanguages.length) {
-            await service.addLanguagesToRequest({
-                requestId: id,
-                languages: req.body.mandatoryLanguages,
-                isMandatory: true
-            })
-        }
-        if (req.body.valuedLanguages && req.body.valuedLanguages.length) {
-            await service.addLanguagesToRequest({
-                requestId: id,
-                languages: req.body.valuedLanguages,
-                isMandatory: false
-            })
-        }
-
+        /* TODO -> UNCOMMENT SOON
         await service.addRequestToUser({
             userId: req.user.id,
             requestId: id
         })
+
+         */
 
         res.status(201).send({
             message: 'Request created successfully',
             id: id
         })
     }
+
+    async function addLanguageToRequest(req, res) {
+        await service.addLanguageToRequest({
+            requestId: req.params.id,
+            language: req.body.language,
+            isMandatory: req.body.isMandatory
+        })
+
+        res.status(200).send({
+            message: `${req.body.language} ` + req.body.isMandatory ? 'mandatory' : 'valued' +
+                ` requirement successfully deleted from request ${req.params.id}`
+        })
+    }
+
+    async function deleteLanguage(req, res) {
+        await service.deleteLanguage({
+            requestId: req.params.id,
+            language: req.query.language,
+            isMandatory: req.query.isMandatory
+        })
+
+        res.status(200).send({
+            message: 'Language deleted successfully'
+        })
+    }
+
 
     async function addUserToRequest(req, res) {
         await service.addUserToRequest({
@@ -110,18 +125,6 @@ module.exports = (service) => {
 
         res.status(201).send({
             message: 'Request updated successfully'
-        })
-    }
-
-    async function deleteLanguage(req, res) {
-        await service.deleteLanguage({
-            requestId: req.params.id,
-            language: req.query.language,
-            isMandatory: req.query.isMandatory
-        })
-
-        res.status(200).send({
-            message: 'Language deleted successfully'
         })
     }
 

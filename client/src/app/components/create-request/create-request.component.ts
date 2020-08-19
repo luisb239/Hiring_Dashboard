@@ -6,7 +6,8 @@ import {RequestService} from 'src/app/services/request/request.service';
 import {Router} from '@angular/router';
 import {CreateRequestProps} from './create-request-props';
 import {AlertService} from '../../services/alert/alert.service';
-
+import {map, mergeMap, take} from 'rxjs/operators';
+import {forkJoin} from 'rxjs';
 
 @Component({
   selector: 'app-create-request',
@@ -32,7 +33,6 @@ export class CreateRequestComponent implements OnInit {
    * These properties will be presented to the user in the create request view.
    */
   ngOnInit(): void {
-
     this.reqPropsService.getRequestSkills()
       .subscribe(dao => {
           this.properties.skills = dao.skills.map(s => s.skill);
@@ -106,13 +106,12 @@ export class CreateRequestComponent implements OnInit {
       skill: value.skill,
       profile: value.profile,
       project: value.project,
-      mandatoryLanguages: value.mandatoryLanguages.map(idx => this.properties.languages[idx]),
-      valuedLanguages: value.valuedLanguages.map(idx => this.properties.languages[idx]),
       workflow: value.workflow,
       targetDate: value.targetDate,
       dateToSendProfile: value.dateToSendProfile
     };
-    this.requestService.createRequest(body)
+    this.requestService.createRequest(body).pipe(mergeMap(dao =>
+      forkJoin(this.getLanguagesObservableArray(dao.id))))
       .subscribe(() => {
           this.alertService.success('Request Created Successfully!');
           this.router.navigate(['/all-requests']);
@@ -120,6 +119,18 @@ export class CreateRequestComponent implements OnInit {
         () => {
           this.alertService.error('Unexpected server error. Unable to create request.');
         });
+  }
+
+  getLanguagesObservableArray(requestId: number) {
+    const value = this.properties.form.value;
+    const mandatoryLanguages = value.mandatoryLanguages.map(idx => this.properties.languages[idx]);
+    const valuedLanguages = value.valuedLanguages.map(idx => this.properties.languages[idx]);
+    const observables = [];
+    mandatoryLanguages.forEach(mL =>
+      observables.push(this.requestService.addLanguageRequirementToRequest(requestId, mL, true)));
+    valuedLanguages.forEach(vL =>
+      observables.push(this.requestService.addLanguageRequirementToRequest(requestId, vL, false)));
+    return observables;
   }
 
   onChange(isMandatory: boolean, idx: number, event: any) {

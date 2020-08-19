@@ -5,7 +5,7 @@ import {Subscription} from 'rxjs';
 import {Alert, AlertType} from '../alert.model';
 import {AlertService} from '../../../services/alert/alert.service';
 
-@Component({selector: 'app-alert', templateUrl: 'alert.component.html'})
+@Component({selector: 'app-alert', templateUrl: 'alert.component.html', styleUrls: ['./alert.component.css']})
 export class AlertComponent implements OnInit, OnDestroy {
   @Input() id = 'default-alert';
   @Input() fade = true;
@@ -79,13 +79,13 @@ export class AlertComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const classes = ['alert', 'alert-dismissable'];
+    const classes = ['alert', 'alert-fixed', 'fixed-bottom', 'alert-dismissable'];
 
     const alertTypeClass = {
-      [AlertType.Success]: 'alert alert-success fixed-bottom',
-      [AlertType.Error]: 'alert alert-danger fixed-bottom',
-      [AlertType.Info]: 'alert alert-info fixed-bottom',
-      [AlertType.Warning]: 'alert alert-warning fixed-bottom'
+      [AlertType.Success]: 'alert-success',
+      [AlertType.Error]: 'alert-danger',
+      [AlertType.Info]: 'alert-info',
+      [AlertType.Warning]: 'alert-warning'
     };
 
     classes.push(alertTypeClass[alert.type]);
@@ -94,6 +94,7 @@ export class AlertComponent implements OnInit, OnDestroy {
       classes.push('fade');
     }
 
+    console.log('classes:', classes);
     return classes.join(' ');
   }
 }
