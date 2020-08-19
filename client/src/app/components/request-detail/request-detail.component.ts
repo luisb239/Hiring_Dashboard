@@ -5,7 +5,7 @@ import {RequestList} from 'src/app/model/request/request-list';
 import {UserRole} from 'src/app/model/user/user-role';
 import {ProcessList} from 'src/app/model/process/process-list';
 import {RequestDetailProps} from './request-detail-props';
-import {map, switchMap} from 'rxjs/operators';
+import {map, mergeMap, switchMap} from 'rxjs/operators';
 import {FormArray, FormBuilder, FormControl} from '@angular/forms';
 import {AlertService} from '../../services/alert/alert.service';
 import {UserService} from '../../services/user/user.service';
@@ -14,6 +14,7 @@ import {RequestPropsService} from '../../services/requestProps/requestProps.serv
 import {LanguageCheckbox} from '../../model/requestProps/language-checkbox';
 import {AuthService} from '../../services/auth/auth.service';
 import {ErrorType} from '../../services/common-error';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-request-detail',
@@ -25,7 +26,7 @@ export class RequestDetailComponent implements OnInit {
 
   properties: RequestDetailProps = new RequestDetailProps();
   patchObj: any = {};
-  private initialValues: any;
+  initialValues: any;
 
   constructor(
     private router: Router,
@@ -71,22 +72,35 @@ export class RequestDetailComponent implements OnInit {
       }
     });
 
-    const mandatoryLanguages = this.properties.mandatoryLanguages
+    const mandatoryLanguagesToRemove = this.properties.mandatoryLanguages
+      .filter(l => !l.checked && l.initialCheck)
+      .map(l => l.language)
+      .map(l => this.requestService.deleteLanguageRequirementFromRequest(this.properties.requestId, l, true));
+
+    const mandatoryLanguagesToAdd = this.properties.mandatoryLanguages
       .filter(l => l.checked && !l.initialCheck)
-      .map(l => l.language);
+      .map(l => l.language)
+      .map(l => this.requestService.addLanguageRequirementToRequest(this.properties.requestId, l, true));
 
-    const valuedLanguages = this.properties.valuedLanguages
+    const valuedLanguagesToRemove = this.properties.valuedLanguages
+      .filter(l => !l.checked && l.initialCheck)
+      .map(l => l.language)
+      .map(l => this.requestService.deleteLanguageRequirementFromRequest(this.properties.requestId, l, false));
+
+    const valuedLanguagesToAdd = this.properties.valuedLanguages
       .filter(l => l.checked && !l.initialCheck)
-      .map(l => l.language);
+      .map(l => l.language)
+      .map(l => this.requestService.addLanguageRequirementToRequest(this.properties.requestId, l, false));
 
-    if (mandatoryLanguages && mandatoryLanguages.length) {
-      this.patchObj.mandatoryLanguages = mandatoryLanguages;
-    }
+    let observables = [];
+    observables = observables
+      .concat(mandatoryLanguagesToRemove)
+      .concat(mandatoryLanguagesToAdd)
+      .concat(valuedLanguagesToRemove)
+      .concat(valuedLanguagesToAdd);
 
-    if (valuedLanguages && valuedLanguages.length) {
-      this.patchObj.valuedLanguages = valuedLanguages;
-    }
-
+    console.log('observables', observables);
+    // No attributes to update
     if (this.patchObj && Object.keys(this.patchObj).length) {
       this.patchObj.timestamp = this.properties.timestamp;
       this.requestService.updateRequest(this.properties.requestId, this.patchObj)
@@ -98,21 +112,19 @@ export class RequestDetailComponent implements OnInit {
           this.getRequestInfo(this.properties.requestId);
         });
     }
+
+    /*
+    if (mandatoryLanguages && mandatoryLanguages.length) {
+      this.patchObj.mandatoryLanguages = mandatoryLanguages;
+    }
+
+    if (valuedLanguages && valuedLanguages.length) {
+      this.patchObj.valuedLanguages = valuedLanguages;
+    }
+    */
   }
 
   getRequestProperties() {
-    // Get recruiters
-    this.userService.getRoleIdByName('recruiter')
-      .pipe(
-        switchMap(dao => this.userService.getAllUsers(dao.id)),
-        map(dao => {
-          const existingUsers = this.properties.userRoles.map(u => u.userId);
-          return dao.users
-            .filter(user => !existingUsers.includes(user.id))
-            .map(user => new User(user.id, user.email));
-        })
-      )
-      .subscribe(users => this.properties.users = users);
     // Get states from server
     this.reqPropsService.getRequestStates()
       .pipe(map(dao => dao.states
@@ -153,24 +165,16 @@ export class RequestDetailComponent implements OnInit {
         .map(m => m.month)))
       .subscribe(t => this.properties.targetDates = t,
         () => this.alertService.error('Unexpected server error. Refresh and try again.'));
-    // Get all languages from server
-    this.reqPropsService.getRequestLanguages()
-      .pipe(map(dao => dao.languages
-        .map(l => l.language)))
-      .subscribe(lang => {
-          this.properties.languages = lang;
-          const mandatory = this.properties.mandatoryLanguages.map(l => l.language);
-          const valued = this.properties.valuedLanguages.map(l => l.language);
-          this.properties.mandatoryLanguages = this.properties.mandatoryLanguages
-            .concat(lang.filter(l => !mandatory.includes(l))
-              .map(l => new LanguageCheckbox(l, false, false))
-            );
-          this.properties.valuedLanguages = this.properties.valuedLanguages
-            .concat(lang.filter(l => !valued.includes(l))
-              .map(l => new LanguageCheckbox(l, false, false))
-            );
-        },
-        () => this.alertService.error('Unexpected server error. Refresh and try again.'));
+    // Get all recruiters
+    // Try to pipe this ??
+    // TODO -> THIS IS WRONG, ALL USERS, AND THIS REQUEST USERS IS NOT RIGHT. FIX THIS
+    this.userService.getRoleIdByName('recruiter')
+      .pipe(
+        switchMap(dao => this.userService.getAllUsers(dao.id)),
+        map(dao => {
+          return dao.users.map(user => new User(user.id, user.email));
+        }))
+      .subscribe(recruiters => this.properties.users = recruiters);
   }
 
   onSubmit() {
@@ -179,8 +183,7 @@ export class RequestDetailComponent implements OnInit {
       .subscribe(dao => {
           const roleId = dao.id;
           values.forEach(idx => {
-            this.requestService.addUser(this.properties.requestId, this.properties.users[idx].userId,
-              roleId, this.properties.timestamp)
+            this.requestService.addUser(this.properties.requestId, this.properties.users[idx].userId, roleId, this.properties.timestamp)
               .subscribe(() => {
                   this.alertService.success('Recruiters added to this request successfully!');
                   this.getRequestInfo(this.properties.requestId);
@@ -243,31 +246,20 @@ export class RequestDetailComponent implements OnInit {
             dao.request.targetDate,
             dao.request.profile);
           return {dao, requests};
-        }
-        ),
+        }),
         map(data => {
           const userRoles = data.dao.userRoles
             .map(userRoleDao => new UserRole(userRoleDao.userId, userRoleDao.email, userRoleDao.roleId, userRoleDao.role));
-          return {...data, userRoles};
-        }),
-        map(data => {
           const processes = data.dao.processes
             .map(processDao => new ProcessList(processDao.status, processDao.candidate.id, processDao.candidate.name));
-          return {...data, processes};
-        }),
-        map(data => {
           const mandatory = data.dao.languages
             .filter(languageDao => languageDao.isMandatory)
             .map(l => new LanguageCheckbox(l.language, true, true));
-          return {...data, mandatory};
-        }),
-        map(data => {
           const valued = data.dao.languages
             .filter(languageDao => !languageDao.isMandatory)
             .map(l => new LanguageCheckbox(l.language, true, true));
-          return {...data, valued};
-        }),
-      )
+          return {...data, userRoles, processes, mandatory, valued};
+        }))
       .subscribe(result => {
         this.properties.requestList = result.requests;
         this.properties.requestAttrs = Object.keys(this.properties.requestList)
@@ -276,8 +268,28 @@ export class RequestDetailComponent implements OnInit {
         this.properties.processes = result.processes;
         this.properties.mandatoryLanguages = result.mandatory;
         this.properties.valuedLanguages = result.valued;
-        this.properties.timestamp = new Date();
+        this.properties.timestamp = moment().format('YYYY-MM-DDTHH:mm:ss.SSS');
 
+        // Get all languages from server
+        this.reqPropsService.getRequestLanguages()
+          .pipe(map(dao => dao.languages
+            .map(l => l.language)))
+          .subscribe(lang => {
+              this.properties.languages = lang;
+              const mandatory = this.properties.mandatoryLanguages.map(l => l.language);
+              const valued = this.properties.valuedLanguages.map(l => l.language);
+              this.properties.mandatoryLanguages = this.properties.mandatoryLanguages.concat(lang
+                .filter(l => !mandatory.includes(l))
+                .map(l => new LanguageCheckbox(l, false, false))
+              );
+              this.properties.valuedLanguages = this.properties.valuedLanguages.concat(lang
+                .filter(l => !valued.includes(l))
+                .map(l => new LanguageCheckbox(l, false, false))
+              );
+            },
+            () => this.alertService.error('Unexpected server error. Refresh and try again.'));
+
+        // TODO -> DONT ADD control..init in ngOnInit and here we only set value
         // TODO -> also add description to update form
         this.properties.updateForm.addControl('state', new FormControl(result.requests.state));
         this.properties.updateForm.addControl('stateCsl', new FormControl(result.requests.stateCSL));
@@ -289,16 +301,5 @@ export class RequestDetailComponent implements OnInit {
         this.properties.updateForm.addControl('profile', new FormControl(result.requests.profile));
         this.properties.updateForm.addControl('dateToSendProfile', new FormControl(result.requests.dateToSendProfile));
       });
-  }
-
-  onLanguageChange(language: LanguageCheckbox, isMandatory: boolean) {
-    if (!language.checked) {
-      this.requestService.deleteRequestLanguage(this.properties.requestId,
-        {language: language.language, isMandatory}).subscribe(
-        () => {
-          this.alertService.success('Removed Language successfully!');
-        }
-      );
-    }
   }
 }

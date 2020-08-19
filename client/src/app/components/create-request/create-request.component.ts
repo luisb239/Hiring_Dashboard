@@ -6,7 +6,7 @@ import {RequestService} from 'src/app/services/request/request.service';
 import {Router} from '@angular/router';
 import {CreateRequestProps} from './create-request-props';
 import {AlertService} from '../../services/alert/alert.service';
-import {map, mergeMap, take} from 'rxjs/operators';
+import {defaultIfEmpty, mergeMap} from 'rxjs/operators';
 import {forkJoin} from 'rxjs';
 
 @Component({
@@ -25,6 +25,11 @@ export class CreateRequestComponent implements OnInit {
     private alertService: AlertService
   ) {
   }
+
+  mandatoryLanguagesForm = new FormControl();
+  valuedLanguagesForm = new FormControl();
+  mandatorySelectedLanguages = [];
+  valuedSelectedLanguages = [];
 
   properties: CreateRequestProps = new CreateRequestProps();
 
@@ -80,6 +85,7 @@ export class CreateRequestComponent implements OnInit {
         () => {
           this.alertService.error('Unexpected server error. Refresh and try again.');
         });
+    // Initialize form group
     this.properties.form = this.formBuilder.group({
       description: this.formBuilder.control(''),
       quantity: this.formBuilder.control(1),
@@ -111,7 +117,7 @@ export class CreateRequestComponent implements OnInit {
       dateToSendProfile: value.dateToSendProfile
     };
     this.requestService.createRequest(body).pipe(mergeMap(dao =>
-      forkJoin(this.getLanguagesObservableArray(dao.id))))
+      forkJoin(this.getLanguagesObservableArray(dao.id)).pipe(defaultIfEmpty(null))))
       .subscribe(() => {
           this.alertService.success('Request Created Successfully!');
           this.router.navigate(['/all-requests']);
@@ -122,27 +128,40 @@ export class CreateRequestComponent implements OnInit {
   }
 
   getLanguagesObservableArray(requestId: number) {
-    const value = this.properties.form.value;
-    const mandatoryLanguages = value.mandatoryLanguages.map(idx => this.properties.languages[idx]);
-    const valuedLanguages = value.valuedLanguages.map(idx => this.properties.languages[idx]);
     const observables = [];
-    mandatoryLanguages.forEach(mL =>
+    this.mandatorySelectedLanguages.forEach(mL =>
       observables.push(this.requestService.addLanguageRequirementToRequest(requestId, mL, true)));
-    valuedLanguages.forEach(vL =>
+    this.valuedSelectedLanguages.forEach(vL =>
       observables.push(this.requestService.addLanguageRequirementToRequest(requestId, vL, false)));
     return observables;
   }
 
-  onChange(isMandatory: boolean, idx: number, event: any) {
-    const array = isMandatory ? this.properties.form.controls.mandatoryLanguages as FormArray :
-      this.properties.form.controls.valuedLanguages as FormArray;
-    if (event.target.checked) {
-      array.push(new FormControl(idx));
-    } else {
-      const index = array.controls.findIndex(x => x.value === idx);
-      array.removeAt(index);
+  change(event, mandatoryLanguage: boolean) {
+    if (event.isUserInput) {
+      if (mandatoryLanguage) {
+        if (event.source.selected) {
+          this.mandatorySelectedLanguages.push(event.source.value);
+        } else {
+          this.mandatorySelectedLanguages.splice(this.mandatorySelectedLanguages.indexOf(event.source.value), 1);
+        }
+      } else {
+        if (event.source.selected) {
+          this.valuedSelectedLanguages.push(event.source.value);
+        } else {
+          this.valuedSelectedLanguages.splice(this.valuedSelectedLanguages.indexOf(event.source.value), 1);
+        }
+      }
     }
   }
+
+  mandatoryAvailableLanguages() {
+    return this.properties.languages ? this.properties.languages.filter(l => !this.valuedSelectedLanguages.includes(l)) : [];
+  }
+
+  valuedAvailableLanguages() {
+    return this.properties.languages ? this.properties.languages.filter(l => !this.mandatorySelectedLanguages.includes(l)) : [];
+  }
+
 }
 
 

@@ -45,6 +45,7 @@ export class AuthService {
     localStorage.setItem(this.authKey, String(auth));
   }
 
+  // TODO -> LOCAL STORAGE NO LONGER NECESSARY -> WE ARE BETTER THAN THAT
   // Get session auth from session storage
   getSessionFromStorage(): boolean {
     return localStorage.getItem(this.authKey) === 'true';

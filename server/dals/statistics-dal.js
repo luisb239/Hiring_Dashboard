@@ -9,7 +9,6 @@ const processSchema = require('./dal-schemas/process/process-schema.js')
 const candidateSchema = require('./dal-schemas/candidate-schema')
 const currentPhaseSchema = require('./dal-schemas/process/process-current-phase.js')
 const reqLanguagesSchema = require('./dal-schemas/request-language-schema')
-
 const statisticsConfigs = require('./dal-schemas/statistics-configs-schema')
 
 module.exports = (query) => {
@@ -22,13 +21,16 @@ module.exports = (query) => {
         const statement = {
             name: 'Get All Statistics',
             text:
-                `SELECT DISTINCT P.*, ` +
+                `SELECT DISTINCT ` +
                 // Request info
-                `R.${requestSchema.state}, R.${requestSchema.progress}, R.${requestSchema.dateToSendProfile}, ` +
-                `R.${requestSchema.workflow}, R.${requestSchema.profile}, R.${requestSchema.project}, ` +
-                `R.${requestSchema.stateCsl}, R.${requestSchema.skill}, R.${requestSchema.targetDate}, ` +
-                `R.${requestSchema.description}, R.${requestSchema.quantity}, R.${requestSchema.request_date}, ` +
-                // Candidate info
+                `R.${requestSchema.id}, R.${requestSchema.state}, R.${requestSchema.progress}, ` +
+                `R.${requestSchema.dateToSendProfile}, R.${requestSchema.workflow}, R.${requestSchema.profile}, ` +
+                `R.${requestSchema.project}, R.${requestSchema.stateCsl}, R.${requestSchema.skill}, ` +
+                `R.${requestSchema.targetDate}, R.${requestSchema.description}, R.${requestSchema.quantity}, ` +
+                `R.${requestSchema.request_date}, ` +
+                // Process info (candidate id + process status)
+                `P.${processSchema.candidateId}, P.${processSchema.status}, ` +
+                // Candidate info (name)
                 `C.${candidateSchema.name}, ` +
                 // Process Current Phase info
                 `PP.${currentPhaseSchema.currentPhase}, ` +
@@ -39,20 +41,20 @@ module.exports = (query) => {
                 // Request Languages
                 `RL.${reqLanguagesSchema.language}, RL.${reqLanguagesSchema.isMandatory} ` +
 
-                `FROM ${processSchema.table} AS P ` +
+                `FROM ${requestSchema.table} AS R ` +
 
-                `LEFT JOIN ${requestSchema.table} AS R ` +
-                `ON P.${processSchema.requestId} = R.${requestSchema.id} ` +
+                `LEFT JOIN ${processSchema.table} AS P ` +
+                `ON R.${requestSchema.id} = P.${processSchema.requestId} ` +
 
                 `LEFT JOIN ${candidateSchema.table} AS C ` +
                 `ON P.${processSchema.candidateId} = C.${candidateSchema.id} ` +
 
                 `LEFT JOIN ${currentPhaseSchema.table} AS PP ` +
-                `ON PP.${currentPhaseSchema.candidateId} = P.${candidateSchema.id} ` +
-                `AND PP.${currentPhaseSchema.requestId} = R.${requestSchema.id} ` +
+                `ON PP.${currentPhaseSchema.candidateId} = P.${processSchema.candidateId} ` +
+                `AND PP.${currentPhaseSchema.requestId} = P.${processSchema.requestId} ` +
 
                 `LEFT JOIN ${userRoleReqSchema.table} AS URR ` +
-                `ON P.${processSchema.requestId} = URR.${userRoleReqSchema.requestId} ` +
+                `ON R.${requestSchema.id} = URR.${userRoleReqSchema.requestId} ` +
 
                 `LEFT JOIN ${userRoleSchema.table} as UserRole ` +
                 `ON URR.${userRoleReqSchema.userId} = UserRole.${userRoleSchema.userId} ` +
@@ -65,7 +67,7 @@ module.exports = (query) => {
                 `ON UserRole.${userRoleSchema.roleId} = ${role.table}.${role.roleId} ` +
 
                 `LEFT JOIN ${reqLanguagesSchema.table} AS RL ` +
-                `ON P.${processSchema.requestId} = RL.${reqLanguagesSchema.requestId};`,
+                `ON R.${requestSchema.id} = RL.${reqLanguagesSchema.requestId};`,
             values: []
         }
 
@@ -76,10 +78,10 @@ module.exports = (query) => {
     function extractStatistics(row) {
         return {
             // Process info
-            requestId: row[processSchema.requestId],
             candidateId: row[processSchema.candidateId],
             status: row[processSchema.status],
             // Request info
+            requestId: row[requestSchema.id],
             state: row[requestSchema.state],
             quantity: row[requestSchema.quantity],
             description: row[requestSchema.description],
@@ -90,7 +92,7 @@ module.exports = (query) => {
             project: row[requestSchema.project],
             profile: row[requestSchema.profile],
             workflow: row[requestSchema.workflow],
-            dateToSendProfile: row[requestSchema.workflow] ?
+            dateToSendProfile: row[requestSchema.dateToSendProfile] ?
                 new Date(row[requestSchema.dateToSendProfile]).toLocaleDateString() : null,
             progress: row[requestSchema.progress],
             // Candidate info

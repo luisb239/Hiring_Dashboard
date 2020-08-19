@@ -57,7 +57,6 @@ module.exports = (service) => {
             userId: req.user.id,
             requestId: id
         })
-
          */
 
         res.status(201).send({
@@ -82,7 +81,7 @@ module.exports = (service) => {
     async function deleteLanguage(req, res) {
         await service.deleteLanguage({
             requestId: req.params.id,
-            language: req.query.language,
+            language: req.params.language,
             isMandatory: req.query.isMandatory
         })
 

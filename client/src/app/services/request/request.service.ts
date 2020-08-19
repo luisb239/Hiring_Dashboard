@@ -86,7 +86,7 @@ export class RequestService {
    * @param roleId is used to specify a role.
    * @param timestamp is used to specify the user's time of arrival
    */
-  addUser(requestId: number, userId: number, roleId: number, timestamp: Date) {
+  addUser(requestId: number, userId: number, roleId: number, timestamp: string) {
     return this.http.post<SuccessPostDao>(`${this.baseUrl}/requests/${requestId}/users`,
       {userId, roleId, timestamp}, httpOptions);
   }
@@ -95,17 +95,14 @@ export class RequestService {
     return this.http.patch<SuccessPostDao>(`${this.baseUrl}/requests/${requestId}`, body, httpOptions);
   }
 
-  deleteRequestLanguage(requestId: number, parameters: any) {
-    let params = new HttpParams();
-    Object.keys(parameters).forEach(p => {
-      params = params.set(p, parameters[p]);
-    });
-    return this.http.delete<SuccessPostDao>(`${this.baseUrl}/requests/${requestId}/languages`, {
+  deleteLanguageRequirementFromRequest(requestId: number, language: string, isMandatory: boolean): Observable<any> {
+    const params = new HttpParams().append('isMandatory', String(isMandatory));
+    return this.http.delete<SuccessPostDao>(`${this.baseUrl}/requests/${requestId}/languages/${language}`, {
       headers: new HttpHeaders({'Content-Type': 'application/json'}), params
     });
   }
 
-  addLanguageRequirementToRequest(requestId: number, language: string, isMandatory: boolean) {
+  addLanguageRequirementToRequest(requestId: number, language: string, isMandatory: boolean): Observable<any> {
     return this.http.post(`${this.baseUrl}/requests/${requestId}/languages`, {language, isMandatory});
   }
 

@@ -46,28 +46,32 @@
       </div>
     </div>
     <div class="form-row">
-      <div class="form-group col-md-4">
-        <label for="inputMandatoryLanguage" id="inputMandatoryLanguage">Select the Mandatory Languages</label>
-        <ul class="checkbox-items">
-          <li *ngFor="let language of properties.languages; index as idx">
-            <input type="checkbox" name="mandatoryItem" (change)="onChange(true, idx, $event)">{{language}}
-          </li>
-        </ul>
-      </div>
-      <div class="form-group col-md-4">
-        <label for="inputValuedLanguages" id="inputValuedLanguages">Select the Valued Languages</label>
-        <ul class="checkbox-items">
-          <li *ngFor="let language of properties.languages; index as idx">
-            <input type="checkbox" name="valuedItem" (change)="onChange(false, idx, $event)">{{language}}
-          </li>
-        </ul>
-      </div>
+      <mat-form-field appearance="fill">
+        <mat-label>Mandatory languages</mat-label>
+        <mat-select [formControl]="mandatoryLanguagesForm" multiple>
+          <mat-option (onSelectionChange)="change($event, true)" *ngFor="let language of mandatoryAvailableLanguages()"
+                      [value]="language">
+            {{language}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div class="form-row">
+      <mat-form-field appearance="fill">
+        <mat-label>Valued languages</mat-label>
+        <mat-select [formControl]="valuedLanguagesForm" multiple>
+          <mat-option (onSelectionChange)="change($event, false)" *ngFor="let language of valuedAvailableLanguages()"
+                      [value]="language">
+            {{language}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
     </div>
     <div class="form-row">
       <div class="form-group col-md-4">
         <label for="inputTargetDate">Target Month</label>
         <select required formControlName="targetDate" class="custom-select"
-          id="inputTargetDate">
+                id="inputTargetDate">
           <option selected disabled value="">Choose a Target Month</option>
           <option *ngFor="let month of properties.targetDates">{{month}}</option>
         </select>

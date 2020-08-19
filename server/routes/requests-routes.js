@@ -105,10 +105,9 @@ module.exports = function (router, requestsController, processController, valida
     /**
      * Remove languages from request
      */
-    router.delete(`/${root}/:id/languages`, [
-        query('language').exists().isString().withMessage("Language must exist and be a string"),
-        query('isMandatory').exists().isBoolean().withMessage("Language Mandatory boolean must exist on the query" +
-            " and be of type boolean")
+    router.delete(`/${root}/:id/languages/:language`, [
+        verifyIfAuthenticated,
+        query('isMandatory').exists().isBoolean().withMessage("Language Mandatory boolean must exist on the query and be of type boolean")
     ], handle(requestsController.deleteLanguage))
 
     /**

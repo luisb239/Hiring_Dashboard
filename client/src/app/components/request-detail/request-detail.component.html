@@ -10,19 +10,19 @@
             <form [formGroup]="properties.updateForm" (submit)="onUpdate()">
               <ul class="list-group list-group-flush">
                 <li class="list-group-item">
-                  <h5>Workflow: </h5>
+                  <h5>Workflow</h5>
                   <p>{{properties.requestList.workflow}}</p>
                 </li>
                 <li class="list-group-item">
-                  <h5>Progress: </h5>
+                  <h5>Progress</h5>
                   <p>{{properties.requestList.progress}}%</p>
                 </li>
                 <li class="list-group-item">
-                  <h5>Request Date: </h5>
+                  <h5>Request Date</h5>
                   <p>{{properties.requestList.requestDate}}</p>
                 </li>
                 <li class="list-group-item">
-                  <h5>State: </h5>
+                  <h5>State</h5>
                   <label>
                     <select formControlName="state">
                       <option [selected]="true"
@@ -32,7 +32,7 @@
                   </label>
                 </li>
                 <li class="list-group-item">
-                  <h5>Project: </h5>
+                  <h5>Project</h5>
                   <label>
                     <select formControlName="project">
                       <option [selected]="true"
@@ -42,13 +42,13 @@
                   </label>
                 </li>
                 <li class="list-group-item">
-                  <h5>Quantity: </h5>
+                  <h5>Quantity</h5>
                   <label>
                     <input type="number" min="1" formControlName="quantity" [value]="properties.requestList.quantity">
                   </label>
                 </li>
                 <li class="list-group-item">
-                  <h5>Skill Center: </h5>
+                  <h5>Skill Center</h5>
                   <label>
                     <select formControlName="skill">
                       <option [selected]="true"
@@ -58,7 +58,7 @@
                   </label>
                 </li>
                 <li class="list-group-item">
-                  <h5>CSL State: </h5>
+                  <h5>CSL State</h5>
                   <label>
                     <select formControlName="stateCsl">
                       <option [selected]="true"
@@ -68,7 +68,7 @@
                   </label>
                 </li>
                 <li class="list-group-item">
-                  <h5>Target Date: </h5>
+                  <h5>Target Date</h5>
                   <label>
                     <select formControlName="targetDate">
                       <option [selected]="true"
@@ -78,7 +78,7 @@
                   </label>
                 </li>
                 <li class="list-group-item">
-                  <h5>Profile: </h5>
+                  <h5>Profile</h5>
                   <label>
                     <select formControlName="profile">
                       <option [selected]="true"
@@ -88,7 +88,7 @@
                   </label>
                 </li>
                 <li class="list-group-item">
-                  <h5>Date To Send Profile: </h5>
+                  <h5>Date To Send Profile</h5>
                   <label>
                     <input formControlName="dateToSendProfile" type="date"
                            [ngModel]="properties.requestList.dateToSendProfile"
@@ -96,26 +96,24 @@
                   </label>
                 </li>
                 <li class="list-group-item" *ngIf="properties.mandatoryLanguages.length > 0">
-                  <h5>Mandatory Languages: </h5>
+                  <h5>Mandatory Languages</h5>
                   <ul>
                     <li *ngFor="let language of properties.mandatoryLanguages; index as idx">
                       <label>
                         <input type="checkbox" [(ngModel)]="language.checked"
-                               [ngModelOptions]="{standalone: true}"
-                               (change)="onLanguageChange(language, true)">
+                               [ngModelOptions]="{standalone: true}">
                       </label>
                       <p class="lang">{{language.language}}</p>
                     </li>
                   </ul>
                 </li>
                 <li class="list-group-item" *ngIf="properties.valuedLanguages.length > 0">
-                  <h5>Valued Languages: </h5>
+                  <h5>Valued Languages</h5>
                   <ul>
                     <li *ngFor="let language of properties.valuedLanguages; index as idx">
                       <label>
                         <input type="checkbox" [(ngModel)]="language.checked"
-                               [ngModelOptions]="{standalone: true}"
-                               (change)="onLanguageChange(language, false)">
+                               [ngModelOptions]="{standalone: true}">
                       </label>
                       <p class="lang">{{language.language}}</p>
                     </li>
@@ -150,7 +148,7 @@
             </table>
           </div>
           <form [formGroup]="properties.userForm" (submit)="onSubmit()"
-                *ngIf='authService.userRoles && authService.isTeamLeader()'>
+                *ngIf='authService.isTeamLeader()'>
             <table class="table-responsive-xl">
               <caption style="display: none">Available Candidates Table</caption>
               <thead>

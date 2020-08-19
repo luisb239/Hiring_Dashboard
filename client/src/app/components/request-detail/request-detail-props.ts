@@ -25,5 +25,5 @@ export class RequestDetailProps {
 
   updateForm: FormGroup;
 
-  timestamp: Date;
+  timestamp: string;
 }

@@ -28,7 +28,6 @@ export class AllRequestsDataSource implements DataSource<RequestDetailsDao> {
         catchError(() => of([]))
       )
       .subscribe(requests => {
-        console.log('load requests ->', requests);
         this.requestsSubject.next(requests);
       });
   }
