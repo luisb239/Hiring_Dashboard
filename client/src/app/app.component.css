@@ -4,9 +4,18 @@ body {
   width: 100%;
 }
 
+.router-outlet {
+  transform: translateY(70px);
+}
+
+.app-alert {
+  position: fixed;
+  transform: translateY(70px);
+  z-index: 99999;
+}
+
 .navbar {
   position: -webkit-sticky; /* Safari */
-  position: sticky;
   top: 0;
 }
 

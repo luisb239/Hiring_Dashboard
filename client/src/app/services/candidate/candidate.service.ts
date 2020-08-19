@@ -61,7 +61,7 @@ export class CandidateService {
 
   updateCandidate(body: any, id: number) {
     const formData: FormData = new FormData();
-    let allRequests: any;
+    let allRequests = [];
     if (body.cv) {
       formData.append('cv', body.cv, body.cv.name);
     }
