@@ -1,17 +1,19 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { ProcessPhase } from '../../model/process/process-phase';
-import { PhaseAttribute } from '../../model/phase/phase-attribute';
-import { Candidate } from 'src/app/model/candidate/candidate';
-import { Process } from '../../model/process/process';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
-import { ProcessService } from '../../services/process/process.service';
-import { CandidateService } from '../../services/candidate/candidate.service';
-import { PhaseService } from '../../services/phase/phase.service';
-import { ProcessPhaseService } from '../../services/process-phase/process-phase.service';
-import { map } from 'rxjs/operators';
-import { AlertService } from '../../services/alert/alert.service';
-import { ErrorType } from '../../services/common-error';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
+import {ProcessPhase} from '../../model/process/process-phase';
+import {PhaseAttribute} from '../../model/phase/phase-attribute';
+import {Candidate} from 'src/app/model/candidate/candidate';
+import {Process} from '../../model/process/process';
+import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
+import {ProcessService} from '../../services/process/process.service';
+import {CandidateService} from '../../services/candidate/candidate.service';
+import {PhaseService} from '../../services/phase/phase.service';
+import {ProcessPhaseService} from '../../services/process-phase/process-phase.service';
+import {map} from 'rxjs/operators';
+import {AlertService} from '../../services/alert/alert.service';
+import {ErrorType} from '../../services/common-error';
+import * as moment from 'moment';
+import {PopupProps} from './popup-props';
 
 @Component({
   selector: 'app-popup',
@@ -29,14 +31,7 @@ export class PopupComponent implements OnInit {
 
   @Output() candidateProcessChanged = new EventEmitter();
 
-  statusList: string[];
-  reasons: string[];
-  process: Process;
-  phase: ProcessPhase;
-  candidate: Candidate;
-  attributeTemplates: PhaseAttribute[] = [];
-  updateForm: FormGroup;
-  timestamp: Date;
+  public properties: PopupProps = new PopupProps();
 
   constructor(
     public activeModal: NgbActiveModal,
@@ -47,7 +42,7 @@ export class PopupComponent implements OnInit {
     private processPhaseService: ProcessPhaseService,
     private alertService: AlertService
   ) {
-    this.updateForm = this.formBuilder.group(
+    this.properties.updateForm = this.formBuilder.group(
       {
         phaseNotes: this.formBuilder.control('')
       }
@@ -62,14 +57,14 @@ export class PopupComponent implements OnInit {
     this.getCandidateInfo();
     this.processService.getProcess(this.requestId, this.candidateId)
       .subscribe(dao => {
-        this.updateForm.addControl('status', new FormControl(dao.status));
-        this.updateForm.addControl('unavailableReason', new FormControl(dao.unavailableReason));
-        this.process = new Process(dao.status, dao.unavailableReason);
+        this.properties.updateForm.addControl('status', new FormControl(dao.status));
+        this.properties.updateForm.addControl('unavailableReason', new FormControl(dao.unavailableReason));
+        this.properties.process = new Process(dao.status, dao.unavailableReason);
 
         this.processService.getReasons()
           .subscribe(reasonDao => {
-            this.reasons = reasonDao.unavailableReasons
-              .filter(res => res.unavailableReason !== this.process.unavailableReason)
+            this.properties.reasons = reasonDao.unavailableReasons
+              .filter(res => res.unavailableReason !== this.properties.process.unavailableReason)
               .map(res => res.unavailableReason);
           }, () => {
             this.alertService.error('Unexpected server error. Refresh and try again.');
@@ -77,15 +72,15 @@ export class PopupComponent implements OnInit {
 
         this.processService.getStatus()
           .subscribe(statusDao => {
-            this.statusList = statusDao.status
-              .filter(stat => stat.status !== this.process.status)
+            this.properties.statusList = statusDao.status
+              .filter(stat => stat.status !== this.properties.process.status)
               .map(stat => stat.status);
           }, () => {
             this.alertService.error('Unexpected server error. Refresh and try again.');
           });
 
         const phaseDetails = dao.phases.find(p => p.phase === dao.currentPhase);
-        this.phase = new ProcessPhase(phaseDetails.phase,
+        this.properties.phase = new ProcessPhase(phaseDetails.phase,
           phaseDetails.notes === null ? '' : phaseDetails.notes);
       }, () => {
         this.alertService.error('Unexpected server error. Refresh and try again.');
@@ -93,19 +88,23 @@ export class PopupComponent implements OnInit {
 
     this.phaseService.getPhase(this.phaseName)
       .subscribe(phaseDao => {
-        phaseDao
-          .infos.forEach(pi => {
-            this.updateForm.addControl(pi.name, new FormControl());
-            this.attributeTemplates.push(new PhaseAttribute(pi.name, pi.value.name, pi.value.type));
-          }
+        phaseDao.infos
+          .forEach(pi => {
+              const phaseForm = this.properties.updateForm.get(pi.name);
+              if (!phaseForm) {
+                this.properties.updateForm.addControl(pi.name, new FormControl());
+                this.properties.attributeTemplates.push(new PhaseAttribute(pi.name, pi.value.type));
+              }
+            }
           );
 
         this.processService.getProcess(this.requestId, this.candidateId)
           .subscribe(processDao => {
-            this.attributeTemplates
+            this.properties.attributeTemplates
               .forEach(at => at.value = processDao.phases
                 .find(phase => phase.phase === this.phaseName).infos
-                .find(i => i.name === at.name).value);
+                .find(i => i.name === at.name).value
+              );
           }, () => {
             this.alertService.error('Unexpected server error. Refresh and try again.');
           });
@@ -116,31 +115,43 @@ export class PopupComponent implements OnInit {
 
   updateCandidate() {
     const attributeArray = [];
-    this.attributeTemplates.forEach(att => {
-      const res = this.updateForm.value[att.name];
-      if (res !== null && res !== att.value) {
-        attributeArray.push({ name: att.name, value: res });
+    this.properties.attributeTemplates.forEach(att => {
+        const res = this.properties.updateForm.value[att.name];
+        if (res !== null && res !== att.value) {
+          attributeArray.push({name: att.name, value: res});
+        }
       }
-    }
     );
-    const body: { status?: string, unavailableReason?: string, infos?: any[], timestamp?: Date } = {};
+    const body: { status?: string, unavailableReason?: string, infos?: any[], timestamp?: string } = {};
 
-    if (this.process.status !== this.updateForm.value.status) {
-      body.status = this.updateForm.value.status;
+    if (this.properties.process.status !== this.properties.updateForm.value.status) {
+      body.status = this.properties.updateForm.value.status;
     }
 
-    if (this.process.unavailableReason !== this.updateForm.value.unavailableReason) {
-      body.unavailableReason = this.updateForm.value.unavailableReason;
+    if (this.properties.process.unavailableReason !== this.properties.updateForm.value.unavailableReason) {
+      body.unavailableReason = this.properties.updateForm.value.unavailableReason;
     }
 
     if (attributeArray.length > 0) {
       body.infos = attributeArray;
     }
 
-    if (body !== {}) {
-      body.timestamp = this.timestamp;
-      this.processService.updateProcess(this.requestId, this.candidateId, body)
-        .subscribe(() => {
+    body.timestamp = this.properties.timestamp;
+
+    this.processService.updateProcess(this.requestId, this.candidateId, body)
+      .pipe(map(() => {
+        this.properties.timestamp = moment().format('YYYY-MM-DDTHH:mm:ss.SSS');
+        if (this.properties.phase.notes !== this.properties.updateForm.value.phaseNotes) {
+          this.processPhaseService.updateProcessPhaseNotes(
+            this.requestId,
+            this.candidateId,
+            this.properties.phase.phase,
+            this.properties.updateForm.value.phaseNotes,
+            this.properties.timestamp).subscribe(() => {
+          });
+        }
+      }))
+      .subscribe(() => {
           this.alertService.success('Updated Candidate successfully!');
           this.activeModal.close('Close click');
           this.candidateProcessChanged.emit(`Candidate ${this.candidateId} process has been updated`);
@@ -148,41 +159,22 @@ export class PopupComponent implements OnInit {
           if (error === ErrorType.PRECONDITION_FAILED) {
             this.alertService.error('This process has already been updated by another user.');
             this.alertService.info('Refreshing process details...');
-            this.getCandidateAndProcessInfo();
+            this.getNewValues();
           } else {
             this.alertService.error('Unexpected server error. Refresh and try again.');
           }
         }
-        );
-    }
-    if (this.phase.notes !== this.updateForm.value.phaseNotes) {
-      this.processPhaseService.updateProcessPhaseNotes(
-        this.requestId,
-        this.candidateId,
-        this.phase.phase,
-        this.updateForm.value.phaseNotes,
-        this.timestamp)
-        .subscribe(() => {
-        }, error => {
-          if (error === ErrorType.PRECONDITION_FAILED) {
-            this.alertService.error('This process has already been updated by another user.');
-            this.alertService.info('Refreshing process details...');
-            this.getCandidateAndProcessInfo();
-          } else {
-            this.alertService.error('Unexpected server error. Refresh and try again.');
-          }
-        });
-    }
+      );
   }
 
   downloadCv() {
     this.candidateService.downloadCandidateCv(this.candidateId)
       .subscribe(data => {
-        const blob = new Blob([data], { type: 'application/pdf' });
+        const blob = new Blob([data], {type: 'application/pdf'});
         const downloadURL = window.URL.createObjectURL(blob);
         const link = document.createElement('a');
         link.href = downloadURL;
-        link.download = this.candidate.cv;
+        link.download = this.properties.candidate.cv;
         link.click();
       }, () => {
         this.alertService.error('Unexpected server error. Refresh and try again.');
@@ -192,14 +184,21 @@ export class PopupComponent implements OnInit {
   changeAvailable() {
     const updateBody = {
       cv: null,
-      profileInfo: this.candidate.profileInfo,
-      available: !this.candidate.available
+      profileInfo: this.properties.candidate.profileInfo,
+      available: !this.properties.candidate.available,
+      timestamp: this.properties.timestamp
     };
     this.candidateService.updateCandidate(updateBody, this.candidateId)
       .subscribe(() => {
         this.getCandidateInfo();
-      }, () => {
-        this.alertService.error('Unexpected server error. Refresh and try again.');
+      }, error => {
+        if (error === ErrorType.PRECONDITION_FAILED) {
+          this.alertService.error('This process has already been updated by another user.');
+          this.alertService.info('Refreshing process details...');
+          this.getNewValues();
+        } else {
+          this.alertService.error('Unexpected server error. Refresh and try again.');
+        }
       });
   }
 
@@ -212,14 +211,46 @@ export class PopupComponent implements OnInit {
         dao.candidate.available,
         dao.candidate.cvFileName)))
       .subscribe(result => {
-        this.timestamp = new Date();
-        this.candidate = result;
+        this.properties.timestamp = moment().format('YYYY-MM-DDTHH:mm:ss.SSS');
+        this.properties.candidate = result;
       }, error => {
         if (error === ErrorType.NOT_FOUND) {
           this.alertService.error('Candidate does not exist.');
         } else {
           this.alertService.error('Unexpected server error. Refresh and try again.');
         }
+      });
+  }
+
+  private getNewValues() {
+    this.properties.conflict = true;
+    this.getCandidateInfo();
+    this.processService.getProcess(this.requestId, this.candidateId)
+      .subscribe(dao => {
+        this.properties.newStatus = dao.status;
+        this.properties.newUnavailableReasons = dao.unavailableReason;
+        this.properties.newProcess = new Process(dao.status, dao.unavailableReason);
+
+        const phaseNotes = dao.phases.find(p => p.phase === dao.currentPhase).notes;
+        this.properties.newPhaseNotes = phaseNotes === null ? '' : phaseNotes;
+        this.phaseService.getPhase(this.phaseName)
+          .subscribe(phaseDao => {
+            this.properties.newAttributeTemplates = {};
+            phaseDao.infos
+              .forEach(pi => {
+                  this.properties.newAttributeTemplates[pi.name] = new PhaseAttribute(pi.name, pi.value.type);
+                }
+              );
+            Object.keys(this.properties.newAttributeTemplates)
+              .forEach(at => this.properties.newAttributeTemplates[at] = dao.phases
+                .find(phase => phase.phase === this.phaseName).infos
+                .find(i => i.name === at).value
+              );
+          }, () => {
+            this.alertService.error('Unexpected server error. Refresh and try again.');
+          });
+      }, () => {
+        this.alertService.error('Unexpected server error. Refresh and try again.');
       });
   }
 }

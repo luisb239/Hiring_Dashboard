@@ -95,7 +95,7 @@ module.exports = (requestDb, candidateDb, processDb, phaseDb, infoDb, processUna
             }
 
             if (status) {
-                await updateStatus({requestId, candidateId, status, client})
+                await updateStatus({requestId, candidateId, status, client, timestamp})
             }
 
             if (unavailableReason) {
@@ -197,7 +197,7 @@ module.exports = (requestDb, candidateDb, processDb, phaseDb, infoDb, processUna
             id: requestId,
             progress: percentage > 100 ? 100 : percentage,
             client,
-            timestamp
+            observedTimestamp: timestamp
         });
     }
 

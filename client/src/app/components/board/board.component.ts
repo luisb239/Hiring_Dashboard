@@ -1,23 +1,23 @@
-import { Component, OnInit } from '@angular/core';
-import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
+import {Component, OnInit} from '@angular/core';
+import {CdkDragDrop, moveItemInArray, transferArrayItem} from '@angular/cdk/drag-drop';
 
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { PopupComponent } from '../popup/popup.component';
-import { RequestService } from '../../services/request/request.service';
-import { Workflow } from '../../model/workflow/workflow';
-import { Phase } from '../../model/phase/phase';
-import { WorkflowService } from '../../services/workflow/workflow.service';
-import { ProcessService } from '../../services/process/process.service';
+import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {PopupComponent} from '../popup/popup.component';
+import {RequestService} from '../../services/request/request.service';
+import {Workflow} from '../../model/workflow/workflow';
+import {Phase} from '../../model/phase/phase';
+import {WorkflowService} from '../../services/workflow/workflow.service';
+import {ProcessService} from '../../services/process/process.service';
 
-import { Candidate } from 'src/app/model/candidate/candidate';
-import { RequestList } from 'src/app/model/request/request-list';
-import { ProcessPhaseService } from '../../services/process-phase/process-phase.service';
-import { BoardProps } from './board-props';
-import { AddCandidateComponent } from '../add-candidate/add-candidate.component';
-import { AlertService } from '../../services/alert/alert.service';
-import { Content } from './content';
-import { map, startWith } from 'rxjs/operators';
-import { ErrorType } from '../../services/common-error';
+import {Candidate} from 'src/app/model/candidate/candidate';
+import {RequestList} from 'src/app/model/request/request-list';
+import {ProcessPhaseService} from '../../services/process-phase/process-phase.service';
+import {BoardProps} from './board-props';
+import {AddCandidateComponent} from '../add-candidate/add-candidate.component';
+import {AlertService} from '../../services/alert/alert.service';
+import {Content} from './content';
+import {map, startWith} from 'rxjs/operators';
+import {ErrorType} from '../../services/common-error';
 import * as moment from 'moment';
 
 @Component({
@@ -28,11 +28,11 @@ import * as moment from 'moment';
 export class BoardComponent implements OnInit {
 
   constructor(private modalService: NgbModal,
-    private requestService: RequestService,
-    private workflowService: WorkflowService,
-    private processService: ProcessService,
-    private processPhaseService: ProcessPhaseService,
-    private alertService: AlertService
+              private requestService: RequestService,
+              private workflowService: WorkflowService,
+              private processService: ProcessService,
+              private processPhaseService: ProcessPhaseService,
+              private alertService: AlertService
   ) {
   }
 
@@ -83,9 +83,9 @@ export class BoardComponent implements OnInit {
       this.processPhaseService.updateProcessPhase(request.id, event.container.data[event.currentIndex].id,
         newPhase, this.properties.timestampDictionary[request.id])
         .subscribe(() => {
-          this.alertService.success('Candidate successfully switched phases');
-          this.fetchProcessesInRequest(request);
-        },
+            this.alertService.success('Candidate successfully switched phases');
+            this.fetchProcessesInRequest(request);
+          },
           error => {
             if (error === ErrorType.PRECONDITION_FAILED) {
               this.alertService.error('This card has already been moved by another user.');
@@ -99,7 +99,7 @@ export class BoardComponent implements OnInit {
   }
 
   onClick(candidateId: number, request: RequestList, phaseName: string) {
-    const modalRef = this.modalService.open(PopupComponent);
+    const modalRef = this.modalService.open(PopupComponent, { size: 'lg' });
     modalRef.componentInstance.requestId = request.id;
     modalRef.componentInstance.candidateId = candidateId;
     modalRef.componentInstance.phaseName = phaseName;
@@ -216,36 +216,36 @@ export class BoardComponent implements OnInit {
         }),
         map(data => {
           const workflows = [...new Set(data.requests.map(r => r.workflow))].map(w => new Workflow(w));
-          return { ...data, workflows };
+          return {...data, workflows};
         })
       ).subscribe(
-        result => {
-          this.properties.requests = result.requests;
-          this.properties.requests.forEach(request =>
-            this.properties.timestampDictionary[request.id] = moment().format('YYYY-MM-DDTHH:mm:ss.SSS'));
-          this.properties.workflows = result.workflows;
-          this.properties.allRequests = this.properties.requests.map(r => r.description);
-          this.properties.allWorkflows = this.properties.workflows.map(w => w.workflow);
-          this.properties.content = new Content('Workflow', this.properties.allWorkflows);
-          this.properties.filteredOptions = this.properties.control.valueChanges.pipe(
-            startWith(''),
-            map(value => {
-              return this._filter(value);
-            }));
-          this.properties.workflows.forEach(workflow => {
-            this.workflowService.getWorkflowByName(workflow.workflow)
-              .subscribe(workflowDao => {
-                workflow.phases = workflowDao.phases.map(wp => new Phase(wp.phase));
-                workflow.requests = this.properties.requests.filter(req => req.workflow === workflow.workflow);
-                workflow.requests.forEach(request => {
-                  workflow.phases.forEach(p => request.phases.push(new Phase(p.name, [])));
-                  this.fetchProcessesInRequest(request);
-                });
-              }, () => {
-                this.alertService.error('Unexpected server error. Refresh and try again.');
+      result => {
+        this.properties.requests = result.requests;
+        this.properties.requests.forEach(request =>
+          this.properties.timestampDictionary[request.id] = moment().format('YYYY-MM-DDTHH:mm:ss.SSS'));
+        this.properties.workflows = result.workflows;
+        this.properties.allRequests = this.properties.requests.map(r => r.description);
+        this.properties.allWorkflows = this.properties.workflows.map(w => w.workflow);
+        this.properties.content = new Content('Workflow', this.properties.allWorkflows);
+        this.properties.filteredOptions = this.properties.control.valueChanges.pipe(
+          startWith(''),
+          map(value => {
+            return this._filter(value);
+          }));
+        this.properties.workflows.forEach(workflow => {
+          this.workflowService.getWorkflowByName(workflow.workflow)
+            .subscribe(workflowDao => {
+              workflow.phases = workflowDao.phases.map(wp => new Phase(wp.phase));
+              workflow.requests = this.properties.requests.filter(req => req.workflow === workflow.workflow);
+              workflow.requests.forEach(request => {
+                workflow.phases.forEach(p => request.phases.push(new Phase(p.name, [])));
+                this.fetchProcessesInRequest(request);
               });
-          });
+            }, () => {
+              this.alertService.error('Unexpected server error. Refresh and try again.');
+            });
         });
+      });
   }
 
   reset() {
