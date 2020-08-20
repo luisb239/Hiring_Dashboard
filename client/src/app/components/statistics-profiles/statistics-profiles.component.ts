@@ -28,11 +28,8 @@ export class StatisticsProfilesComponent implements OnInit {
 
   ngOnInit(): void {
     this.statisticsService.getUserConfigProfiles()
-      .subscribe(result => {
-        this.properties.configProfiles = result.configs.map(configDao => new ConfigProfile(configDao.profileName));
-      }, error => {
-        console.log(error);
-      });
+      .subscribe(result =>
+        this.properties.configProfiles = result.configs.map(configDao => new ConfigProfile(configDao.profileName)));
     this.properties.form = this.formBuilder.group({
       createProfileForm: this.formBuilder.control(''),
       getProfileForm: this.formBuilder.control('')
@@ -49,9 +46,6 @@ export class StatisticsProfilesComponent implements OnInit {
       .subscribe(result => {
         this.alertService.success(`Profile ${result.id.profileName} created.`);
         this.activeModal.close('Close click');
-      }, error => {
-        alert(error);
-        console.log(error);
       });
   }
 
@@ -63,8 +57,6 @@ export class StatisticsProfilesComponent implements OnInit {
           new ConfigProfile(configDao.profileName, configDao.configs);
         this.activeModal.close('Close click');
         this.profileChosen.emit(this.properties.currentProfile);
-      }, error => {
-        console.log(error);
       });
   }
 

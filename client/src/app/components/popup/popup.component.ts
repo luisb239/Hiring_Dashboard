@@ -66,8 +66,6 @@ export class PopupComponent implements OnInit {
             this.properties.reasons = reasonDao.unavailableReasons
               .filter(res => res.unavailableReason !== this.properties.process.unavailableReason)
               .map(res => res.unavailableReason);
-          }, () => {
-            this.alertService.error('Unexpected server error. Refresh and try again.');
           });
 
         this.processService.getStatus()
@@ -75,15 +73,11 @@ export class PopupComponent implements OnInit {
             this.properties.statusList = statusDao.status
               .filter(stat => stat.status !== this.properties.process.status)
               .map(stat => stat.status);
-          }, () => {
-            this.alertService.error('Unexpected server error. Refresh and try again.');
           });
 
         const phaseDetails = dao.phases.find(p => p.phase === dao.currentPhase);
         this.properties.phase = new ProcessPhase(phaseDetails.phase,
           phaseDetails.notes === null ? '' : phaseDetails.notes);
-      }, () => {
-        this.alertService.error('Unexpected server error. Refresh and try again.');
       });
 
     this.phaseService.getPhase(this.phaseName)
@@ -105,11 +99,7 @@ export class PopupComponent implements OnInit {
                 .find(phase => phase.phase === this.phaseName).infos
                 .find(i => i.name === at.name).value
               );
-          }, () => {
-            this.alertService.error('Unexpected server error. Refresh and try again.');
           });
-      }, () => {
-        this.alertService.error('Unexpected server error. Refresh and try again.');
       });
   }
 
@@ -156,12 +146,10 @@ export class PopupComponent implements OnInit {
           this.activeModal.close('Close click');
           this.candidateProcessChanged.emit(`Candidate ${this.candidateId} process has been updated`);
         }, error => {
-          if (error === ErrorType.PRECONDITION_FAILED) {
-            this.alertService.error('This process has already been updated by another user.');
+          if (error === ErrorType.CONFLICT) {
+            this.alertService.error('This process has already been updated.');
             this.alertService.info('Refreshing process details...');
             this.getNewValues();
-          } else {
-            this.alertService.error('Unexpected server error. Refresh and try again.');
           }
         }
       );
@@ -176,8 +164,6 @@ export class PopupComponent implements OnInit {
         link.href = downloadURL;
         link.download = this.properties.candidate.cv;
         link.click();
-      }, () => {
-        this.alertService.error('Unexpected server error. Refresh and try again.');
       });
   }
 
@@ -192,12 +178,10 @@ export class PopupComponent implements OnInit {
       .subscribe(() => {
         this.getCandidateInfo();
       }, error => {
-        if (error === ErrorType.PRECONDITION_FAILED) {
+        if (error === ErrorType.CONFLICT) {
           this.alertService.error('This process has already been updated by another user.');
           this.alertService.info('Refreshing process details...');
           this.getNewValues();
-        } else {
-          this.alertService.error('Unexpected server error. Refresh and try again.');
         }
       });
   }
@@ -216,8 +200,6 @@ export class PopupComponent implements OnInit {
       }, error => {
         if (error === ErrorType.NOT_FOUND) {
           this.alertService.error('Candidate does not exist.');
-        } else {
-          this.alertService.error('Unexpected server error. Refresh and try again.');
         }
       });
   }
@@ -246,11 +228,7 @@ export class PopupComponent implements OnInit {
                 .find(phase => phase.phase === this.phaseName).infos
                 .find(i => i.name === at).value
               );
-          }, () => {
-            this.alertService.error('Unexpected server error. Refresh and try again.');
           });
-      }, () => {
-        this.alertService.error('Unexpected server error. Refresh and try again.');
       });
   }
 }

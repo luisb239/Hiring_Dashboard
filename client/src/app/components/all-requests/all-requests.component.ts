@@ -79,64 +79,31 @@ export class AllRequestsComponent implements OnInit, AfterViewInit {
   getFilterParameters() {
     this.reqPropsService.getRequestStates()
       .pipe(map(dao => dao.states.map(s => s.state)))
-      .subscribe(result => {
-          this.properties.states = result;
-        },
-        () => {
-          this.alertService.error('Unexpected server error. Refresh and try again.');
-        });
+      .subscribe(result => this.properties.states = result);
+
     this.reqPropsService.getRequestStatesCsl()
       .pipe(map(dao => dao.statesCsl.map(s => s.stateCsl)))
-      .subscribe(result => {
-          this.properties.statesCsl = result;
-        },
-        () => {
-          this.alertService.error('Unexpected server error. Refresh and try again.');
-        });
+      .subscribe(result => this.properties.statesCsl = result);
+
     this.reqPropsService.getRequestProjects()
       .pipe(map(dao => dao.projects.map(p => p.project)))
-      .subscribe(result => {
-          this.properties.projects = result;
-        },
-        () => {
-          this.alertService.error('Unexpected server error. Refresh and try again.');
-        });
+      .subscribe(result => this.properties.projects = result);
 
     this.reqPropsService.getRequestSkills()
       .pipe(map(dao => dao.skills.map(s => s.skill)))
-      .subscribe(result => {
-          this.properties.skills = result;
-        },
-        () => {
-          this.alertService.error('Unexpected server error. Refresh and try again.');
-        });
+      .subscribe(result => this.properties.skills = result);
 
     this.reqPropsService.getRequestProfiles()
       .pipe(map(dao => dao.profiles.map(p => p.profile)))
-      .subscribe(result => {
-          this.properties.profiles = result;
-        },
-        () => {
-          this.alertService.error('Unexpected server error. Refresh and try again.');
-        });
+      .subscribe(result => this.properties.profiles = result);
 
     this.workflowService.getAllWorkflows()
       .pipe(map(dao => dao.workflows.map(w => w.workflow)))
-      .subscribe(result => {
-          this.properties.workflows = result;
-        },
-        () => {
-          this.alertService.error('Unexpected server error. Refresh and try again.');
-        });
+      .subscribe(result => this.properties.workflows = result);
 
     this.reqPropsService.getTargetDates()
       .pipe(map(dao => dao.months.map(m => m.month)))
-      .subscribe(result => {
-          this.properties.targetDates = result;
-        },
-        () => {
-          this.alertService.error('Unexpected server error. Refresh and try again.');
-        });
+      .subscribe(result => this.properties.targetDates = result);
   }
 
   onSubmit() {

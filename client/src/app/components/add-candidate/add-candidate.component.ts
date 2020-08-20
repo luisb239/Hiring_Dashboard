@@ -41,11 +41,7 @@ export class AddCandidateComponent implements OnInit {
 
     this.requestPropsService.getRequestProfiles()
       .pipe(map(dao => dao.profiles.map(p => p.profile)))
-      .subscribe(result => {
-        this.profiles = result;
-      }, () => {
-        this.alertService.error('Unexpected server error. Refresh and try again.');
-      });
+      .subscribe(result => this.profiles = result);
 
     this.candidateForm = this.formBuilder.group({
       candidatesIdx: this.formBuilder.array([])
@@ -83,8 +79,6 @@ export class AddCandidateComponent implements OnInit {
               this.alertService.error('This candidate has already been added to this request by another user.');
               this.alertService.info('Refreshing...');
               this.getRequestProcesses();
-            } else {
-              this.alertService.error('Unexpected server error. Refresh and try again.');
             }
           }
         );
@@ -98,8 +92,6 @@ export class AddCandidateComponent implements OnInit {
         new Candidate(c.name, c.id, c.profileInfo, c.available, c.cvFileName))))
       .subscribe(result => {
         this.candidates = result;
-      }, () => {
-        this.alertService.error('Unexpected server error. Refresh and try again.');
       });
   }
 
@@ -115,8 +107,6 @@ export class AddCandidateComponent implements OnInit {
       )
       .subscribe(result => {
         this.candidates = result;
-      }, () => {
-        this.alertService.error('Unexpected server error. Refresh and try again.');
       });
   }
 
@@ -129,8 +119,6 @@ export class AddCandidateComponent implements OnInit {
       .subscribe(result => {
         this.existingCandidates = result;
         this.getAllCandidates();
-      }, () => {
-        this.alertService.error('Unexpected server error. Refresh and try again.');
       });
   }
 }

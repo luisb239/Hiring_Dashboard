@@ -131,9 +131,9 @@ export class RequestDetailComponent implements OnInit {
       }, error => {
         if (error === ErrorType.CONFLICT || error === ErrorType.GONE) {
           this.alertService.error(`This request's languages have already been updated`);
+          this.alertService.info('Refreshing request details...');
+          this.getRequestInfo(this.properties.requestId);
         }
-        this.alertService.info('Refreshing request details...');
-        this.getRequestInfo(this.properties.requestId);
       });
     }
   }

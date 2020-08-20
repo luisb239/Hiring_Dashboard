@@ -110,10 +110,7 @@ export class StatisticsComponent {
         const st = JSON.stringify(this.properties.myReport);
         const blob = new Blob([st], {type: 'application/json'});
         saveAs(blob, `My_configs.json`);
-      }, (error) => {
-        console.log(error);
       });
-
   }
 
   saveRemotelyHandler() {

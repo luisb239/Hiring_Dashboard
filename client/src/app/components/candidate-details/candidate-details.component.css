@@ -6,6 +6,14 @@
   color: red;
 }
 
+.mat-select-trigger {
+  min-width: 80vw;
+}
+
+.mat-select-panel {
+  max-height: 80vh !important;
+}
+
 .property {
   margin-top: 10px;
   margin-bottom: 10px;

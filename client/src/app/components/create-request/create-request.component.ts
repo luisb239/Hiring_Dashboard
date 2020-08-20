@@ -39,52 +39,23 @@ export class CreateRequestComponent implements OnInit {
    */
   ngOnInit(): void {
     this.reqPropsService.getRequestSkills()
-      .subscribe(dao => {
-          this.properties.skills = dao.skills.map(s => s.skill);
-        },
-        () => {
-          this.alertService.error('Unexpected server error. Refresh and try again.');
-        });
+      .subscribe(dao => this.properties.skills = dao.skills.map(s => s.skill));
 
     this.reqPropsService.getRequestProjects()
-      .subscribe(dao => {
-          this.properties.projects = dao.projects.map(p => p.project);
-        },
-        () => {
-          this.alertService.error('Unexpected server error. Refresh and try again.');
-        });
+      .subscribe(dao => this.properties.projects = dao.projects.map(p => p.project));
 
     this.reqPropsService.getRequestProfiles()
-      .subscribe(dao => {
-          this.properties.profiles = dao.profiles.map(p => p.profile);
-        },
-        () => {
-          this.alertService.error('Unexpected server error. Refresh and try again.');
-        });
+      .subscribe(dao => this.properties.profiles = dao.profiles.map(p => p.profile));
 
     this.reqPropsService.getRequestLanguages()
-      .subscribe(dao => {
-          this.properties.languages = dao.languages.map(l => l.language);
-        },
-        () => {
-          this.alertService.error('Unexpected server error. Refresh and try again.');
-        });
+      .subscribe(dao => this.properties.languages = dao.languages.map(l => l.language));
 
     this.reqPropsService.getTargetDates()
-      .subscribe(dao => {
-          this.properties.targetDates = dao.months.map(m => m.month);
-        },
-        () => {
-          this.alertService.error('Unexpected server error. Refresh and try again.');
-        });
+      .subscribe(dao => this.properties.targetDates = dao.months.map(m => m.month));
 
     this.workflowService.getAllWorkflows()
-      .subscribe(dao => {
-          this.properties.workflows = dao.workflows.map(w => w.workflow);
-        },
-        () => {
-          this.alertService.error('Unexpected server error. Refresh and try again.');
-        });
+      .subscribe(dao => this.properties.workflows = dao.workflows.map(w => w.workflow));
+
     // Initialize form group
     this.properties.form = this.formBuilder.group({
       description: this.formBuilder.control(''),
@@ -121,9 +92,6 @@ export class CreateRequestComponent implements OnInit {
       .subscribe(() => {
           this.alertService.success('Request Created Successfully!');
           this.router.navigate(['/all-requests']);
-        },
-        () => {
-          this.alertService.error('Unexpected server error. Unable to create request.');
         });
   }
 

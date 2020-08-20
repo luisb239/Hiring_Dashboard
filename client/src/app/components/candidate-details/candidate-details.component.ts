@@ -70,16 +70,15 @@ export class CandidateDetailsComponent implements OnInit {
 
             this.processService.getProcess(process.requestId, this.properties.candidateId)
               .subscribe(processDao => {
-                  this.properties.allProcesses.push(new Process(processDao.status,
-                    processDao.unavailableReason,
-                    processDao.phases.map(phase => new ProcessPhase(
-                      phase.phase,
-                      phase.notes,
-                      phase.infos.map(info => new PhaseInfo(info.name, info.value))
-                    )))
-                  );
-                },
-                () => this.alertService.error('Unexpected server error. Refresh and try again.'));
+                this.properties.allProcesses.push(new Process(processDao.status,
+                  processDao.unavailableReason,
+                  processDao.phases.map(phase => new ProcessPhase(
+                    phase.phase,
+                    phase.notes,
+                    phase.infos.map(info => new PhaseInfo(info.name, info.value))
+                  )))
+                );
+              });
           });
 
         this.getRequestProfiles();
@@ -90,8 +89,6 @@ export class CandidateDetailsComponent implements OnInit {
           info: this.properties.infoForm,
           profiles: this.properties.profilesForm
         });
-      }, () => {
-        this.alertService.error('Unexpected server error. Refresh and try again.');
       });
 
     if (this.properties.requestId) {
@@ -105,7 +102,7 @@ export class CandidateDetailsComponent implements OnInit {
             requestDao.state,
             requestDao.description
           ), [], []);
-        }, () => this.alertService.error('Unexpected server error. Refresh and try again.'));
+        });
 
       this.processService.getProcess(this.properties.requestId, this.properties.candidateId)
         .subscribe(dao => {
@@ -113,8 +110,6 @@ export class CandidateDetailsComponent implements OnInit {
             dao.phases.map(phase => new ProcessPhase(phase.phase,
               phase.notes,
               phase.infos.map(info => new PhaseInfo(info.name, info.value)))));
-        }, () => {
-          this.alertService.error('Unexpected server error. Refresh and try again.');
         });
     }
   }
@@ -137,12 +132,10 @@ export class CandidateDetailsComponent implements OnInit {
         this.properties.conflict = false;
         this.updateCandidateComponent();
       }, error => {
-        if (error === ErrorType.PRECONDITION_FAILED) {
-          this.alertService.error('This candidate has already been updated by another user.');
+        if (error === ErrorType.CONFLICT) {
+          this.alertService.error('This candidate has already been updated.');
           this.alertService.info('Refreshing...');
           this.updateCandidateComponent();
-        } else {
-          this.alertService.error('Unexpected server error. Refresh and try again.');
         }
       });
   }
@@ -158,8 +151,6 @@ export class CandidateDetailsComponent implements OnInit {
           this.alertService.error('This profile has already been deleted.');
           this.alertService.info('Refreshing...');
           this.updateCandidateComponent();
-        } else {
-          this.alertService.error('Unexpected server error. Refresh and try again.');
         }
       });
   }
@@ -187,8 +178,6 @@ export class CandidateDetailsComponent implements OnInit {
         this.getRequestProfiles();
         this.properties.infoForm.setValue(this.properties.candidate.profileInfo);
         this.properties.profilesForm.setValue('');
-      }, () => {
-        this.alertService.error('Unexpected server error. Refresh and try again.');
       });
   }
 
@@ -210,8 +199,6 @@ export class CandidateDetailsComponent implements OnInit {
       .subscribe(profs => {
         this.properties.profiles =
           profs.filter(p => !this.properties.candidate.profiles.some(profile => profile === p));
-      }, () => {
-        this.alertService.error('Unexpected server error. Refresh and try again.');
       });
   }
 

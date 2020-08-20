@@ -66,8 +66,6 @@ export class BoardComponent implements OnInit {
         });
         request.placedCandidates = dao.processes.filter(proc => proc.status === 'Placed').length || 0;
         this.properties.timestampDictionary[request.id] = moment().format('YYYY-MM-DDTHH:mm:ss.SSS');
-      }, () => {
-        this.alertService.error('Unexpected server error. Refresh and try again.');
       });
   }
 
@@ -87,12 +85,10 @@ export class BoardComponent implements OnInit {
             this.fetchProcessesInRequest(request);
           },
           error => {
-            if (error === ErrorType.PRECONDITION_FAILED) {
+            if (error === ErrorType.CONFLICT) {
               this.alertService.error('This card has already been moved by another user.');
               this.alertService.info('Fetching requests again...');
               this.fetchProcessesInRequest(request);
-            } else {
-              this.alertService.error('Unexpected server error. Refresh and try again.');
             }
           });
     }
@@ -170,8 +166,6 @@ export class BoardComponent implements OnInit {
                   workflow.phases.forEach(p => request.phases.push(new Phase(p.name, [])));
                   this.fetchProcessesInRequest(request);
                 });
-              }, () => {
-                this.alertService.error('Unexpected server error. Refresh and try again.');
               });
           });
         });
@@ -199,8 +193,6 @@ export class BoardComponent implements OnInit {
                 this.properties.workflows[0].phases.forEach(p => request.phases.push(new Phase(p.name, [])));
                 this.fetchProcessesInRequest(request);
               });
-            }, () => {
-              this.alertService.error('Unexpected server error. Refresh and try again.');
             });
         });
   }
@@ -241,8 +233,6 @@ export class BoardComponent implements OnInit {
                 workflow.phases.forEach(p => request.phases.push(new Phase(p.name, [])));
                 this.fetchProcessesInRequest(request);
               });
-            }, () => {
-              this.alertService.error('Unexpected server error. Refresh and try again.');
             });
         });
       });

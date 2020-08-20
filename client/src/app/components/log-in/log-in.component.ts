@@ -6,14 +6,9 @@ import {AuthService} from '../../services/auth/auth.service';
   templateUrl: './log-in.component.html',
   styleUrls: ['./log-in.component.css']
 })
-export class LogInComponent implements OnInit {
+export class LogInComponent {
 
   constructor(private authService: AuthService) {
-  }
-
-  ngOnInit(): void {
-    // login -> redirect to office 365 auth
-    // TODO -> Change into an <a href...> with ngIf notAuthenticated
     window.location.href = this.authService.azureAuthenticationUrl;
   }
 

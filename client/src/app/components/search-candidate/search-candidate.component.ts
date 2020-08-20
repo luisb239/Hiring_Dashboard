@@ -41,19 +41,11 @@ export class SearchCandidateComponent implements OnInit {
 
   filterCandidates() {
     this.candidateService.getAllCandidatesWithQueries(this.properties.filterForm.value.profiles, this.properties.filterForm.value.available)
-      .subscribe(result => {
-        this.properties.candidates = result.candidates;
-      }, error => {
-        console.log(error);
-      });
+      .subscribe(result => this.properties.candidates = result.candidates);
   }
 
   fetchAllCandidates() {
     this.candidateService.getAllCandidates()
-      .subscribe(result => {
-        this.properties.candidates = result.candidates;
-      }, error => {
-        console.log(error);
-      });
+      .subscribe(result => this.properties.candidates = result.candidates);
   }
 }

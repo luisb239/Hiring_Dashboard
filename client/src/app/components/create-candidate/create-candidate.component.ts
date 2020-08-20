@@ -28,11 +28,7 @@ export class CreateCandidateComponent implements OnInit {
   ngOnInit(): void {
     this.requestPropsService.getRequestProfiles()
       .pipe(map(dao => dao.profiles.map(p => p.profile)))
-      .subscribe(result => {
-        this.properties.profiles = result;
-      }, () => {
-        this.alertService.error('Unexpected server error. Refresh and try again.');
-      });
+      .subscribe(result => this.properties.profiles = result);
     this.properties.createForm = this.formBuilder.group({
       name: this.formBuilder.control(''),
       info: this.formBuilder.control(''),
@@ -68,10 +64,9 @@ export class CreateCandidateComponent implements OnInit {
             }));
           }
         })).subscribe((res) => {
-          this.alertService.success('Candidate added to the system');
-          this.router.navigate(['/candidates', res.id]);
-        }, () =>
-          this.alertService.error('Unexpected server error. Refresh and try again.'));
+        this.alertService.success('Candidate added to the system');
+        this.router.navigate(['/candidates', res.id]);
+      });
     }
   }
 }
