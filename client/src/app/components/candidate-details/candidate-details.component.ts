@@ -124,8 +124,6 @@ export class CandidateDetailsComponent implements OnInit {
     const body = {
       cv: this.properties.fileToUpload !== null ? this.properties.fileToUpload : null,
       profileInfo: this.properties.candidate.profileInfo,
-      // profileInfo: this.properties.updateForm.value.info !== '' ?
-      //   this.properties.updateForm.value.info : this.properties.candidate.profileInfo,
       available: this.properties.candidate.available,
       profiles: this.properties.updateForm.value.profiles.length > 0 ?
         this.properties.updateForm.value.profiles : null,
