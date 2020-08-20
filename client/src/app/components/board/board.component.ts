@@ -4,8 +4,6 @@ import {CdkDragDrop, moveItemInArray, transferArrayItem} from '@angular/cdk/drag
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {PopupComponent} from '../popup/popup.component';
 import {RequestService} from '../../services/request/request.service';
-import {CandidateService} from '../../services/candidate/candidate.service';
-import {PhaseService} from '../../services/phase/phase.service';
 import {Workflow} from '../../model/workflow/workflow';
 import {Phase} from '../../model/phase/phase';
 import {WorkflowService} from '../../services/workflow/workflow.service';
@@ -20,6 +18,7 @@ import {AlertService} from '../../services/alert/alert.service';
 import {Content} from './content';
 import {map, startWith} from 'rxjs/operators';
 import {ErrorType} from '../../services/common-error';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-board',
@@ -32,8 +31,6 @@ export class BoardComponent implements OnInit {
               private requestService: RequestService,
               private workflowService: WorkflowService,
               private processService: ProcessService,
-              private candidateService: CandidateService,
-              private phaseService: PhaseService,
               private processPhaseService: ProcessPhaseService,
               private alertService: AlertService
   ) {
@@ -68,12 +65,13 @@ export class BoardComponent implements OnInit {
             });
         });
         request.placedCandidates = dao.processes.filter(proc => proc.status === 'Placed').length || 0;
+        this.properties.timestampDictionary[request.id] = moment().format('YYYY-MM-DDTHH:mm:ss.SSS');
       }, () => {
         this.alertService.error('Unexpected server error. Refresh and try again.');
       });
   }
 
-  drop(event: CdkDragDrop<Candidate[], any>, requestId: number, newPhase: string) {
+  drop(event: CdkDragDrop<Candidate[], any>, request: RequestList, newPhase: string) {
     if (event.previousContainer === event.container) {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
     } else {
@@ -82,15 +80,17 @@ export class BoardComponent implements OnInit {
         event.previousIndex,
         event.currentIndex
       );
-      this.processPhaseService.updateProcessPhase(requestId, event.container.data[event.currentIndex].id,
-        newPhase, this.properties.timestamp)
+      this.processPhaseService.updateProcessPhase(request.id, event.container.data[event.currentIndex].id,
+        newPhase, this.properties.timestampDictionary[request.id])
         .subscribe(() => {
+            this.alertService.success('Candidate successfully switched phases');
+            this.fetchProcessesInRequest(request);
           },
           error => {
             if (error === ErrorType.PRECONDITION_FAILED) {
               this.alertService.error('This card has already been moved by another user.');
               this.alertService.info('Fetching requests again...');
-              this.getAllRequests();
+              this.fetchProcessesInRequest(request);
             } else {
               this.alertService.error('Unexpected server error. Refresh and try again.');
             }
@@ -99,7 +99,7 @@ export class BoardComponent implements OnInit {
   }
 
   onClick(candidateId: number, request: RequestList, phaseName: string) {
-    const modalRef = this.modalService.open(PopupComponent);
+    const modalRef = this.modalService.open(PopupComponent, { size: 'lg' });
     modalRef.componentInstance.requestId = request.id;
     modalRef.componentInstance.candidateId = candidateId;
     modalRef.componentInstance.phaseName = phaseName;
@@ -157,6 +157,8 @@ export class BoardComponent implements OnInit {
           this.properties.requests = [];
           this.properties.requests.push(new RequestList(filteredRequest.id, filteredRequest.workflow, filteredRequest.progress,
             filteredRequest.state, filteredRequest.description, filteredRequest.quantity));
+          this.properties.requests.forEach(request =>
+            this.properties.timestampDictionary[request.id] = moment().format('YYYY-MM-DDTHH:mm:ss.SSS'));
           this.properties.workflows = [];
           this.properties.workflows.push(new Workflow(filteredRequest.workflow));
           this.properties.workflows.forEach(workflow => {
@@ -183,6 +185,8 @@ export class BoardComponent implements OnInit {
             .filter(r => r.workflow === this.properties.control.value)
             .map(r => new RequestList(r.id, r.workflow, r.progress,
               r.state, r.description, r.quantity));
+          this.properties.requests.forEach(request =>
+            this.properties.timestampDictionary[request.id] = moment().format('YYYY-MM-DDTHH:mm:ss.SSS'));
           this.properties.workflows = [];
           this.properties.workflows.push(new Workflow(this.properties.requests[0].workflow));
           this.workflowService.getWorkflowByName(this.properties.workflows[0].workflow)
@@ -205,8 +209,10 @@ export class BoardComponent implements OnInit {
     this.requestService.getUserCurrentRequests()
       .pipe(
         map(dao => {
-          return {requests: dao.requests.map(r => new RequestList(r.id, r.workflow, r.progress,
-            r.state, r.description, r.quantity))};
+          return {
+            requests: dao.requests.map(r => new RequestList(r.id, r.workflow, r.progress,
+              r.state, r.description, r.quantity))
+          };
         }),
         map(data => {
           const workflows = [...new Set(data.requests.map(r => r.workflow))].map(w => new Workflow(w));
@@ -214,8 +220,9 @@ export class BoardComponent implements OnInit {
         })
       ).subscribe(
       result => {
-        this.properties.timestamp = new Date();
         this.properties.requests = result.requests;
+        this.properties.requests.forEach(request =>
+          this.properties.timestampDictionary[request.id] = moment().format('YYYY-MM-DDTHH:mm:ss.SSS'));
         this.properties.workflows = result.workflows;
         this.properties.allRequests = this.properties.requests.map(r => r.description);
         this.properties.allWorkflows = this.properties.workflows.map(w => w.workflow);

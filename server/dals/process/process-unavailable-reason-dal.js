@@ -55,7 +55,7 @@ module.exports = (query) => {
                 `UPDATE ${schema.table} ` +
                 `SET ${schema.reason} = $1 ` +
                 `WHERE ${schema.requestId} = $2 AND ${schema.candidateId} = $3;`,
-            values: [requestId, candidateId, reason]
+            values: [reason, requestId, candidateId]
         }
         await query(statement, client)
     }

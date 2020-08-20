@@ -123,3 +123,7 @@ footer.footer {
   padding-top: 4rem;
   padding-bottom: 4rem;
 }
+
+#root {
+  transform: translateY(-7px);
+}

@@ -1,67 +1,86 @@
-<div class="modal-header" *ngIf="candidate">
-  <h4 class="modal-title">{{candidate.name}}</h4>
+<div class="modal-header" *ngIf="properties.candidate">
+  <h4 class="modal-title">{{properties.candidate.name}}</h4>
   <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
     <span aria-hidden="true">&times;</span>
   </button>
 </div>
-<div class="modal-body" *ngIf="candidate && process">
-  <div class="property">
-    <h5 class="inline">CV:</h5>
-    <h6 class="inline" id="cv" (click)="downloadCv()">{{candidate.cv}}</h6>
-  </div>
-  <form [formGroup]="updateForm" (submit)="updateCandidate()">
-    <div>
-      <div class="property">
-        <h5>Available?</h5>
-        <div (click)="changeAvailable()" id="click-box">
-          <div *ngIf="candidate.available" class="circle available"></div>
-          <div *ngIf="!candidate.available" class="circle not_available"></div>
+<div class="modal-body" *ngIf="properties.candidate && properties.process">
+  <div id="original">
+    <p class="new-value" *ngIf="properties.conflict">The red value(s) indicates what has been updated by another user.
+      <br>Merge your information or close this page and overwrite your values.</p>
+    <div class="property">
+      <h5 class="inline">CV:</h5>
+      <h6 class="inline" id="cv" (click)="downloadCv()">{{properties.candidate.cv}}</h6>
+    </div>
+    <form [formGroup]="properties.updateForm" (submit)="updateCandidate()">
+      <div>
+        <div class="property">
+          <h5>Available?</h5>
+          <div (click)="changeAvailable()" class="click-box">
+            <div *ngIf="properties.candidate.available" class="circle available"></div>
+            <div *ngIf="!properties.candidate.available" class="circle not_available"></div>
+          </div>
+        </div>
+        <div class="property">
+          <h5 class="inline">Status:</h5>
+          <label>
+            <select formControlName="status">
+              <option [selected]="true" [value]="properties.process.status">{{properties.process.status}}</option>
+              <option *ngFor="let status of properties.statusList" [value]="status">{{status}}</option>
+            </select>
+          </label>
+          <p class="inline new-value" *ngIf="properties.newStatus !== properties.process.status">
+            {{properties.newStatus}}
+          </p>
+        </div>
+        <div class="property">
+          <h5>Unavailable Reason:</h5>
+          <label>
+            <select formControlName="unavailableReason">
+              <option [selected]="true"
+                      [value]="properties.process.unavailableReason">{{properties.process.unavailableReason}}</option>
+              <option *ngFor="let reason of properties.reasons" [value]="reason">{{reason}}</option>
+            </select>
+          </label>
+          <p class="inline new-value" *ngIf="properties.newUnavailableReasons !== properties.process.unavailableReason">
+            {{properties.newUnavailableReasons}}
+          </p>
+        </div>
+        <div class="property">
+          <h5>{{properties.phase.phase}} Notes</h5>
+          <label>
+            <textarea formControlName="phaseNotes" name="phaseNotes" [ngModel]="properties.phase.notes"></textarea>
+          </label>
+          <p class="inline new-value" *ngIf="properties.newPhaseNotes !== properties.phase.notes">
+            {{properties.newPhaseNotes}}
+          </p>
         </div>
       </div>
       <div class="property">
-        <h5 class="inline">Status:</h5>
-        <label>
-          <select formControlName="status">
-            <option [selected]="true" [value]="process.status">{{process.status}}</option>
-            <option *ngFor="let status of statusList" [value]="status">{{status}}</option>
-          </select>
-        </label>
+        <h5>{{properties.phase.phase}} Attributes</h5>
+        <div *ngFor="let attribute of properties.attributeTemplates;" style="display: block">
+          <label>{{attribute.name}}
+            <input *ngIf="attribute.type !== 'number'" [type]="attribute.type" [value]="attribute.value"
+                   class="attribute"
+                   [formControlName]="attribute.name">
+            <input *ngIf="attribute.type === 'number'" [type]="attribute.type" [value]="attribute.value"
+                   class="attribute"
+                   [formControlName]="attribute.name" min="0">
+          </label>
+          <p class="inline new-value" *ngIf="properties.newAttributeTemplates[attribute.name] !== properties.phase.notes">
+            {{properties.newAttributeTemplates[attribute.name]}}
+          </p>
+        </div>
       </div>
-      <div class="property">
-        <h5 class="inline">Unavailable Reason:</h5>
-        <label>
-          <select formControlName="unavailableReason">
-            <option [selected]="true" [value]="process.unavailableReason">{{process.unavailableReason}}</option>
-            <option *ngFor="let reason of reasons" [value]="reason">{{reason}}</option>
-          </select>
-        </label>
-      </div>
-      <div class="property">
-        <h5>{{phase.phase}} Notes</h5>
-        <label>
-          <textarea formControlName="phaseNotes" name="phaseNotes" [ngModel]="phase.notes"></textarea>
-        </label>
-      </div>
+      <button type="submit" class="btn btn-primary add" *ngIf="!properties.conflict">Update Candidate</button>
+      <button type="submit" class="btn btn-danger add" *ngIf="properties.conflict">Merge and Update Candidate</button>
+    </form>
+    <div>
+      <a [routerLink]="['/candidates/', properties.candidate.id]"
+         [state]="{requestId: requestId, candidateId: properties.candidate.id}"
+         (click)="activeModal.close('Close click')"
+      >More about {{properties.candidate.name}}</a>
     </div>
-    <div class="property">
-      <h5>{{phase.phase}} Attributes</h5>
-      <div *ngFor="let attribute of attributeTemplates;" style="display: block">
-        <label>{{attribute.name}}
-          <input *ngIf="attribute.type !== 'number'" [type]="attribute.type" [value]="attribute.value" class="attribute"
-                 [formControlName]="attribute.name">
-          <input *ngIf="attribute.type === 'number'" [type]="attribute.type" [value]="attribute.value" class="attribute"
-                 [formControlName]="attribute.name" min="0">
-        </label>
-      </div>
-    </div>
-    <button type="submit" class="btn btn-primary add">Update Candidate</button>
-  </form>
-  <div>
-    <a [routerLink]="['/candidates/', candidate.id]"
-       [state]="{requestId: requestId, candidateId: candidate.id}"
-       (click)="activeModal.close('Close click')"
-    >
-      More about {{candidate.name}}</a>
   </div>
 </div>
 <div class="modal-footer">

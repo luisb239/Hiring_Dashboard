@@ -38,7 +38,7 @@ export class ProcessService {
   }
 
   updateProcess(requestId: number, candidateId: number, body: any) {
-    return this.http.put(`${this.baseUrl}/requests/${requestId}/candidates/${candidateId}/process`, body,
+    return this.http.patch(`${this.baseUrl}/requests/${requestId}/candidates/${candidateId}/process`, body,
       {
         headers: new HttpHeaders({'Content-Type': 'application/json'})
       });

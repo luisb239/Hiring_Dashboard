@@ -143,7 +143,7 @@ module.exports = function (router, requestsController, processController, valida
     /**
      * Update process
      */
-    router.put(`/${root}/:requestId/${candidates}/:candidateId/${process}`, [
+    router.patch(`/${root}/:requestId/${candidates}/:candidateId/${process}`, [
         verifyIfAuthenticated,
         body('infos').optional().isArray()
             .custom(infosArray => infosArray.every(info => info.name && info.value != null))

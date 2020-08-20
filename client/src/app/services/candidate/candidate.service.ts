@@ -70,7 +70,7 @@ export class CandidateService {
       allRequests = this.addCandidateProfiles(body, id);
     }
     formData.append('available', String(body.available));
-    formData.append('timestamp', String(body.timestamp));
+    formData.append('timestamp', body.timestamp);
     allRequests.push(this.http.patch<CandidatesDao>(`${this.baseUrl}/candidates/${id}`,
       formData, {
       headers: new HttpHeaders({ enctype: 'multipart/form-data' })

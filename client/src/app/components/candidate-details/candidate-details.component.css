@@ -1,6 +1,9 @@
 #root {
   width: 100%;
-  margin: 10px;
+}
+
+.new-value {
+  color: red;
 }
 
 .property {
@@ -14,7 +17,7 @@
   min-width: 0;
 }
 
-#props, #procs {
+#props, .procs {
   background-color: rgb(235, 235, 235);
   border-radius: 15px;
   padding: 10px;
@@ -126,7 +129,7 @@ td {
   max-width: 20em;
 }
 
-#updateCandidateSubmit {
+.updateCandidateSubmit {
   margin-right: 5px;
   margin-bottom: 5px;
 }

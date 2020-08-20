@@ -1,3 +1,12 @@
+.modal-body {
+  display: flex;
+  flex-direction: row;
+}
+
+.new-value {
+  color: red;
+}
+
 .circle{
   height: 25px;
   width: 25px;
@@ -25,7 +34,7 @@
   margin-right: 10px;
 }
 
-#click-box {
+.click-box {
   width: fit-content;
 }
 

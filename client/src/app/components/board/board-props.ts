@@ -12,5 +12,5 @@ export class BoardProps {
   control = new FormControl();
   allRequests: string[];
   allWorkflows: string[];
-  timestamp: Date;
+  timestampDictionary: any = {};
 }

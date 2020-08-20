@@ -66,7 +66,7 @@
                 [width]="tableContainer.offsetWidth/request.phases.length"
                 *ngFor="let phase of request.phases; index as i"
                 [cdkDropListData]="phase.candidates"
-                (cdkDropListDropped)="drop($event, request.id, phase.name)">
+                (cdkDropListDropped)="drop($event, request, phase.name)">
               <div class="task bg-light text-dark" *ngFor="let candidate of phase.candidates"
                    [cdkDragData]="candidate"
                    cdkDrag
