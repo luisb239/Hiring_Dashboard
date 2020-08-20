@@ -2,6 +2,8 @@
 
 module.exports = (userDb, transporter) => {
 
+    // TODO -> MAKE A FILE WITH THE TEMPLATES
+
     return {
         notifyStatus,
         notifyMoved,
@@ -9,7 +11,8 @@ module.exports = (userDb, transporter) => {
     }
 
     async function notifyStatus({id, oldStatus, newStatus, candidate, request}) {
-        await sendMultipleEmails({id, emailTitle: "Candidate Status Changed",
+        await sendMultipleEmails({
+            id, emailTitle: "Candidate Status Changed",
             emailContent: `The candidate "${candidate.name}" status, in the "${request.description}" request, has been changed. ` +
             `Changed from "${oldStatus}" to "${newStatus}".`})
     }

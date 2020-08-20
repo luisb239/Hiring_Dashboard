@@ -87,10 +87,6 @@ module.exports = function (router, requestsController, processController, valida
         body('project').optional(),
         body('profile').optional(),
         body('dateToSendProfile').optional().toDate(),
-        /*
-        body('mandatoryLanguages').optional().isArray(),
-        body('valuedLanguages').optional().isArray()
-        */
     ], handle(requestsController.patchRequest))
 
     /**

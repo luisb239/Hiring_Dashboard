@@ -1,5 +1,8 @@
 'use strict'
 
+const DbError = require('../dals/errors/db-access-error')
+const dbCommonErrors = require('../dals/errors/db-errors.js')
+
 const errors = require('./errors/common-errors.js')
 const AppError = require('./errors/app-error.js')
 
@@ -125,9 +128,9 @@ module.exports = (requestDb, processDb, requestLanguagesDb, authModule, candidat
             })
 
             if(rowCount === 0)
-                throw new AppError(errors.preconditionFailed,
+                throw new AppError(errors.conflict,
                     "Request not updated",
-                    `Update timestamp was older than the latest timestamp.`)
+                    `Request ${id} has already been updated`)
         })
     }
 
@@ -157,7 +160,7 @@ module.exports = (requestDb, processDb, requestLanguagesDb, authModule, candidat
             // request not found, user not found... other reason..
             if (!await requestDb.updateRequest({id: requestId, timestamp: timestamp, client})) {
                 // TODO -> could not update request.. request id not found or timestamp
-                throw new AppError(errors.preconditionFailed,
+                throw new AppError(errors.conflict,
                     'Could not add user to request',
                     'Update timestamp was older than latest timestamp')
             } else return success
@@ -167,21 +170,32 @@ module.exports = (requestDb, processDb, requestLanguagesDb, authModule, candidat
             const request = await requestDb.getRequestById({id: requestId})
             await emailService.notifyAssigned({userId, request, currentUsername})
         }
-        // TODO
     }
 
     async function addLanguageToRequest({requestId, language, isMandatory}) {
-        // try catch -> db.conflict
-        await requestLanguagesDb.createLanguageRequirement({requestId, language, isMandatory})
+        try {
+            await requestLanguagesDb.createLanguageRequirement({requestId, language, isMandatory})
+        } catch (e) {
+            if (e instanceof DbError) {
+                if (e.error && e.error === dbCommonErrors.detailErrors.uniqueViolation) {
+                    throw new AppError(errors.conflict,
+                        "Cannot add language requirement to current request",
+                        `Request ${requestId} already has ${language} as request's `
+                        + isMandatory ? 'mandatory' : 'valued' + ' language')
+                }
+                throw e;
+            }
+        }
+
     }
 
     async function deleteLanguage({requestId, language, isMandatory}) {
         const deleted = await requestLanguagesDb.deleteLanguageRequirement({requestId, language, isMandatory})
         if (!deleted) {
+            const str = isMandatory ? 'Mandatory' : 'Valued';
             throw new AppError(errors.gone,
                 "Could not delete language requirement from request",
-                isMandatory ? 'Mandatory' : 'Valued' +
-                    `${language} requirement on request ${requestId} not found`)
+                `${str} ${language} requirement on request ${requestId} not found`)
         }
     }
 

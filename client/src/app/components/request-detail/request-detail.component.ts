@@ -5,7 +5,7 @@ import {RequestList} from 'src/app/model/request/request-list';
 import {UserRole} from 'src/app/model/user/user-role';
 import {ProcessList} from 'src/app/model/process/process-list';
 import {RequestDetailProps} from './request-detail-props';
-import {map, mergeMap, switchMap} from 'rxjs/operators';
+import {defaultIfEmpty, map, mergeMap, switchMap} from 'rxjs/operators';
 import {FormArray, FormBuilder, FormControl} from '@angular/forms';
 import {AlertService} from '../../services/alert/alert.service';
 import {UserService} from '../../services/user/user.service';
@@ -15,6 +15,7 @@ import {LanguageCheckbox} from '../../model/requestProps/language-checkbox';
 import {AuthService} from '../../services/auth/auth.service';
 import {ErrorType} from '../../services/common-error';
 import * as moment from 'moment';
+import {forkJoin, Observable} from 'rxjs';
 
 @Component({
   selector: 'app-request-detail',
@@ -36,7 +37,6 @@ export class RequestDetailComponent implements OnInit {
     private userService: UserService,
     private alertService: AlertService,
     public authService: AuthService) {
-    this.properties.updateForm = this.formBuilder.group({});
   }
 
   /**
@@ -44,7 +44,12 @@ export class RequestDetailComponent implements OnInit {
    * all-requests or from the url, if the view isn't forwarded by the previous component.
    * Then it calls the function getRequest with the id obtained.
    */
+
   ngOnInit() {
+    this.properties.updateForm = this.formBuilder.group({
+      state: '', stateCsl: '', description: '', quantity: '', targetDate: '',
+      skill: '', project: '', profile: '', dateToSendProfile: ''
+    });
     this.properties.requestId = history.state.requestId || this.router.url.split('/')[2];
     this.getRequestProperties();
     this.getRequestInfo(this.properties.requestId);
@@ -53,14 +58,19 @@ export class RequestDetailComponent implements OnInit {
     });
   }
 
-  onChange(idx: number, event: any) {
-    const array = this.properties.userForm.controls.userIdx as FormArray;
-
-    if (event.target.checked) {
-      array.push(new FormControl(idx));
+  languagesOnChange(event: any, isMandatory: boolean) {
+    const language = event.source.value;
+    const checked = event.source.checked;
+    const languagesToAddOrRemove = isMandatory ? this.properties.valuedLanguages : this.properties.mandatoryLanguages;
+    const initialLanguages = isMandatory ? this.properties.initialValuedLanguages : this.properties.initialMandatoryLanguages;
+    if (checked) {
+      languagesToAddOrRemove.splice(languagesToAddOrRemove.findIndex(l => language === l.language), 1);
     } else {
-      const index = array.controls.findIndex(x => x.value === idx);
-      array.removeAt(index);
+      if (initialLanguages.find(l => l.language === language)) {
+        languagesToAddOrRemove.push(new LanguageCheckbox(language, false, true));
+      } else {
+        languagesToAddOrRemove.push(new LanguageCheckbox(language, false, false));
+      }
     }
   }
 
@@ -74,8 +84,8 @@ export class RequestDetailComponent implements OnInit {
 
     const mandatoryLanguagesToRemove = this.properties.mandatoryLanguages
       .filter(l => !l.checked && l.initialCheck)
-      .map(l => l.language)
-      .map(l => this.requestService.deleteLanguageRequirementFromRequest(this.properties.requestId, l, true));
+      .concat(this.properties.initialMandatoryLanguages.filter(l => !this.properties.mandatoryLanguages.includes(l)))
+      .map(l => l.language).map(l => this.requestService.deleteLanguageRequirementFromRequest(this.properties.requestId, l, true));
 
     const mandatoryLanguagesToAdd = this.properties.mandatoryLanguages
       .filter(l => l.checked && !l.initialCheck)
@@ -84,6 +94,7 @@ export class RequestDetailComponent implements OnInit {
 
     const valuedLanguagesToRemove = this.properties.valuedLanguages
       .filter(l => !l.checked && l.initialCheck)
+      .concat(this.properties.initialValuedLanguages.filter(l => !this.properties.valuedLanguages.includes(l)))
       .map(l => l.language)
       .map(l => this.requestService.deleteLanguageRequirementFromRequest(this.properties.requestId, l, false));
 
@@ -92,36 +103,46 @@ export class RequestDetailComponent implements OnInit {
       .map(l => l.language)
       .map(l => this.requestService.addLanguageRequirementToRequest(this.properties.requestId, l, false));
 
-    let observables = [];
-    observables = observables
-      .concat(mandatoryLanguagesToRemove)
-      .concat(mandatoryLanguagesToAdd)
-      .concat(valuedLanguagesToRemove)
-      .concat(valuedLanguagesToAdd);
+    const removeLanguagesObservables = mandatoryLanguagesToRemove.concat(valuedLanguagesToRemove);
+    const addLanguagesObservables = mandatoryLanguagesToAdd.concat(valuedLanguagesToAdd);
 
-    console.log('observables', observables);
-    // No attributes to update
     if (this.patchObj && Object.keys(this.patchObj).length) {
       this.patchObj.timestamp = this.properties.timestamp;
       this.requestService.updateRequest(this.properties.requestId, this.patchObj)
+        .pipe(mergeMap(() => this.addAndRemoveLanguages(removeLanguagesObservables, addLanguagesObservables)))
         .subscribe(() => {
           this.patchObj = {};
           this.initialValues = this.properties.updateForm.value;
           this.properties.updateForm.reset(this.initialValues);
-          this.alertService.success('Updated request details successfully!');
+          this.alertService.success('Request updated successfully!');
           this.getRequestInfo(this.properties.requestId);
+        }, error => {
+          this.patchObj = {};
+          if (error === ErrorType.CONFLICT) {
+            this.alertService.error('Request info has already been updated');
+            this.alertService.info('Refreshing request details...');
+            this.getRequestInfo(this.properties.requestId);
+          }
         });
+    } else if (removeLanguagesObservables.length > 0 || addLanguagesObservables.length > 0) {
+      this.addAndRemoveLanguages(removeLanguagesObservables, addLanguagesObservables).subscribe(() => {
+        this.alertService.success('Request languages updated successfully!');
+        this.getRequestInfo(this.properties.requestId);
+      }, error => {
+        if (error === ErrorType.CONFLICT || error === ErrorType.GONE) {
+          this.alertService.error(`This request's languages have already been updated`);
+        }
+        this.alertService.info('Refreshing request details...');
+        this.getRequestInfo(this.properties.requestId);
+      });
     }
+  }
 
-    /*
-    if (mandatoryLanguages && mandatoryLanguages.length) {
-      this.patchObj.mandatoryLanguages = mandatoryLanguages;
-    }
-
-    if (valuedLanguages && valuedLanguages.length) {
-      this.patchObj.valuedLanguages = valuedLanguages;
-    }
-    */
+  addAndRemoveLanguages(languagesToRemove: Observable<any>[], languagesToAdd: Observable<any>[]): Observable<any> {
+    return forkJoin(languagesToRemove)
+      .pipe(
+        defaultIfEmpty(null),
+        mergeMap(() => forkJoin(languagesToAdd).pipe(defaultIfEmpty(null))));
   }
 
   getRequestProperties() {
@@ -129,42 +150,32 @@ export class RequestDetailComponent implements OnInit {
     this.reqPropsService.getRequestStates()
       .pipe(map(dao => dao.states
         .map(s => s.state)))
-      .subscribe(s => this.properties.states = s,
-        () => {
-          this.alertService.error('Unexpected server error. Refresh and try again.');
-        });
+      .subscribe(s => this.properties.states = s);
     // Get states csl from server
     this.reqPropsService.getRequestStatesCsl()
       .pipe(map(dao => dao.statesCsl
         .map(s => s.stateCsl)))
-      .subscribe(s => this.properties.statesCsl = s,
-        () => {
-          this.alertService.error('Unexpected server error. Refresh and try again.');
-        });
+      .subscribe(s => this.properties.statesCsl = s);
     // Get all projects from server
     this.reqPropsService.getRequestProjects()
       .pipe(map(dao => dao.projects
         .map(p => p.project)))
-      .subscribe(p => this.properties.projects = p,
-        () => this.alertService.error('Unexpected server error. Refresh and try again.'));
+      .subscribe(p => this.properties.projects = p);
     // Get all skills from server
     this.reqPropsService.getRequestSkills()
       .pipe(map(dao => dao.skills
         .map(s => s.skill)))
-      .subscribe(s => this.properties.skills = s,
-        () => this.alertService.error('Unexpected server error. Refresh and try again.'));
+      .subscribe(s => this.properties.skills = s);
     // Get all profiles from server
     this.reqPropsService.getRequestProfiles()
       .pipe(map(dao => dao.profiles
         .map(p => p.profile)))
-      .subscribe(p => this.properties.profiles = p,
-        () => this.alertService.error('Unexpected server error. Refresh and try again.'));
+      .subscribe(p => this.properties.profiles = p);
     // Get all target dates(months) from server
     this.reqPropsService.getTargetDates()
       .pipe(map(dao => dao.months
         .map(m => m.month)))
-      .subscribe(t => this.properties.targetDates = t,
-        () => this.alertService.error('Unexpected server error. Refresh and try again.'));
+      .subscribe(t => this.properties.targetDates = t);
     // Get all recruiters
     // Try to pipe this ??
     // TODO -> THIS IS WRONG, ALL USERS, AND THIS REQUEST USERS IS NOT RIGHT. FIX THIS
@@ -189,7 +200,7 @@ export class RequestDetailComponent implements OnInit {
                   this.getRequestInfo(this.properties.requestId);
                 }, error => {
                   if (error === ErrorType.CONFLICT) {
-                    this.alertService.error('The user you were trying to add to the request has already been added by another user.');
+                    this.alertService.error('The user you were trying to add to the request has already been added.');
                     this.alertService.info('Refreshing request details...');
                     this.getRequestInfo(this.properties.requestId);
                   }
@@ -200,6 +211,8 @@ export class RequestDetailComponent implements OnInit {
       );
   }
 
+
+  // Maybe this methods are unnecessary...
   getAvailableStates() {
     return this.properties.states ? this.properties.states.filter(s => s !== this.properties.requestList.state) : [];
   }
@@ -222,6 +235,16 @@ export class RequestDetailComponent implements OnInit {
 
   getAvailableProfiles() {
     return this.properties.profiles ? this.properties.profiles.filter(s => s !== this.properties.requestList.profile) : [];
+  }
+
+  usersOnChange(idx: number, event: any) {
+    const array = this.properties.userForm.controls.userIdx as FormArray;
+    if (event.target.checked) {
+      array.push(new FormControl(idx));
+    } else {
+      const index = array.controls.findIndex(x => x.value === idx);
+      array.removeAt(index);
+    }
   }
 
   /**
@@ -262,12 +285,13 @@ export class RequestDetailComponent implements OnInit {
         }))
       .subscribe(result => {
         this.properties.requestList = result.requests;
-        this.properties.requestAttrs = Object.keys(this.properties.requestList)
+        this.properties.requestAttrs = Object
+          .keys(this.properties.requestList)
           .filter(attr => attr !== 'phases' && attr !== 'id');
         this.properties.userRoles = result.userRoles;
         this.properties.processes = result.processes;
-        this.properties.mandatoryLanguages = result.mandatory;
-        this.properties.valuedLanguages = result.valued;
+        this.properties.initialMandatoryLanguages = result.mandatory;
+        this.properties.initialValuedLanguages = result.valued;
         this.properties.timestamp = moment().format('YYYY-MM-DDTHH:mm:ss.SSS');
 
         // Get all languages from server
@@ -275,31 +299,29 @@ export class RequestDetailComponent implements OnInit {
           .pipe(map(dao => dao.languages
             .map(l => l.language)))
           .subscribe(lang => {
-              this.properties.languages = lang;
-              const mandatory = this.properties.mandatoryLanguages.map(l => l.language);
-              const valued = this.properties.valuedLanguages.map(l => l.language);
-              this.properties.mandatoryLanguages = this.properties.mandatoryLanguages.concat(lang
-                .filter(l => !mandatory.includes(l))
-                .map(l => new LanguageCheckbox(l, false, false))
-              );
-              this.properties.valuedLanguages = this.properties.valuedLanguages.concat(lang
-                .filter(l => !valued.includes(l))
-                .map(l => new LanguageCheckbox(l, false, false))
-              );
-            },
-            () => this.alertService.error('Unexpected server error. Refresh and try again.'));
+            this.properties.languages = lang;
+            const mandatory = this.properties.initialMandatoryLanguages.map(l => l.language);
+            const valued = this.properties.initialValuedLanguages.map(l => l.language);
+            this.properties.mandatoryLanguages = this.properties.initialMandatoryLanguages.concat(lang
+              .filter(l => !mandatory.includes(l) && !valued.includes(l))
+              .map(l => new LanguageCheckbox(l, false, false)));
+            this.properties.valuedLanguages = this.properties.initialValuedLanguages.concat(lang
+              .filter(l => !valued.includes(l) && !mandatory.includes(l))
+              .map(l => new LanguageCheckbox(l, false, false)));
+          });
 
-        // TODO -> DONT ADD control..init in ngOnInit and here we only set value
-        // TODO -> also add description to update form
-        this.properties.updateForm.addControl('state', new FormControl(result.requests.state));
-        this.properties.updateForm.addControl('stateCsl', new FormControl(result.requests.stateCSL));
-        this.properties.updateForm.addControl('description', new FormControl(result.requests.description));
-        this.properties.updateForm.addControl('quantity', new FormControl(result.requests.quantity));
-        this.properties.updateForm.addControl('targetDate', new FormControl(result.requests.targetDate));
-        this.properties.updateForm.addControl('skill', new FormControl(result.requests.skill));
-        this.properties.updateForm.addControl('project', new FormControl(result.requests.project));
-        this.properties.updateForm.addControl('profile', new FormControl(result.requests.profile));
-        this.properties.updateForm.addControl('dateToSendProfile', new FormControl(result.requests.dateToSendProfile));
+        // Set form values to the values retrieved by the server
+        this.properties.updateForm.setValue({
+          state: result.requests.state,
+          stateCsl: result.requests.stateCSL,
+          description: result.requests.description,
+          quantity: result.requests.quantity,
+          targetDate: result.requests.targetDate,
+          skill: result.requests.skill,
+          project: result.requests.project,
+          profile: result.requests.profile,
+          dateToSendProfile: result.requests.dateToSendProfile
+        });
       });
   }
 }

@@ -63,7 +63,9 @@ module.exports = (languagesDao, monthsDao, profilesDao, projectsDao,
         const _workflow = await workflowsDao.getWorkflow({workflow})
 
         if (!_workflow)
-            throw new AppError(errors.notFound, "Workflow Not Found", `Workflow ${workflow} does not exist`)
+            throw new AppError(errors.notFound,
+                "Workflow Not Found",
+                `Workflow ${workflow} does not exist`)
 
         const phases = await phasesDao.getPhasesByWorkflow({workflow})
 

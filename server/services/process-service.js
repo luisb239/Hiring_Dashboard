@@ -87,9 +87,10 @@ module.exports = (requestDb, candidateDb, processDb, phaseDb, infoDb, processUna
         await transaction(async (client) => {
             const rowCount = await processDb.updateProcess({requestId, candidateId, timestamp, client})
             if (rowCount === 0)
-                throw new AppError(errors.preconditionFailed,
+                throw new AppError(errors.conflict,
                     "Process not updated",
-                    `Update timestamp was older than the latest timestamp.`)
+                    `Process of candidate ${candidateId} in request ${requestId} has already been updated`)
+
             if (newPhase) {
                 await updateProcessCurrentPhase({requestId, candidateId, newPhase, client})
             }

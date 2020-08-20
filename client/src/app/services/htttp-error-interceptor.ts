@@ -5,7 +5,7 @@ import {Router} from '@angular/router';
 import {AlertService} from './alert/alert.service';
 import {Injectable} from '@angular/core';
 import {AuthService} from './auth/auth.service';
-import {CommonError, ErrorType} from './common-error';
+import {ErrorType} from './common-error';
 
 @Injectable()
 export class HttpErrorInterceptor implements HttpInterceptor {
@@ -39,11 +39,9 @@ export class HttpErrorInterceptor implements HttpInterceptor {
                 case 409:
                   errorType = ErrorType.CONFLICT;
                   break;
-                case 412:
-                  errorType = ErrorType.PRECONDITION_FAILED;
-                  break;
                 default:
                   errorType = ErrorType.INTERNAL_SERVER;
+                  this.alert.error('Unexpected error. Refresh and try again.');
                   break;
               }
               console.log(errorMessage);

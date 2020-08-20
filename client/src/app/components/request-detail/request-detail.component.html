@@ -1,14 +1,17 @@
 <div id='Request-Detail'>
   <div class="container-fluid">
     <div *ngIf="properties.requestList">
-      <div class='row'>
-        <h2>{{properties.requestList.description}}</h2>
-      </div>
       <div class="row">
         <div class='col'>
           <div id='Request'>
             <form [formGroup]="properties.updateForm" (submit)="onUpdate()">
               <ul class="list-group list-group-flush">
+                <li class="list-group-item">
+                  <h4>Description</h4>
+                  <label>
+                    <input formControlName="description" type="text">
+                  </label>
+                </li>
                 <li class="list-group-item">
                   <h5>Workflow</h5>
                   <p>{{properties.requestList.workflow}}</p>
@@ -35,8 +38,9 @@
                   <h5>Project</h5>
                   <label>
                     <select formControlName="project">
-                      <option [selected]="true"
-                              [value]="properties.requestList.project">{{properties.requestList.project}}</option>
+                      <option [selected]="true" [value]="properties.requestList.project">
+                        {{properties.requestList.project}}
+                      </option>
                       <option *ngFor="let project of getAvailableProjects()" [value]="project">{{project}}</option>
                     </select>
                   </label>
@@ -91,33 +95,33 @@
                   <h5>Date To Send Profile</h5>
                   <label>
                     <input formControlName="dateToSendProfile" type="date"
-                           [ngModel]="properties.requestList.dateToSendProfile"
                            [value]="properties.requestList.dateToSendProfile">
                   </label>
                 </li>
-                <li class="list-group-item" *ngIf="properties.mandatoryLanguages.length > 0">
+                <li class="list-group-item">
                   <h5>Mandatory Languages</h5>
-                  <ul>
-                    <li *ngFor="let language of properties.mandatoryLanguages; index as idx">
-                      <label>
-                        <input type="checkbox" [(ngModel)]="language.checked"
-                               [ngModelOptions]="{standalone: true}">
-                      </label>
-                      <p class="lang">{{language.language}}</p>
-                    </li>
-                  </ul>
-                </li>
-                <li class="list-group-item" *ngIf="properties.valuedLanguages.length > 0">
+                  <p *ngIf="!properties.mandatoryLanguages || !properties.mandatoryLanguages.length">
+                    No available mandatory languages.
+                  </p>
+                  <div *ngFor="let language of properties.mandatoryLanguages; index as idx">
+                    <mat-checkbox (change)="languagesOnChange($event, true)"
+                                  [(ngModel)]="language.checked" [ngModelOptions]="{standalone: true}"
+                                  [value]="language.language" class="lang">
+                      {{language.language}}
+                    </mat-checkbox>
+                  </div>
+                <li class="list-group-item">
                   <h5>Valued Languages</h5>
-                  <ul>
-                    <li *ngFor="let language of properties.valuedLanguages; index as idx">
-                      <label>
-                        <input type="checkbox" [(ngModel)]="language.checked"
-                               [ngModelOptions]="{standalone: true}">
-                      </label>
-                      <p class="lang">{{language.language}}</p>
-                    </li>
-                  </ul>
+                  <p *ngIf="!properties.valuedLanguages || !properties.valuedLanguages.length">
+                    No available valued languages.
+                  </p>
+                  <div *ngFor="let language of properties.valuedLanguages; index as idx">
+                    <mat-checkbox (change)="languagesOnChange($event, false)"
+                                  [(ngModel)]="language.checked" [ngModelOptions]="{standalone: true}"
+                                  [value]="language.language" class="lang">
+                      {{language.language}}
+                    </mat-checkbox>
+                  </div>
                 </li>
               </ul>
               <button type="submit" class="btn btn-primary add">Update Request</button>
@@ -165,7 +169,7 @@
                   {{user.userEmail}}
                 </td>
                 <td class="form-check assign td">
-                  <input class="form-check-input" type="checkbox" (change)="onChange(i, $event)">
+                  <input (change)="usersOnChange(i, $event)" class="form-check-input" type="checkbox">
                 </td>
               </tr>
             </table>

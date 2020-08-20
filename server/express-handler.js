@@ -26,24 +26,22 @@ module.exports = function handle(controllerFunction) {
 }
 
 function handleError(res, error) {
+    // TODO -> Always log the stack trace -> if there is one
+    //  AppError should contain stacktrace
     if (error.commonError === commonErrors.invalidInput || error.commonError === commonErrors.missingInput) {
         // Bad Request
         res.status(400).send(format(error.title, error.detail))
     } else if (error.commonError === commonErrors.notFound) {
         // Not Found
         res.status(404).send(format(error.title, error.detail))
-    } else if (error.commonError === commonErrors.alreadyExists) {
+    } else if (error.commonError === commonErrors.conflict) {
         // Conflict
         res.status(409).send(format(error.title, error.detail))
     } else if (error.commonError === commonErrors.gone) {
         // Gone
         res.status(410).send(format(error.title, error.detail))
-    } else if (error.commonError === commonErrors.preconditionFailed) {
-        // Precondition Failed
-        res.status(412).send(format(error.title, error.detail))
     } else {
         // Internal Server Error
-        // TODO if error is not 500 print stack trace -> if there is one obviously
         console.log(error)
         res.status(500).send(format("Internal Server Error", "Something unexpected happened!"))
     }

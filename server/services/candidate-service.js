@@ -27,7 +27,8 @@ module.exports = (candidateDb, profilesDb, processDb, transaction) => {
 
         if (!candidateFound)
             throw new AppError(errors.notFound,
-                "Candidate not found", `Candidate with id ${id} does not exist`)
+                "Candidate not found",
+                `Candidate with id ${id} does not exist`)
 
         const profiles = await profilesDb.getCandidateProfiles({ candidateId: id })
 
@@ -61,9 +62,9 @@ module.exports = (candidateDb, profilesDb, processDb, transaction) => {
                 client: client
             })
             if (rowCount === 0)
-                throw new AppError(errors.preconditionFailed,
-                    "Candidate not updated",
-                    `Update timestamp was older than the latest timestamp.`)
+                throw new AppError(errors.conflict,
+                    "Conflict trying to update candidate",
+                    `The information of candidate ${id} has already been updated`)
         })
     }
 
@@ -87,6 +88,7 @@ module.exports = (candidateDb, profilesDb, processDb, transaction) => {
      * @param profile : String
      * @returns {Promise<void>}
      */
+    // TODO -> Might Throw Conflict
     async function addCandidateProfile({ id, profile }) {
         await profilesDb.addProfileToCandidate({
             candidateId: id,
@@ -100,6 +102,7 @@ module.exports = (candidateDb, profilesDb, processDb, transaction) => {
      * @param profile : String
      * @returns {Promise<void>}
      */
+    // TODO -> If delete didnt affect any row -> rowCount === 0 -> throw Gone Error
     async function removeCandidateProfile({ id, profile }) {
         await profilesDb.deleteProfileFromCandidate({
             candidateId: id,
@@ -113,7 +116,7 @@ module.exports = (candidateDb, profilesDb, processDb, transaction) => {
         if (!cvFileInfo) {
             throw new AppError(errors.notFound,
                 "Candidate Cv Not Found",
-                "Candidate does not exist, or doesnt have a cv")
+                `Candidate with id ${id} does not exist, or does not have a cv`)
         }
 
         return {

@@ -11,6 +11,8 @@ export class RequestDetailProps {
   userRoles: UserRole[];
   mandatoryLanguages: LanguageCheckbox[];
   valuedLanguages: LanguageCheckbox[];
+  initialMandatoryLanguages: LanguageCheckbox[];
+  initialValuedLanguages: LanguageCheckbox[];
   processes: ProcessList[];
   requestAttrs: string[];
   userForm: FormGroup;

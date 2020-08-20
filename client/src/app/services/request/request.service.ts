@@ -92,7 +92,7 @@ export class RequestService {
   }
 
   updateRequest(requestId: number, body: any) {
-    return this.http.patch<SuccessPostDao>(`${this.baseUrl}/requests/${requestId}`, body, httpOptions);
+    return this.http.patch(`${this.baseUrl}/requests/${requestId}`, body, httpOptions);
   }
 
   deleteLanguageRequirementFromRequest(requestId: number, language: string, isMandatory: boolean): Observable<any> {

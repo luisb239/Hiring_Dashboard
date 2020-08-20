@@ -32,6 +32,7 @@ import {MatTableModule} from '@angular/material/table';
 import {MatPaginatorModule} from '@angular/material/paginator';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {LoadingBarHttpClientModule} from '@ngx-loading-bar/http-client';
+import {MatCheckboxModule} from "@angular/material/checkbox";
 
 @NgModule({
   declarations: [
@@ -70,6 +71,7 @@ import {LoadingBarHttpClientModule} from '@ngx-loading-bar/http-client';
     MatPaginatorModule,
     MatAutocompleteModule,
     LoadingBarHttpClientModule,
+    MatCheckboxModule,
   ],
   providers: [{
     provide: HTTP_INTERCEPTORS,
