@@ -4,17 +4,14 @@
       <div class="input-group" id="filter">
         <div class="input-group-prepend">
           <button class="btn btn-primary dropdown-toggle" type="submit" data-toggle="dropdown" aria-haspopup="true"
-                  aria-expanded="false"><span id="dropdown">Search By {{properties.content.name}}</span></button>
+            aria-expanded="false"><span id="dropdown">Search By {{properties.content.name}}</span></button>
           <div class="dropdown-menu">
             <a class="dropdown-item" (click)="setContent(0)">Workflow</a>
             <a class="dropdown-item" (click)="setContent(1)">Description</a>
           </div>
         </div>
-        <input type="text"
-               (keydown.enter)="filter($event)"
-               placeholder="Search By {{properties.content.name}}"
-               [formControl]="properties.control"
-               [matAutocomplete]="auto">
+        <input type="text" (keydown.enter)="filter($event)" placeholder="Search By {{properties.content.name}}"
+          [formControl]="properties.control" [matAutocomplete]="auto">
         <mat-autocomplete #auto="matAutocomplete">
           <mat-option *ngFor="let option of properties.filteredOptions | async" [value]="option">
             {{option}}
@@ -31,7 +28,9 @@
           <caption style="display: none">Board Header</caption>
           <tr>
             <th [colSpan]=workflow.phases.length id="workflow-header">
-              <div class="workflow-header bg-dark text-white"><h3>{{workflow.workflow}}</h3></div>
+              <div class="workflow-header bg-dark text-white">
+                <h3 class="myH3">{{workflow.workflow}}</h3>
+              </div>
             </th>
             <th>
               <div></div>
@@ -51,31 +50,38 @@
             <th id="non-visible"></th>
           </tr>
           <tr>
-            <td class="title-data swim-lane bg-dark text-white" [colSpan]=workflow.phases.length-1
-                [routerLink]="['/request-detail', request.id]">
-              <h5 class="swim-lane-title">{{request.description}} [Placed: {{request.placedCandidates}}
-                /{{request.quantity}}]</h5>
+            <td class="title-data swim-lane bg-dark text-white" [colSpan]=workflow.phases.length-1>
+              <h5 id="icon-data">
+                <img src="../../../assets/img/Icon_Refresh.svg" (click)='onRefresh($event, request)'>
+                <!-- <svg width="1em" height="1em" class="bi bi-arrow-clockwise" fill="currentColor"
+                  xmlns="http://www.w3.org/2000/svg" (click)='onRefresh($event, request)'>
+                  <path fill-rule="evenodd"
+                    d="M3.17 6.706a5 5 0 0 1 7.103-3.16.5.5 0 1 0 .454-.892A6 6 0 1 0 13.455 5.5a.5.5 0 0 0-.91.417 5 5 0 1 1-9.375.789z" />
+                  <path fill-rule="evenodd"
+                    d="M8.147.146a.5.5 0 0 1 .707 0l2.5 2.5a.5.5 0 0 1 0 .708l-2.5 2.5a.5.5 0 1 1-.707-.708L10.293 3 8.147.854a.5.5 0 0 1 0-.708z" />
+                </svg> -->
+              </h5>
+              <h5 id="swim-lane-title" [routerLink]="['/request-detail', request.id]">
+                {{request.description}} [Placed: {{request.placedCandidates}}
+                / {{request.quantity}}]</h5>
             </td>
             <td class="fraction-data swim-lane bg-dark text-white">
               <h5 class="swim-lane-minus" (click)="hide($event, request)">&minus;</h5>
             </td>
           </tr>
           <tr cdkDropListGroup [hidden]=request.hidden class="list">
-            <td class="tasks-container"
-                cdkDropList
-                [width]="tableContainer.offsetWidth/request.phases.length"
-                *ngFor="let phase of request.phases; index as i"
-                [cdkDropListData]="phase.candidates"
-                (cdkDropListDropped)="drop($event, request, phase.name)">
-              <div class="task bg-light text-dark" *ngFor="let candidate of phase.candidates"
-                   [cdkDragData]="candidate"
-                   cdkDrag
-                   (click)="onClick(candidate.id, request, phase.name)">
+            <td class="tasks-container" cdkDropList [width]="tableContainer.offsetWidth/request.phases.length"
+              *ngFor="let phase of request.phases; index as i" [cdkDropListData]="phase.candidates"
+              (cdkDropListDropped)="drop($event, request, phase.name)">
+              <div class="task bg-light text-dark" *ngFor="let candidate of phase.candidates" [cdkDragData]="candidate"
+                cdkDrag (click)="onClick(candidate.id, request, phase.name)">
                 <h6>{{ candidate.name }}</h6>
                 <p class="candidate-status">{{ candidate.status }}</p>
               </div>
               <div (click)="addCandidate(request)" *ngIf="i==0" class="hidden-task">
-                <div class="hidden-text"><h6><span>...</span></h6></div>
+                <div class="hidden-text">
+                  <h6><span>...</span></h6>
+                </div>
               </div>
             </td>
           </tr>

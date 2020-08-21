@@ -1,26 +1,26 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
-import {ProcessPhase} from '../../model/process/process-phase';
-import {PhaseAttribute} from '../../model/phase/phase-attribute';
-import {Candidate} from 'src/app/model/candidate/candidate';
-import {Process} from '../../model/process/process';
-import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
-import {ProcessService} from '../../services/process/process.service';
-import {CandidateService} from '../../services/candidate/candidate.service';
-import {PhaseService} from '../../services/phase/phase.service';
-import {ProcessPhaseService} from '../../services/process-phase/process-phase.service';
-import {map} from 'rxjs/operators';
-import {AlertService} from '../../services/alert/alert.service';
-import {ErrorType} from '../../services/common-error';
+import { Component, EventEmitter, Input, OnInit, Output, OnDestroy } from '@angular/core';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { ProcessPhase } from '../../model/process/process-phase';
+import { PhaseAttribute } from '../../model/phase/phase-attribute';
+import { Candidate } from 'src/app/model/candidate/candidate';
+import { Process } from '../../model/process/process';
+import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { ProcessService } from '../../services/process/process.service';
+import { CandidateService } from '../../services/candidate/candidate.service';
+import { PhaseService } from '../../services/phase/phase.service';
+import { ProcessPhaseService } from '../../services/process-phase/process-phase.service';
+import { map } from 'rxjs/operators';
+import { AlertService } from '../../services/alert/alert.service';
+import { ErrorType } from '../../services/common-error';
 import * as moment from 'moment';
-import {PopupProps} from './popup-props';
+import { PopupProps } from './popup-props';
 
 @Component({
   selector: 'app-popup',
   templateUrl: './popup.component.html',
   styleUrls: ['./popup.component.css']
 })
-export class PopupComponent implements OnInit {
+export class PopupComponent implements OnInit, OnDestroy {
 
   @Input()
   requestId: number;
@@ -51,6 +51,10 @@ export class PopupComponent implements OnInit {
 
   ngOnInit(): void {
     this.getCandidateAndProcessInfo();
+  }
+
+  ngOnDestroy(): void {
+    this.candidateProcessChanged.emit();
   }
 
   getCandidateAndProcessInfo() {
@@ -84,12 +88,12 @@ export class PopupComponent implements OnInit {
       .subscribe(phaseDao => {
         phaseDao.infos
           .forEach(pi => {
-              const phaseForm = this.properties.updateForm.get(pi.name);
-              if (!phaseForm) {
-                this.properties.updateForm.addControl(pi.name, new FormControl());
-                this.properties.attributeTemplates.push(new PhaseAttribute(pi.name, pi.value.type));
-              }
+            const phaseForm = this.properties.updateForm.get(pi.name);
+            if (!phaseForm) {
+              this.properties.updateForm.addControl(pi.name, new FormControl());
+              this.properties.attributeTemplates.push(new PhaseAttribute(pi.name, pi.value.type));
             }
+          }
           );
 
         this.processService.getProcess(this.requestId, this.candidateId)
@@ -106,11 +110,11 @@ export class PopupComponent implements OnInit {
   updateCandidate() {
     const attributeArray = [];
     this.properties.attributeTemplates.forEach(att => {
-        const res = this.properties.updateForm.value[att.name];
-        if (res !== null && res !== att.value) {
-          attributeArray.push({name: att.name, value: res});
-        }
+      const res = this.properties.updateForm.value[att.name];
+      if (res !== null && res !== att.value) {
+        attributeArray.push({ name: att.name, value: res });
       }
+    }
     );
     const body: { status?: string, unavailableReason?: string, infos?: any[], timestamp?: string } = {};
 
@@ -138,27 +142,29 @@ export class PopupComponent implements OnInit {
             this.properties.phase.phase,
             this.properties.updateForm.value.phaseNotes,
             this.properties.timestamp).subscribe(() => {
-          });
+            });
         }
       }))
       .subscribe(() => {
-          this.alertService.success('Updated Candidate successfully!');
-          this.activeModal.close('Close click');
-          this.candidateProcessChanged.emit(`Candidate ${this.candidateId} process has been updated`);
-        }, error => {
-          if (error === ErrorType.CONFLICT) {
-            this.alertService.error('This process has already been updated.');
-            this.alertService.info('Refreshing process details...');
-            this.getNewValues();
-          }
+        this.alertService.success('Updated Candidate successfully!');
+        this.activeModal.close('Close click');
+      }, error => {
+        if (error === ErrorType.CONFLICT) {
+          this.alertService.error('This process has already been updated.');
+          this.alertService.info('Refreshing process details...');
+          this.alertService.warn('The red value(s) indicates what has been updated by another user.' +
+            ' Merge your information or close this page and overwrite your values.',
+            { autoClose: false, keepAfterRouteChange: false });
+          this.getNewValues();
         }
+      }
       );
   }
 
   downloadCv() {
     this.candidateService.downloadCandidateCv(this.candidateId)
       .subscribe(data => {
-        const blob = new Blob([data], {type: 'application/pdf'});
+        const blob = new Blob([data], { type: 'application/pdf' });
         const downloadURL = window.URL.createObjectURL(blob);
         const link = document.createElement('a');
         link.href = downloadURL;
@@ -220,8 +226,8 @@ export class PopupComponent implements OnInit {
             this.properties.newAttributeTemplates = {};
             phaseDao.infos
               .forEach(pi => {
-                  this.properties.newAttributeTemplates[pi.name] = new PhaseAttribute(pi.name, pi.value.type);
-                }
+                this.properties.newAttributeTemplates[pi.name] = new PhaseAttribute(pi.name, pi.value.type);
+              }
               );
             Object.keys(this.properties.newAttributeTemplates)
               .forEach(at => this.properties.newAttributeTemplates[at] = dao.phases

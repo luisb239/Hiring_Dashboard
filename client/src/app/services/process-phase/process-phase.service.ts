@@ -18,7 +18,7 @@ export class ProcessPhaseService {
   baseUrl = `/hd`;
 
   updateProcessPhase(requestId: number, candidateId: number, newPhase: string, timestamp: string) {
-    return this.http.put(`${this.baseUrl}/requests/${requestId}/candidates/${candidateId}/process`,
+    return this.http.patch(`${this.baseUrl}/requests/${requestId}/candidates/${candidateId}/process`,
       {newPhase, timestamp}, httpOptions);
   }
 

@@ -50,7 +50,7 @@ input {
 
 .workflow-header {
   border-top-right-radius: 20px;
-  padding-left: 10px;
+  padding: 10px;
 }
 
 .phase-row {
@@ -73,17 +73,23 @@ input {
   border-bottom: solid 5px rgb(244, 148, 4);
 }
 
+#icon-data {
+  vertical-align: middle;
+  float: left;
+  margin-left: 10px;
+}
 
 .title-data {
   border-bottom-left-radius: 20px;
 }
 
 .swim-lane {
-  vertical-align: middle;
+  padding: 3px;
 }
 
-.swim-lane-title {
-  margin-left: 10px;
+#swim-lane-title {
+  padding-left: 5px ;
+  vertical-align: middle;
 }
 
 .fraction-data {
@@ -184,6 +190,10 @@ td {
 
 .candidate-status {
   margin-bottom: 0;
+}
+
+h5 {
+  display: inline;
 }
 
 @media only screen and (min-width: 360px) and (max-width: 767px) {

@@ -100,6 +100,7 @@ export class BoardComponent implements OnInit {
     modalRef.componentInstance.candidateId = candidateId;
     modalRef.componentInstance.phaseName = phaseName;
     modalRef.componentInstance.candidateProcessChanged.subscribe(() => {
+      this.alertService.clear();
       this.fetchProcessesInRequest(request);
     });
   }
@@ -195,6 +196,11 @@ export class BoardComponent implements OnInit {
               });
             });
         });
+  }
+
+  onRefresh(event: any, request: RequestList) {
+    event.preventDefault();
+    this.fetchProcessesInRequest(request);
   }
 
   getAllRequests() {

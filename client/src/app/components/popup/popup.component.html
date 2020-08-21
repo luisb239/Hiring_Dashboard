@@ -6,8 +6,8 @@
 </div>
 <div class="modal-body" *ngIf="properties.candidate && properties.process">
   <div id="original">
-    <p class="new-value" *ngIf="properties.conflict">The red value(s) indicates what has been updated by another user.
-      <br>Merge your information or close this page and overwrite your values.</p>
+    <!-- <p class="new-value" *ngIf="properties.conflict">The red value(s) indicates what has been updated by another user.
+      <br>Merge your information or close this page and overwrite your values.</p> -->
     <div class="property">
       <h5 class="inline">CV:</h5>
       <h6 class="inline" id="cv" (click)="downloadCv()">{{properties.candidate.cv}}</h6>

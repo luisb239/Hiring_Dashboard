@@ -19,20 +19,20 @@ export class AlertService {
   }
 
   // convenience methods
-  success(message: string) {
-    this.alert(new Alert({...this.options, type: AlertType.Success, message}));
+  success(message: string, options = this.options) {
+    this.alert(new Alert({...options, type: AlertType.Success, message}));
   }
 
-  error(message: string) {
-    this.alert(new Alert({...this.options, type: AlertType.Error, message}));
+  error(message: string, options = this.options) {
+    this.alert(new Alert({...options, type: AlertType.Error, message}));
   }
 
-  info(message: string) {
-    this.alert(new Alert({...this.options, type: AlertType.Info, message}));
+  info(message: string, options = this.options) {
+    this.alert(new Alert({...options, type: AlertType.Info, message}));
   }
 
-  warn(message: string) {
-    this.alert(new Alert({...this.options, type: AlertType.Warning, message}));
+  warn(message: string, options = this.options) {
+    this.alert(new Alert({...options, type: AlertType.Warning, message}));
   }
 
   // main alert method

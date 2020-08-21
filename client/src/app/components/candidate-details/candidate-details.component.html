@@ -1,8 +1,13 @@
 <div class="table-responsive-xl" id="root">
+  <!-- <button class="btn btn-success m-1" (click)="alertService.success('Success!!', options)">Success</button>
+  <button class="btn btn-danger m-1" (click)="alertService.error('Error :(', options)">Error</button>
+  <button class="btn btn-info m-1" (click)="alertService.info('Some info....', options)">Info</button>
+  <button class="btn btn-warning m-1" (click)="alertService.warn('Warning: ...', options)">Warn</button>
+  <button class="btn btn-outline-dark m-1" (click)="alertService.clear()">Clear</button> -->
   <div id="box">
     <div *ngIf="properties.candidate" id="props">
-      <p class="new-value" *ngIf="properties.conflict">The red value indicates the new profile information written by
-        another user.<br>Merge your information or refresh this page to override your information.</p>
+      <!-- <p class="new-value" *ngIf="properties.conflict">The red value indicates the new profile information written by
+        another user.<br>Merge your information or refresh this page to override your information.</p> -->
       <form [formGroup]="properties.updateForm" (ngSubmit)='onSubmit()'>
         <h1>{{properties.candidate.name}}</h1>
         <div *ngIf="properties.candidate.cv" class="property">
@@ -16,7 +21,7 @@
         <div class="custom-file">
           <input (change)="handleFileInput($event.target.files)" type="file" class="custom-file-input" id="file">
           <label class="custom-file-label"
-                 for="file">{{properties.fileToUpload !== null ? properties.fileToUpload.name : 'Update File'}}</label>
+            for="file">{{properties.fileToUpload !== null ? properties.fileToUpload.name : 'Update File'}}</label>
         </div>
         <div class="property">
           <h5>Available?</h5>
@@ -28,30 +33,49 @@
         <div class="property">
           <h5>Profile Information</h5>
           <textarea class="form-control inline" id="info" name="info"
-                    formControlName="info">{{properties.candidate.profileInfo}}</textarea>
+            formControlName="info">{{properties.candidate.profileInfo}}</textarea>
           <p class="new-value" *ngIf="properties.newCandidate &&
            properties.newCandidate.profileInfo !== properties.candidate.profileInfo">
             {{properties.newCandidate.profileInfo}}
           </p>
         </div>
         <h5>Profiles</h5>
-        <div *ngIf="properties.candidate.profiles.length > 0" class="property">
+        <div *ngIf="!properties.newCandidate && properties.candidate.profiles.length > 0" class="property">
           <table class="table-responsive-xl profileTable">
             <thead>
-            <tr>
-              <th scope="col">Profile</th>
-              <th scope="col">Remove</th>
-            </tr>
+              <tr>
+                <th scope="col">Profile</th>
+                <th scope="col">Remove</th>
+              </tr>
             </thead>
             <tbody>
-            <tr *ngFor="let profile of properties.candidate.profiles; index as i">
-              <td class="td">
-                <h6>{{profile}}</h6>
-              </td>
-              <td class="td assign">
-                <button type='button' (click)='handleProfileDelete(profile)' class="btn-sm btn-danger">X</button>
-              </td>
-            </tr>
+              <tr *ngFor="let profile of properties.candidate.profiles; index as i">
+                <td class="td">
+                  <h6>{{profile}}</h6>
+                </td>
+                <td class="td assign">
+                  <button type='button' (click)='handleProfileDelete(profile)' class="btn-sm btn-danger">X</button>
+                </td>
+              </tr>
+          </table>
+        </div>
+        <div *ngIf="properties.newCandidate && properties.newCandidate.profiles.length > 0 " class="property">
+          <table class="table-responsive-xl profileTable">
+            <thead>
+              <tr>
+                <th scope="col">Profile</th>
+                <th scope="col">Remove</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let profile of properties.newCandidate.profiles; index as i">
+                <td class="td">
+                  <h6>{{profile}}</h6>
+                </td>
+                <td class="td assign">
+                  <button type='button' (click)='handleProfileDelete(profile)' class="btn-sm btn-danger">X</button>
+                </td>
+              </tr>
           </table>
         </div>
         <div *ngIf="properties.candidate.profiles.length === 0" class="property">
@@ -66,7 +90,8 @@
           </mat-form-field>
         </div>
         <button class="btn btn-primary updateCandidateSubmit" *ngIf="!properties.conflict">Update Candidate</button>
-        <button class="btn btn-danger updateCandidateSubmit" *ngIf="properties.conflict" >Merge and Update Candidate</button>
+        <button class="btn btn-danger updateCandidateSubmit" *ngIf="properties.conflict">Merge and Update
+          Candidate</button>
       </form>
     </div>
     <div class="procs" *ngIf="properties.requestId && properties.currentRequest && properties.currentProcess">
@@ -74,46 +99,46 @@
       <table>
         <caption style="display: none">Current Processes</caption>
         <tbody>
-        <tr>
-          <th id="non-visible1"></th>
-        </tr>
-        <tr>
-          <td [colSpan]="properties.currentProcess.phases.length">
-            <h5>{{properties.currentRequest.request.description}}</h5>
-          </td>
-        </tr>
-        <tr>
-          <td [colSpan]="properties.currentProcess.phases.length">
-            <div>
-              <h5 class="inline">Status:</h5>
-              <p class="inline">{{properties.currentProcess.status}}</p>
-            </div>
-          </td>
-        </tr>
-        <tr *ngIf="properties.currentProcess.unavailableReason">
-          <td [colSpan]="properties.currentProcess.phases.length">
-            <div>
-              <h5 class="inline">Unavailable Reason:</h5>
-              <p class="inline">{{properties.currentProcess.unavailableReason}}</p>
-            </div>
-          </td>
-        </tr>
-        <tr class="end-row">
-          <td *ngFor="let phase of properties.currentProcess.phases">
-            <div class="attribute">
-              <h5>{{phase.phase}}</h5>
-              <div class="attribute-info">
-                <h6 class="inline">Notes:</h6>
-                <p class="inline">{{phase.notes}}</p>
+          <tr>
+            <th id="non-visible1"></th>
+          </tr>
+          <tr>
+            <td [colSpan]="properties.currentProcess.phases.length">
+              <h5>{{properties.currentRequest.request.description}}</h5>
+            </td>
+          </tr>
+          <tr>
+            <td [colSpan]="properties.currentProcess.phases.length">
+              <div>
+                <h5 class="inline">Status:</h5>
+                <p class="inline">{{properties.currentProcess.status}}</p>
               </div>
-              <div class="attribute-info" *ngFor="let info of phase.infos">
-                <h6 class="inline">{{info.name}}:</h6>
-                <p class="inline">{{info.value}}</p>
+            </td>
+          </tr>
+          <tr *ngIf="properties.currentProcess.unavailableReason">
+            <td [colSpan]="properties.currentProcess.phases.length">
+              <div>
+                <h5 class="inline">Unavailable Reason:</h5>
+                <p class="inline">{{properties.currentProcess.unavailableReason}}</p>
               </div>
-            </div>
-          </td>
-          <td>
-        </tr>
+            </td>
+          </tr>
+          <tr class="end-row">
+            <td *ngFor="let phase of properties.currentProcess.phases">
+              <div class="attribute">
+                <h5>{{phase.phase}}</h5>
+                <div class="attribute-info">
+                  <h6 class="inline">Notes:</h6>
+                  <p class="inline">{{phase.notes}}</p>
+                </div>
+                <div class="attribute-info" *ngFor="let info of phase.infos">
+                  <h6 class="inline">{{info.name}}:</h6>
+                  <p class="inline">{{info.value}}</p>
+                </div>
+              </div>
+            </td>
+            <td>
+          </tr>
         </tbody>
       </table>
       <h5 class="older" *ngIf="properties.allProcesses.length === 0">There are no other processes.</h5>
@@ -122,8 +147,58 @@
         <table *ngFor="let process of properties.allProcesses; index as i">
           <caption style="display: none">Other Processes</caption>
           <tbody>
+            <tr>
+              <th id="non-visible2"></th>
+            </tr>
+            <tr>
+              <td [colSpan]="process.phases.length">
+                <h5>{{properties.allRequests[i].request.description}}</h5>
+              </td>
+            </tr>
+            <tr>
+              <td [colSpan]="process.phases.length">
+                <div>
+                  <h5 class="inline">Status:</h5>
+                  <p class="inline">{{process.status}}</p>
+                </div>
+              </td>
+            </tr>
+            <tr *ngIf="process.unavailableReason">
+              <td [colSpan]="process.phases.length">
+                <div>
+                  <h5 class="inline">Unavailable Reason:</h5>
+                  <p class="inline">{{process.unavailableReason}}</p>
+                </div>
+              </td>
+            </tr>
+            <tr class="end-row">
+              <td *ngFor="let phase of process.phases">
+                <div class="attribute">
+                  <h5>{{phase.phase}}</h5>
+                  <div class="attribute-info">
+                    <h6 class="inline">Notes:</h6>
+                    <p class="inline">{{phase.notes}}</p>
+                  </div>
+                  <div class="attribute-info" *ngFor="let info of phase.infos">
+                    <h6 class="inline">{{info.name}}:</h6>
+                    <p class="inline">{{info.value}}</p>
+                  </div>
+                </div>
+              </td>
+              <td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="procs" *ngIf="!properties.requestId && properties.allProcesses.length > 0 &&
+      properties.allProcesses.length === properties.allRequests.length">
+      <h3>All processes</h3>
+      <table *ngFor="let process of properties.allProcesses; index as i">
+        <caption style="display: none">All Processes</caption>
+        <tbody>
           <tr>
-            <th id="non-visible2"></th>
+            <th id="non-visible3"></th>
           </tr>
           <tr>
             <td [colSpan]="process.phases.length">
@@ -162,56 +237,6 @@
             </td>
             <td>
           </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-    <div class="procs" *ngIf="!properties.requestId && properties.allProcesses.length > 0 &&
-      properties.allProcesses.length === properties.allRequests.length">
-      <h3>All processes</h3>
-      <table *ngFor="let process of properties.allProcesses; index as i">
-        <caption style="display: none">All Processes</caption>
-        <tbody>
-        <tr>
-          <th id="non-visible3"></th>
-        </tr>
-        <tr>
-          <td [colSpan]="process.phases.length">
-            <h5>{{properties.allRequests[i].request.description}}</h5>
-          </td>
-        </tr>
-        <tr>
-          <td [colSpan]="process.phases.length">
-            <div>
-              <h5 class="inline">Status:</h5>
-              <p class="inline">{{process.status}}</p>
-            </div>
-          </td>
-        </tr>
-        <tr *ngIf="process.unavailableReason">
-          <td [colSpan]="process.phases.length">
-            <div>
-              <h5 class="inline">Unavailable Reason:</h5>
-              <p class="inline">{{process.unavailableReason}}</p>
-            </div>
-          </td>
-        </tr>
-        <tr class="end-row">
-          <td *ngFor="let phase of process.phases">
-            <div class="attribute">
-              <h5>{{phase.phase}}</h5>
-              <div class="attribute-info">
-                <h6 class="inline">Notes:</h6>
-                <p class="inline">{{phase.notes}}</p>
-              </div>
-              <div class="attribute-info" *ngFor="let info of phase.infos">
-                <h6 class="inline">{{info.name}}:</h6>
-                <p class="inline">{{info.value}}</p>
-              </div>
-            </div>
-          </td>
-          <td>
-        </tr>
         </tbody>
       </table>
     </div>
