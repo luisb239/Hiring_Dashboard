@@ -51,7 +51,7 @@
           <label>
             <textarea formControlName="phaseNotes" name="phaseNotes" [ngModel]="properties.phase.notes"></textarea>
           </label>
-          <p class="inline new-value" *ngIf="properties.newPhaseNotes !== properties.phase.notes">
+          <br><p class="inline new-value" *ngIf="properties.newPhaseNotes !== properties.phase.notes">
             {{properties.newPhaseNotes}}
           </p>
         </div>
@@ -67,7 +67,10 @@
                    class="attribute"
                    [formControlName]="attribute.name" min="0">
           </label>
-          <p class="inline new-value" *ngIf="properties.newAttributeTemplates[attribute.name] !== properties.phase.notes">
+          <!-- <p class="inline new-value" *ngIf="properties.newAttributeTemplates[attribute.name] !== properties.attributeTemplates[attribute.name]">
+            {{properties.newAttributeTemplates[attribute.name]}}
+          </p> -->
+          <p class="inline new-value" *ngIf="!isEqualAttributeTemplate(attribute.name)">
             {{properties.newAttributeTemplates[attribute.name]}}
           </p>
         </div>

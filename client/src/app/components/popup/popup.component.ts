@@ -237,4 +237,10 @@ export class PopupComponent implements OnInit, OnDestroy {
           });
       });
   }
+
+  isEqualAttributeTemplate(attributeName: string) {
+    const elem = this.properties.attributeTemplates.find(att =>
+      att.name === attributeName);
+    return elem.value === this.properties.newAttributeTemplates[attributeName];
+  }
 }
