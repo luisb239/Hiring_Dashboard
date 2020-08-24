@@ -16,16 +16,16 @@ module.exports = () => {
             if (await passportUtils.checkProtocol(protocolName)) {
                 const mail = jwt.decode(params.id_token).email;
                 let user = await passportUtils.findCorrespondingUser(mail);
-            if (!user) {
-                user = await passportUtils.createUser(params.id_token, 'azureAD', mail, 'null');
-            }
-            if (await passportUtils.isBlackListed(user.id)) {
-                passportUtils.addNotification(user.id);
-                done(null, false, {message: 'User is BlackListed'});
+                if (!user) {
+                    user = await passportUtils.createUser(params.id_token, 'azureAD', mail, 'null');
+                }
+                if (await passportUtils.isBlackListed(user.id)) {
+                    passportUtils.addNotification(user.id);
+                    done(null, false, {message: 'User is BlackListed'});
+                } else {
+                    done(null, user);
+                }
             } else {
-                done(null, user);
-            }
-        } else {
             done(null, false, {message: 'Protocol is not avaiable'});
         }
     });

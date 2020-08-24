@@ -10,9 +10,27 @@
         another user.<br>Merge your information or refresh this page to override your information.</p> -->
       <form [formGroup]="properties.updateForm" (ngSubmit)='onSubmit()'>
         <h1>{{properties.candidate.name}}</h1>
-        <div *ngIf="properties.candidate.cv" class="property">
+        <div *ngIf="properties.candidate.cv && !properties.newCandidate" class="property">
           <h5 class="inline">CV:</h5>
-          <h6 class="inline" id="cv" (click)="downloadCv()">{{properties.candidate.cv}}</h6>
+          <h6 (click)="downloadCv()" class="inline cv">{{properties.candidate.cv}}</h6>
+        </div>
+        <div *ngIf="properties.newCandidate && properties.newCandidate.cvVersionId === properties.candidate.cvVersionId"
+             class="property">
+          <h5 class="inline">CV:</h5>
+          <h6 (click)="downloadCv()" class="inline cv">{{properties.newCandidate.cv}}</h6>
+        </div>
+
+        <div *ngIf="properties.newCandidate && properties.candidate.cv
+        && properties.candidate.cvVersionId !== properties.newCandidate.cvVersionId" class="property">
+          <h5 class="inline">CV:</h5>
+          <h6 class="inline cv">{{properties.candidate.cv}}</h6>
+          <p (click)="downloadCv()" class="inline new-value">{{properties.newCandidate.cv}}</p>
+        </div>
+
+        <div *ngIf="properties.newCandidate && !properties.candidate.cv
+        && properties.candidate.cvVersionId !== properties.newCandidate.cvVersionId" class="property">
+          <h6 class="inline">Missing CV!</h6>
+          <p (click)="downloadCv()" class="inline new-value">{{properties.newCandidate.cv}}</p>
         </div>
         <div *ngIf="!properties.candidate.cv" class="property">
           <h5 id="file-label" class="inline">Curriculum Vitae:</h5>
@@ -21,7 +39,7 @@
         <div class="custom-file">
           <input (change)="handleFileInput($event.target.files)" type="file" class="custom-file-input" id="file">
           <label class="custom-file-label"
-            for="file">{{properties.fileToUpload !== null ? properties.fileToUpload.name : 'Update File'}}</label>
+                 for="file">{{properties.fileToUpload !== null ? properties.fileToUpload.name : 'Update File'}}</label>
         </div>
         <div class="property">
           <h5>Available?</h5>
@@ -33,9 +51,9 @@
         <div class="property">
           <h5>Profile Information</h5>
           <textarea class="form-control inline" id="info" name="info"
-            formControlName="info">{{properties.candidate.profileInfo}}</textarea>
-          <p class="new-value" *ngIf="properties.newCandidate &&
-           properties.newCandidate.profileInfo !== properties.candidate.profileInfo">
+                    formControlName="info">{{properties.candidate.profileInfo}}</textarea>
+          <p *ngIf="properties.newCandidate && properties.newCandidate.profileInfo &&
+           properties.newCandidate.profileInfo !== properties.candidate.profileInfo" class="new-value">
             {{properties.newCandidate.profileInfo}}
           </p>
         </div>
@@ -89,9 +107,10 @@
             </mat-select>
           </mat-form-field>
         </div>
-        <button class="btn btn-primary updateCandidateSubmit" *ngIf="!properties.conflict">Update Candidate</button>
-        <button class="btn btn-danger updateCandidateSubmit" *ngIf="properties.conflict">Merge and Update
-          Candidate</button>
+        <button *ngIf="!properties.newCandidate" class="btn btn-primary updateCandidateSubmit">Update Candidate</button>
+        <button *ngIf="properties.newCandidate" class="btn btn-danger updateCandidateSubmit">Merge and Update
+          Candidate
+        </button>
       </form>
     </div>
     <div class="procs" *ngIf="properties.requestId && properties.currentRequest && properties.currentProcess">

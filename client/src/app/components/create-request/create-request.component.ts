@@ -6,7 +6,7 @@ import {RequestService} from 'src/app/services/request/request.service';
 import {Router} from '@angular/router';
 import {CreateRequestProps} from './create-request-props';
 import {AlertService} from '../../services/alert/alert.service';
-import {defaultIfEmpty, mergeMap} from 'rxjs/operators';
+import {defaultIfEmpty, map, mergeMap} from 'rxjs/operators';
 import {forkJoin} from 'rxjs';
 
 @Component({
@@ -87,12 +87,16 @@ export class CreateRequestComponent implements OnInit {
       targetDate: value.targetDate,
       dateToSendProfile: value.dateToSendProfile
     };
-    this.requestService.createRequest(body).pipe(mergeMap(dao =>
-      forkJoin(this.getLanguagesObservableArray(dao.id)).pipe(defaultIfEmpty(null))))
-      .subscribe(() => {
-          this.alertService.success('Request Created Successfully!');
-          this.router.navigate(['/all-requests']);
-        });
+
+    this.requestService.createRequest(body)
+      .pipe(mergeMap(dao =>
+        forkJoin(this.getLanguagesObservableArray(dao.id))
+          .pipe(defaultIfEmpty(null))
+          .pipe(map(() => dao))))
+      .subscribe(res => {
+        this.alertService.success('Request Created Successfully!');
+        this.router.navigate(['/request-detail', res.id]);
+      });
   }
 
   getLanguagesObservableArray(requestId: number) {

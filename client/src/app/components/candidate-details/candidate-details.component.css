@@ -35,7 +35,7 @@
   margin-bottom: 10px;
 }
 
-#cv {
+.cv {
   color: dodgerblue;
   text-decoration: underline;
   cursor: pointer;
@@ -48,6 +48,10 @@
 
 .attribute-info {
   display: block;
+}
+
+.new-value {
+  color: red;
 }
 
 .inline {

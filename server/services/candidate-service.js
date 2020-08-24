@@ -1,5 +1,6 @@
 'use strict'
 
+const uniqid = require('uniqid');
 const AppError = require('./errors/app-error.js')
 const errors = require('./errors/common-errors.js')
 
@@ -58,6 +59,7 @@ module.exports = (candidateDb, profilesDb, processDb, transaction) => {
                 cvMimeType: cvMimeType,
                 cvBuffer: cvFileBuffer,
                 cvEncoding: cvEncoding,
+                cvVersionId: cvFileName ? uniqid() : null,
                 timestamp: timestamp,
                 client: client
             })
@@ -75,7 +77,8 @@ module.exports = (candidateDb, profilesDb, processDb, transaction) => {
             cvBuffer: cvFileBuffer,
             cvMimeType: cvMimeType,
             cvFileName: cvFileName,
-            cvEncoding: cvEncoding
+            cvEncoding: cvEncoding,
+            cvVersionId: uniqid()
         })
         return {
             id: candidate.id
@@ -123,7 +126,8 @@ module.exports = (candidateDb, profilesDb, processDb, transaction) => {
             cv: cvFileInfo.cvBuffer,
             mimeType: cvFileInfo.cvMimeType,
             fileName: cvFileInfo.cvFileName,
-            encoding: cvFileInfo.cvEncoding
+            encoding: cvFileInfo.cvEncoding,
+            versionId: cvFileInfo.cvVersionId
         }
     }
 }

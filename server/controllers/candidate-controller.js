@@ -97,8 +97,8 @@ module.exports = (service) => {
         const cvInfo = await service.getCandidateCv({
             id: req.params.id
         })
-        res.setHeader('Content-disposition', 'attachment; filename=' + cvInfo.fileName);
+        res.setHeader('Content-disposition', 'attachment; filename=' + cvInfo.fileName + ';versionId=' + cvInfo.versionId);
         res.setHeader('Content-type', cvInfo.mimeType);
-        res.status(200).end(cvInfo.cv, cvInfo.encoding)
+        res.status(200).end(cvInfo.cv, cvInfo.encoding);
     }
 }

@@ -1,9 +1,10 @@
-import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { CandidateDao } from 'src/app/model/candidate/candidate-dao';
-import { CandidatesDao } from '../../model/candidate/candidates-dao';
-import { SuccessPostDao } from 'src/app/model/common/successPost-dao';
-import { forkJoin } from 'rxjs';
+import {Injectable} from '@angular/core';
+import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
+import {CandidateDao} from 'src/app/model/candidate/candidate-dao';
+import {CandidatesDao} from '../../model/candidate/candidates-dao';
+import {SuccessPostDao} from 'src/app/model/common/successPost-dao';
+import {forkJoin, Observable} from 'rxjs';
+import {map} from 'rxjs/operators';
 
 const httpOptions = {
   headers: new HttpHeaders({
@@ -83,7 +84,7 @@ export class CandidateService {
       httpOptions);
   }
 
-  addCandidateProfiles(body, id) {
+  addCandidateProfiles(body, id): Observable<any>[] {
     return body.profiles.map(p => {
       const profileBody = {
         id,
@@ -96,9 +97,23 @@ export class CandidateService {
   }
 
   downloadCandidateCv(candidateId: number): any {
-    const options = {
+    /*const options = {
       responseType: 'blob' as 'json'
-    };
-    return this.http.get(`${this.baseUrl}/candidates/${candidateId}/download-cv`, options);
+    };*/
+    return this.http.get(`${this.baseUrl}/candidates/${candidateId}/download-cv`, {
+      responseType: 'blob',
+      observe: 'response'
+    })
+      .pipe(map(resp => {
+          const filenameStr = 'filename=';
+          const versionIdStr = 'versionId=';
+          const disposition = resp.headers.get('Content-disposition');
+          return {
+            filename: disposition.slice(disposition.indexOf(filenameStr) + filenameStr.length),
+            versionId: disposition.slice(disposition.indexOf(versionIdStr) + versionIdStr.length),
+            blob: resp.body
+          };
+        })
+      );
   }
 }

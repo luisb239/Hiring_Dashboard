@@ -10,8 +10,8 @@ module.exports = (query) => {
         getCandidates,
         getCandidateById,
         getCandidatesByRequestId,
-        createCandidate,
-        updateCandidate,
+        createCandidate: createCandidate,
+        updateCandidate: updateCandidate,
         getCandidateCvInfo
     }
 
@@ -64,9 +64,9 @@ module.exports = (query) => {
     }
 
     async function createCandidate({
-        name, available = true, profileInfo = null,
-        cvBuffer, cvMimeType, cvFileName, cvEncoding, timestamp = new Date()
-    }) {
+                                       name, available = true, profileInfo = null,
+                                       cvBuffer, cvMimeType, cvFileName, cvEncoding, cvVersionId, timestamp = new Date()
+                                   }) {
         const statement = {
             name: 'Create Candidate',
             text:
@@ -74,8 +74,7 @@ module.exports = (query) => {
                 `(${candidate.name}, ${candidate.cv}, ${candidate.cvMimeType}, ${candidate.cvFileName}, ` +
                 `${candidate.cvEncoding}, ${candidate.available}, ${candidate.profileInfo}, ${candidate.timestamp}) ` +
                 `VALUES ($1, $2, $3, $4, $5, $6, $7, $8) ` +
-                `RETURNING ${candidate.id}, ${candidate.name}, ${candidate.available}, ` +
-                `${candidate.profileInfo}, ${candidate.cvFileName};`,
+                `RETURNING ${candidate.id};`,
             values: [name, cvBuffer, cvMimeType, cvFileName, cvEncoding, available, profileInfo, timestamp]
         }
 
@@ -85,9 +84,9 @@ module.exports = (query) => {
 
 
     async function updateCandidate({
-        id, cvFileName, cvMimeType, cvBuffer,
-        cvEncoding, profileInfo, available, timestamp, client, newTimestamp = new Date()
-    }) {
+                                       id, cvFileName, cvMimeType, cvBuffer,
+                                       cvEncoding, cvVersionId, profileInfo, available, timestamp, client, newTimestamp = new Date()
+                                   }) {
         const statement = {
             name: 'Update Candidate',
             text:
@@ -96,11 +95,13 @@ module.exports = (query) => {
                 `${candidate.cvFileName} = COALESCE($2, ${candidate.cvFileName}), ` +
                 `${candidate.cvMimeType} = COALESCE($3, ${candidate.cvMimeType}), ` +
                 `${candidate.cvEncoding} = COALESCE($4, ${candidate.cvEncoding}), ` +
-                `${candidate.profileInfo} = COALESCE($5, ${candidate.profileInfo}), ` +
-                `${candidate.available} = COALESCE($6, ${candidate.available}), ` +
-                `${candidate.timestamp} = $9 ` +
-                `WHERE ${candidate.id} = $7 AND ${candidate.timestamp} < $8;`,
-            values: [cvBuffer, cvFileName, cvMimeType, cvEncoding, profileInfo, available, id, timestamp, newTimestamp]
+                `${candidate.cvVersionId} = COALESCE($5, ${candidate.cvVersionId}), ` +
+                `${candidate.profileInfo} = COALESCE($6, ${candidate.profileInfo}), ` +
+                `${candidate.available} = COALESCE($7, ${candidate.available}), ` +
+                `${candidate.timestamp} = $10 ` +
+                `WHERE ${candidate.id} = $8 AND ${candidate.timestamp} < $9;`,
+            values: [cvBuffer, cvFileName, cvMimeType, cvEncoding, cvVersionId, profileInfo, available,
+                id, timestamp, newTimestamp]
         }
 
         const res = await query(statement, client)
@@ -130,7 +131,8 @@ module.exports = (query) => {
             name: obj[candidate.name],
             available: obj[candidate.available],
             profileInfo: obj[candidate.profileInfo],
-            cvFileName: obj[candidate.cvFileName]
+            cvFileName: obj[candidate.cvFileName],
+            cvVersionId: obj[candidate.cvVersionId]
         }
     }
 
@@ -139,7 +141,8 @@ module.exports = (query) => {
             cvBuffer: row[candidate.cv],
             cvFileName: row[candidate.cvFileName],
             cvMimeType: row[candidate.cvMimeType],
-            cvEncoding: row[candidate.cvEncoding]
+            cvEncoding: row[candidate.cvEncoding],
+            cvVersionId: row[candidate.cvVersionId]
         }
 
     }

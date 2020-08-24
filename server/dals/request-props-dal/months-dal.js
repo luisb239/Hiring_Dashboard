@@ -20,7 +20,7 @@ module.exports = (query) => {
 
     function extract(obj) {
         return {
-            month: obj[schema.month]
+            month: obj[schema.targetMonth]
         }
     }
 }

@@ -42,7 +42,7 @@ export class CandidateDetailsComponent implements OnInit {
   ngOnInit(): void {
     this.properties.candidateId = +(history.state.candidateId || this.router.url.split('/')[2]);
     this.properties.requestId = history.state.requestId ? +history.state.requestId : undefined;
-
+    // this.properties.conflict = false;
     this.candidateService.getCandidateById(this.properties.candidateId)
       .subscribe(dao => {
         this.properties.timestamp = moment().format('YYYY-MM-DDTHH:mm:ss.SSS');
@@ -52,6 +52,7 @@ export class CandidateDetailsComponent implements OnInit {
           result.profileInfo,
           result.available,
           result.cvFileName,
+          result.cvVersionId,
           dao.profiles.map(pi => pi.profile),
           dao.processes.map(proc => new CandidateProcess(proc.status, proc.requestId)));
         this.properties.candidate.processes.filter(process => process.requestId !== this.properties.requestId)
@@ -83,7 +84,8 @@ export class CandidateDetailsComponent implements OnInit {
 
         this.getRequestProfiles();
 
-        this.properties.infoForm = this.formBuilder.control(this.properties.candidate.profileInfo);
+        this.properties.infoForm = this.formBuilder.control(this.properties.candidate.profileInfo
+          ? this.properties.candidate.profileInfo : '');
         this.properties.profilesForm = this.formBuilder.control('');
         this.properties.updateForm = this.formBuilder.group({
           info: this.properties.infoForm,
@@ -129,16 +131,16 @@ export class CandidateDetailsComponent implements OnInit {
         this.alertService.success('Candidate Updated Successfully');
         this.properties.profilesForm.setValue('');
         this.properties.fileToUpload = null;
-        this.properties.conflict = false;
-        this.updateCandidateComponent();
+        this.updateCandidateComponent(false);
       }, error => {
         if (error === ErrorType.CONFLICT) {
           this.alertService.error('This candidate has already been updated.');
           this.alertService.info('Refreshing...');
           this.alertService.warn('The red value indicates the new profile information written by another user.' +
             'Merge your information or refresh this page to override your information.',
-            { autoClose: false, keepAfterRouteChange: true});
-          this.updateCandidateComponent();
+            {autoClose: false, keepAfterRouteChange: true});
+          // this.properties.conflict = true;
+          this.updateCandidateComponent(true);
         }
       });
   }
@@ -148,12 +150,12 @@ export class CandidateDetailsComponent implements OnInit {
     this.candidateService.removeCandidateProfile({ id: this.properties.candidateId, profile: encodedProfile })
       .subscribe(() => {
         this.alertService.success('Profile removed successfully');
-        this.updateCandidateComponent();
+        this.updateCandidateComponent(false);
       }, error => {
         if (error === ErrorType.NOT_FOUND) {
           this.alertService.error('This profile has already been deleted.');
           this.alertService.info('Refreshing...');
-          this.updateCandidateComponent();
+          this.updateCandidateComponent(true);
         }
       });
   }
@@ -163,23 +165,32 @@ export class CandidateDetailsComponent implements OnInit {
     this.properties.fileToUpload = files.item(0);
   }
 
-  updateCandidateComponent() {
+  updateCandidateComponent(conflict: boolean) {
     this.candidateService.getCandidateById(this.properties.candidateId)
       .subscribe(candidateDao => {
+        this.properties.newCandidate = null;
         const result = candidateDao.candidate;
         this.properties.timestamp = moment().format('YYYY-MM-DDTHH:mm:ss.SSS');
-        this.properties.newCandidate = new Candidate(result.name,
+        const cand = new Candidate(result.name,
           result.id,
           result.profileInfo,
           result.available,
           result.cvFileName,
+          result.cvVersionId,
           candidateDao.profiles.map(pi => pi.profile),
           candidateDao.processes.map(proc => new CandidateProcess(proc.status, proc.requestId)));
-        if (this.properties.newCandidate.profileInfo !== this.properties.candidate.profileInfo) {
-          this.properties.conflict = true;
+        if (conflict) {
+          this.properties.newCandidate = cand;
+        } else {
+          this.properties.candidate = cand;
         }
+        /* if (this.properties.newCandidate.profileInfo &&
+          this.properties.newCandidate.profileInfo !== this.properties.candidate.profileInfo) {
+          this.properties.conflict = true;
+        } */
         this.getRequestProfiles();
-        this.properties.infoForm.setValue(this.properties.candidate.profileInfo);
+        this.properties.infoForm.setValue(this.properties.candidate.profileInfo
+          ? this.properties.candidate.profileInfo : '');
         this.properties.profilesForm.setValue('');
       });
   }
@@ -187,11 +198,16 @@ export class CandidateDetailsComponent implements OnInit {
   downloadCv() {
     this.candidateService.downloadCandidateCv(this.properties.candidateId)
       .subscribe(data => {
-        const blob = new Blob([data], { type: 'application/pdf' });
+        if (data.versionId !== this.properties.candidate.cvVersionId) {
+          // Conflict with the cvs
+          this.alertService.error('The cv you are trying to download is outdated. Please refresh the page.');
+          return;
+        }
+        const blob = new Blob([data.blob], {type: 'application/pdf'});
         const downloadURL = window.URL.createObjectURL(blob);
         const link = document.createElement('a');
         link.href = downloadURL;
-        link.download = this.properties.candidate.cv;
+        link.download = data.filename;
         link.click();
       });
   }

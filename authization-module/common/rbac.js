@@ -60,7 +60,7 @@ module.exports = async function (rbac_opts) {
 
     // Using promise.all to parallelize queries
     // we need to await this line below because we need 
-    // the database to have all roles and permissions values before creating Grants
+    //the database to have all roles and permissions values before creating Grants
 
 
     return Promise.resolve(rbac.init())

@@ -6,6 +6,7 @@ export class Candidate {
               public profileInfo: string = '',
               public available: boolean = true,
               public cv: string = '',
+              public cvVersionId: string = '',
               public profiles: string[] = [],
               public processes: CandidateProcess[] = []
   ) {

@@ -17,6 +17,6 @@ export class CandidateDetailsProps {
   infoForm: FormControl;
   profilesForm: FormControl;
   timestamp: string;
-  conflict: boolean;
+  //conflict: boolean;
   newCandidate: Candidate;
 }

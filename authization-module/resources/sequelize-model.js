@@ -105,7 +105,7 @@ UserHistory.belongsTo(User, {foreignKey: 'updater'})
  * - list: DefaultString)
  * @type {Model}
  */
-const List = defineTable('List', { list: { type: STRING, allowNull: false, unique: true } }, false);
+const List = defineTable('List', {list: {type: STRING, allowNull: false, unique: true}}, false);
 
 const UserAssociation = (associationName) => defineTable(associationName, {
     start_date: { type: DATE, allowNull: false }, end_date: DATE,
@@ -180,8 +180,7 @@ const createUserRoleHistory = async ({dataValues}) => {
 }
 
 const createUserHistory = async ({dataValues}) => {
-    createHistory({date: new Date(), updater: dataValues.updater, UserId: dataValues.id}, `The user was created`)
-    //createHistory(new Date(),dataValues.updater,`The user was created`)
+    createHistory(new Date(), dataValues.updater, `The user was created`)
 }
 
 const deleteUserRoleHistory = async ({dataValues}) => {

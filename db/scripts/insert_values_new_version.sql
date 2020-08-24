@@ -236,14 +236,14 @@ INSERT INTO workflow_phase(workflow, phase, phase_number)
 	('Consulting', 'Job Offer', 3),
 	('Consulting', 'Offer Accepted', 4);
 
-INSERT INTO candidate(name, available, cv, cv_mime_type, cv_filename, cv_encoding, profile_info, temp)
+INSERT INTO candidate(name, available, cv, cv_mime_type, cv_filename, cv_encoding, cv_version_id, profile_info, temp)
     VALUES
-    ('Michael Corleone', TRUE, NULL, NULL, NULL, NULL, NULL, CURRENT_TIMESTAMP),
-    ('Travis Bickle', TRUE, NULL, NULL, NULL, NULL, NULL, CURRENT_TIMESTAMP),
-    ('Randle McMurphy', TRUE, NULL, NULL, NULL, NULL, NULL, CURRENT_TIMESTAMP),
-    ('Ellen Ripley', TRUE, NULL, NULL, NULL, NULL, NULL, CURRENT_TIMESTAMP),
-    ('Bob Belcher', TRUE, NULL, NULL, NULL, NULL, NULL, CURRENT_TIMESTAMP),
-    ('Troy Barnes', FALSE, NULL, NULL, NULL, NULL, NULL, CURRENT_TIMESTAMP);
+    ('Michael Corleone', TRUE, NULL, NULL, NULL, NULL, NULL, NULL, CURRENT_TIMESTAMP),
+    ('Travis Bickle', TRUE, NULL, NULL, NULL, NULL, NULL, NULL, CURRENT_TIMESTAMP),
+    ('Randle McMurphy', TRUE, NULL, NULL, NULL, NULL, NULL, NULL, CURRENT_TIMESTAMP),
+    ('Ellen Ripley', TRUE, NULL, NULL, NULL, NULL, NULL, NULL, CURRENT_TIMESTAMP),
+    ('Bob Belcher', TRUE, NULL, NULL, NULL, NULL, NULL, NULL, CURRENT_TIMESTAMP),
+    ('Troy Barnes', FALSE, NULL, NULL, NULL, NULL, NULL, NULL, CURRENT_TIMESTAMP);
 	
 INSERT INTO candidate_request_profile(candidate_id, profile)
 	VALUES

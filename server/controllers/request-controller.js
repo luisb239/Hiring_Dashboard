@@ -52,12 +52,10 @@ module.exports = (service) => {
             dateToSendProfile: req.body.dateToSendProfile,
         })
 
-        /* TODO -> UNCOMMENT SOON
         await service.addRequestToUser({
             userId: req.user.id,
             requestId: id
         })
-         */
 
         res.status(201).send({
             message: 'Request created successfully',

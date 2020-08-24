@@ -42,7 +42,7 @@ module.exports = {
      * @param id
      * @returns {Promise<*>}
      */
-    getUserActiveRoles: (id) => tryCatch(() => UserRole.findAll({where: {UserId: id, active: 1}})),
+    getUserActiveRoles: (id) => tryCatch(() => UserRole.findAll({where: {UserId: id, active: true}})),
     /**
      *
      * @returns {Promise<void>}

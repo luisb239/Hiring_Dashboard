@@ -33,7 +33,7 @@ module.exports = {
      * @param username
      * @returns {Promise<{password: *, id: *, username: *}>}
      */
-    getByUsername: (username) => tryCatch(() => User.findOne({ where: { username: username } })),
+    getByUsername: (username) => tryCatch(() => User.findOne({where: {username: username}})),
 
     /**
      * Requests the database to return user's that match username and password parameters

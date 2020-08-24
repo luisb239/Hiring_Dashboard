@@ -1,8 +1,8 @@
 'use strict'
 
-const {Role, UserRoles, Permission, User, RolePermission} = require('../sequelize-model'),
-    config = require('../../common/config/config'),
-    tryCatch = require('../../common/util/functions-utils')
+    const {Role, UserRoles, Permission, User, RolePermission} = require('../sequelize-model'),
+        config = require('../../common/config/config'),
+        tryCatch = require('../../common/util/functions-utils')
 
 const getSpecificById = (roleId) =>
     tryCatch(() => Role.findByPk(roleId))
@@ -76,12 +76,16 @@ module.exports = {
         raw: true
     })),
 
-    getPermissionsWithThisRole: (roleId) => tryCatch(() => RolePermission.findAll({ where: { RoleId: roleId }, include: [Permission], raw: true })),
+    getPermissionsWithThisRole: (roleId) => tryCatch(() => RolePermission.findAll({
+        where: {RoleId: roleId},
+        include: [Permission],
+        raw: true
+    })),
 
     addParentRole: (role, parentRole) =>
         tryCatch(async () => {
             config.rbac.grant(await config.rbac.getRole(parentRole.role), await config.rbac.getRole(role.role))
-            return Role.update({ parent_role: parentRole.id }, { where: { id: role.id } })
+            return Role.update({parent_role: parentRole.id}, {where: {id: role.id}})
         })
 
 }

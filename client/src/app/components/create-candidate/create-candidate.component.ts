@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { CandidateService } from '../../services/candidate/candidate.service';
-import { map, mergeMap } from 'rxjs/operators';
-import { RequestPropsService } from '../../services/requestProps/requestProps.service';
+import {CandidateService} from '../../services/candidate/candidate.service';
+import {defaultIfEmpty, map, mergeMap} from 'rxjs/operators';
+import {RequestPropsService} from '../../services/requestProps/requestProps.service';
 import { FormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AlertService } from '../../services/alert/alert.service';
-import { CreateCandidateProps } from './create-candidate-props';
-import { forkJoin } from 'rxjs';
+import {CreateCandidateProps} from './create-candidate-props';
+import {forkJoin, pipe} from 'rxjs';
 
 @Component({
   selector: 'app-create-candidate',
@@ -55,7 +55,11 @@ export class CreateCandidateComponent implements OnInit {
       if (this.properties.createForm.value.profiles.length > 0) {
         body.profiles = this.properties.createForm.value.profiles;
       }
-      this.candidateService.addCandidate(body)
+      /*
+        .pipe(mergeMap(dao =>
+      forkJoin(this.getLanguagesObservableArray(dao.id)).pipe(defaultIfEmpty(null))))
+         */
+      /*
         .pipe(mergeMap(dao => {
           if (body.profiles) {
             const postProfilesRequests = this.candidateService.addCandidateProfiles(body, dao.id);
@@ -63,10 +67,17 @@ export class CreateCandidateComponent implements OnInit {
               return dao;
             }));
           }
-        })).subscribe((res) => {
-        this.alertService.success('Candidate added to the system');
-        this.router.navigate(['/candidates', res.id]);
-      });
+        }))
+       */
+      this.candidateService.addCandidate(body)
+        .pipe(mergeMap(dao =>
+          forkJoin(body.profiles ? this.candidateService.addCandidateProfiles(body, dao.id) : [])
+            .pipe(defaultIfEmpty(null))
+            .pipe(map(() => dao))))
+        .subscribe((res) => {
+          this.alertService.success('Candidate added to the system');
+          this.router.navigate(['/candidates', res.id]);
+        });
     }
   }
 }

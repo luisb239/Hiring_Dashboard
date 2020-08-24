@@ -2,5 +2,5 @@
 
 module.exports = {
     table: 'months',
-    month: 'month_name',
+    targetMonth: 'month_name',
 }

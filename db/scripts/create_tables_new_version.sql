@@ -125,6 +125,7 @@ cv BYTEA NULL,
 cv_mime_type VARCHAR NULL,
 cv_filename VARCHAR NULL,
 cv_encoding VARCHAR NULL,
+cv_version_id VARCHAR NULL,
 temp TIMESTAMP NOT NULL,
 PRIMARY KEY (candidate_id)	
 );

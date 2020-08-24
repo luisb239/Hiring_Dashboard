@@ -30,8 +30,7 @@ export class AllRequestsComponent implements OnInit, AfterViewInit {
     private router: Router,
     private requestService: RequestService,
     private reqPropsService: RequestPropsService,
-    private workflowService: WorkflowService,
-    private alertService: AlertService) {
+    private workflowService: WorkflowService) {
   }
 
   ngOnInit(): void {
@@ -102,8 +101,14 @@ export class AllRequestsComponent implements OnInit, AfterViewInit {
       .subscribe(result => this.properties.workflows = result);
 
     this.reqPropsService.getTargetDates()
-      .pipe(map(dao => dao.months.map(m => m.month)))
-      .subscribe(result => this.properties.targetDates = result);
+      .pipe(map(dao => {
+        console.log(dao);
+        return dao.months.map(m => m.month);
+      }))
+      .subscribe(result => {
+        console.log(result);
+        this.properties.targetDates = result;
+      });
   }
 
   onSubmit() {
@@ -125,7 +130,7 @@ export class AllRequestsComponent implements OnInit, AfterViewInit {
       project: this.properties.formGroup.value.project,
       profile: this.properties.formGroup.value.profile,
       workflow: this.properties.formGroup.value.workflow,
-      month: this.properties.formGroup.value.month,
+      targetDate: this.properties.formGroup.value.month,
       minQuantity: this.properties.formGroup.value.quantityValues[0],
       maxQuantity: this.properties.formGroup.value.quantityValues[1],
       minProgress: this.properties.formGroup.value.progressValues[0],
