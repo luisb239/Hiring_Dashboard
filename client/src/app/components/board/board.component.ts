@@ -65,7 +65,7 @@ export class BoardComponent implements OnInit {
             });
         });
         request.placedCandidates = dao.processes.filter(proc => proc.status === 'Placed').length || 0;
-        this.properties.timestampDictionary[request.id] = moment().format('YYYY-MM-DDTHH:mm:ss.SSS');
+        this.properties.timestampDictionary[request.id] = moment().utc().format('YYYY-MM-DDTHH:mm:ss.SSS');
       });
   }
 
@@ -155,7 +155,7 @@ export class BoardComponent implements OnInit {
           this.properties.requests.push(new RequestList(filteredRequest.id, filteredRequest.workflow, filteredRequest.progress,
             filteredRequest.state, filteredRequest.description, filteredRequest.quantity));
           this.properties.requests.forEach(request =>
-            this.properties.timestampDictionary[request.id] = moment().format('YYYY-MM-DDTHH:mm:ss.SSS'));
+            this.properties.timestampDictionary[request.id] = moment().utc().format('YYYY-MM-DDTHH:mm:ss.SSS'));
           this.properties.workflows = [];
           this.properties.workflows.push(new Workflow(filteredRequest.workflow));
           this.properties.workflows.forEach(workflow => {
@@ -181,7 +181,7 @@ export class BoardComponent implements OnInit {
             .map(r => new RequestList(r.id, r.workflow, r.progress,
               r.state, r.description, r.quantity));
           this.properties.requests.forEach(request =>
-            this.properties.timestampDictionary[request.id] = moment().format('YYYY-MM-DDTHH:mm:ss.SSS'));
+            this.properties.timestampDictionary[request.id] = moment().utc().format('YYYY-MM-DDTHH:mm:ss.SSS'));
           this.properties.workflows = [];
           this.properties.workflows.push(new Workflow(this.properties.requests[0].workflow));
           this.workflowService.getWorkflowByName(this.properties.workflows[0].workflow)
@@ -220,7 +220,7 @@ export class BoardComponent implements OnInit {
       result => {
         this.properties.requests = result.requests;
         this.properties.requests.forEach(request =>
-          this.properties.timestampDictionary[request.id] = moment().format('YYYY-MM-DDTHH:mm:ss.SSS'));
+          this.properties.timestampDictionary[request.id] = moment().utc().format('YYYY-MM-DDTHH:mm:ss.SSS'));
         this.properties.workflows = result.workflows;
         this.properties.allRequests = this.properties.requests.map(r => r.description);
         this.properties.allWorkflows = this.properties.workflows.map(w => w.workflow);

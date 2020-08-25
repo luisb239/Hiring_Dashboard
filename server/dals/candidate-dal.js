@@ -64,9 +64,9 @@ module.exports = (query) => {
     }
 
     async function createCandidate({
-                                       name, available = true, profileInfo = null,
-                                       cvBuffer, cvMimeType, cvFileName, cvEncoding, cvVersionId, timestamp = new Date()
-                                   }) {
+        name, available = true, profileInfo = null,
+        cvBuffer, cvMimeType, cvFileName, cvEncoding, cvVersionId, timestamp = new Date()
+    }) {
         const statement = {
             name: 'Create Candidate',
             text:
@@ -84,9 +84,8 @@ module.exports = (query) => {
 
 
     async function updateCandidate({
-                                       id, cvFileName, cvMimeType, cvBuffer,
-                                       cvEncoding, cvVersionId, profileInfo, available, timestamp, client, newTimestamp = new Date()
-                                   }) {
+        id, cvFileName, cvMimeType, cvBuffer,
+        cvEncoding, cvVersionId, profileInfo, available, timestamp, client }) {
         const statement = {
             name: 'Update Candidate',
             text:
@@ -98,10 +97,10 @@ module.exports = (query) => {
                 `${candidate.cvVersionId} = COALESCE($5, ${candidate.cvVersionId}), ` +
                 `${candidate.profileInfo} = COALESCE($6, ${candidate.profileInfo}), ` +
                 `${candidate.available} = COALESCE($7, ${candidate.available}), ` +
-                `${candidate.timestamp} = $10 ` +
+                `${candidate.timestamp} = CURRENT_TIMESTAMP ` +
                 `WHERE ${candidate.id} = $8 AND ${candidate.timestamp} < $9;`,
             values: [cvBuffer, cvFileName, cvMimeType, cvEncoding, cvVersionId, profileInfo, available,
-                id, timestamp, newTimestamp]
+                id, timestamp]
         }
 
         const res = await query(statement, client)

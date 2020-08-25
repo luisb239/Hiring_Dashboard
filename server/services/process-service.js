@@ -85,7 +85,7 @@ module.exports = (requestDb, candidateDb, processDb, phaseDb, infoDb, processUna
                                      unavailableReason, infoArray, timestamp
                                  }) {
         await transaction(async (client) => {
-            const rowCount = await processDb.updateProcess({requestId, candidateId, timestamp, client})
+            const rowCount = await processDb.updateProcess({requestId, candidateId, timestamp, status, client})
             if (rowCount === 0)
                 throw new AppError(errors.conflict,
                     "Process not updated",
@@ -93,10 +93,6 @@ module.exports = (requestDb, candidateDb, processDb, phaseDb, infoDb, processUna
 
             if (newPhase) {
                 await updateProcessCurrentPhase({requestId, candidateId, newPhase, client})
-            }
-
-            if (status) {
-                await updateStatus({requestId, candidateId, status, client, timestamp})
             }
 
             if (unavailableReason) {
@@ -171,7 +167,7 @@ module.exports = (requestDb, candidateDb, processDb, phaseDb, infoDb, processUna
             if (oldStatus.status === 'Placed' || status === 'Placed') {
                 const rowCount = await updateRequestProgress({requestId, client, timestamp})
                 if (rowCount === 0)
-                    throw new AppError(errors.preconditionFailed,
+                    throw new AppError(errors.conflict,
                         "Process not updated",
                         `Update timestamp was older than the latest timestamp.`)
             }
@@ -342,7 +338,7 @@ module.exports = (requestDb, candidateDb, processDb, phaseDb, infoDb, processUna
                 candidateId: candidateId,
                 timestamp: timestamp, client: client
             })) {
-                throw new AppError(errors.preconditionFailed,
+                throw new AppError(errors.conflict,
                     'Could not Update Process Notes',
                     'Timestamp of update is older than db timestamp')
             }

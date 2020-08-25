@@ -45,7 +45,7 @@ export class CandidateDetailsComponent implements OnInit {
     // this.properties.conflict = false;
     this.candidateService.getCandidateById(this.properties.candidateId)
       .subscribe(dao => {
-        this.properties.timestamp = moment().format('YYYY-MM-DDTHH:mm:ss.SSS');
+        this.properties.timestamp = moment().utc().format('YYYY-MM-DDTHH:mm:ss.SSS');
         const result = dao.candidate;
         this.properties.candidate = new Candidate(result.name,
           result.id,
@@ -170,7 +170,7 @@ export class CandidateDetailsComponent implements OnInit {
       .subscribe(candidateDao => {
         this.properties.newCandidate = null;
         const result = candidateDao.candidate;
-        this.properties.timestamp = moment().format('YYYY-MM-DDTHH:mm:ss.SSS');
+        this.properties.timestamp = moment().utc().format('YYYY-MM-DDTHH:mm:ss.SSS');
         const cand = new Candidate(result.name,
           result.id,
           result.profileInfo,

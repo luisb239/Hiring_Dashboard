@@ -292,7 +292,7 @@ export class RequestDetailComponent implements OnInit {
         this.properties.processes = result.processes;
         this.properties.initialMandatoryLanguages = result.mandatory;
         this.properties.initialValuedLanguages = result.valued;
-        this.properties.timestamp = moment().format('YYYY-MM-DDTHH:mm:ss.SSS');
+        this.properties.timestamp = moment().utc().format('YYYY-MM-DDTHH:mm:ss.SSS');
 
         // Get all languages from server
         this.reqPropsService.getRequestLanguages()

@@ -134,7 +134,7 @@ export class PopupComponent implements OnInit, OnDestroy {
 
     this.processService.updateProcess(this.requestId, this.candidateId, body)
       .pipe(map(() => {
-        this.properties.timestamp = moment().format('YYYY-MM-DDTHH:mm:ss.SSS');
+        this.properties.timestamp = moment().utc().format('YYYY-MM-DDTHH:mm:ss.SSS');
         if (this.properties.phase.notes !== this.properties.updateForm.value.phaseNotes) {
           this.processPhaseService.updateProcessPhaseNotes(
             this.requestId,
@@ -201,7 +201,7 @@ export class PopupComponent implements OnInit, OnDestroy {
         dao.candidate.available,
         dao.candidate.cvFileName)))
       .subscribe(result => {
-        this.properties.timestamp = moment().format('YYYY-MM-DDTHH:mm:ss.SSS');
+        this.properties.timestamp = moment().utc().format('YYYY-MM-DDTHH:mm:ss.SSS');
         this.properties.candidate = result;
       }, error => {
         if (error === ErrorType.NOT_FOUND) {
