@@ -9,10 +9,11 @@ import { ProcessService } from '../../services/process/process.service';
 import { CandidateService } from '../../services/candidate/candidate.service';
 import { PhaseService } from '../../services/phase/phase.service';
 import { ProcessPhaseService } from '../../services/process-phase/process-phase.service';
-import { map } from 'rxjs/operators';
+import { map, mergeMap } from 'rxjs/operators';
 import { AlertService } from '../../services/alert/alert.service';
 import { ErrorType } from '../../services/common-error';
 import * as moment from 'moment';
+import { iif } from 'rxjs';
 import { PopupProps } from './popup-props';
 
 @Component({
@@ -133,18 +134,14 @@ export class PopupComponent implements OnInit, OnDestroy {
     body.timestamp = this.properties.timestamp;
 
     this.processService.updateProcess(this.requestId, this.candidateId, body)
-      .pipe(map(() => {
-        this.properties.timestamp = moment().utc().format('YYYY-MM-DDTHH:mm:ss.SSS');
-        if (this.properties.phase.notes !== this.properties.updateForm.value.phaseNotes) {
-          this.processPhaseService.updateProcessPhaseNotes(
-            this.requestId,
-            this.candidateId,
-            this.properties.phase.phase,
-            this.properties.updateForm.value.phaseNotes,
-            this.properties.timestamp).subscribe(() => {
-            });
-        }
-      }))
+      .pipe(mergeMap(res => iif(() => this.properties.phase.notes !== this.properties.updateForm.value.phaseNotes
+        || this.properties.newPhaseNotes && this.properties.newPhaseNotes !== this.properties.updateForm.value.phaseNotes,
+        this.processPhaseService.updateProcessPhaseNotes(
+          this.requestId,
+          this.candidateId,
+          this.properties.phase.phase,
+          this.properties.updateForm.value.phaseNotes,
+          this.properties.timestamp = moment().utc().format('YYYY-MM-DDTHH:mm:ss.SSS')))))
       .subscribe(() => {
         this.alertService.success('Updated Candidate successfully!');
         this.activeModal.close('Close click');
