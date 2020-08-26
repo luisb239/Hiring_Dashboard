@@ -13,6 +13,7 @@ process.env.INSTANCE_CONNECTION_NAME ?
         host: process.env.INSTANCE_CONNECTION_NAME,
         dialect: config.database_opts.sgbd,
         query: {raw: true},
+        logging: false,
         dialectOptions: {
             socketPath: process.env.INSTANCE_CONNECTION_NAME
         }
@@ -21,6 +22,7 @@ process.env.INSTANCE_CONNECTION_NAME ?
     sequelize = new Sequelize(config.database_opts.database, config.database_opts.user, config.database_opts.password, {
         host: config.database_opts.host,
         dialect: config.database_opts.sgbd,
+        logging: false,
         query: {raw: true}
     })
 

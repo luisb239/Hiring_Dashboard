@@ -5,7 +5,7 @@ import {RequestList} from 'src/app/model/request/request-list';
 import {UserRole} from 'src/app/model/user/user-role';
 import {ProcessList} from 'src/app/model/process/process-list';
 import {RequestDetailProps} from './request-detail-props';
-import {defaultIfEmpty, map, mergeMap, switchMap} from 'rxjs/operators';
+import {defaultIfEmpty, map, mergeMap, switchMap, concatMap} from 'rxjs/operators';
 import {FormArray, FormBuilder, FormControl} from '@angular/forms';
 import {AlertService} from '../../services/alert/alert.service';
 import {UserService} from '../../services/user/user.service';
@@ -109,7 +109,7 @@ export class RequestDetailComponent implements OnInit {
     if (this.patchObj && Object.keys(this.patchObj).length) {
       this.patchObj.timestamp = this.properties.timestamp;
       this.requestService.updateRequest(this.properties.requestId, this.patchObj)
-        .pipe(mergeMap(() => this.addAndRemoveLanguages(removeLanguagesObservables, addLanguagesObservables)))
+        .pipe(concatMap(() => this.addAndRemoveLanguages(removeLanguagesObservables, addLanguagesObservables)))
         .subscribe(() => {
           this.patchObj = {};
           this.initialValues = this.properties.updateForm.value;

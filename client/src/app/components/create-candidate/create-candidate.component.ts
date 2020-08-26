@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {CandidateService} from '../../services/candidate/candidate.service';
-import {defaultIfEmpty, map, mergeMap} from 'rxjs/operators';
+import {defaultIfEmpty, map, mergeMap, concatMap} from 'rxjs/operators';
 import {RequestPropsService} from '../../services/requestProps/requestProps.service';
 import { FormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -70,7 +70,7 @@ export class CreateCandidateComponent implements OnInit {
         }))
        */
       this.candidateService.addCandidate(body)
-        .pipe(mergeMap(dao =>
+        .pipe(concatMap(dao =>
           forkJoin(body.profiles ? this.candidateService.addCandidateProfiles(body, dao.id) : [])
             .pipe(defaultIfEmpty(null))
             .pipe(map(() => dao))))
