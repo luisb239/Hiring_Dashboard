@@ -67,10 +67,6 @@ module.exports = function (router, requestsController, processController, valida
         body('profile').exists().withMessage("Request must have a profile"),
         body('workflow').exists().withMessage("Request must have a workflow"),
         body('dateToSendProfile').optional().isAfter().toDate().withMessage("Date to send profile a date be after today"),
-        /*
-        body('mandatoryLanguages').optional().isArray().withMessage("Mandatory Languages must be an array of languages"),
-        body('valuedLanguages').optional().isArray().withMessage("Valued Languages must be an array of languages"),
-        */
     ], handle(requestsController.postRequest))
 
     /**
@@ -114,7 +110,6 @@ module.exports = function (router, requestsController, processController, valida
         verifyIfAuthenticated,
         body('userId').exists().isInt().withMessage("User Id must exist and be of int type"),
         body('roleId').exists().isInt().withMessage("Role Id must exist and be of int type"),
-        body('timestamp').exists().toDate().withMessage("timestamp must exist and must be of date type")
     ], handle(requestsController.addUserToRequest))
 
     // TODO -> DELETE USER FROM REQUEST ENDPOINT MISSING

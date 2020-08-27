@@ -11,8 +11,8 @@ export class PopupProps {
   phase: ProcessPhase;
   candidate: Candidate;
   attributeTemplates: PhaseAttribute[] = [];
-  newStatus: string;
-  newUnavailableReasons: string;
+  /*newStatus: string;
+  newUnavailableReasons: string;*/
   newProcess: Process;
   newPhaseNotes: string;
   newAttributeTemplates: any = {};

@@ -4,7 +4,7 @@ const candidate = require('./dal-schemas/candidate-schema.js')
 const process = require('./dal-schemas/process/process-schema.js')
 const candidateProfiles = require('./dal-schemas/candidate-profile-schema.js')
 
-module.exports = (query) => {
+module.exports = (query, moment) => {
 
     return {
         getCandidates,
@@ -64,18 +64,20 @@ module.exports = (query) => {
     }
 
     async function createCandidate({
-        name, available = true, profileInfo = null,
-        cvBuffer, cvMimeType, cvFileName, cvEncoding, cvVersionId, timestamp = new Date()
-    }) {
+                                       name, available = true, profileInfo = null,
+                                       cvBuffer, cvMimeType, cvFileName, cvEncoding,
+                                       cvVersionId, timestamp = moment.utc().format('YYYY-MM-DDTHH:mm:ss.SSS')
+                                   }) {
         const statement = {
             name: 'Create Candidate',
             text:
                 `INSERT INTO ${candidate.table} ` +
                 `(${candidate.name}, ${candidate.cv}, ${candidate.cvMimeType}, ${candidate.cvFileName}, ` +
-                `${candidate.cvEncoding}, ${candidate.available}, ${candidate.profileInfo}, ${candidate.timestamp}) ` +
-                `VALUES ($1, $2, $3, $4, $5, $6, $7, $8) ` +
+                `${candidate.cvEncoding}, ${candidate.available}, ${candidate.profileInfo}, ` +
+                `${candidate.timestamp}, ${candidate.cvVersionId}) ` +
+                `VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) ` +
                 `RETURNING ${candidate.id};`,
-            values: [name, cvBuffer, cvMimeType, cvFileName, cvEncoding, available, profileInfo, timestamp]
+            values: [name, cvBuffer, cvMimeType, cvFileName, cvEncoding, available, profileInfo, timestamp, cvVersionId]
         }
 
         const result = await query(statement)
@@ -84,8 +86,10 @@ module.exports = (query) => {
 
 
     async function updateCandidate({
-        id, cvFileName, cvMimeType, cvBuffer,
-        cvEncoding, cvVersionId, profileInfo, available, timestamp, client }) {
+                                       id, cvFileName, cvMimeType, cvBuffer,
+                                       cvEncoding, cvVersionId, profileInfo, available, client,
+                                       timestamp, newTimestamp = moment.utc().format('YYYY-MM-DDTHH:mm:ss.SSS')
+                                   }) {
         const statement = {
             name: 'Update Candidate',
             text:
@@ -97,10 +101,10 @@ module.exports = (query) => {
                 `${candidate.cvVersionId} = COALESCE($5, ${candidate.cvVersionId}), ` +
                 `${candidate.profileInfo} = COALESCE($6, ${candidate.profileInfo}), ` +
                 `${candidate.available} = COALESCE($7, ${candidate.available}), ` +
-                `${candidate.timestamp} = CURRENT_TIMESTAMP ` +
+                `${candidate.timestamp} = $10 ` +
                 `WHERE ${candidate.id} = $8 AND ${candidate.timestamp} < $9;`,
             values: [cvBuffer, cvFileName, cvMimeType, cvEncoding, cvVersionId, profileInfo, available,
-                id, timestamp]
+                id, timestamp, newTimestamp]
         }
 
         const res = await query(statement, client)
@@ -111,7 +115,7 @@ module.exports = (query) => {
         const statement = {
             name: 'Get Candidate Cv Info',
             text:
-                `SELECT ${candidate.cv}, ${candidate.cvFileName}, ${candidate.cvMimeType} ` +
+                `SELECT ${candidate.cv}, ${candidate.cvFileName}, ${candidate.cvMimeType}, ${candidate.cvEncoding}, ${candidate.cvVersionId} ` +
                 `FROM ${candidate.table} WHERE ${candidate.id} = $1;`,
             values: [id]
         }

@@ -154,51 +154,6 @@ module.exports = (requestDb, candidateDb, processDb, phaseDb, infoDb, processUna
         }
     }
 
-
-    async function updateStatus({requestId, candidateId, status, client, timestamp}) {
-        const oldStatus = await processDb.getProcessStatus({requestId, candidateId, client})
-        if (oldStatus.status !== status) {
-            const statusRowCount = await processDb.updateProcessStatus({
-                requestId,
-                candidateId,
-                status,
-                client
-            })
-            if (oldStatus.status === 'Placed' || status === 'Placed') {
-                const rowCount = await updateRequestProgress({requestId, client, timestamp})
-                if (rowCount === 0)
-                    throw new AppError(errors.conflict,
-                        "Process not updated",
-                        `Update timestamp was older than the latest timestamp.`)
-            }
-            if (statusRowCount > 0) {
-                const candidate = await candidateDb.getCandidateById({id: candidateId, client})
-                const request = await requestDb.getRequestById({id: requestId, client})
-                await emailService.notifyStatus({
-                    id: requestId,
-                    oldStatus: oldStatus.status,
-                    newStatus: status,
-                    candidate,
-                    request
-                })
-            }
-        }
-    }
-
-    async function updateRequestProgress({requestId, client, timestamp}) {
-        const request = await requestDb.getRequestById({id: requestId, client})
-        const processesStatus = await processDb.getAllProcessesStatusFromRequest({requestId, client})
-        const numberOfPlacedCandidates = processesStatus.filter(status => status.status === 'Placed').length || 0
-        const percentage = numberOfPlacedCandidates * 100 / request.quantity
-        return requestDb.updateRequest({
-            id: requestId,
-            progress: percentage > 100 ? 100 : percentage,
-            client,
-            observedTimestamp: timestamp
-        });
-    }
-
-
     async function updateUnavailableReason({requestId, candidateId, unavailableReason, client}) {
         const currentReason = await processUnavailableReasonDb.getProcessUnavailableReason({
             requestId,
@@ -340,7 +295,7 @@ module.exports = (requestDb, candidateDb, processDb, phaseDb, infoDb, processUna
             })) {
                 throw new AppError(errors.conflict,
                     'Could not Update Process Notes',
-                    'Timestamp of update is older than db timestamp')
+                    'The process notes have already been updated')
             }
         })
     }

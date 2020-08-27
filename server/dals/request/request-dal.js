@@ -8,7 +8,7 @@ const role = require('../dal-schemas/user-roles-schemas/role-schema.js')
 
 const dateFormat = require('dateformat');
 
-module.exports = (query) => {
+module.exports = (query, moment) => {
 
     return {
         getRequests, getRequestById, createRequest,
@@ -73,7 +73,8 @@ module.exports = (query) => {
                                      description = null, quantity = null,
                                      targetDate = null, skill = null, project = null,
                                      profile = null, dateToSendProfile = null, progress = null,
-                                     observedTimestamp, client = null
+                                     observedTimestamp, newTimestamp = moment.utc().format('YYYY-MM-DDTHH:mm:ss.SSS')
+                                     , client = null
                                  }) {
         const statement = {
             name: 'Update Request',
@@ -89,10 +90,10 @@ module.exports = (query) => {
                 `${requestSchema.profile} = COALESCE($9, ${requestSchema.profile}), ` +
                 `${requestSchema.dateToSendProfile} = COALESCE($10, ${requestSchema.dateToSendProfile}), ` +
                 `${requestSchema.progress} = COALESCE($11, ${requestSchema.progress}), ` +
-                `${requestSchema.timestamp} = CURRENT_TIMESTAMP ` +
+                `${requestSchema.timestamp} = $13 ` +
                 `WHERE ${requestSchema.id} = $1 AND ${requestSchema.timestamp} < $12;`,
             values: [id, state, stateCsl, description, quantity, targetDate, skill,
-                project, profile, dateToSendProfile, progress, observedTimestamp]
+                project, profile, dateToSendProfile, progress, observedTimestamp, newTimestamp]
         }
 
         const result = await query(statement, client)
@@ -102,7 +103,7 @@ module.exports = (query) => {
     async function createRequest({
                                      quantity, description, targetDate, state, skill, stateCsl,
                                      project, profile, workflow, dateToSendProfile, progress,
-                                     requestDate = new Date()
+                                     requestDate = moment.utc().format('YYYY-MM-DDTHH:mm:ss.SSS')
                                  }) {
         const statement = {
             name: 'Create Request',
@@ -118,10 +119,6 @@ module.exports = (query) => {
             values: [quantity, description, targetDate, state, skill,
                 stateCsl, project, profile, workflow, dateToSendProfile, requestDate, progress, requestDate]
         }
-
-        // TODO
-        // try catch -> mapear o erro do node pg -> mandar um erro que faça sentido para o alert..
-        // log do erro original -> causa do erro
 
         const result = await query(statement)
         return extractRequest(result.rows[0])
@@ -184,7 +181,7 @@ module.exports = (query) => {
         }
     }
 
-    async function addUserAndRoleToRequest({userId, roleId, requestId}, client) {
+    async function addUserAndRoleToRequest({userId, roleId, requestId}) {
         const statement = {
             name: 'Add user and role to request',
             text:
@@ -194,7 +191,7 @@ module.exports = (query) => {
             values: [userId, roleId, requestId]
         }
 
-        const res = await query(statement, client)
+        const res = await query(statement)
         return res.rowCount;
     }
 

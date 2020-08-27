@@ -106,11 +106,12 @@ export class CandidateService {
     })
       .pipe(map(resp => {
           const filenameStr = 'filename=';
-          const versionIdStr = 'versionId=';
-          const disposition = resp.headers.get('Content-disposition');
+        const versionIdStr = ';versionId=';
+        const disposition = resp.headers.get('Content-disposition');
+        const versionIdIndex = disposition.indexOf(versionIdStr);
           return {
-            filename: disposition.slice(disposition.indexOf(filenameStr) + filenameStr.length),
-            versionId: disposition.slice(disposition.indexOf(versionIdStr) + versionIdStr.length),
+            filename: disposition.slice(disposition.indexOf(filenameStr) + filenameStr.length, versionIdIndex),
+            versionId: disposition.slice(versionIdIndex + versionIdStr.length),
             blob: resp.body
           };
         })

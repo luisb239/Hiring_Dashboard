@@ -5,7 +5,7 @@ import {RequestList} from 'src/app/model/request/request-list';
 import {UserRole} from 'src/app/model/user/user-role';
 import {ProcessList} from 'src/app/model/process/process-list';
 import {RequestDetailProps} from './request-detail-props';
-import {defaultIfEmpty, map, mergeMap, switchMap} from 'rxjs/operators';
+import {concatMap, defaultIfEmpty, map, mergeMap, switchMap, switchMapTo} from 'rxjs/operators';
 import {FormArray, FormBuilder, FormControl} from '@angular/forms';
 import {AlertService} from '../../services/alert/alert.service';
 import {UserService} from '../../services/user/user.service';
@@ -176,41 +176,32 @@ export class RequestDetailComponent implements OnInit {
       .pipe(map(dao => dao.months
         .map(m => m.month)))
       .subscribe(t => this.properties.targetDates = t);
-    // Get all recruiters
-    // Try to pipe this ??
-    // TODO -> THIS IS WRONG, ALL USERS, AND THIS REQUEST USERS IS NOT RIGHT. FIX THIS
-    this.userService.getRoleIdByName('recruiter')
-      .pipe(
-        switchMap(dao => this.userService.getAllUsers(dao.id)),
-        map(dao => {
-          return dao.users.map(user => new User(user.id, user.email));
-        }))
-      .subscribe(recruiters => this.properties.users = recruiters);
   }
 
   onSubmit() {
     const values = this.properties.userForm.value.userIdx;
     this.userService.getRoleIdByName('recruiter')
-      .subscribe(dao => {
-          const roleId = dao.id;
-          values.forEach(idx => {
-            this.requestService.addUser(this.properties.requestId, this.properties.users[idx].userId, roleId, this.properties.timestamp)
-              .subscribe(() => {
-                  this.alertService.success('Recruiters added to this request successfully!');
-                  this.getRequestInfo(this.properties.requestId);
-                }, error => {
-                  if (error === ErrorType.CONFLICT) {
-                    this.alertService.error('The user you were trying to add to the request has already been added.');
-                    this.alertService.info('Refreshing request details...');
-                    this.getRequestInfo(this.properties.requestId);
-                  }
-                }
-              );
-          });
+      .pipe(concatMap(role =>
+        forkJoin(this.getObservables(values, role.id))
+          .pipe(defaultIfEmpty(null))))
+      .subscribe(() => {
+        this.alertService.success('Recruiters added to this request successfully!');
+        this.getRequestInfo(this.properties.requestId);
+      }, error => {
+        if (error === ErrorType.CONFLICT) {
+          this.alertService.error('The user you were trying to add to the request has already been added.');
+          this.alertService.info('Refreshing request details...');
+          this.getRequestInfo(this.properties.requestId);
         }
-      );
+      });
   }
 
+  getObservables(values, roleId: number) {
+    const observables = [];
+    values.forEach(idx =>
+      observables.push(this.requestService.addUser(this.properties.requestId, this.properties.users[idx].userId, roleId)));
+    return observables;
+  }
 
   // Maybe this methods are unnecessary...
   getAvailableStates() {
@@ -293,6 +284,21 @@ export class RequestDetailComponent implements OnInit {
         this.properties.initialMandatoryLanguages = result.mandatory;
         this.properties.initialValuedLanguages = result.valued;
         this.properties.timestamp = moment().utc().format('YYYY-MM-DDTHH:mm:ss.SSS');
+        // Get all recruiters
+        this.userService.getRoleIdByName('recruiter')
+          .pipe(
+            switchMap(dao => this.userService.getAllUsers(dao.id)),
+            map(dao => {
+              const existingUsers = this.properties.userRoles.map(u => u.userId);
+              return dao.users
+                .filter(user => !existingUsers.includes(user.id))
+                .map(user => new User(user.id, user.email));
+            })
+          )
+          .subscribe(users => {
+            this.properties.users = users;
+            console.log(users);
+          });
 
         // Get all languages from server
         this.reqPropsService.getRequestLanguages()

@@ -1,22 +1,22 @@
-import { Component, OnInit } from '@angular/core';
-import { CandidateService } from '../../services/candidate/candidate.service';
-import { Router } from '@angular/router';
-import { Candidate } from 'src/app/model/candidate/candidate';
-import { ProcessService } from '../../services/process/process.service';
-import { Process } from '../../model/process/process';
-import { ProcessPhase } from '../../model/process/process-phase';
-import { RequestService } from '../../services/request/request.service';
-import { Request } from '../../model/request/request';
-import { RequestList } from '../../model/request/request-list';
-import { PhaseInfo } from '../../model/phase/phase-info';
-import { CandidateProcess } from '../../model/candidate/candidate-process';
-import { CandidateDetailsProps } from './candidate-details-props';
-import { map } from 'rxjs/operators';
-import { RequestPropsService } from '../../services/requestProps/requestProps.service';
-import { FormBuilder } from '@angular/forms';
-import { AlertService } from 'src/app/services/alert/alert.service';
-import { Buffer } from 'buffer';
-import { ErrorType } from '../../services/common-error';
+import {Component, OnInit} from '@angular/core';
+import {CandidateService} from '../../services/candidate/candidate.service';
+import {Router} from '@angular/router';
+import {Candidate} from 'src/app/model/candidate/candidate';
+import {ProcessService} from '../../services/process/process.service';
+import {Process} from '../../model/process/process';
+import {ProcessPhase} from '../../model/process/process-phase';
+import {RequestService} from '../../services/request/request.service';
+import {Request} from '../../model/request/request';
+import {RequestList} from '../../model/request/request-list';
+import {PhaseInfo} from '../../model/phase/phase-info';
+import {CandidateProcess} from '../../model/candidate/candidate-process';
+import {CandidateDetailsProps} from './candidate-details-props';
+import {map} from 'rxjs/operators';
+import {RequestPropsService} from '../../services/requestProps/requestProps.service';
+import {FormBuilder} from '@angular/forms';
+import {AlertService} from 'src/app/services/alert/alert.service';
+import {Buffer} from 'buffer';
+import {ErrorType} from '../../services/common-error';
 import * as moment from 'moment';
 
 @Component({
@@ -147,7 +147,7 @@ export class CandidateDetailsComponent implements OnInit {
 
   handleProfileDelete(profile: string) {
     const encodedProfile = Buffer.from(profile, 'binary').toString('base64');
-    this.candidateService.removeCandidateProfile({ id: this.properties.candidateId, profile: encodedProfile })
+    this.candidateService.removeCandidateProfile({id: this.properties.candidateId, profile: encodedProfile})
       .subscribe(() => {
         this.alertService.success('Profile removed successfully');
         this.updateCandidateComponent(false);
@@ -198,7 +198,8 @@ export class CandidateDetailsComponent implements OnInit {
   downloadCv() {
     this.candidateService.downloadCandidateCv(this.properties.candidateId)
       .subscribe(data => {
-        if (data.versionId !== this.properties.candidate.cvVersionId) {
+        if ((!this.properties.newCandidate && data.versionId !== this.properties.candidate.cvVersionId) ||
+          (this.properties.newCandidate && data.versionId !== this.properties.newCandidate.cvVersionId)) {
           // Conflict with the cvs
           this.alertService.error('The cv you are trying to download is outdated. Please refresh the page.');
           return;

@@ -23,7 +23,7 @@
         <div *ngIf="properties.newCandidate && properties.candidate.cv
         && properties.candidate.cvVersionId !== properties.newCandidate.cvVersionId" class="property">
           <h5 class="inline">CV:</h5>
-          <h6 class="inline cv">{{properties.candidate.cv}}</h6>
+          <h6 class="inline outdated-cv">{{properties.candidate.cv}}</h6>
           <p (click)="downloadCv()" class="inline new-value">{{properties.newCandidate.cv}}</p>
         </div>
 

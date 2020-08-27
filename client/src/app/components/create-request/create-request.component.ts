@@ -6,7 +6,7 @@ import {RequestService} from 'src/app/services/request/request.service';
 import {Router} from '@angular/router';
 import {CreateRequestProps} from './create-request-props';
 import {AlertService} from '../../services/alert/alert.service';
-import {defaultIfEmpty, map, mergeMap} from 'rxjs/operators';
+import {concatMap, defaultIfEmpty, map, mergeMap} from 'rxjs/operators';
 import {forkJoin} from 'rxjs';
 
 @Component({
@@ -89,7 +89,7 @@ export class CreateRequestComponent implements OnInit {
     };
 
     this.requestService.createRequest(body)
-      .pipe(mergeMap(dao =>
+      .pipe(concatMap(dao =>
         forkJoin(this.getLanguagesObservableArray(dao.id))
           .pipe(defaultIfEmpty(null))
           .pipe(map(() => dao))))

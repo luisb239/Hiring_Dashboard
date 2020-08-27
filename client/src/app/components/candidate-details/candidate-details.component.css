@@ -4,6 +4,18 @@
 
 .new-value {
   color: red;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.cv {
+  color: dodgerblue;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.outdated-cv {
+  color: dodgerblue;
 }
 
 .mat-select-trigger {
@@ -35,12 +47,6 @@
   margin-bottom: 10px;
 }
 
-.cv {
-  color: dodgerblue;
-  text-decoration: underline;
-  cursor: pointer;
-}
-
 
 .attribute {
   margin-right: 10px;
@@ -50,9 +56,6 @@
   display: block;
 }
 
-.new-value {
-  color: red;
-}
 
 .inline {
   display: inline;

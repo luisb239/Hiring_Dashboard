@@ -1,6 +1,10 @@
 'use strict'
 
-const {Pool} = require('pg')
+const moment = require('moment');
+const {Pool, types} = require('pg')
+
+// Override timestamp conversion to force timestamp to be inserted in UTC
+//types.setTypeParser(1114, str => moment.utc(str).format());
 
 const pool = new Pool()
 
@@ -9,7 +13,7 @@ const DbError = require('./errors/db-access-error.js')
 
 async function query(text, client) {
     try {
-        if(client)
+        if (client)
             return await client.query(text)
         else
             return await pool.query(text)
@@ -59,8 +63,8 @@ function checkAndThrowError(e) {
     } else throw new DbError(errors.typeErrors.internalError)
 }
 
-const request = require('./request/request-dal.js')(query)
-const candidate = require('./candidate-dal.js')(query)
+const request = require('./request/request-dal.js')(query, moment)
+const candidate = require('./candidate-dal.js')(query, moment)
 const skill = require('./request-props-dal/skill-dal.js')(query)
 const state = require('./request-props-dal/state-dal.js')(query)
 const stateCsl = require('./request-props-dal/state-csl-dal.js')(query)
@@ -70,7 +74,7 @@ const language = require('./request-props-dal/language-dal.js')(query)
 const months = require('./request-props-dal/months-dal.js')(query)
 const workflow = require('./request-props-dal/workflow-dal.js')(query)
 const phase = require('./phase-dal.js')(query)
-const process = require('./process/process-dal.js')(query)
+const process = require('./process/process-dal.js')(query, moment)
 const user = require('./users/user-dal.js')(query)
 const role = require('./users/role-dal.js')(query)
 const info = require('./info-dal.js')(query)

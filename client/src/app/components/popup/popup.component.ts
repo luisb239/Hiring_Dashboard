@@ -1,20 +1,20 @@
-import { Component, EventEmitter, Input, OnInit, Output, OnDestroy } from '@angular/core';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { ProcessPhase } from '../../model/process/process-phase';
-import { PhaseAttribute } from '../../model/phase/phase-attribute';
-import { Candidate } from 'src/app/model/candidate/candidate';
-import { Process } from '../../model/process/process';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
-import { ProcessService } from '../../services/process/process.service';
-import { CandidateService } from '../../services/candidate/candidate.service';
-import { PhaseService } from '../../services/phase/phase.service';
-import { ProcessPhaseService } from '../../services/process-phase/process-phase.service';
-import { map, mergeMap } from 'rxjs/operators';
-import { AlertService } from '../../services/alert/alert.service';
-import { ErrorType } from '../../services/common-error';
+import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
+import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
+import {ProcessPhase} from '../../model/process/process-phase';
+import {PhaseAttribute} from '../../model/phase/phase-attribute';
+import {Candidate} from 'src/app/model/candidate/candidate';
+import {Process} from '../../model/process/process';
+import {FormBuilder, FormControl} from '@angular/forms';
+import {ProcessService} from '../../services/process/process.service';
+import {CandidateService} from '../../services/candidate/candidate.service';
+import {PhaseService} from '../../services/phase/phase.service';
+import {ProcessPhaseService} from '../../services/process-phase/process-phase.service';
+import {concatMap, map} from 'rxjs/operators';
+import {AlertService} from '../../services/alert/alert.service';
+import {ErrorType} from '../../services/common-error';
 import * as moment from 'moment';
-import { iif } from 'rxjs';
-import { PopupProps } from './popup-props';
+import {of} from 'rxjs';
+import {PopupProps} from './popup-props';
 
 @Component({
   selector: 'app-popup',
@@ -89,12 +89,12 @@ export class PopupComponent implements OnInit, OnDestroy {
       .subscribe(phaseDao => {
         phaseDao.infos
           .forEach(pi => {
-            const phaseForm = this.properties.updateForm.get(pi.name);
-            if (!phaseForm) {
-              this.properties.updateForm.addControl(pi.name, new FormControl());
-              this.properties.attributeTemplates.push(new PhaseAttribute(pi.name, pi.value.type));
+              const phaseForm = this.properties.updateForm.get(pi.name);
+              if (!phaseForm) {
+                this.properties.updateForm.addControl(pi.name, new FormControl());
+                this.properties.attributeTemplates.push(new PhaseAttribute(pi.name, pi.value.type));
+              }
             }
-          }
           );
 
         this.processService.getProcess(this.requestId, this.candidateId)
@@ -111,19 +111,22 @@ export class PopupComponent implements OnInit, OnDestroy {
   updateCandidate() {
     const attributeArray = [];
     this.properties.attributeTemplates.forEach(att => {
-      const res = this.properties.updateForm.value[att.name];
-      if (res !== null && res !== att.value) {
-        attributeArray.push({ name: att.name, value: res });
+        const res = this.properties.updateForm.value[att.name];
+        const newAttr = this.properties.newAttributeTemplates[att.name];
+        if ((res !== null && res !== att.value) || (res !== null && newAttr && (newAttr !== res))) {
+          attributeArray.push({name: att.name, value: res});
+        }
       }
-    }
     );
     const body: { status?: string, unavailableReason?: string, infos?: any[], timestamp?: string } = {};
 
-    if (this.properties.process.status !== this.properties.updateForm.value.status) {
+    if (this.properties.process.status !== this.properties.updateForm.value.status ||
+      (this.properties.newProcess && this.properties.newProcess.status !== this.properties.process.status)) {
       body.status = this.properties.updateForm.value.status;
     }
 
-    if (this.properties.process.unavailableReason !== this.properties.updateForm.value.unavailableReason) {
+    if (this.properties.process.unavailableReason !== this.properties.updateForm.value.unavailableReason
+      || (this.properties.newProcess && this.properties.newProcess.unavailableReason !== this.properties.process.unavailableReason)) {
       body.unavailableReason = this.properties.updateForm.value.unavailableReason;
     }
 
@@ -134,34 +137,39 @@ export class PopupComponent implements OnInit, OnDestroy {
     body.timestamp = this.properties.timestamp;
 
     this.processService.updateProcess(this.requestId, this.candidateId, body)
-      .pipe(mergeMap(res => iif(() => this.properties.phase.notes !== this.properties.updateForm.value.phaseNotes
-        || this.properties.newPhaseNotes && this.properties.newPhaseNotes !== this.properties.updateForm.value.phaseNotes,
-        this.processPhaseService.updateProcessPhaseNotes(
-          this.requestId,
-          this.candidateId,
-          this.properties.phase.phase,
-          this.properties.updateForm.value.phaseNotes,
-          this.properties.timestamp = moment().utc().format('YYYY-MM-DDTHH:mm:ss.SSS')))))
-      .subscribe(() => {
-        this.alertService.success('Updated Candidate successfully!');
-        this.activeModal.close('Close click');
-      }, error => {
-        if (error === ErrorType.CONFLICT) {
-          this.alertService.error('This process has already been updated.');
-          this.alertService.info('Refreshing process details...');
-          this.alertService.warn('The red value(s) indicates what has been updated by another user.' +
-            ' Merge your information or close this page and overwrite your values.',
-            { autoClose: false, keepAfterRouteChange: false });
-          this.getNewValues();
+      .pipe(concatMap((res) => {
+        if (this.properties.phase.notes !== this.properties.updateForm.value.phaseNotes
+          || (this.properties.newPhaseNotes && this.properties.newPhaseNotes !== this.properties.updateForm.value.phaseNotes)) {
+          return this.processPhaseService.updateProcessPhaseNotes(
+            this.requestId,
+            this.candidateId,
+            this.properties.phase.phase,
+            this.properties.updateForm.value.phaseNotes,
+            this.properties.timestamp = moment().utc().format('YYYY-MM-DDTHH:mm:ss.SSS'));
+        } else {
+          return of(res);
         }
-      }
+      }))
+      .subscribe(() => {
+          this.alertService.success('Updated Candidate successfully!');
+          this.activeModal.close('Close click');
+        }, error => {
+          if (error === ErrorType.CONFLICT) {
+            this.alertService.error('This process has already been updated.');
+            this.alertService.info('Refreshing process details...');
+            this.alertService.warn('The red value(s) indicates what has been updated by another user.' +
+              ' Merge your information or close this page and overwrite your values.',
+              {autoClose: false, keepAfterRouteChange: false});
+            this.getNewValues();
+          }
+        }
       );
   }
 
   downloadCv() {
     this.candidateService.downloadCandidateCv(this.candidateId)
       .subscribe(data => {
-        const blob = new Blob([data], { type: 'application/pdf' });
+        const blob = new Blob([data], {type: 'application/pdf'});
         const downloadURL = window.URL.createObjectURL(blob);
         const link = document.createElement('a');
         link.href = downloadURL;
@@ -207,13 +215,16 @@ export class PopupComponent implements OnInit, OnDestroy {
       });
   }
 
+  isEqualAttributeTemplate(attributeName: string) {
+    const elem = this.properties.attributeTemplates.find(att => att.name === attributeName);
+    return elem.value === this.properties.newAttributeTemplates[attributeName];
+  }
+
   private getNewValues() {
     this.properties.conflict = true;
     this.getCandidateInfo();
     this.processService.getProcess(this.requestId, this.candidateId)
       .subscribe(dao => {
-        this.properties.newStatus = dao.status;
-        this.properties.newUnavailableReasons = dao.unavailableReason;
         this.properties.newProcess = new Process(dao.status, dao.unavailableReason);
 
         const phaseNotes = dao.phases.find(p => p.phase === dao.currentPhase).notes;
@@ -223,8 +234,8 @@ export class PopupComponent implements OnInit, OnDestroy {
             this.properties.newAttributeTemplates = {};
             phaseDao.infos
               .forEach(pi => {
-                this.properties.newAttributeTemplates[pi.name] = new PhaseAttribute(pi.name, pi.value.type);
-              }
+                  this.properties.newAttributeTemplates[pi.name] = new PhaseAttribute(pi.name, pi.value.type);
+                }
               );
             Object.keys(this.properties.newAttributeTemplates)
               .forEach(at => this.properties.newAttributeTemplates[at] = dao.phases
@@ -233,11 +244,5 @@ export class PopupComponent implements OnInit, OnDestroy {
               );
           });
       });
-  }
-
-  isEqualAttributeTemplate(attributeName: string) {
-    const elem = this.properties.attributeTemplates.find(att =>
-      att.name === attributeName);
-    return elem.value === this.properties.newAttributeTemplates[attributeName];
   }
 }

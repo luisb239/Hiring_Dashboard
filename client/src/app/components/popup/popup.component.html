@@ -29,8 +29,9 @@
               <option *ngFor="let status of properties.statusList" [value]="status">{{status}}</option>
             </select>
           </label>
-          <p class="inline new-value" *ngIf="properties.newStatus !== properties.process.status">
-            {{properties.newStatus}}
+          <p *ngIf="properties.newProcess && properties.newProcess.status !== properties.process.status"
+             class="inline new-value">
+            {{properties.newProcess.status}}
           </p>
         </div>
         <div class="property">
@@ -42,8 +43,10 @@
               <option *ngFor="let reason of properties.reasons" [value]="reason">{{reason}}</option>
             </select>
           </label>
-          <p class="inline new-value" *ngIf="properties.newUnavailableReasons !== properties.process.unavailableReason">
-            {{properties.newUnavailableReasons}}
+          <p
+            *ngIf="properties.newProcess && properties.newProcess.unavailableReason !== properties.process.unavailableReason"
+            class="inline new-value">
+            {{properties.newProcess.unavailableReason}}
           </p>
         </div>
         <div class="property">
@@ -51,8 +54,10 @@
           <label>
             <textarea formControlName="phaseNotes" name="phaseNotes" [ngModel]="properties.phase.notes"></textarea>
           </label>
-          <br><p class="inline new-value" *ngIf="properties.newPhaseNotes !== properties.phase.notes">
-            {{properties.newPhaseNotes}}
+          <br>
+          <p class="inline new-value" *ngIf="properties.newPhaseNotes !== properties.phase.notes">
+            {{properties.newPhaseNotes === '' ?
+            '(' + properties.phase.phase + ' notes have been deleted)' : properties.newPhaseNotes}}
           </p>
         </div>
       </div>
@@ -71,7 +76,8 @@
             {{properties.newAttributeTemplates[attribute.name]}}
           </p> -->
           <p class="inline new-value" *ngIf="!isEqualAttributeTemplate(attribute.name)">
-            {{properties.newAttributeTemplates[attribute.name]}}
+            {{properties.newAttributeTemplates[attribute.name] === '' ?
+            '(' + attribute.name + ' has been deleted)' : properties.newAttributeTemplates[attribute.name]}}
           </p>
         </div>
       </div>

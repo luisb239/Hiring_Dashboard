@@ -94,8 +94,7 @@ module.exports = (service) => {
             requestId: req.params.id,
             userId: req.body.userId,
             roleId: req.body.roleId,
-            currentUsername: req.user.username,
-            timestamp: req.body.timestamp
+            currentUsername: req.user.username
         })
 
         res.status(201).send({

@@ -69,8 +69,6 @@ module.exports = (requestDb, processDb, requestLanguagesDb, authModule, candidat
                 "Request not found",
                 `Request with id ${id} does not exist`)
 
-        // TODO -> CALL user_roles_db instead
-        // Get users (and their roles) in current request
         const userRoles = await requestDb.getUserRolesInRequest({requestId: id})
 
         const candidates = await candidateDb.getCandidatesByRequestId({requestId: id});
@@ -127,7 +125,7 @@ module.exports = (requestDb, processDb, requestLanguagesDb, authModule, candidat
                 observedTimestamp: timestamp, client
             })
 
-            if(rowCount === 0)
+            if (rowCount === 0)
                 throw new AppError(errors.conflict,
                     "Request not updated",
                     `Request ${id} has already been updated`)
@@ -151,25 +149,20 @@ module.exports = (requestDb, processDb, requestLanguagesDb, authModule, candidat
         await requestDb.addUserAndRoleToRequest({userId: userId, roleId: userRoleToAddToRequest, requestId: requestId})
     }
 
-    async function addUserToRequest({requestId, userId, roleId, currentUsername, timestamp}) {
-        const success = await transaction(async (client) => {
-            const success = await requestDb.addUserAndRoleToRequest({userId, roleId, requestId}, client)
-            // TODO
-            // throw error, could not add user to request
-            // check reason for failure..
-            // request not found, user not found... other reason..
-            if (!await requestDb.updateRequest({id: requestId, timestamp: timestamp, client})) {
-                // TODO -> could not update request.. request id not found or timestamp
+    async function addUserToRequest({requestId, userId, roleId, currentUsername}) {
+        try {
+            await requestDb.addUserAndRoleToRequest({userId, roleId, requestId})
+        } catch (e) {
+            if (e.error && e.error === dbCommonErrors.detailErrors.uniqueViolation) {
                 throw new AppError(errors.conflict,
-                    'Could not add user to request',
-                    'Update timestamp was older than latest timestamp')
-            } else return success
-        })
-
-        if (success) {
-            const request = await requestDb.getRequestById({id: requestId})
-            await emailService.notifyAssigned({userId, request, currentUsername})
+                    "Could not add user to current request",
+                    `Request ${requestId} already has user ${userId}.`)
+            }
+            throw e;
         }
+
+        const request = await requestDb.getRequestById({id: requestId})
+        await emailService.notifyAssigned({userId, request, currentUsername})
     }
 
     async function addLanguageToRequest({requestId, language, isMandatory}) {
