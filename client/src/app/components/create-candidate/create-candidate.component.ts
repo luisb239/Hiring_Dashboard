@@ -55,20 +55,6 @@ export class CreateCandidateComponent implements OnInit {
       if (this.properties.createForm.value.profiles.length > 0) {
         body.profiles = this.properties.createForm.value.profiles;
       }
-      /*
-        .pipe(mergeMap(dao =>
-      forkJoin(this.getLanguagesObservableArray(dao.id)).pipe(defaultIfEmpty(null))))
-         */
-      /*
-        .pipe(mergeMap(dao => {
-          if (body.profiles) {
-            const postProfilesRequests = this.candidateService.addCandidateProfiles(body, dao.id);
-            return forkJoin(postProfilesRequests).pipe(map(res => {
-              return dao;
-            }));
-          }
-        }))
-       */
       this.candidateService.addCandidate(body)
         .pipe(concatMap(dao =>
           forkJoin(body.profiles ? this.candidateService.addCandidateProfiles(body, dao.id) : [])

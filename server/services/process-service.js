@@ -291,7 +291,8 @@ module.exports = (requestDb, candidateDb, processDb, phaseDb, infoDb, processUna
             if (!await processDb.updateProcess({
                 requestId: requestId,
                 candidateId: candidateId,
-                timestamp: timestamp, client: client
+                timestamp: timestamp,
+                client: client
             })) {
                 throw new AppError(errors.conflict,
                     'Could not Update Process Notes',

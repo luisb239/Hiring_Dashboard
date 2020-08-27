@@ -136,34 +136,41 @@ export class PopupComponent implements OnInit, OnDestroy {
 
     body.timestamp = this.properties.timestamp;
 
-    this.processService.updateProcess(this.requestId, this.candidateId, body)
-      .pipe(concatMap((res) => {
-        if (this.properties.phase.notes !== this.properties.updateForm.value.phaseNotes
-          || (this.properties.newPhaseNotes && this.properties.newPhaseNotes !== this.properties.updateForm.value.phaseNotes)) {
-          return this.processPhaseService.updateProcessPhaseNotes(
-            this.requestId,
-            this.candidateId,
-            this.properties.phase.phase,
-            this.properties.updateForm.value.phaseNotes,
-            this.properties.timestamp = moment().utc().format('YYYY-MM-DDTHH:mm:ss.SSS'));
-        } else {
-          return of(res);
-        }
-      }))
-      .subscribe(() => {
-          this.alertService.success('Updated Candidate successfully!');
-          this.activeModal.close('Close click');
+    this.processService.updateProcess(this.requestId, this.candidateId, body).subscribe(() => {
+      if (this.properties.phase.notes !== this.properties.updateForm.value.phaseNotes
+        || (this.properties.newPhaseNotes && this.properties.newPhaseNotes !== this.properties.updateForm.value.phaseNotes)) {
+        this.processPhaseService.updateProcessPhaseNotes(
+          this.requestId,
+          this.candidateId,
+          this.properties.phase.phase,
+          this.properties.updateForm.value.phaseNotes,
+          this.properties.timestamp = moment().utc().format('YYYY-MM-DDTHH:mm:ss.SSS')).subscribe(() => {
+          this.closeModal();
         }, error => {
-          if (error === ErrorType.CONFLICT) {
-            this.alertService.error('This process has already been updated.');
-            this.alertService.info('Refreshing process details...');
-            this.alertService.warn('The red value(s) indicates what has been updated by another user.' +
-              ' Merge your information or close this page and overwrite your values.',
-              {autoClose: false, keepAfterRouteChange: false});
-            this.getNewValues();
-          }
-        }
-      );
+          this.handleConflict(error);
+        });
+      } else {
+        this.closeModal();
+      }
+    }, error => {
+      this.handleConflict(error);
+    });
+  }
+
+  handleConflict(error) {
+    if (error === ErrorType.CONFLICT) {
+      this.alertService.error('This process note have already been updated.');
+      this.alertService.info('Refreshing process details...');
+      this.alertService.warn('The red value(s) indicates what has been updated by another user.' +
+        ' Merge your information or close this page and overwrite your values.',
+        {autoClose: false, keepAfterRouteChange: false});
+      this.getNewValues();
+    }
+  }
+
+  closeModal() {
+    this.alertService.success('Updated Candidate successfully!');
+    this.activeModal.close('Close click');
   }
 
   downloadCv() {

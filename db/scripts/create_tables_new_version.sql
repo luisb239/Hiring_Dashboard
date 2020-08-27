@@ -1,3 +1,6 @@
+
+SET TIME ZONE 'GMT';
+
 /* User Statistics Configs */
 CREATE TABLE statistics_configs(
 user_id INT,
@@ -71,7 +74,7 @@ request_profile VARCHAR NOT NULL,
 workflow VARCHAR NOT NULL,
 date_to_send_profile DATE NULL,
 progress INT NOT NULL,
-temp TIMESTAMP WITHOUT TIME ZONE NOT NULL,
+temp TIMESTAMP NOT NULL,
 FOREIGN KEY (target_date) REFERENCES months(month_name),
 FOREIGN KEY (request_state) REFERENCES request_state(request_state),
 FOREIGN KEY (request_skill) REFERENCES request_skill(request_skill),
@@ -126,7 +129,7 @@ cv_mime_type VARCHAR NULL,
 cv_filename VARCHAR NULL,
 cv_encoding VARCHAR NULL,
 cv_version_id VARCHAR NULL,
-temp TIMESTAMP WITHOUT TIME ZONE NOT NULL,
+temp TIMESTAMP NOT NULL,
 PRIMARY KEY (candidate_id)	
 );
 
@@ -138,7 +141,7 @@ CREATE TABLE process(
 request_id INT,
 candidate_id INT,
 status VARCHAR,
-temp TIMESTAMP WITHOUT TIME ZONE NOT NULL,
+temp TIMESTAMP NOT NULL,
 FOREIGN KEY (request_id) REFERENCES request(request_id),
 FOREIGN KEY (candidate_id) REFERENCES candidate(candidate_id),
 FOREIGN KEY (status) REFERENCES process_status(status),

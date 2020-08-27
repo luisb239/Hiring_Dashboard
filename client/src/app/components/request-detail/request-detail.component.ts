@@ -109,7 +109,7 @@ export class RequestDetailComponent implements OnInit {
     if (this.patchObj && Object.keys(this.patchObj).length) {
       this.patchObj.timestamp = this.properties.timestamp;
       this.requestService.updateRequest(this.properties.requestId, this.patchObj)
-        .pipe(mergeMap(() => this.addAndRemoveLanguages(removeLanguagesObservables, addLanguagesObservables)))
+        .pipe(concatMap(() => this.addAndRemoveLanguages(removeLanguagesObservables, addLanguagesObservables)))
         .subscribe(() => {
           this.patchObj = {};
           this.initialValues = this.properties.updateForm.value;
@@ -142,7 +142,8 @@ export class RequestDetailComponent implements OnInit {
     return forkJoin(languagesToRemove)
       .pipe(
         defaultIfEmpty(null),
-        mergeMap(() => forkJoin(languagesToAdd).pipe(defaultIfEmpty(null))));
+        concatMap(() => forkJoin(languagesToAdd)
+          .pipe(defaultIfEmpty(null))));
   }
 
   getRequestProperties() {
@@ -297,7 +298,6 @@ export class RequestDetailComponent implements OnInit {
           )
           .subscribe(users => {
             this.properties.users = users;
-            console.log(users);
           });
 
         // Get all languages from server
