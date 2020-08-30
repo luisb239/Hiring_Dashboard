@@ -8,7 +8,7 @@
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-      <div *ngIf="!this.authService.getSessionFromStorage(); else loggedIn">
+      <div *ngIf="!this.authService.currentUserId; else loggedIn">
         <ul class="navbar-nav">
           <li class="nav-item">
             <a [routerLinkActive]="['active']" [routerLink]="['/home']" class=" nav-link">
@@ -38,8 +38,8 @@
               <a [routerLinkActive]="['active']" [routerLink]="['/all-requests']" class="dropdown-item">
                 All Requests
               </a>
-              <a *ngIf='userRoles && authService.isJobOwner()' [routerLinkActive]="['active']"
-                [routerLink]="['/create-request']" class="dropdown-item">
+              <a *ngIf='authService.isJobOwner()' [routerLinkActive]="['active']"
+                 [routerLink]="['/create-request']" class="dropdown-item">
                 Create Request
               </a>
             </div>
@@ -53,8 +53,8 @@
               <a [routerLinkActive]="['active']" [routerLink]="['/search-candidate']" class="dropdown-item">
                 Search Candidates
               </a>
-              <a *ngIf='userRoles && authService.isRecruiter()' [routerLinkActive]="['active']"
-                [routerLink]="['/create-candidate']" class="dropdown-item">
+              <a *ngIf='authService.isRecruiter()' [routerLinkActive]="['active']"
+                 [routerLink]="['/create-candidate']" class="dropdown-item">
                 Create Candidate
               </a>
             </div>
