@@ -5,7 +5,7 @@ import {RequestList} from 'src/app/model/request/request-list';
 import {UserRole} from 'src/app/model/user/user-role';
 import {ProcessList} from 'src/app/model/process/process-list';
 import {RequestDetailProps} from './request-detail-props';
-import {concatMap, defaultIfEmpty, map, mergeMap, switchMap, switchMapTo} from 'rxjs/operators';
+import {concatMap, defaultIfEmpty, map, switchMap} from 'rxjs/operators';
 import {FormArray, FormBuilder, FormControl} from '@angular/forms';
 import {AlertService} from '../../services/alert/alert.service';
 import {UserService} from '../../services/user/user.service';
@@ -284,7 +284,7 @@ export class RequestDetailComponent implements OnInit {
         this.properties.processes = result.processes;
         this.properties.initialMandatoryLanguages = result.mandatory;
         this.properties.initialValuedLanguages = result.valued;
-        this.properties.timestamp = moment().utc().format('YYYY-MM-DDTHH:mm:ss.SSS');
+        this.properties.timestamp = moment.utc().format('YYYY-MM-DDTHH:mm:ss.SSS');
         // Get all recruiters
         this.userService.getRoleIdByName('recruiter')
           .pipe(

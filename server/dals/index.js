@@ -1,7 +1,7 @@
 'use strict'
 
 const moment = require('moment');
-const {Pool, types} = require('pg')
+const {Pool} = require('pg')
 
 // Override timestamp conversion to force timestamp to be inserted in UTC
 //types.setTypeParser(1114, str => moment.utc(str).format());

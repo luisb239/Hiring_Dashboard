@@ -13,7 +13,6 @@ import {concatMap, map} from 'rxjs/operators';
 import {AlertService} from '../../services/alert/alert.service';
 import {ErrorType} from '../../services/common-error';
 import * as moment from 'moment';
-import {of} from 'rxjs';
 import {PopupProps} from './popup-props';
 
 @Component({
@@ -89,21 +88,26 @@ export class PopupComponent implements OnInit, OnDestroy {
       .subscribe(phaseDao => {
         phaseDao.infos
           .forEach(pi => {
-              const phaseForm = this.properties.updateForm.get(pi.name);
-              if (!phaseForm) {
-                this.properties.updateForm.addControl(pi.name, new FormControl());
-                this.properties.attributeTemplates.push(new PhaseAttribute(pi.name, pi.value.type));
-              }
-            }
-          );
+            this.properties.updateForm.addControl(pi.name, new FormControl());
+            this.properties.attributeTemplates.push(new PhaseAttribute(pi.name, pi.value.type));
+          });
 
         this.processService.getProcess(this.requestId, this.candidateId)
           .subscribe(processDao => {
-            this.properties.attributeTemplates
-              .forEach(at => at.value = processDao.phases
-                .find(phase => phase.phase === this.phaseName).infos
-                .find(i => i.name === at.name).value
-              );
+            const phase = processDao.phases
+              .find(ph => ph.phase === this.phaseName);
+            if (!phase) {
+              return;
+            }
+            const phaseInfos = phase.infos;
+            this.properties.attributeTemplates.forEach(at => {
+              const info = phaseInfos.find(i => i.name === at.name);
+              if (!info) {
+                return;
+              }
+              at.value = info.value;
+              this.properties.updateForm.get(at.name).setValue(at.value);
+            });
           });
       });
   }
@@ -139,12 +143,14 @@ export class PopupComponent implements OnInit, OnDestroy {
     this.processService.updateProcess(this.requestId, this.candidateId, body).subscribe(() => {
       if (this.properties.phase.notes !== this.properties.updateForm.value.phaseNotes
         || (this.properties.newPhaseNotes && this.properties.newPhaseNotes !== this.properties.updateForm.value.phaseNotes)) {
+        this.properties.timestamp = moment.utc().format('YYYY-MM-DDTHH:mm:ss.SSS');
         this.processPhaseService.updateProcessPhaseNotes(
           this.requestId,
           this.candidateId,
           this.properties.phase.phase,
           this.properties.updateForm.value.phaseNotes,
-          this.properties.timestamp = moment().utc().format('YYYY-MM-DDTHH:mm:ss.SSS')).subscribe(() => {
+          this.properties.timestamp
+        ).subscribe(() => {
           this.closeModal();
         }, error => {
           this.handleConflict(error);
@@ -213,7 +219,7 @@ export class PopupComponent implements OnInit, OnDestroy {
         dao.candidate.available,
         dao.candidate.cvFileName)))
       .subscribe(result => {
-        this.properties.timestamp = moment().utc().format('YYYY-MM-DDTHH:mm:ss.SSS');
+        this.properties.timestamp = moment.utc().format('YYYY-MM-DDTHH:mm:ss.SSS');
         this.properties.candidate = result;
       }, error => {
         if (error === ErrorType.NOT_FOUND) {

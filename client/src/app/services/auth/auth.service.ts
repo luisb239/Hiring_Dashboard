@@ -15,19 +15,24 @@ const httpOptions = {
 })
 export class AuthService {
 
+  public userId: BehaviorSubject<number>;
   public userRoles: BehaviorSubject<Role[]>;
   private authUrl = `/hd/auth`;
   public azureAuthenticationUrl = `${this.authUrl}/azure`;
   private authSession = `${this.authUrl}/session`;
   private logoutUrl = `${this.authUrl}/logout`;
-  private authKey = 'auth';
 
   constructor(private http: HttpClient) {
     this.userRoles = new BehaviorSubject<Role[]>([]);
+    this.userId = new BehaviorSubject<number>(null);
   }
 
   public get currentUserRoles(): Role[] {
     return this.userRoles.value;
+  }
+
+  public get currentUserId(): number {
+    return this.userId.value;
   }
 
   // Get current session
@@ -38,22 +43,6 @@ export class AuthService {
   // Logout current user
   logout() {
     return this.http.post<Session>(this.logoutUrl, null);
-  }
-
-  // Save session auth in session storage
-  setSessionInStorage(auth: boolean) {
-    localStorage.setItem(this.authKey, String(auth));
-  }
-
-  // TODO -> LOCAL STORAGE NO LONGER NECESSARY -> WE ARE BETTER THAN THAT
-  // Get session auth from session storage
-  getSessionFromStorage(): boolean {
-    return localStorage.getItem(this.authKey) === 'true';
-  }
-
-  // Clear session auth
-  clearSessionFromStorage() {
-    localStorage.removeItem(this.authKey);
   }
 
   isRecruiter() {

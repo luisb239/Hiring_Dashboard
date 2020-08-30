@@ -19,7 +19,7 @@ export class HttpErrorInterceptor implements HttpInterceptor {
         catchError((error: HttpErrorResponse) => {
           if (error.status === 401) {
             this.alert.error('Your session has expired. Please log in.');
-            this.authService.clearSessionFromStorage();
+            this.authService.userId.next(null);
             this.router.navigate(['/home']);
           } else {
             let errorMessage;

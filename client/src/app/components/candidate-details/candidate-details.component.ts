@@ -42,10 +42,9 @@ export class CandidateDetailsComponent implements OnInit {
   ngOnInit(): void {
     this.properties.candidateId = +(history.state.candidateId || this.router.url.split('/')[2]);
     this.properties.requestId = history.state.requestId ? +history.state.requestId : undefined;
-    // this.properties.conflict = false;
     this.candidateService.getCandidateById(this.properties.candidateId)
       .subscribe(dao => {
-        this.properties.timestamp = moment().utc().format('YYYY-MM-DDTHH:mm:ss.SSS');
+        this.properties.timestamp = moment.utc().format('YYYY-MM-DDTHH:mm:ss.SSS');
         const result = dao.candidate;
         this.properties.candidate = new Candidate(result.name,
           result.id,
@@ -170,7 +169,7 @@ export class CandidateDetailsComponent implements OnInit {
       .subscribe(candidateDao => {
         this.properties.newCandidate = null;
         const result = candidateDao.candidate;
-        this.properties.timestamp = moment().utc().format('YYYY-MM-DDTHH:mm:ss.SSS');
+        this.properties.timestamp = moment.utc().format('YYYY-MM-DDTHH:mm:ss.SSS');
         const cand = new Candidate(result.name,
           result.id,
           result.profileInfo,
@@ -184,10 +183,6 @@ export class CandidateDetailsComponent implements OnInit {
         } else {
           this.properties.candidate = cand;
         }
-        /* if (this.properties.newCandidate.profileInfo &&
-          this.properties.newCandidate.profileInfo !== this.properties.candidate.profileInfo) {
-          this.properties.conflict = true;
-        } */
         this.getRequestProfiles();
         this.properties.infoForm.setValue(this.properties.candidate.profileInfo
           ? this.properties.candidate.profileInfo : '');
