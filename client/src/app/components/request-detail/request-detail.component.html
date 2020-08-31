@@ -3,7 +3,7 @@
     <div *ngIf="properties.requestList">
       <div class="row">
         <div class='col'>
-          <div id='Request'>
+          <div class='Request'>
             <form [formGroup]="properties.updateForm" (submit)="onUpdate()">
               <ul class="list-group list-group-flush">
                 <li class="list-group-item">
@@ -51,6 +51,14 @@
                     <input type="number" min="1" formControlName="quantity" [value]="properties.requestList.quantity">
                   </label>
                 </li>
+              </ul>
+            </form>
+          </div>
+        </div>
+        <div class='col'>
+          <div class="Request">
+            <form [formGroup]="properties.updateForm" (submit)="onUpdate()">
+              <ul class="list-group list-group-flush">
                 <li class="list-group-item">
                   <h5>Skill Center</h5>
                   <label>
@@ -175,8 +183,6 @@
             </table>
             <button type="submit" class="btn btn-primary add">Add Recruiter</button>
           </form>
-        </div>
-        <div class='col'>
           <div class='Candidates'>
             <h3>Candidates</h3>
             <table class="table">
