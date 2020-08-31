@@ -1,13 +1,6 @@
 <div class="table-responsive-xl" id="root">
-  <!-- <button class="btn btn-success m-1" (click)="alertService.success('Success!!', options)">Success</button>
-  <button class="btn btn-danger m-1" (click)="alertService.error('Error :(', options)">Error</button>
-  <button class="btn btn-info m-1" (click)="alertService.info('Some info....', options)">Info</button>
-  <button class="btn btn-warning m-1" (click)="alertService.warn('Warning: ...', options)">Warn</button>
-  <button class="btn btn-outline-dark m-1" (click)="alertService.clear()">Clear</button> -->
   <div id="box">
     <div *ngIf="properties.candidate" id="props">
-      <!-- <p class="new-value" *ngIf="properties.conflict">The red value indicates the new profile information written by
-        another user.<br>Merge your information or refresh this page to override your information.</p> -->
       <form [formGroup]="properties.updateForm" (ngSubmit)='onSubmit()'>
         <h1>{{properties.candidate.name}}</h1>
         <div *ngIf="properties.candidate.cv && !properties.newCandidate" class="property">
@@ -113,135 +106,37 @@
         </button>
       </form>
     </div>
-    <div class="procs" *ngIf="properties.requestId && properties.currentRequest && properties.currentProcess">
-      <h3 id="current">Current Process</h3>
-      <table>
-        <caption style="display: none">Current Processes</caption>
-        <tbody>
-          <tr>
-            <th id="non-visible1"></th>
-          </tr>
-          <tr>
-            <td [colSpan]="properties.currentProcess.phases.length">
-              <h5>{{properties.currentRequest.request.description}}</h5>
-            </td>
-          </tr>
-          <tr>
-            <td [colSpan]="properties.currentProcess.phases.length">
-              <div>
-                <h5 class="inline">Status:</h5>
-                <p class="inline">{{properties.currentProcess.status}}</p>
-              </div>
-            </td>
-          </tr>
-          <tr *ngIf="properties.currentProcess.unavailableReason">
-            <td [colSpan]="properties.currentProcess.phases.length">
-              <div>
-                <h5 class="inline">Unavailable Reason:</h5>
-                <p class="inline">{{properties.currentProcess.unavailableReason}}</p>
-              </div>
-            </td>
-          </tr>
-          <tr class="end-row">
-            <td *ngFor="let phase of properties.currentProcess.phases">
-              <div class="attribute">
-                <h5>{{phase.phase}}</h5>
-                <div class="attribute-info">
-                  <h6 class="inline">Notes:</h6>
-                  <p class="inline">{{phase.notes}}</p>
-                </div>
-                <div class="attribute-info" *ngFor="let info of phase.infos">
-                  <h6 class="inline">{{info.name}}:</h6>
-                  <p class="inline">{{info.value}}</p>
-                </div>
-              </div>
-            </td>
-            <td>
-          </tr>
-        </tbody>
-      </table>
-      <h5 class="older" *ngIf="properties.allProcesses.length === 0">There are no other processes.</h5>
-      <div *ngIf="properties.allRequests.length > 0 && properties.allProcesses.length > 0" class="older">
-        <h3>Other Processes</h3>
-        <table *ngFor="let process of properties.allProcesses; index as i">
-          <caption style="display: none">Other Processes</caption>
-          <tbody>
-            <tr>
-              <th id="non-visible2"></th>
-            </tr>
-            <tr>
-              <td [colSpan]="process.phases.length">
-                <h5>{{properties.allRequests[i].request.description}}</h5>
-              </td>
-            </tr>
-            <tr>
-              <td [colSpan]="process.phases.length">
-                <div>
-                  <h5 class="inline">Status:</h5>
-                  <p class="inline">{{process.status}}</p>
-                </div>
-              </td>
-            </tr>
-            <tr *ngIf="process.unavailableReason">
-              <td [colSpan]="process.phases.length">
-                <div>
-                  <h5 class="inline">Unavailable Reason:</h5>
-                  <p class="inline">{{process.unavailableReason}}</p>
-                </div>
-              </td>
-            </tr>
-            <tr class="end-row">
-              <td *ngFor="let phase of process.phases">
-                <div class="attribute">
-                  <h5>{{phase.phase}}</h5>
-                  <div class="attribute-info">
-                    <h6 class="inline">Notes:</h6>
-                    <p class="inline">{{phase.notes}}</p>
-                  </div>
-                  <div class="attribute-info" *ngFor="let info of phase.infos">
-                    <h6 class="inline">{{info.name}}:</h6>
-                    <p class="inline">{{info.value}}</p>
-                  </div>
-                </div>
-              </td>
-              <td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-    <div class="procs" *ngIf="!properties.requestId && properties.allProcesses.length > 0 &&
-      properties.allProcesses.length === properties.allRequests.length">
+    <div class="procs" *ngIf="hasProcesses()">
       <h3>All processes</h3>
-      <table *ngFor="let process of properties.allProcesses; index as i">
+      <table *ngFor="let key of properties.allProcessesKeys;">
         <caption style="display: none">All Processes</caption>
         <tbody>
           <tr>
             <th id="non-visible3"></th>
           </tr>
           <tr>
-            <td [colSpan]="process.phases.length">
-              <h5>{{properties.allRequests[i].request.description}}</h5>
+            <td [colSpan]="properties.allProcesses[key].phases.length">
+              <h5>{{properties.allRequests[key].request.description}}</h5>
             </td>
           </tr>
           <tr>
-            <td [colSpan]="process.phases.length">
+            <td [colSpan]="properties.allProcesses[key].phases.length">
               <div>
                 <h5 class="inline">Status:</h5>
-                <p class="inline">{{process.status}}</p>
+                <p class="inline">{{properties.allProcesses[key].status}}</p>
               </div>
             </td>
           </tr>
-          <tr *ngIf="process.unavailableReason">
-            <td [colSpan]="process.phases.length">
+          <tr *ngIf="properties.allProcesses[key].unavailableReason">
+            <td [colSpan]="properties.allProcesses[key].phases.length">
               <div>
                 <h5 class="inline">Unavailable Reason:</h5>
-                <p class="inline">{{process.unavailableReason}}</p>
+                <p class="inline">{{properties.allProcesses[key].unavailableReason}}</p>
               </div>
             </td>
           </tr>
           <tr class="end-row">
-            <td *ngFor="let phase of process.phases">
+            <td *ngFor="let phase of properties.allProcesses[key].phases">
               <div class="attribute">
                 <h5>{{phase.phase}}</h5>
                 <div class="attribute-info">
@@ -254,12 +149,11 @@
                 </div>
               </div>
             </td>
-            <td>
           </tr>
         </tbody>
       </table>
     </div>
-    <div class="procs" *ngIf="!properties.requestId && properties.allProcesses.length === 0">
+    <div class="procs" *ngIf="!hasProcesses()">
       <h3>There are no processes.</h3>
     </div>
   </div>

@@ -41,7 +41,6 @@ export class CandidateDetailsComponent implements OnInit {
 
   ngOnInit(): void {
     this.properties.candidateId = +(history.state.candidateId || this.router.url.split('/')[2]);
-    this.properties.requestId = history.state.requestId ? +history.state.requestId : undefined;
     this.candidateService.getCandidateById(this.properties.candidateId)
       .subscribe(dao => {
         this.properties.timestamp = moment.utc().format('YYYY-MM-DDTHH:mm:ss.SSS');
@@ -59,25 +58,26 @@ export class CandidateDetailsComponent implements OnInit {
             this.requestService.getRequest(process.requestId)
               .subscribe(requestDao => {
                 const request = requestDao.request;
-                this.properties.allRequests.push(new Request(new RequestList(
+                this.properties.allRequests[request.id] = new Request(new RequestList(
                   request.id,
                   request.workflow,
                   request.progress,
                   request.state,
                   request.description
-                ), [], []));
+                ), [], []);
               });
 
             this.processService.getProcess(process.requestId, this.properties.candidateId)
               .subscribe(processDao => {
-                this.properties.allProcesses.push(new Process(processDao.status,
+                this.properties.allProcesses[process.requestId] = new Process(processDao.status,
                   processDao.unavailableReason,
                   processDao.phases.map(phase => new ProcessPhase(
                     phase.phase,
                     phase.notes,
                     phase.infos.map(info => new PhaseInfo(info.name, info.value))
-                  )))
+                  ))
                 );
+                this.properties.allProcessesKeys.push(String(process.requestId));
               });
           });
 
@@ -91,28 +91,6 @@ export class CandidateDetailsComponent implements OnInit {
           profiles: this.properties.profilesForm
         });
       });
-
-    if (this.properties.requestId) {
-      this.requestService.getRequest(this.properties.requestId)
-        .subscribe(dao => {
-          const requestDao = dao.request;
-          this.properties.currentRequest = new Request(new RequestList(
-            requestDao.id,
-            requestDao.workflow,
-            requestDao.progress,
-            requestDao.state,
-            requestDao.description
-          ), [], []);
-        });
-
-      this.processService.getProcess(this.properties.requestId, this.properties.candidateId)
-        .subscribe(dao => {
-          this.properties.currentProcess = new Process(dao.status, dao.unavailableReason,
-            dao.phases.map(phase => new ProcessPhase(phase.phase,
-              phase.notes,
-              phase.infos.map(info => new PhaseInfo(info.name, info.value)))));
-        });
-    }
   }
 
   onSubmit() {
@@ -170,7 +148,7 @@ export class CandidateDetailsComponent implements OnInit {
         this.properties.newCandidate = null;
         const result = candidateDao.candidate;
         this.properties.timestamp = moment.utc().format('YYYY-MM-DDTHH:mm:ss.SSS');
-        const cand = new Candidate(result.name,
+        const candidate = new Candidate(result.name,
           result.id,
           result.profileInfo,
           result.available,
@@ -179,9 +157,9 @@ export class CandidateDetailsComponent implements OnInit {
           candidateDao.profiles.map(pi => pi.profile),
           candidateDao.processes.map(proc => new CandidateProcess(proc.status, proc.requestId)));
         if (conflict) {
-          this.properties.newCandidate = cand;
+          this.properties.newCandidate = candidate;
         } else {
-          this.properties.candidate = cand;
+          this.properties.candidate = candidate;
         }
         this.getRequestProfiles();
         this.properties.infoForm.setValue(this.properties.candidate.profileInfo
@@ -220,6 +198,11 @@ export class CandidateDetailsComponent implements OnInit {
             profs.filter(p => !this.properties.candidate.profiles.some(profile => profile === p));
         }
       });
+  }
+
+  hasProcesses() {
+    return Object.keys(this.properties.allProcesses).length > 0 &&
+      Object.keys(this.properties.allProcesses).length === Object.keys(this.properties.allRequests).length;
   }
 
 }

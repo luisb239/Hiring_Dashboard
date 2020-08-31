@@ -72,9 +72,6 @@
                    class="attribute"
                    [formControlName]="attribute.name" min="0">
           </label>
-          <!-- <p class="inline new-value" *ngIf="properties.newAttributeTemplates[attribute.name] !== properties.attributeTemplates[attribute.name]">
-            {{properties.newAttributeTemplates[attribute.name]}}
-          </p> -->
           <p class="inline new-value" *ngIf="!isEqualAttributeTemplate(attribute.name)">
             {{properties.newAttributeTemplates[attribute.name] === '' ?
             '(' + attribute.name + ' has been deleted)' : properties.newAttributeTemplates[attribute.name]}}
@@ -86,7 +83,7 @@
     </form>
     <div>
       <a [routerLink]="['/candidates/', properties.candidate.id]"
-         [state]="{requestId: requestId, candidateId: properties.candidate.id}"
+         [state]="{candidateId: properties.candidate.id}"
          (click)="activeModal.close('Close click')"
       >More about {{properties.candidate.name}}</a>
     </div>
