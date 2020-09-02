@@ -85,11 +85,22 @@ module.exports = (requestDb, candidateDb, processDb, phaseDb, infoDb, processUna
                                      unavailableReason, infoArray, timestamp
                                  }) {
         await transaction(async (client) => {
+
+            let oldStatus;
+            if(status)
+                oldStatus = await processDb.getProcessStatus({requestId, candidateId, client})
+
             const rowCount = await processDb.updateProcess({requestId, candidateId, timestamp, status, client})
             if (rowCount === 0)
                 throw new AppError(errors.conflict,
                     "Process not updated",
                     `Process of candidate ${candidateId} in request ${requestId} has already been updated`)
+
+            if(oldStatus) {
+                const candidate = await candidateDb.getCandidateById({id: candidateId, client})
+                const request = await requestDb.getRequestById({id: requestId, client})
+                await emailService.notifyStatus({id: requestId, oldStatus, status, candidate, request})
+            }
 
             if (newPhase) {
                 await updateProcessCurrentPhase({requestId, candidateId, newPhase, client})
