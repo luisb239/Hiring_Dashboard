@@ -7,16 +7,14 @@ export class CandidateDetailsProps {
   candidateId: number;
   requestId: number;
   candidate: Candidate;
-  currentRequest: Request;
-  currentProcess: Process;
   profiles: string[];
-  allProcesses: Process[] = [];
-  allRequests: Request[] = [];
+  allProcesses: any = {};
+  allProcessesKeys: string[] = [];
+  allRequests: any = {};
   fileToUpload: File = null;
   updateForm: FormGroup;
   infoForm: FormControl;
   profilesForm: FormControl;
   timestamp: string;
-  //conflict: boolean;
   newCandidate: Candidate;
 }
