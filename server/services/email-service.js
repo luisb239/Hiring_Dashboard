@@ -1,5 +1,7 @@
 'use strict'
 
+const templates = require('./email-templates.js')
+
 module.exports = (userDb, transporter) => {
 
     // TODO -> MAKE A FILE WITH THE TEMPLATES
@@ -13,19 +15,17 @@ module.exports = (userDb, transporter) => {
     async function notifyStatus({id, oldStatus, newStatus, candidate, request}) {
         await sendMultipleEmails({
             id, emailTitle: "Candidate Status Changed",
-            emailContent: `The candidate "${candidate.name}" status, in the "${request.description}" request, has been changed. ` +
-            `Changed from "${oldStatus}" to "${newStatus}".`})
+            emailContent: templates.statusMessage(candidate.name, request.description, oldStatus, newStatus)})
     }
 
     async function notifyMoved({id, oldPhase, newPhase, candidate, request}) {
         await sendMultipleEmails({id, emailTitle: "Moved Candidate",
-            emailContent: `The candidate "${candidate.name}" in the "${request.description}" request ` +
-                `has been moved from "${oldPhase}" to "${newPhase}".`})
+            emailContent: templates.movedMessage(candidate.name, request.description, oldPhase, newPhase)})
     }
 
     async function notifyAssigned({userId, request, currentUsername}) {
         await sendSingularEmail({userId, emailTitle: "New Request Assignment",
-            emailContent: `You have been assigned to the "${request.description}" request by the user ${currentUsername}.`})
+            emailContent: templates.assignedMessage(request.description, currentUsername)})
     }
 
     async function sendMultipleEmails({id, emailTitle, emailContent}) {
@@ -46,7 +46,7 @@ module.exports = (userDb, transporter) => {
             sendMail({
                 from: 'hiring.dashboard.isel@gmail.com', // listed in rfc822 message header
                 to: user.email, // listed in rfc822 message header
-                subject: emailTitle,
+                subject: `${emailTitle} - HIRING DASHBOARD`,
                 text: emailContent
             })
         }
