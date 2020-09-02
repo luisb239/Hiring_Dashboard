@@ -12,9 +12,11 @@ const config = require('./config.js')(app)
 
 const authModule = require('../authization-module/authization')
 
+// TODO -> usar modulo npm
+
 authModule.setup({app: config.app, db: config.dbOptions, rbac_opts: config.jsonObj})
     .then(async (auth) => {
-        const db = require('./dals');
+        const db = require('./dals')
         const services = require('./services')(db, auth, config.transporter)
         const controllers = require('./controllers')(services)
         const routes = require('./routes/routes.js')(express.Router(), controllers, auth, config.upload, config.validator)

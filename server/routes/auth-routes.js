@@ -9,7 +9,6 @@ module.exports = function (router, authController, authModule, handle) {
     router.get(`/${root}/azure`, authModule.authenticate.usingOffice365)
 
     router.get(`/${root}/azure/callback`, authModule.authenticate.usingOffice365Callback, (req, res) => {
-        // TODO -> Before redirect take into account req.referer ??
         res.redirect("http://localhost:4200/")
     })
 

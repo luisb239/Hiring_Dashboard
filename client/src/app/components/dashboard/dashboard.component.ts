@@ -9,20 +9,15 @@ import {Role} from 'src/app/model/user/user';
   styleUrls: ['./dashboard.component.css']
 })
 export class DashboardComponent {
-
   returnUrl: string;
   userRoles: Role[];
 
-  constructor(
-    private authService: AuthService,
-    private router: Router,
-    private route: ActivatedRoute) {
-    this.returnUrl = this.route.snapshot.queryParams.returnUrl || '/all-requests';
+  constructor(private authService: AuthService, private router: Router, private route: ActivatedRoute) {
+    this.returnUrl = this.route.snapshot.queryParams.returnUrl || this.authService.genericRoute;
     this.authService.getSession().subscribe(session => {
       if (!session.auth) {
         // User not authenticated
-        this.authService.userId.next(null);
-        this.authService.userRoles.next([]);
+        this.authService.resetUserInfo();
         this.router.navigate(['/home']);
       } else {
         // User authenticated

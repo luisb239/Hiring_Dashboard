@@ -4,21 +4,33 @@ module.exports = (service) => {
 
     return {
         getCandidates: getCandidates,
+        countCandidates: countCandidates,
         getCandidateById: getCandidateById,
         postCandidate: postCandidate,
         updateCandidate: updateCandidate,
         addCandidateProfile: addCandidateProfile,
         removeCandidateProfile: removeCandidateProfile,
-        downloadCandidateCv: downloadCandidateCv
+        downloadCandidateCv: downloadCandidateCv,
     }
 
     async function getCandidates(req, res) {
         const profiles = req.query.profiles
         const candidates = await service.getCandidates({
+            pageNumber: req.query.pageNumber,
+            pageSize: req.query.pageSize,
             available: req.query.available,
             profiles: profiles ? profiles.includes(",") ? req.query.profiles.split(',') : [profiles] : null
         })
         res.status(200).send(candidates)
+    }
+
+    async function countCandidates(req, res) {
+        const profiles = req.query.profiles
+        const count = await service.countCandidates({
+            available: req.query.available,
+            profiles: profiles ? profiles.includes(",") ? req.query.profiles.split(',') : [profiles] : null
+        })
+        res.status(200).send(count)
     }
 
     async function getCandidateById(req, res) {

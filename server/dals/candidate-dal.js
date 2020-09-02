@@ -7,15 +7,19 @@ const candidateProfiles = require('./dal-schemas/candidate-profile-schema.js')
 module.exports = (query, moment) => {
 
     return {
-        getCandidates,
-        getCandidateById,
-        getCandidatesByRequestId,
+        getCandidates: getCandidates,
+        countCandidates: countCandidates,
+        getCandidateById: getCandidateById,
+        getCandidatesByRequestId: getCandidatesByRequestId,
         createCandidate: createCandidate,
         updateCandidate: updateCandidate,
-        getCandidateCvInfo
+        getCandidateCvInfo: getCandidateCvInfo
     }
 
-    async function getCandidates({ available = null, profiles = null }) {
+    async function getCandidates({
+                                     pageNumber = null, pageSize = null,
+                                     available = null, profiles = null
+                                 }) {
         const statement = {
             name: 'Get Candidates',
             text:
@@ -23,15 +27,36 @@ module.exports = (query, moment) => {
                 `LEFT JOIN ${candidateProfiles.table} AS CP ` +
                 `ON C.${candidate.id} = CP.${candidateProfiles.candidateId} ` +
                 `WHERE (C.${candidate.available} = $1 OR $1 is null) AND ` +
-                `(CP.${candidateProfiles.profile} = ANY($2) OR $2 is null);`,
-            values: [available, profiles]
+                `(CP.${candidateProfiles.profile} = ANY($2) OR $2 is null) ` +
+                `ORDER BY C.${candidate.id} LIMIT $3 OFFSET $4;`,
+            values: [available, profiles, pageSize, pageSize && pageNumber ? pageNumber * pageSize : 0]
         }
 
         const result = await query(statement)
         return result.rows.map(row => extract(row))
     }
 
-    async function getCandidateById({ id, client }) {
+    async function countCandidates({available = null, profiles = null}) {
+        const statement = {
+            name: 'Count Candidates',
+            text:
+                `SELECT COUNT(DISTINCT C.*) FROM ${candidate.table} AS C ` +
+                `LEFT JOIN ${candidateProfiles.table} AS CP ` +
+                `ON C.${candidate.id} = CP.${candidateProfiles.candidateId} ` +
+                `WHERE (C.${candidate.available} = $1 OR $1 is null) AND ` +
+                `(CP.${candidateProfiles.profile} = ANY($2) OR $2 is null);`,
+            // `GROUP BY R.${requestSchema.id};`,
+            values: [available, profiles]
+        }
+        const result = await query(statement)
+        return extractCount(result.rows[0]);
+    }
+
+    function extractCount(row) {
+        return {count: row.count}
+    }
+
+    async function getCandidateById({id, client}) {
         const statement = {
             name: 'Get Candidate By Id',
             text:

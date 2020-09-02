@@ -86,28 +86,21 @@ export class AddCandidateComponent implements OnInit {
   }
 
   filterCandidates() {
-    this.candidateService.getAllCandidatesWithQueries(this.filterForm.value.profiles, this.filterForm.value.available)
-      .pipe(map(dao => dao.candidates.filter(
+    this.candidateService.find(undefined, undefined,
+      {profiles: this.filterForm.value.profiles, available: this.filterForm.value.available})
+      .pipe(map(candidates => candidates.filter(
         candidate => !this.existingCandidates.includes(candidate.id)).map(c =>
         new Candidate(c.name, c.id, c.profileInfo, c.available, c.cvFileName))))
-      .subscribe(result => {
-        this.candidates = result;
-      });
+      .subscribe(result => this.candidates = result);
   }
 
   getAllCandidates() {
-    this.candidateService.getAllCandidates()
+    this.candidateService.find()
       .pipe(
-        map(dao => dao.candidates.filter(
-          candidate => !this.existingCandidates.includes(candidate.id))
-          .map(c =>
-            new Candidate(c.name, c.id, c.profileInfo, c.available, c.cvFileName)
-          )
-        )
-      )
-      .subscribe(result => {
-        this.candidates = result;
-      });
+        map(candidates => candidates.filter(
+          candidate => !this.existingCandidates.includes(candidate.id)
+        ).map(c => new Candidate(c.name, c.id, c.profileInfo, c.available, c.cvFileName)))
+      ).subscribe(result => this.candidates = result);
   }
 
   getRequestProcesses() {

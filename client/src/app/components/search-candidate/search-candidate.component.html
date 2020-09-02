@@ -1,7 +1,7 @@
 <div id="root">
   <h2>Search candidates</h2>
   <div>
-    <form (submit)="filterCandidates()" [formGroup]="properties.filterForm">
+    <form (submit)="onSubmit()" [formGroup]="properties.filterForm">
       <mat-form-field id="profile">
         <mat-label>Possible Profiles</mat-label>
         <mat-select formControlName="profiles" multiple>
@@ -15,13 +15,44 @@
         </label>
       </div>
       <button class="btn btn-primary" id="filter" style="display: block" type="submit">Filter</button>
-      <button (click)="fetchAllCandidates()" class="btn btn-secondary reset-button reset" id="resetRequestTable"
+      <button (click)="resetForms()" class="btn btn-secondary reset-button reset" id="resetRequestTable"
               type="reset">Reset Filter
       </button>
     </form>
   </div>
-  <div>
-    <table class="table-responsive-xl">
+  <div class="mat-elevation-z8">
+    <table [dataSource]="properties.dataSource" mat-table>
+
+      <ng-container matColumnDef="Name">
+        <th *matHeaderCellDef class="col-un-sm" mat-header-cell> Name</th>
+        <td *matCellDef="let candidate" class="col-un-sm" mat-cell> {{candidate.name}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="Availability">
+        <th *matHeaderCellDef class="col-un-sm" mat-header-cell> Availability</th>
+        <td *matCellDef="let candidate" class="col-un-sm" mat-cell>
+          <ngb-progressbar *ngIf="candidate.available" [showValue]="false" [value]="100"
+                           type="success"></ngb-progressbar>
+          <ngb-progressbar *ngIf="!candidate.available" [showValue]="false" [value]="100"
+                           type="danger"></ngb-progressbar>
+        </td>
+      </ng-container>
+
+      <tr *matHeaderRowDef="displayedColumns" mat-header-row></tr>
+      <tr *matRowDef="let row; columns: displayedColumns;" [routerLink]="['/candidates', row.id]"
+          [state]="{candidateId: row.id}"
+          mat-row
+      ></tr>
+    </table>
+
+    <mat-paginator
+      [length]="properties.listSize"
+      [pageIndex]="0"
+      [pageSizeOptions]="[1, 2, 3, 4, 5, 10]"
+      [pageSize]="properties.DEFAULT_PAGE_SIZE"
+      showFirstLastButtons>
+    </mat-paginator>
+    <!--<table class="table-responsive-xl">
       <caption style="display: none">Candidates Table</caption>
       <thead>
       <tr>
@@ -42,6 +73,6 @@
                            type="danger"></ngb-progressbar>
         </td>
       </tr>
-    </table>
+    </table>-->
   </div>
 </div>

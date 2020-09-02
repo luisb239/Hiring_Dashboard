@@ -1,6 +1,6 @@
 import {RequestList} from '../../model/request/request-list';
 import {Options} from 'ng5-slider';
-import {AllRequestsDataSource} from './all-requests-data-source';
+import {GenericDataSource} from '../datasource/generic-data-source';
 import {FormBuilder, FormGroup} from '@angular/forms';
 
 export class AllRequestsProps {
@@ -27,7 +27,7 @@ export class AllRequestsProps {
   };
 
   requestId: number;
-  dataSource: AllRequestsDataSource;
+  dataSource: GenericDataSource;
 
   formGroup: FormGroup;
   formBuilder: FormBuilder;

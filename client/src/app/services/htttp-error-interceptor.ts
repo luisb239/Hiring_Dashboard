@@ -19,7 +19,7 @@ export class HttpErrorInterceptor implements HttpInterceptor {
         catchError((error: HttpErrorResponse) => {
           if (error.status === 401) {
             this.alert.error('Your session has expired. Please log in.');
-            this.authService.userId.next(null);
+            this.authService.resetUserInfo();
             this.router.navigate(['/home']);
           } else {
             let errorMessage;
@@ -27,8 +27,6 @@ export class HttpErrorInterceptor implements HttpInterceptor {
             if (error.error instanceof ErrorEvent) {
               // client-side error
               errorMessage = `Error: ${error.error.message}`;
-              console.log(errorMessage);
-              return throwError(errorMessage);
             } else {
               // server-side error
               errorMessage = `Error Code: ${error.status}\nTitle: ${error.error.title}\nDetail: ${error.error.detail}`;
@@ -44,9 +42,9 @@ export class HttpErrorInterceptor implements HttpInterceptor {
                   this.alert.error('Unexpected error. Refresh and try again.');
                   break;
               }
-              console.log(errorMessage);
-              return throwError(errorType);
             }
+            console.log(errorMessage);
+            return throwError(errorType);
           }
         })
       );

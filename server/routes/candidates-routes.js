@@ -11,9 +11,17 @@ module.exports = function (router, candidatesController, validator, upload, hand
      */
     router.get(`/${root}`, [
         verifyIfAuthenticated,
+        query('pageNumber').optional().isInt(),
+        query('pageSize').optional().isInt(),
         query('available').optional().isBoolean().withMessage("Available must be of boolean type"),
         query('profiles').optional().isString().withMessage("Profiles must be of string type separated by ','")
     ], handle(candidatesController.getCandidates))
+
+    router.get(`/${root}/count`, [
+        verifyIfAuthenticated,
+        query('available').optional().isBoolean().withMessage("Available must be of boolean type"),
+        query('profiles').optional().isString().withMessage("Profiles must be of string type separated by ','")
+    ], handle(candidatesController.countCandidates))
 
     /**
      * Get candidate by id

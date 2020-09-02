@@ -13,8 +13,7 @@ export class LogoutComponent implements OnInit {
 
   ngOnInit(): void {
     this.authService.logout().subscribe(() => {
-      this.authService.clearSessionFromStorage();
-      this.authService.userRoles = null;
+      this.authService.resetUserInfo();
       this.router.navigate(['/home']);
     });
   }

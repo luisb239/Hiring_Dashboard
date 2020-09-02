@@ -8,6 +8,7 @@ module.exports = (candidateDb, profilesDb, processDb, transaction) => {
 
     return {
         getCandidates: getCandidates,
+        countCandidates: countCandidates,
         getCandidateById: getCandidateById,
         createCandidate: createCandidate,
         updateCandidate: updateCandidate,
@@ -16,15 +17,23 @@ module.exports = (candidateDb, profilesDb, processDb, transaction) => {
         removeCandidateProfile: removeCandidateProfile
     }
 
-    async function getCandidates({ available = null, profiles = null }) {
+    async function getCandidates({
+                                     pageNumber = null, pageSize = null,
+                                     available = null, profiles = null
+                                 }) {
         return {
-            candidates: await candidateDb.getCandidates({ available, profiles }),
+            candidates: await candidateDb.getCandidates({pageNumber, pageSize, available, profiles})
         }
     }
 
-    async function getCandidateById({ id }) {
+    async function countCandidates({available = null, profiles = null}) {
+        const result = await candidateDb.countCandidates({available, profiles})
+        return {count: result.count};
+    }
 
-        const candidateFound = await candidateDb.getCandidateById({ id })
+    async function getCandidateById({id}) {
+
+        const candidateFound = await candidateDb.getCandidateById({id})
 
         if (!candidateFound)
             throw new AppError(errors.notFound,

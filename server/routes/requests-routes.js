@@ -66,7 +66,7 @@ module.exports = function (router, requestsController, processController, valida
         body('project').exists().withMessage("Request must have a project"),
         body('profile').exists().withMessage("Request must have a profile"),
         body('workflow').exists().withMessage("Request must have a workflow"),
-        body('dateToSendProfile').optional().isAfter().toDate().withMessage("Date to send profile a date be after today"),
+        body('dateToSendProfile').optional().toDate(),
     ], handle(requestsController.postRequest))
 
     /**

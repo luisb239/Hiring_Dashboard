@@ -7,6 +7,7 @@ import {RequestDetailsDao} from 'src/app/model/request/request-details-dao';
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {AuthService} from '../auth/auth.service';
+import {PaginationService} from '../../components/datasource/generic-data-source';
 
 const httpOptions = {
   headers: new HttpHeaders({
@@ -21,11 +22,21 @@ const httpOptions = {
 /**
  * This class supplies all the functions needed to manage requests.
  */
-export class RequestService {
+export class RequestService implements PaginationService {
   constructor(private http: HttpClient, private authService: AuthService) {
   }
 
   baseUrl = `/hd`;
+
+  private static getParams(args: any = {}): HttpParams {
+    let params = new HttpParams();
+    Object.keys(args).forEach(arg => {
+      if (args[arg] !== null && args[arg] !== undefined) {
+        params = params.set(arg, args[arg]);
+      }
+    });
+    return params;
+  }
 
   /**
    * This function queries the server for a specific request's details.
@@ -35,24 +46,22 @@ export class RequestService {
     return this.http.get<RequestDao>(`${this.baseUrl}/requests/${requestId}`, httpOptions);
   }
 
-  find(
-    pageNumber: number,
-    pageSize: number,
-    args: any
-  ): Observable<RequestDetailsDao[]> {
-    let params = new HttpParams()
+  find(pageNumber: number, pageSize: number, args: any): Observable<RequestDetailsDao[]> {
+    const params = RequestService.getParams(args)
       .set('pageNumber', pageNumber.toString())
       .set('pageSize', pageSize.toString());
-
-    Object.keys(args).forEach(arg => {
-      if (args[arg] !== null && args[arg] !== undefined) {
-        params = params.set(arg, args[arg]);
-      }
-    });
 
     return this.http.get<RequestsDao>(`${this.baseUrl}/requests`, {
       params
     }).pipe(map(r => r.requests));
+  }
+
+  // count the number of requests with the filters applied..
+  count(args: any = {}) {
+    const params = RequestService.getParams(args);
+    return this.http.get<any>(`${this.baseUrl}/requests/count`, {
+      params
+    });
   }
 
   /**
@@ -60,6 +69,8 @@ export class RequestService {
    */
   getUserCurrentRequests() {
     let params = new HttpParams();
+    // If user is admin or team Leader get all requests from server,
+    // otherwise only retrieve the user associated requests
     if (!this.authService.currentUserRoles.find(r => r.role === 'admin' || r.role === 'teamLeader')) {
       params = params.set('currentUser', String(true));
     }
@@ -104,22 +115,6 @@ export class RequestService {
 
   addLanguageRequirementToRequest(requestId: number, language: string, isMandatory: boolean): Observable<any> {
     return this.http.post(`${this.baseUrl}/requests/${requestId}/languages`, {language, isMandatory});
-  }
-
-  // count the number of requests with the filters applied..
-  count(args: any) {
-
-    let params = new HttpParams();
-
-    Object.keys(args).forEach(arg => {
-      if (args[arg]) {
-        params = params.set(arg, args[arg]);
-      }
-    });
-
-    return this.http.get<any>(`${this.baseUrl}/requests/count`, {
-      params
-    });
   }
 
 }

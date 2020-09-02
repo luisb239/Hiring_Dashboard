@@ -7,8 +7,7 @@ import {Router} from '@angular/router';
 import {AllRequestsProps} from './all-requests-props';
 import {map, tap} from 'rxjs/operators';
 import {MatPaginator} from '@angular/material/paginator';
-import {AllRequestsDataSource} from './all-requests-data-source';
-import {AlertService} from '../../services/alert/alert.service';
+import {GenericDataSource} from '../datasource/generic-data-source';
 
 @Component({
   selector: 'app-all-requests',
@@ -46,23 +45,21 @@ export class AllRequestsComponent implements OnInit, AfterViewInit {
       quantityValues: this.properties.formBuilder.control([1, 10]),
       progressValues: this.properties.formBuilder.control([0, 100])
     });
-    this.properties.dataSource = new AllRequestsDataSource(this.requestService);
-    this.properties.dataSource.loadRequests();
+    this.properties.dataSource = new GenericDataSource(this.requestService);
+    this.properties.dataSource.loadInfo();
     this.count();
-    this.getFilterParameters();
+    this.fetchFilterParameters();
   }
 
 
   ngAfterViewInit() {
     this.paginator.page
-      .pipe(
-        tap(() => this.loadTable())
-      )
+      .pipe(tap(() => this.loadTable()))
       .subscribe();
   }
 
   loadTable() {
-    this.properties.dataSource.loadRequests(
+    this.properties.dataSource.loadInfo(
       this.paginator.pageIndex,
       this.paginator.pageSize,
       this.getFilterValues()
@@ -71,11 +68,13 @@ export class AllRequestsComponent implements OnInit, AfterViewInit {
 
 
   count() {
-    this.properties.dataSource.count(this.getFilterValues(), (count: number) => this.properties.listSize = count);
+    this.properties.dataSource.count(
+      this.getFilterValues(),
+      (count: number) => this.properties.listSize = count);
   }
 
 
-  getFilterParameters() {
+  fetchFilterParameters() {
     this.reqPropsService.getRequestStates()
       .pipe(map(dao => dao.states.map(s => s.state)))
       .subscribe(result => this.properties.states = result);

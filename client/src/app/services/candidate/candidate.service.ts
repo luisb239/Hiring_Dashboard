@@ -5,6 +5,8 @@ import {CandidatesDao} from '../../model/candidate/candidates-dao';
 import {SuccessPostDao} from 'src/app/model/common/successPost-dao';
 import {forkJoin, Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
+import {PaginationService} from '../../components/datasource/generic-data-source';
+import {CandidateDetailsDao} from '../../model/candidate/candidate-details-dao';
 
 const httpOptions = {
   headers: new HttpHeaders({
@@ -15,34 +17,44 @@ const httpOptions = {
 @Injectable({
   providedIn: 'root'
 })
-export class CandidateService {
+export class CandidateService implements PaginationService {
 
   constructor(private http: HttpClient) {
   }
 
   baseUrl = `/hd`;
 
+  private static getParams(args: any = {}): HttpParams {
+    let params = new HttpParams();
+    if (args.profiles && args.profiles.length > 0) {
+      params = params.append('profiles', args.profiles.join(','));
+    }
+
+    if (args.available) {
+      params = params.set('available', String(args.available));
+    }
+    return params;
+  }
+
   getCandidateById(candidateId: number) {
     return this.http.get<CandidateDao>(`${this.baseUrl}/candidates/${candidateId}`, httpOptions);
   }
 
-  getAllCandidates() {
-    return this.http.get<CandidatesDao>(`${this.baseUrl}/candidates`, httpOptions);
-  }
-
-  getAllCandidatesWithQueries(profiles: string[], available: boolean) {
-    let params = new HttpParams();
-    if (profiles && profiles.length > 0) {
-      params = params.append('profiles', profiles.join(','));
-    }
-
-    if (available) {
-      params = params.set('available', String(available));
-    }
+  find(pageNumber: number = 0, pageSize: number = 10, args: any = {}): Observable<CandidateDetailsDao[]> {
+    const params = CandidateService.getParams(args)
+      .set('pageNumber', pageNumber.toString())
+      .set('pageSize', pageSize.toString());
     return this.http.get<CandidatesDao>(`${this.baseUrl}/candidates`, {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
       }), params
+    }).pipe(map(res => res.candidates));
+  }
+
+  count(args: any = {}) {
+    const params = CandidateService.getParams(args);
+    return this.http.get<any>(`${this.baseUrl}/candidates/count`, {
+      params
     });
   }
 
@@ -86,29 +98,22 @@ export class CandidateService {
 
   addCandidateProfiles(body, id): Observable<any>[] {
     return body.profiles.map(p => {
-      const profileBody = {
-        id,
-        profile: p
-      };
+      const profileBody = {id, profile: p};
       return this.http.post<SuccessPostDao>(`${this.baseUrl}/candidates/${id}/profiles`,
         profileBody, httpOptions);
     });
-
   }
 
   downloadCandidateCv(candidateId: number): any {
-    /*const options = {
-      responseType: 'blob' as 'json'
-    };*/
     return this.http.get(`${this.baseUrl}/candidates/${candidateId}/download-cv`, {
       responseType: 'blob',
       observe: 'response'
     })
       .pipe(map(resp => {
           const filenameStr = 'filename=';
-        const versionIdStr = ';versionId=';
-        const disposition = resp.headers.get('Content-disposition');
-        const versionIdIndex = disposition.indexOf(versionIdStr);
+          const versionIdStr = ';versionId=';
+          const disposition = resp.headers.get('Content-disposition');
+          const versionIdIndex = disposition.indexOf(versionIdStr);
           return {
             filename: disposition.slice(disposition.indexOf(filenameStr) + filenameStr.length, versionIdIndex),
             versionId: disposition.slice(versionIdIndex + versionIdStr.length),
