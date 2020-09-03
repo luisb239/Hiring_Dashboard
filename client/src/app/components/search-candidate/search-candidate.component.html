@@ -24,13 +24,13 @@
     <table [dataSource]="properties.dataSource" mat-table>
 
       <ng-container matColumnDef="Name">
-        <th *matHeaderCellDef class="col-un-sm" mat-header-cell> Name</th>
-        <td *matCellDef="let candidate" class="col-un-sm" mat-cell> {{candidate.name}} </td>
+        <th *matHeaderCellDef mat-header-cell> Name</th>
+        <td *matCellDef="let candidate" mat-cell> {{candidate.name}} </td>
       </ng-container>
 
       <ng-container matColumnDef="Availability">
-        <th *matHeaderCellDef class="col-un-sm" mat-header-cell> Availability</th>
-        <td *matCellDef="let candidate" class="col-un-sm" mat-cell>
+        <th *matHeaderCellDef mat-header-cell> Availability</th>
+        <td *matCellDef="let candidate" mat-cell>
           <ngb-progressbar *ngIf="candidate.available" [showValue]="false" [value]="100"
                            type="success"></ngb-progressbar>
           <ngb-progressbar *ngIf="!candidate.available" [showValue]="false" [value]="100"
@@ -52,27 +52,5 @@
       [pageSize]="properties.DEFAULT_PAGE_SIZE"
       showFirstLastButtons>
     </mat-paginator>
-    <!--<table class="table-responsive-xl">
-      <caption style="display: none">Candidates Table</caption>
-      <thead>
-      <tr>
-        <th scope="col">Name</th>
-        <th scope="col">Available</th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr *ngFor="let candidate of properties.candidates; index as i">
-        <td [routerLink]="['/candidates/', candidate.id]"
-            class="candidate_name td">
-          {{candidate.name}}
-        </td>
-        <td class="td">
-          <ngb-progressbar *ngIf="candidate.available" [showValue]="false" [value]="100"
-                           type="success"></ngb-progressbar>
-          <ngb-progressbar *ngIf="!candidate.available" [showValue]="false" [value]="100"
-                           type="danger"></ngb-progressbar>
-        </td>
-      </tr>
-    </table>-->
   </div>
 </div>
