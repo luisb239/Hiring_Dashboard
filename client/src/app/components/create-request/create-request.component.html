@@ -4,14 +4,14 @@
     <div class="form-row">
       <div class="form-group col-md-4">
         <label for="inputDescription">Description</label>
-        <input required formControlName="description" class="form-control"
-          id="inputDescription" placeholder="Request's Description" type="text">
+        <input required formControlName="description" class="form-control" id="inputDescription"
+          placeholder="Request's Description" type="text">
       </div>
       <div class="form-group col-md-4">
         <label for="inputQuantity">Quantity</label>
         <div>
-          <input required formControlName="quantity" type="number" class="form-control"
-            value="1" min="1" id="inputQuantity" placeholder="Request's Quantity">
+          <input required formControlName="quantity" type="number" class="form-control" value="1" min="1"
+            id="inputQuantity" placeholder="Request's Quantity">
         </div>
       </div>
       <div class="form-group col-md-4">
@@ -46,32 +46,33 @@
       </div>
     </div>
     <div class="form-row">
-      <mat-form-field appearance="fill">
-        <mat-label>Mandatory languages</mat-label>
-        <mat-select [formControl]="mandatoryLanguagesForm" multiple>
-          <mat-option (onSelectionChange)="change($event, true)" *ngFor="let language of mandatoryAvailableLanguages()"
-                      [value]="language">
-            {{language}}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-    </div>
-    <div class="form-row">
-      <mat-form-field appearance="fill">
-        <mat-label>Valued languages</mat-label>
-        <mat-select [formControl]="valuedLanguagesForm" multiple>
-          <mat-option (onSelectionChange)="change($event, false)" *ngFor="let language of valuedAvailableLanguages()"
-                      [value]="language">
-            {{language}}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
+      <div class="form-group col-md-4">
+        <mat-form-field appearance="fill">
+          <mat-label>Mandatory languages</mat-label>
+          <mat-select [formControl]="mandatoryLanguagesForm" multiple>
+            <mat-option (onSelectionChange)="change($event, true)"
+              *ngFor="let language of mandatoryAvailableLanguages()" [value]="language">
+              {{language}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="form-group col-md-4">
+        <mat-form-field appearance="fill">
+          <mat-label>Valued languages</mat-label>
+          <mat-select [formControl]="valuedLanguagesForm" multiple>
+            <mat-option (onSelectionChange)="change($event, false)" *ngFor="let language of valuedAvailableLanguages()"
+              [value]="language">
+              {{language}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
     </div>
     <div class="form-row">
       <div class="form-group col-md-4">
         <label for="inputTargetDate">Target Month</label>
-        <select required formControlName="targetDate" class="custom-select"
-                id="inputTargetDate">
+        <select required formControlName="targetDate" class="custom-select" id="inputTargetDate">
           <option selected disabled value="">Choose a Target Month</option>
           <option *ngFor="let month of properties.targetDates">{{month}}</option>
         </select>
@@ -79,8 +80,7 @@
 
       <div class="form-group col-md-4">
         <label for="inputDateToSendProf" id="inputDateToSendProf">Date to send Profile</label>
-        <input formControlName="dateToSendProfile" class="form-control" type="date"
-          id="inputDateToSendProfile">
+        <input formControlName="dateToSendProfile" class="form-control" type="date" id="inputDateToSendProfile">
       </div>
     </div>
     <button id="createRequestSubmit" class="btn btn-primary">Submit Request</button>
