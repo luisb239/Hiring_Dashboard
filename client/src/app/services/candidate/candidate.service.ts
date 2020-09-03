@@ -40,10 +40,15 @@ export class CandidateService implements PaginationService {
     return this.http.get<CandidateDao>(`${this.baseUrl}/candidates/${candidateId}`, httpOptions);
   }
 
-  find(pageNumber: number = 0, pageSize: number = 10, args: any = {}): Observable<CandidateDetailsDao[]> {
-    const params = CandidateService.getParams(args)
-      .set('pageNumber', pageNumber.toString())
-      .set('pageSize', pageSize.toString());
+  find(pageNumber?: number, pageSize?: number, args: any = {}): Observable<CandidateDetailsDao[]> {
+    let params = CandidateService.getParams(args);
+    if (pageNumber !== null && pageNumber !== undefined) {
+      params = params.set('pageNumber', pageNumber.toString());
+    }
+    if (pageSize !== null && pageSize !== undefined) {
+      params = params.set('pageSize', pageSize.toString());
+    }
+
     return this.http.get<CandidatesDao>(`${this.baseUrl}/candidates`, {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',

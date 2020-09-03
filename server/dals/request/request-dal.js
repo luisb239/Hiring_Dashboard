@@ -52,7 +52,7 @@ module.exports = (query, moment) => {
         return result.rows.map(row => extractRequest(row))
     }
 
-    async function getRequestById({id, client}) {
+    async function getRequestById({id}) {
         const statement = {
             name: 'Get Request By Id',
             text:
@@ -60,7 +60,7 @@ module.exports = (query, moment) => {
                 `WHERE ${requestSchema.id} = $1;`,
             values: [id]
         }
-        const result = await query(statement, client)
+        const result = await query(statement)
 
         if (result.rowCount) {
             return extractRequest(result.rows[0])
@@ -218,9 +218,8 @@ module.exports = (query, moment) => {
                 `((R.${requestSchema.quantity} BETWEEN $7 AND $8) OR ($7 is null) OR ($8 is null)) AND ` +
                 `((R.${requestSchema.progress} BETWEEN $9 AND $10) OR ($9 is null) OR ($10 is null)) AND ` +
                 `(R.${requestSchema.targetDate} = $11 OR $11 is null) AND ` +
-                `(URR.${userRoleReqSchema.userId} = $12 OR $12 is null) `
-                ,
-                // `GROUP BY R.${requestSchema.id};`,
+                `(URR.${userRoleReqSchema.userId} = $12 OR $12 is null);`,
+            // `GROUP BY R.${requestSchema.id};`,
             values: [
                 skill, state, stateCsl, profile,
                 project, workflow, minQuantity, maxQuantity,

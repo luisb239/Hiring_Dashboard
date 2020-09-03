@@ -7,9 +7,9 @@ module.exports = (userDb, transporter) => {
     // TODO -> MAKE A FILE WITH THE TEMPLATES
 
     return {
-        notifyStatus,
-        notifyMoved,
-        notifyAssigned
+        notifyStatus: notifyStatus,
+        notifyMoved: notifyMoved,
+        notifyAssigned: notifyAssigned
     }
 
     async function notifyStatus({id, oldStatus, newStatus, candidate, request}) {

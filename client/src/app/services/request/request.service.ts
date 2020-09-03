@@ -46,11 +46,14 @@ export class RequestService implements PaginationService {
     return this.http.get<RequestDao>(`${this.baseUrl}/requests/${requestId}`, httpOptions);
   }
 
-  find(pageNumber: number, pageSize: number, args: any): Observable<RequestDetailsDao[]> {
-    const params = RequestService.getParams(args)
-      .set('pageNumber', pageNumber.toString())
-      .set('pageSize', pageSize.toString());
-
+  find(pageNumber?: number, pageSize?: number, args: any = {}): Observable<RequestDetailsDao[]> {
+    let params = RequestService.getParams(args);
+    if (pageNumber !== null && pageNumber !== undefined) {
+      params = params.set('pageNumber', pageNumber.toString());
+    }
+    if (pageSize !== null && pageSize !== undefined) {
+      params = params.set('pageSize', pageSize.toString());
+    }
     return this.http.get<RequestsDao>(`${this.baseUrl}/requests`, {
       params
     }).pipe(map(r => r.requests));

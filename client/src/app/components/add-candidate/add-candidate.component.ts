@@ -86,7 +86,7 @@ export class AddCandidateComponent implements OnInit {
   }
 
   filterCandidates() {
-    this.candidateService.find(undefined, undefined,
+    this.candidateService.find(null, null,
       {profiles: this.filterForm.value.profiles, available: this.filterForm.value.available})
       .pipe(map(candidates => candidates.filter(
         candidate => !this.existingCandidates.includes(candidate.id)).map(c =>
@@ -95,7 +95,7 @@ export class AddCandidateComponent implements OnInit {
   }
 
   getAllCandidates() {
-    this.candidateService.find()
+    this.candidateService.find(null, null)
       .pipe(
         map(candidates => candidates.filter(
           candidate => !this.existingCandidates.includes(candidate.id)

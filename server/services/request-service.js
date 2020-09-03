@@ -46,12 +46,12 @@ module.exports = (requestDb, processDb, requestLanguagesDb, authModule, candidat
                                    targetDate = null, userId = null
                                }) {
 
-
         const requests = await requestDb.getRequests({
             pageNumber, pageSize,
             skill, state, stateCsl, profile, project, workflow, minQuantity,
             maxQuantity, minProgress, maxProgress, targetDate, userId
         })
+
         return {
             requests
         }
@@ -118,6 +118,7 @@ module.exports = (requestDb, processDb, requestLanguagesDb, authModule, candidat
                                      id, state, stateCsl, description, quantity, targetDate,
                                      skill, project, profile, dateToSendProfile, timestamp
                                  }) {
+
         return await transaction(async (client) => {
             const rowCount = await requestDb.updateRequest({
                 id, state, stateCsl, description, quantity,
