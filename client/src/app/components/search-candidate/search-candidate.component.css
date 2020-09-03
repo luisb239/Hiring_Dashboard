@@ -1,6 +1,5 @@
 #root {
-  margin-left: 20px;
-  margin-top: 20px;
+  margin: 15px;
 }
 
 #filter-box {
@@ -23,8 +22,7 @@
 }
 
 table {
-  border-collapse: separate;
-  border-spacing: 10px 10px;
+  margin: 15px;
 }
 
 .candidate_name {
@@ -37,4 +35,13 @@ table {
 
 .assign {
   text-align: center;
+}
+
+.mat-cell {
+  padding: 15px;
+  flex-grow: 1;
+}
+
+.mat-elevation-z8 {
+  width: fit-content;
 }
