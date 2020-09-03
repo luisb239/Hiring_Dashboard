@@ -6,7 +6,6 @@ import {Injectable} from '@angular/core';
 @Injectable()
 export abstract class PaginationService {
   abstract find(pageNumber: number, pageSize: number, args: any);
-
   abstract count(args: any);
 }
 

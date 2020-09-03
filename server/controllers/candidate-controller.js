@@ -18,6 +18,7 @@ module.exports = (service) => {
         const candidates = await service.getCandidates({
             pageNumber: req.query.pageNumber,
             pageSize: req.query.pageSize,
+            notInRequest: req.query.notInRequest,
             available: req.query.available,
             profiles: profiles ? profiles.includes(",") ? req.query.profiles.split(',') : [profiles] : null
         })
@@ -28,7 +29,8 @@ module.exports = (service) => {
         const profiles = req.query.profiles
         const count = await service.countCandidates({
             available: req.query.available,
-            profiles: profiles ? profiles.includes(",") ? req.query.profiles.split(',') : [profiles] : null
+            profiles: profiles ? profiles.includes(",") ? req.query.profiles.split(',') : [profiles] : null,
+            notInRequest: req.query.notInRequest
         })
         res.status(200).send(count)
     }

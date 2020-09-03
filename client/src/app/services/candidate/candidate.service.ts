@@ -29,9 +29,11 @@ export class CandidateService implements PaginationService {
     if (args.profiles && args.profiles.length > 0) {
       params = params.append('profiles', args.profiles.join(','));
     }
-
     if (args.available) {
       params = params.set('available', String(args.available));
+    }
+    if (args.notInRequest) {
+      params = params.set('notInRequest', args.notInRequest);
     }
     return params;
   }

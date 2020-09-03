@@ -21,6 +21,10 @@
   max-width: 300px;
 }
 
+.mat-row:hover {
+  background-color: lightgrey;
+}
+
 button {
   height: fit-content;
   margin-right: 10px;

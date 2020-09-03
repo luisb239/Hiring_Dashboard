@@ -1,5 +1,5 @@
 <div class="modal-header">
-  <h4 class="modal-title">Add Candidate To This Request</h4>
+  <h4 class="modal-title">Add Candidates to {{request.description}}</h4>
   <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
     <span aria-hidden="true">&times;</span>
   </button>
@@ -20,44 +20,68 @@
     </div>
     <button type="submit" class="btn btn-primary" id="filter" style="display: block">Filter</button>
     <button id="resetRequestTable" class="btn btn-secondary reset-button reset" type="reset"
-            (click)="getAllCandidates()">Reset Filter
+            (click)="resetForms()">Reset Filter
     </button>
   </form>
-  <h3 class="table-title">Candidates</h3>
-  <form [formGroup]="candidateForm" (submit)="onSubmit()">
-    <table class="table-responsive-xl">
-      <caption style="display: none">Available Candidates Table</caption>
-      <thead>
-      <tr>
-        <th scope="col">#</th>
-        <th scope="col">Name</th>
-        <th scope="col">Available</th>
-        <th scope="col">Assign</th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr *ngFor="let candidate of candidates; index as i">
-        <th scope="row">{{ i + 1 }}</th>
-        <td [routerLink]="['/candidates/', candidate.id]"
-            [state]="{candidateId:  candidate.id}"
+  <!--h3 class="table-title">Candidates</h3-->
+  <div class="mat-elevation-z8">
+    <table [dataSource]="dataSource" mat-table>
+      <ng-container matColumnDef="Name">
+        <th *matHeaderCellDef class="col-un-sm" mat-header-cell> Name</th>
+        <td *matCellDef="let candidate" [routerLink]="['/candidates', candidate.id]"
+            [state]="{candidateId: candidate.id}"
+            class="col-un-sm"
             (click)="activeModal.close('Close click')"
-            class="candidate_name td">
-          {{candidate.name}}
+            mat-cell> {{candidate.name}}
         </td>
-        <td class="td">
-          <ngb-progressbar *ngIf="candidate.available" type="success" [value]="100"
-                           [showValue]="false"></ngb-progressbar>
-          <ngb-progressbar *ngIf="!candidate.available" type="danger" [value]="100"
-                           [showValue]="false"></ngb-progressbar>
+      </ng-container>
+
+      <ng-container matColumnDef="Availability">
+        <th *matHeaderCellDef class="col-un-sm" mat-header-cell> Availability</th>
+        <td *matCellDef="let candidate" class="col-un-sm" mat-cell>
+          <ngb-progressbar *ngIf="candidate.available" [showValue]="false" [value]="100"
+                           type="success"></ngb-progressbar>
+          <ngb-progressbar *ngIf="!candidate.available" [showValue]="false" [value]="100"
+                           type="danger"></ngb-progressbar>
         </td>
-        <td class="form-check assign td">
-          <input class="form-check-input" type="checkbox" (change)="onChange(i, $event)">
+      </ng-container>
+
+      <ng-container matColumnDef="Assign">
+        <th *matHeaderCellDef class="col-un-sm" mat-header-cell> Assign</th>
+        <td *matCellDef="let candidate" class="col-un-sm assign td" mat-cell>
+          <mat-checkbox
+            (change)="onChange(candidate, $event)"
+            (click)="$event.stopPropagation()"
+            [checked]="isChecked(candidate)">
+          </mat-checkbox>
         </td>
-      </tr>
+      </ng-container>
+
+      <tr *matHeaderRowDef="displayedColumns" mat-header-row></tr>
+      <tr *matRowDef="let row; columns: displayedColumns;" mat-row></tr>
     </table>
-    <button type="submit" class="btn btn-primary" id="add">Add Candidates</button>
-  </form>
-  <a [routerLink]="['/create-candidate/']" (click)="activeModal.close('Close click')"><h6>Create Candidate</h6></a>
+
+    <mat-paginator
+      [length]="listSize"
+      [pageIndex]="0"
+      [pageSizeOptions]="[5, 10, 25, 50]"
+      [pageSize]="DEFAULT_PAGE_SIZE"
+      showFirstLastButtons>
+    </mat-paginator>
+  </div>
+  <div *ngIf="checkedCandidates.length > 0">
+    <div *ngFor="let candidate of checkedCandidates" class="card" style="width: 18rem;height: 3rem;margin-top: 0.5rem">
+      <div (click)="removeCandidate(candidate)" class="card-body">
+        <h6 class="card-title">{{candidate.name}}</h6>
+      </div>
+    </div>
+    <button (click)="addCandidatesToRequest()" class="btn btn-primary general-margin" id="add">
+      Add Candidates ({{checkedCandidates.length}})
+    </button>
+  </div>
+  <a (click)="activeModal.close('Close click')" [routerLink]="['/create-candidate/']" class="general-margin">
+    <h6>Create Candidate</h6>
+  </a>
 </div>
 <div class="modal-footer">
   <button type="button" class="btn btn-outline-dark" (click)="activeModal.close('Close click')">Close</button>

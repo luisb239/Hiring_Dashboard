@@ -1,30 +1,37 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {AfterViewInit, Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
-import {Candidate} from '../../model/candidate/candidate';
 import {CandidateService} from '../../services/candidate/candidate.service';
 import {RequestPropsService} from 'src/app/services/requestProps/requestProps.service';
 import {FormArray, FormBuilder, FormControl, FormGroup} from '@angular/forms';
 import {ProcessService} from '../../services/process/process.service';
-import {map} from 'rxjs/operators';
+import {defaultIfEmpty, map, tap} from 'rxjs/operators';
 import {RequestService} from '../../services/request/request.service';
 import {RequestList} from '../../model/request/request-list';
 import {AlertService} from '../../services/alert/alert.service';
 import {ErrorType} from '../../services/common-error';
+import {GenericDataSource} from '../datasource/generic-data-source';
+import {MatPaginator} from '@angular/material/paginator';
+import {forkJoin} from 'rxjs';
+import {CandidateDetailsDao} from '../../model/candidate/candidate-details-dao';
 
 @Component({
   selector: 'app-add-candidate',
   templateUrl: './add-candidate.component.html',
   styleUrls: ['./add-candidate.component.css']
 })
-export class AddCandidateComponent implements OnInit {
+export class AddCandidateComponent implements OnInit, AfterViewInit {
+  displayedColumns: string[] = ['Name', 'Availability', 'Assign'];
+
+  @ViewChild(MatPaginator) paginator: MatPaginator;
 
   @Input() request: RequestList;
   @Output() candidateAdded = new EventEmitter();
-  candidates: Candidate[];
   profiles: string[];
-  candidateForm: FormGroup;
   filterForm: FormGroup;
-  existingCandidates: number[];
+  DEFAULT_PAGE_SIZE = 10;
+  listSize: number;
+  dataSource: GenericDataSource;
+  checkedCandidates: CandidateDetailsDao[] = [];
 
   constructor(
     public activeModal: NgbActiveModal,
@@ -37,81 +44,97 @@ export class AddCandidateComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getRequestProcesses();
-
     this.requestPropsService.getRequestProfiles()
       .pipe(map(dao => dao.profiles.map(p => p.profile)))
       .subscribe(result => this.profiles = result);
-
-    this.candidateForm = this.formBuilder.group({
-      candidatesIdx: this.formBuilder.array([])
-    });
 
     this.filterForm = this.formBuilder.group(
       {
         profiles: this.formBuilder.control([]),
         available: this.formBuilder.control(false)
-      }
-    );
+      });
+    this.dataSource = new GenericDataSource(this.candidateService);
+    this.dataSource.loadInfo(null, null, {notInRequest: this.request.id});
+    this.count();
   }
 
-  onChange(idx: number, event: any) {
-    const array = this.candidateForm.controls.candidatesIdx as FormArray;
-
-    if (event.target.checked) {
-      array.push(new FormControl(idx));
+  onChange(candidate: CandidateDetailsDao, event: any) {
+    if (event.checked) {
+      this.checkedCandidates.push(candidate);
     } else {
-      const index = array.controls.findIndex(x => x.value === idx);
-      array.removeAt(index);
+      this.removeCandidate(candidate);
     }
   }
 
-  onSubmit() {
-    const values = this.candidateForm.value.candidatesIdx;
-    values.forEach(idx => {
-      this.processService.createProcess(this.request.id, this.candidates[idx].id)
-        .subscribe(() => {
-            this.alertService.success('Candidates added to this request successfully!');
-            this.activeModal.close('Close click');
-            this.candidateAdded.emit();
-          }, error => {
-            if (error === ErrorType.CONFLICT) {
-              this.alertService.error('This candidate has already been added to this request by another user.');
-              this.alertService.info('Refreshing...');
-              this.getRequestProcesses();
-            }
-          }
-        );
+  getCheckedCandidatesNames() {
+    return this.checkedCandidates.map(c => c.name).join(', ');
+  }
+
+  removeCandidate(candidate: CandidateDetailsDao) {
+    this.checkedCandidates.splice(this.checkedCandidates.findIndex(c => c.id === candidate.id), 1);
+  }
+
+  isChecked(candidate: CandidateDetailsDao): boolean {
+    return this.checkedCandidates.find(c => c.id === candidate.id) !== undefined;
+  }
+
+  addCandidatesToRequest() {
+    const addCandidatesToRequest = [];
+    this.checkedCandidates.forEach(candidate => {
+      addCandidatesToRequest.push(this.processService.createProcess(this.request.id, candidate.id));
     });
+    forkJoin(addCandidatesToRequest)
+      .pipe(defaultIfEmpty(null))
+      .subscribe(() => {
+          this.alertService.success('Candidate(s) added to this request successfully!');
+          this.activeModal.close('Close click');
+          this.candidateAdded.emit();
+        }, error => {
+          if (error === ErrorType.CONFLICT) {
+            this.alertService.error('Candidate(s) have already been added to this request by another user.');
+            this.activeModal.close('Close click');
+          }
+          this.candidateAdded.emit();
+        }
+      );
+  }
+
+  count() {
+    this.dataSource.count(
+      this.getFilterValues(),
+      (count: number) => this.listSize = count);
+  }
+
+  ngAfterViewInit() {
+    this.paginator.page
+      .pipe(tap(() => this.loadTable()))
+      .subscribe();
+  }
+
+  loadTable() {
+    this.dataSource.loadInfo(
+      this.paginator.pageIndex,
+      this.paginator.pageSize,
+      this.getFilterValues()
+    );
   }
 
   filterCandidates() {
-    this.candidateService.find(null, null,
-      {profiles: this.filterForm.value.profiles, available: this.filterForm.value.available})
-      .pipe(map(candidates => candidates.filter(
-        candidate => !this.existingCandidates.includes(candidate.id)).map(c =>
-        new Candidate(c.name, c.id, c.profileInfo, c.available, c.cvFileName))))
-      .subscribe(result => this.candidates = result);
+    this.loadTable();
+    this.count();
   }
 
-  getAllCandidates() {
-    this.candidateService.find(null, null)
-      .pipe(
-        map(candidates => candidates.filter(
-          candidate => !this.existingCandidates.includes(candidate.id)
-        ).map(c => new Candidate(c.name, c.id, c.profileInfo, c.available, c.cvFileName)))
-      ).subscribe(result => this.candidates = result);
+  getFilterValues() {
+    return {
+      profiles: this.filterForm.value.profiles,
+      available: this.filterForm.value.available,
+      notInRequest: this.request.id
+    };
   }
 
-  getRequestProcesses() {
-    this.requestService.getRequest(this.request.id)
-      .pipe(map(dao => {
-        return dao.processes
-          .map(processDao => processDao.candidate.id);
-      }))
-      .subscribe(result => {
-        this.existingCandidates = result;
-        this.getAllCandidates();
-      });
+  resetForms() {
+    this.filterForm.reset({profiles: [], available: false, notInRequest: this.request.id});
+    this.loadTable();
+    this.count();
   }
 }

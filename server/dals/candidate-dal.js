@@ -18,7 +18,7 @@ module.exports = (query, moment) => {
 
     async function getCandidates({
                                      pageNumber = null, pageSize = null,
-                                     available = null, profiles = null
+                                     notInRequest = null, available = null, profiles = null
                                  }) {
         const statement = {
             name: 'Get Candidates',
@@ -27,16 +27,18 @@ module.exports = (query, moment) => {
                 `LEFT JOIN ${candidateProfiles.table} AS CP ` +
                 `ON C.${candidate.id} = CP.${candidateProfiles.candidateId} ` +
                 `WHERE (C.${candidate.available} = $1 OR $1 is null) AND ` +
-                `(CP.${candidateProfiles.profile} = ANY($2) OR $2 is null) ` +
+                `(CP.${candidateProfiles.profile} = ANY($2) OR $2 is null) AND ` +
+                `(NOT EXISTS (SELECT * FROM ${process.table} AS P WHERE ` +
+                `C.${candidate.id} = P.${process.candidateId} AND P.${process.requestId} = $5) OR $5 is null) ` +
                 `ORDER BY C.${candidate.id} LIMIT $3 OFFSET $4;`,
-            values: [available, profiles, pageSize, pageSize && pageNumber ? pageNumber * pageSize : 0]
+            values: [available, profiles, pageSize, pageSize && pageNumber ? pageNumber * pageSize : 0, notInRequest]
         }
 
         const result = await query(statement)
         return result.rows.map(row => extract(row))
     }
 
-    async function countCandidates({available = null, profiles = null}) {
+    async function countCandidates({available = null, profiles = null, notInRequest = null}) {
         const statement = {
             name: 'Count Candidates',
             text:
@@ -44,9 +46,10 @@ module.exports = (query, moment) => {
                 `LEFT JOIN ${candidateProfiles.table} AS CP ` +
                 `ON C.${candidate.id} = CP.${candidateProfiles.candidateId} ` +
                 `WHERE (C.${candidate.available} = $1 OR $1 is null) AND ` +
-                `(CP.${candidateProfiles.profile} = ANY($2) OR $2 is null);`,
-            // `GROUP BY R.${requestSchema.id};`,
-            values: [available, profiles]
+                `(CP.${candidateProfiles.profile} = ANY($2) OR $2 is null) AND ` +
+                `(NOT EXISTS (SELECT * FROM ${process.table} AS P WHERE ` +
+                `C.${candidate.id} = P.${process.candidateId} AND P.${process.requestId} = $3) OR $3 is null);`,
+            values: [available, profiles, notInRequest]
         }
         const result = await query(statement)
         return extractCount(result.rows[0]);

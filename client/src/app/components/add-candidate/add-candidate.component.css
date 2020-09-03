@@ -2,6 +2,10 @@
   max-width: fit-content;
 }
 
+.general-margin {
+  margin: 10px;
+}
+
 #filter-box {
   margin-left: 50px;
   display: inline;
@@ -11,6 +15,14 @@
   margin-bottom: 10px;
   margin-right: 10px;
   display: inline;
+}
+
+.mat-row:hover {
+  background-color: lightgrey;
+}
+
+.card-body:hover {
+  background-color: orangered;
 }
 
 .reset {

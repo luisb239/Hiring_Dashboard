@@ -14,13 +14,15 @@ module.exports = function (router, candidatesController, validator, upload, hand
         query('pageNumber').optional().isInt(),
         query('pageSize').optional().isInt(),
         query('available').optional().isBoolean().withMessage("Available must be of boolean type"),
-        query('profiles').optional().isString().withMessage("Profiles must be of string type separated by ','")
+        query('profiles').optional().isString().withMessage("Profiles must be of string type separated by ','"),
+        query('notInRequest').optional().isInt()
     ], handle(candidatesController.getCandidates))
 
     router.get(`/${root}/count`, [
         verifyIfAuthenticated,
         query('available').optional().isBoolean().withMessage("Available must be of boolean type"),
-        query('profiles').optional().isString().withMessage("Profiles must be of string type separated by ','")
+        query('profiles').optional().isString().withMessage("Profiles must be of string type separated by ','"),
+        query('notInRequest').optional().isInt(),
     ], handle(candidatesController.countCandidates))
 
     /**

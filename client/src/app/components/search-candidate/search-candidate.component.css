@@ -8,6 +8,10 @@
   display: inline;
 }
 
+.mat-row:hover {
+  background-color: lightgrey;
+}
+
 #profile {
   max-width: fit-content;
 }
