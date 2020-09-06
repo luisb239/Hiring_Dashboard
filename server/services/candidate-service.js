@@ -60,8 +60,8 @@ module.exports = (candidateDb, profilesDb, processDb, transaction) => {
         if (available)
             available = (available === 'true')
 
-        await transaction(async (client) => {
-            const rowCount = await candidateDb.updateCandidate({
+        return await transaction(async (client) => {
+            const newTimestamp = await candidateDb.updateCandidate({
                 id: id,
                 profileInfo: profileInfo,
                 available: available,
@@ -73,10 +73,13 @@ module.exports = (candidateDb, profilesDb, processDb, transaction) => {
                 timestamp: timestamp,
                 client: client
             })
-            if (rowCount === 0)
+            if (!newTimestamp)
                 throw new AppError(errors.conflict,
                     "Conflict trying to update candidate",
                     `The information of candidate ${id} has already been updated`)
+            return {
+                newTimestamp
+            }
         })
     }
 

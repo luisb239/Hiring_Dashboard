@@ -12,6 +12,7 @@ export class RequestDetailsDao {
     public id: number = 0,
     public progress: number = 0,
     public requestDate: string = null,
-    public dateToSendProfile: string = null) {
+    public dateToSendProfile: string = null,
+    public timestamp: string) {
   }
 }

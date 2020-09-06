@@ -38,11 +38,6 @@
   margin-top: 20px;
 }
 
-table {
-  border-collapse: separate;
-  border-spacing: 10px 10px;
-}
-
 .candidate_name{
   cursor: pointer;
 }

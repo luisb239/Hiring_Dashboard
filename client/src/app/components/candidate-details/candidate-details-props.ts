@@ -15,6 +15,5 @@ export class CandidateDetailsProps {
   updateForm: FormGroup;
   infoForm: FormControl;
   profilesForm: FormControl;
-  timestamp: string;
   newCandidate: Candidate;
 }

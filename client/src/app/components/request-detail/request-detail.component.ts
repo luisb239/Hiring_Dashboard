@@ -14,7 +14,6 @@ import {RequestPropsService} from '../../services/requestProps/requestProps.serv
 import {LanguageCheckbox} from '../../model/requestProps/language-checkbox';
 import {AuthService} from '../../services/auth/auth.service';
 import {ErrorType} from '../../services/common-error';
-import * as moment from 'moment';
 import {forkJoin, Observable} from 'rxjs';
 
 @Component({
@@ -107,7 +106,7 @@ export class RequestDetailComponent implements OnInit {
     const addLanguagesObservables = mandatoryLanguagesToAdd.concat(valuedLanguagesToAdd);
 
     if (this.patchObj && Object.keys(this.patchObj).length) {
-      this.patchObj.timestamp = this.properties.timestamp;
+      this.patchObj.timestamp = this.properties.requestList.timestamp;
       this.requestService.updateRequest(this.properties.requestId, this.patchObj)
         .pipe(concatMap(() => this.addAndRemoveLanguages(removeLanguagesObservables, addLanguagesObservables)))
         .subscribe(() => {
@@ -259,14 +258,17 @@ export class RequestDetailComponent implements OnInit {
             dao.request.skill,
             dao.request.stateCsl,
             dao.request.targetDate,
-            dao.request.profile);
+            dao.request.profile,
+            [],
+            dao.request.timestamp);
           return {dao, requests};
         }),
         map(data => {
           const userRoles = data.dao.userRoles
             .map(userRoleDao => new UserRole(userRoleDao.userId, userRoleDao.email, userRoleDao.roleId, userRoleDao.role));
           const processes = data.dao.processes
-            .map(processDao => new ProcessList(processDao.status, processDao.candidate.id, processDao.candidate.name));
+            .map(processDao =>
+              new ProcessList(processDao.status, processDao.candidate.id, processDao.candidate.name, processDao.timestamp));
           const mandatory = data.dao.languages
             .filter(languageDao => languageDao.isMandatory)
             .map(l => new LanguageCheckbox(l.language, true, true));
@@ -284,7 +286,6 @@ export class RequestDetailComponent implements OnInit {
         this.properties.processes = result.processes;
         this.properties.initialMandatoryLanguages = result.mandatory;
         this.properties.initialValuedLanguages = result.valued;
-        this.properties.timestamp = moment.utc().format('YYYY-MM-DDTHH:mm:ss.SSS');
         // Get all recruiters
         this.userService.getRoleIdByName('recruiter')
           .pipe(

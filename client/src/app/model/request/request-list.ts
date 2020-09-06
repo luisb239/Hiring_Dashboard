@@ -14,7 +14,8 @@ export class RequestList {
               public stateCSL: string = '',
               public targetDate: string = '',
               public profile: string = '',
-              public phases: Phase[] = []
+              public phases: Phase[] = [],
+              public timestamp: string = ''
   ) {
   }
 

@@ -103,7 +103,7 @@ module.exports = (service) => {
     }
 
     async function patchRequest(req, res) {
-        await service.updateRequest({
+        const {newTimestamp} = await service.updateRequest({
             id: req.params.id,
             state: req.body.state,
             stateCsl: req.body.stateCsl,
@@ -120,7 +120,8 @@ module.exports = (service) => {
         })
 
         res.status(201).send({
-            message: 'Request updated successfully'
+            newTimestamp,
+            message: `Request ${req.params.id} updated successfully`
         })
     }
 

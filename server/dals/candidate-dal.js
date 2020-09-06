@@ -4,7 +4,7 @@ const candidate = require('./dal-schemas/candidate-schema.js')
 const process = require('./dal-schemas/process/process-schema.js')
 const candidateProfiles = require('./dal-schemas/candidate-profile-schema.js')
 
-module.exports = (query, moment) => {
+module.exports = (query) => {
 
     return {
         getCandidates: getCandidates,
@@ -94,7 +94,7 @@ module.exports = (query, moment) => {
     async function createCandidate({
                                        name, available = true, profileInfo = null,
                                        cvBuffer, cvMimeType, cvFileName, cvEncoding,
-                                       cvVersionId, timestamp = moment.utc().format('YYYY-MM-DDTHH:mm:ss.SSS')
+                                       cvVersionId,
                                    }) {
         const statement = {
             name: 'Create Candidate',
@@ -102,10 +102,10 @@ module.exports = (query, moment) => {
                 `INSERT INTO ${candidate.table} ` +
                 `(${candidate.name}, ${candidate.cv}, ${candidate.cvMimeType}, ${candidate.cvFileName}, ` +
                 `${candidate.cvEncoding}, ${candidate.available}, ${candidate.profileInfo}, ` +
-                `${candidate.timestamp}, ${candidate.cvVersionId}) ` +
-                `VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) ` +
+                `${candidate.cvVersionId}, ${candidate.timestamp}) ` +
+                `VALUES ($1, $2, $3, $4, $5, $6, $7, $8, CURRENT_TIMESTAMP) ` +
                 `RETURNING ${candidate.id};`,
-            values: [name, cvBuffer, cvMimeType, cvFileName, cvEncoding, available, profileInfo, timestamp, cvVersionId]
+            values: [name, cvBuffer, cvMimeType, cvFileName, cvEncoding, available, profileInfo, cvVersionId]
         }
 
         const result = await query(statement)
@@ -115,8 +115,7 @@ module.exports = (query, moment) => {
 
     async function updateCandidate({
                                        id, cvFileName, cvMimeType, cvBuffer,
-                                       cvEncoding, cvVersionId, profileInfo, available, client,
-                                       timestamp, newTimestamp = moment.utc().format('YYYY-MM-DDTHH:mm:ss.SSS')
+                                       cvEncoding, cvVersionId, profileInfo, available, client, timestamp
                                    }) {
         const statement = {
             name: 'Update Candidate',
@@ -129,17 +128,25 @@ module.exports = (query, moment) => {
                 `${candidate.cvVersionId} = COALESCE($5, ${candidate.cvVersionId}), ` +
                 `${candidate.profileInfo} = COALESCE($6, ${candidate.profileInfo}), ` +
                 `${candidate.available} = COALESCE($7, ${candidate.available}), ` +
-                `${candidate.timestamp} = $10 ` +
-                `WHERE ${candidate.id} = $8 AND ${candidate.timestamp} < $9;`,
+                `${candidate.timestamp} = CURRENT_TIMESTAMP ` +
+                `WHERE ${candidate.id} = $8 AND ${candidate.timestamp} = $9 ` +
+                `RETURNING ${candidate.timestamp};`,
             values: [cvBuffer, cvFileName, cvMimeType, cvEncoding, cvVersionId, profileInfo, available,
-                id, timestamp, newTimestamp]
+                id, timestamp]
         }
 
         const res = await query(statement, client)
-        return res.rowCount
+        if (res.rowCount) {
+            return extractTimestamp(res.rows[0])
+        }
+        return null
     }
 
-    async function getCandidateCvInfo({ id }) {
+    function extractTimestamp(row) {
+        return row[candidate.timestamp]
+    }
+
+    async function getCandidateCvInfo({id}) {
         const statement = {
             name: 'Get Candidate Cv Info',
             text:
@@ -163,7 +170,8 @@ module.exports = (query, moment) => {
             available: obj[candidate.available],
             profileInfo: obj[candidate.profileInfo],
             cvFileName: obj[candidate.cvFileName],
-            cvVersionId: obj[candidate.cvVersionId]
+            cvVersionId: obj[candidate.cvVersionId],
+            timestamp: obj[candidate.timestamp]
         }
     }
 

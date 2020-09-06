@@ -100,14 +100,8 @@ export class AllRequestsComponent implements OnInit, AfterViewInit {
       .subscribe(result => this.properties.workflows = result);
 
     this.reqPropsService.getTargetDates()
-      .pipe(map(dao => {
-        console.log(dao);
-        return dao.months.map(m => m.month);
-      }))
-      .subscribe(result => {
-        console.log(result);
-        this.properties.targetDates = result;
-      });
+      .pipe(map(dao => dao.months.map(m => m.month)))
+      .subscribe(result => this.properties.targetDates = result);
   }
 
   onSubmit() {

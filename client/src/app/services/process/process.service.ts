@@ -4,6 +4,7 @@ import {RequestProcessesDao} from '../../model/request/request-processes-dao';
 import {ProcessDao} from '../../model/process/process-dao';
 import {UnavailableReasonsDao} from '../../model/process/unavailable-reasons-dao';
 import {StatusListDao} from '../../model/process/status-dao';
+import {map} from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -38,10 +39,10 @@ export class ProcessService {
   }
 
   updateProcess(requestId: number, candidateId: number, body: any) {
-    return this.http.patch(`${this.baseUrl}/requests/${requestId}/candidates/${candidateId}/process`, body,
+    return this.http.patch<any>(`${this.baseUrl}/requests/${requestId}/candidates/${candidateId}/process`, body,
       {
         headers: new HttpHeaders({'Content-Type': 'application/json'})
-      });
+      }).pipe(map(res => res.newTimestamp));
   }
 
   getReasons() {

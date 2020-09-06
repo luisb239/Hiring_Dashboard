@@ -24,8 +24,5 @@ export class RequestDetailProps {
   languages: string[];
   states: string[];
   statesCsl: string[];
-
   updateForm: FormGroup;
-
-  timestamp: string;
 }

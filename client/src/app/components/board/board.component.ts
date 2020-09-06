@@ -18,7 +18,6 @@ import {AlertService} from '../../services/alert/alert.service';
 import {Content} from './content';
 import {map, startWith} from 'rxjs/operators';
 import {ErrorType} from '../../services/common-error';
-import * as moment from 'moment';
 
 @Component({
   selector: 'app-board',
@@ -61,11 +60,11 @@ export class BoardComponent implements OnInit {
             .map(process => {
               const candidate = new Candidate(process.candidate.name, process.candidate.id);
               candidate.status = process.status;
+              candidate.timestamp = process.timestamp;
               return candidate;
             });
         });
         request.placedCandidates = dao.processes.filter(proc => proc.status === 'Placed').length || 0;
-        this.properties.timestampDictionary[request.id] = moment().utc().format('YYYY-MM-DDTHH:mm:ss.SSS');
       });
   }
 
@@ -79,7 +78,7 @@ export class BoardComponent implements OnInit {
         event.currentIndex
       );
       this.processPhaseService.updateProcessPhase(request.id, event.container.data[event.currentIndex].id,
-        newPhase, this.properties.timestampDictionary[request.id])
+        newPhase, event.container.data[event.currentIndex].timestamp)
         .subscribe(() => {
             this.alertService.success('Candidate successfully switched phases');
             this.fetchProcessesInRequest(request);
@@ -154,8 +153,6 @@ export class BoardComponent implements OnInit {
           this.properties.requests = [];
           this.properties.requests.push(new RequestList(filteredRequest.id, filteredRequest.workflow, filteredRequest.progress,
             filteredRequest.state, filteredRequest.description, filteredRequest.quantity));
-          this.properties.requests.forEach(request =>
-            this.properties.timestampDictionary[request.id] = moment().utc().format('YYYY-MM-DDTHH:mm:ss.SSS'));
           this.properties.workflows = [];
           this.properties.workflows.push(new Workflow(filteredRequest.workflow));
           this.properties.workflows.forEach(workflow => {
@@ -180,8 +177,6 @@ export class BoardComponent implements OnInit {
             .filter(r => r.workflow === this.properties.control.value)
             .map(r => new RequestList(r.id, r.workflow, r.progress,
               r.state, r.description, r.quantity));
-          this.properties.requests.forEach(request =>
-            this.properties.timestampDictionary[request.id] = moment().utc().format('YYYY-MM-DDTHH:mm:ss.SSS'));
           this.properties.workflows = [];
           this.properties.workflows.push(new Workflow(this.properties.requests[0].workflow));
           this.workflowService.getWorkflowByName(this.properties.workflows[0].workflow)
@@ -205,8 +200,7 @@ export class BoardComponent implements OnInit {
 
   getAllRequests() {
     this.requestService.getUserCurrentRequests()
-      .pipe(
-        map(dao => {
+      .pipe(map(dao => {
           return {
             requests: dao.requests.map(r => new RequestList(r.id, r.workflow, r.progress,
               r.state, r.description, r.quantity))
@@ -219,8 +213,6 @@ export class BoardComponent implements OnInit {
       ).subscribe(
       result => {
         this.properties.requests = result.requests;
-        this.properties.requests.forEach(request =>
-          this.properties.timestampDictionary[request.id] = moment().utc().format('YYYY-MM-DDTHH:mm:ss.SSS'));
         this.properties.workflows = result.workflows;
         this.properties.allRequests = this.properties.requests.map(r => r.description);
         this.properties.allWorkflows = this.properties.workflows.map(w => w.workflow);

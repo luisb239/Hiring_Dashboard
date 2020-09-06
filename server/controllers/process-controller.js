@@ -41,7 +41,7 @@ module.exports = (processService) => {
         const requestId = req.params.requestId
         const candidateId = req.params.candidateId
 
-        await processService.updateProcess({
+        const {newTimestamp} = await processService.updateProcess({
             requestId,
             candidateId,
             newPhase: req.body.newPhase,
@@ -51,7 +51,10 @@ module.exports = (processService) => {
             timestamp: req.body.timestamp,
         })
 
-        res.status(200).send({message: 'Process updated with success'})
+        res.status(200).send({
+            newTimestamp,
+            message: 'Process updated with success'
+        })
     }
 
     async function createProcess(req, res) {
@@ -64,13 +67,16 @@ module.exports = (processService) => {
     }
 
     async function updateProcessPhaseNotes(req, res) {
-        await processService.updateProcessPhaseNotes({
+        const newTimestamp = await processService.updateProcessPhaseNotes({
             requestId: req.params.requestId,
             candidateId: req.params.candidateId,
             phase: req.params.phase,
             notes: req.body.notes,
             timestamp: req.body.timestamp
         })
-        res.status(200).send({message: `Phase ${req.params.phase} notes of process updated with success`})
+        res.status(200).send({
+            newTimestamp: newTimestamp,
+            message: `Phase ${req.params.phase} notes of process updated with success`
+        })
     }
 }

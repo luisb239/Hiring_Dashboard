@@ -4,6 +4,10 @@
 
 .new-value {
   color: red;
+}
+
+.new-value-cv {
+  color: red;
   text-decoration: underline;
   cursor: pointer;
 }

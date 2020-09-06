@@ -5,4 +5,5 @@ export class CandidateDetailsDao {
   cvFileName: string;
   available: boolean;
   profileInfo: string;
+  timestamp: string;
 }

@@ -17,13 +17,13 @@
         && properties.candidate.cvVersionId !== properties.newCandidate.cvVersionId" class="property">
           <h5 class="inline">CV:</h5>
           <h6 class="inline outdated-cv">{{properties.candidate.cv}}</h6>
-          <p (click)="downloadCv()" class="inline new-value">{{properties.newCandidate.cv}}</p>
+          <p (click)="downloadCv()" class="inline new-value-cv">{{properties.newCandidate.cv}}</p>
         </div>
 
         <div *ngIf="properties.newCandidate && !properties.candidate.cv
         && properties.candidate.cvVersionId !== properties.newCandidate.cvVersionId" class="property">
           <h6 class="inline">Missing CV!</h6>
-          <p (click)="downloadCv()" class="inline new-value">{{properties.newCandidate.cv}}</p>
+          <p (click)="downloadCv()" class="inline new-value-cv">{{properties.newCandidate.cv}}</p>
         </div>
         <div *ngIf="!properties.candidate.cv" class="property">
           <h5 id="file-label" class="inline">Curriculum Vitae:</h5>

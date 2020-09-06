@@ -17,7 +17,6 @@ import {FormBuilder} from '@angular/forms';
 import {AlertService} from 'src/app/services/alert/alert.service';
 import {Buffer} from 'buffer';
 import {ErrorType} from '../../services/common-error';
-import * as moment from 'moment';
 
 @Component({
   selector: 'app-candidate-details',
@@ -43,7 +42,6 @@ export class CandidateDetailsComponent implements OnInit {
     this.properties.candidateId = +(history.state.candidateId || this.router.url.split('/')[2]);
     this.candidateService.getCandidateById(this.properties.candidateId)
       .subscribe(dao => {
-        this.properties.timestamp = moment.utc().format('YYYY-MM-DDTHH:mm:ss.SSS');
         const result = dao.candidate;
         this.properties.candidate = new Candidate(result.name,
           result.id,
@@ -51,8 +49,9 @@ export class CandidateDetailsComponent implements OnInit {
           result.available,
           result.cvFileName,
           result.cvVersionId,
+          result.timestamp,
           dao.profiles.map(pi => pi.profile),
-          dao.processes.map(proc => new CandidateProcess(proc.status, proc.requestId)));
+          dao.processes.map(proc => new CandidateProcess(proc.status, proc.requestId, proc.timestamp)));
         this.properties.candidate.processes.filter(process => process.requestId !== this.properties.requestId)
           .forEach(process => {
             this.requestService.getRequest(process.requestId)
@@ -63,20 +62,20 @@ export class CandidateDetailsComponent implements OnInit {
                   request.workflow,
                   request.progress,
                   request.state,
-                  request.description
-                ), [], []);
+                  request.description,
+                ), [], [], []);
               });
 
             this.processService.getProcess(process.requestId, this.properties.candidateId)
               .subscribe(processDao => {
                 this.properties.allProcesses[process.requestId] = new Process(processDao.status,
                   processDao.unavailableReason,
+                  processDao.timestamp,
                   processDao.phases.map(phase => new ProcessPhase(
                     phase.phase,
                     phase.notes,
                     phase.infos.map(info => new PhaseInfo(info.name, info.value))
-                  ))
-                );
+                  )));
                 this.properties.allProcessesKeys.push(String(process.requestId));
               });
           });
@@ -101,7 +100,7 @@ export class CandidateDetailsComponent implements OnInit {
       available: this.properties.candidate.available,
       profiles: this.properties.updateForm.value.profiles.length > 0 ?
         this.properties.updateForm.value.profiles : null,
-      timestamp: this.properties.timestamp
+      timestamp: this.properties.newCandidate ? this.properties.newCandidate.timestamp : this.properties.candidate.timestamp
     };
     this.candidateService.updateCandidate(body, this.properties.candidateId)
       .subscribe(() => {
@@ -147,15 +146,15 @@ export class CandidateDetailsComponent implements OnInit {
       .subscribe(candidateDao => {
         this.properties.newCandidate = null;
         const result = candidateDao.candidate;
-        this.properties.timestamp = moment.utc().format('YYYY-MM-DDTHH:mm:ss.SSS');
         const candidate = new Candidate(result.name,
           result.id,
           result.profileInfo,
           result.available,
           result.cvFileName,
           result.cvVersionId,
+          result.timestamp,
           candidateDao.profiles.map(pi => pi.profile),
-          candidateDao.processes.map(proc => new CandidateProcess(proc.status, proc.requestId)));
+          candidateDao.processes.map(proc => new CandidateProcess(proc.status, proc.requestId, proc.timestamp)));
         if (conflict) {
           this.properties.newCandidate = candidate;
         } else {
@@ -201,8 +200,9 @@ export class CandidateDetailsComponent implements OnInit {
   }
 
   hasProcesses() {
-    return Object.keys(this.properties.allProcesses).length > 0 &&
-      Object.keys(this.properties.allProcesses).length === Object.keys(this.properties.allRequests).length;
+    return this.properties.candidate &&
+      Object.keys(this.properties.allProcesses).length === this.properties.candidate.processes.length
+      && this.properties.candidate.processes.length !== 0;
   }
 
 }

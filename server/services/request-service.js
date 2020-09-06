@@ -74,13 +74,17 @@ module.exports = (requestDb, processDb, requestLanguagesDb, authModule, candidat
         const candidates = await candidateDb.getCandidatesByRequestId({requestId: id});
 
         const processes = await Promise.all(candidates.map(async (candidate) => {
-            const status = await processDb.getProcessStatus({requestId: id, candidateId: candidate.id})
+            const processDetails = await processDb.getProcessStatusAndTimestamp({
+                requestId: id,
+                candidateId: candidate.id
+            })
             return {
                 candidate: ({
                     id: candidate.id,
                     name: candidate.name
                 }),
-                status: status.status
+                status: processDetails.status,
+                timestamp: processDetails.timestamp
             }
         }))
 
@@ -120,16 +124,19 @@ module.exports = (requestDb, processDb, requestLanguagesDb, authModule, candidat
                                  }) {
 
         return await transaction(async (client) => {
-            const rowCount = await requestDb.updateRequest({
+            const newTimestamp = await requestDb.updateRequest({
                 id, state, stateCsl, description, quantity,
                 targetDate, skill, project, profile, dateToSendProfile,
                 observedTimestamp: timestamp, client
             })
 
-            if (rowCount === 0)
+            if (!newTimestamp)
                 throw new AppError(errors.conflict,
                     "Request not updated",
                     `Request ${id} has already been updated`)
+            return {
+                newTimestamp
+            }
         })
     }
 

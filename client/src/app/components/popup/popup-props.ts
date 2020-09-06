@@ -11,12 +11,9 @@ export class PopupProps {
   phase: ProcessPhase;
   candidate: Candidate;
   attributeTemplates: PhaseAttribute[] = [];
-  /*newStatus: string;
-  newUnavailableReasons: string;*/
   newProcess: Process;
   newPhaseNotes: string;
   newAttributeTemplates: any = {};
   updateForm: FormGroup;
-  timestamp: string;
   conflict: boolean;
 }

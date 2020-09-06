@@ -44,8 +44,9 @@ module.exports = (service) => {
 
     async function updateCandidate(req, res) {
         const fileInfo = req.file
+        let newInfo;
         if (fileInfo) {
-            await service.updateCandidate({
+            newInfo = await service.updateCandidate({
                 id: req.params.id,
                 cvFileName: fileInfo.originalname,
                 cvMimeType: fileInfo.mimetype,
@@ -56,14 +57,17 @@ module.exports = (service) => {
                 timestamp: req.body.timestamp
             })
         } else {
-            await service.updateCandidate({
+            newInfo = await service.updateCandidate({
                 id: req.params.id,
                 profileInfo: req.body.profileInfo,
                 available: req.body.available,
                 timestamp: req.body.timestamp
             })
         }
-        res.status(200).send({message: 'Candidate updated successfully'})
+        res.status(200).send({
+            newTimestamp: newInfo.newTimestamp,
+            message: 'Candidate updated successfully'
+        })
     }
 
     async function addCandidateProfile(req, res) {

@@ -9,7 +9,7 @@ module.exports = (requestDb, candidateDb, processDb, phaseDb, infoDb, processUna
     return {
         getProcessDetail,
         getProcessesByRequestId,
-        updateProcess,
+        updateProcess: updateProcess,
         updateProcessCurrentPhase,
         createProcess,
         getUnavailableReasons,
@@ -30,7 +30,7 @@ module.exports = (requestDb, candidateDb, processDb, phaseDb, infoDb, processUna
     }
 
     async function createProcess({requestId, candidateId}) {
-        return transaction(async (client) => {
+        return await transaction(async (client) => {
             await processDb.createProcess({requestId, candidateId, status: "Onhold", client})
 
             const {workflow} = await requestDb.getRequestById({id: requestId, client})
@@ -64,13 +64,14 @@ module.exports = (requestDb, candidateDb, processDb, phaseDb, infoDb, processUna
                 requestId,
                 candidateId: candidate.id
             })
-            const status = await processDb.getProcessStatus({requestId, candidateId: candidate.id})
+            const processDetails = await processDb.getProcessStatusAndTimestamp({requestId, candidateId: candidate.id})
             return {
                 candidate: ({
                     id: candidate.id,
                     name: candidate.name
                 }),
-                status: status.status,
+                status: processDetails.status,
+                timestamp: processDetails.timestamp,
                 phase: processCurrentPhase.currentPhase
             }
         }))
@@ -84,19 +85,19 @@ module.exports = (requestDb, candidateDb, processDb, phaseDb, infoDb, processUna
                                      requestId, candidateId, newPhase, status,
                                      unavailableReason, infoArray, timestamp
                                  }) {
-        await transaction(async (client) => {
-
+        return await transaction(async (client) => {
+            const processDetails = await processDb.getProcessStatusAndTimestamp({requestId, candidateId, client})
             let oldStatus;
-            if(status)
-                oldStatus = await processDb.getProcessStatus({requestId, candidateId, client})
+            if (status)
+                oldStatus = processDetails.status;
 
-            const rowCount = await processDb.updateProcess({requestId, candidateId, timestamp, status, client})
-            if (rowCount === 0)
+            const newTimestamp = await processDb.updateProcess({requestId, candidateId, timestamp, status, client})
+            if (!newTimestamp)
                 throw new AppError(errors.conflict,
                     "Process not updated",
                     `Process of candidate ${candidateId} in request ${requestId} has already been updated`)
 
-            if(oldStatus) {
+            if (oldStatus) {
                 const candidate = await candidateDb.getCandidateById({id: candidateId, client})
                 const request = await requestDb.getRequestById({id: requestId, client})
                 await emailService.notifyStatus({id: requestId, oldStatus, status, candidate, request})
@@ -113,7 +114,12 @@ module.exports = (requestDb, candidateDb, processDb, phaseDb, infoDb, processUna
             if (infoArray) {
                 await updateProcessInfoValues({requestId, candidateId, infoArray, client})
             }
+
+            return {
+                newTimestamp
+            }
         })
+
     }
 
     /**
@@ -125,9 +131,14 @@ module.exports = (requestDb, candidateDb, processDb, phaseDb, infoDb, processUna
      * @returns {Promise<{unavailableReason: (*|null), currentPhase: *, phases: number[], status: string}>}
      */
     async function getProcessDetail({requestId, candidateId}) {
-        const currentPhase = await processPhaseDb.getProcessCurrentPhase({requestId, candidateId})
+        const processDetails = await processDb.getProcessStatusAndTimestamp({requestId, candidateId})
 
-        const status = await processDb.getProcessStatus({requestId, candidateId})
+        if (!processDetails) {
+            throw new AppError(errors.notFound, "Process not found",
+                `Process of candidate ${candidateId} in request ${requestId} does not exist`)
+        }
+
+        const currentPhase = await processPhaseDb.getProcessCurrentPhase({requestId, candidateId})
 
         const reason = await processUnavailableReasonDb.getProcessUnavailableReason({requestId, candidateId})
 
@@ -158,7 +169,8 @@ module.exports = (requestDb, candidateDb, processDb, phaseDb, infoDb, processUna
         }))
 
         return {
-            status: status ? status.status : null,
+            timestamp: processDetails.timestamp,
+            status: processDetails.status,
             unavailableReason: reason ? reason.unavailableReason : null,
             currentPhase: currentPhase ? currentPhase.currentPhase : null,
             phases: processDetailedPhases
@@ -298,16 +310,20 @@ module.exports = (requestDb, candidateDb, processDb, phaseDb, infoDb, processUna
             await processPhaseDb.updatePhaseOfProcess({
                 requestId, candidateId, phase, notes, client
             })
-
-            if (!await processDb.updateProcess({
+            const newTimestamp = await processDb.updateProcess({
                 requestId: requestId,
                 candidateId: candidateId,
                 timestamp: timestamp,
                 client: client
-            })) {
+            })
+
+            if (!newTimestamp) {
                 throw new AppError(errors.conflict,
                     'Could not Update Process Notes',
                     'The process notes have already been updated')
+            }
+            return {
+                timestamp: newTimestamp
             }
         })
     }

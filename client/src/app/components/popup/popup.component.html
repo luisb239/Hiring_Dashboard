@@ -46,7 +46,7 @@
           <p
             *ngIf="properties.newProcess && properties.newProcess.unavailableReason !== properties.process.unavailableReason"
             class="inline new-value">
-            {{properties.newProcess.unavailableReason}}
+            {{!properties.newProcess.unavailableReason ? '(Candidate unavailable reasons have been deleted)' : properties.newProcess.unavailableReason}}
           </p>
         </div>
         <div class="property">

@@ -9,10 +9,9 @@ import {ProcessService} from '../../services/process/process.service';
 import {CandidateService} from '../../services/candidate/candidate.service';
 import {PhaseService} from '../../services/phase/phase.service';
 import {ProcessPhaseService} from '../../services/process-phase/process-phase.service';
-import {concatMap, map} from 'rxjs/operators';
+import {map} from 'rxjs/operators';
 import {AlertService} from '../../services/alert/alert.service';
 import {ErrorType} from '../../services/common-error';
-import * as moment from 'moment';
 import {PopupProps} from './popup-props';
 
 @Component({
@@ -63,7 +62,7 @@ export class PopupComponent implements OnInit, OnDestroy {
       .subscribe(dao => {
         this.properties.updateForm.addControl('status', new FormControl(dao.status));
         this.properties.updateForm.addControl('unavailableReason', new FormControl(dao.unavailableReason));
-        this.properties.process = new Process(dao.status, dao.unavailableReason);
+        this.properties.process = new Process(dao.status, dao.unavailableReason, dao.timestamp);
 
         this.processService.getReasons()
           .subscribe(reasonDao => {
@@ -129,38 +128,40 @@ export class PopupComponent implements OnInit, OnDestroy {
       body.status = this.properties.updateForm.value.status;
     }
 
-    if (this.properties.process.unavailableReason !== this.properties.updateForm.value.unavailableReason
-      || (this.properties.newProcess && this.properties.newProcess.unavailableReason !== this.properties.process.unavailableReason)) {
-      body.unavailableReason = this.properties.updateForm.value.unavailableReason;
+    if (this.properties.updateForm.value.unavailableReason) {
+      if (this.properties.process.unavailableReason !== this.properties.updateForm.value.unavailableReason
+        || (this.properties.newProcess && this.properties.newProcess.unavailableReason !== this.properties.process.unavailableReason)) {
+        body.unavailableReason = this.properties.updateForm.value.unavailableReason;
+      }
     }
 
     if (attributeArray.length > 0) {
       body.infos = attributeArray;
     }
 
-    body.timestamp = this.properties.timestamp;
+    body.timestamp = this.properties.newProcess ? this.properties.newProcess.timestamp : this.properties.process.timestamp;
 
-    this.processService.updateProcess(this.requestId, this.candidateId, body).subscribe(() => {
-      if (this.properties.phase.notes !== this.properties.updateForm.value.phaseNotes
-        || (this.properties.newPhaseNotes && this.properties.newPhaseNotes !== this.properties.updateForm.value.phaseNotes)) {
-        this.properties.timestamp = moment.utc().format('YYYY-MM-DDTHH:mm:ss.SSS');
-        this.processPhaseService.updateProcessPhaseNotes(
-          this.requestId,
-          this.candidateId,
-          this.properties.phase.phase,
-          this.properties.updateForm.value.phaseNotes,
-          this.properties.timestamp
-        ).subscribe(() => {
+    this.processService.updateProcess(this.requestId, this.candidateId, body)
+      .subscribe((newTimestamp) => {
+        if (this.properties.phase.notes !== this.properties.updateForm.value.phaseNotes
+          || (this.properties.newPhaseNotes && this.properties.newPhaseNotes !== this.properties.updateForm.value.phaseNotes)) {
+          this.processPhaseService.updateProcessPhaseNotes(
+            this.requestId,
+            this.candidateId,
+            this.properties.phase.phase,
+            this.properties.updateForm.value.phaseNotes,
+            newTimestamp
+          ).subscribe(() => {
+            this.closeModal();
+          }, error => {
+            this.handleConflict(error);
+          });
+        } else {
           this.closeModal();
-        }, error => {
-          this.handleConflict(error);
-        });
-      } else {
-        this.closeModal();
-      }
-    }, error => {
-      this.handleConflict(error);
-    });
+        }
+      }, error => {
+        this.handleConflict(error);
+      });
   }
 
   handleConflict(error) {
@@ -170,8 +171,8 @@ export class PopupComponent implements OnInit, OnDestroy {
       this.alertService.warn('The red value(s) indicates what has been updated by another user.' +
         ' Merge your information or close this page and overwrite your values.',
         {autoClose: false, keepAfterRouteChange: false});
-      this.getNewValues();
     }
+    this.getNewValues();
   }
 
   closeModal() {
@@ -196,7 +197,7 @@ export class PopupComponent implements OnInit, OnDestroy {
       cv: null,
       profileInfo: this.properties.candidate.profileInfo,
       available: !this.properties.candidate.available,
-      timestamp: this.properties.timestamp
+      timestamp: this.properties.candidate.timestamp
     };
     this.candidateService.updateCandidate(updateBody, this.candidateId)
       .subscribe(() => {
@@ -217,9 +218,10 @@ export class PopupComponent implements OnInit, OnDestroy {
         dao.candidate.id,
         dao.candidate.profileInfo,
         dao.candidate.available,
-        dao.candidate.cvFileName)))
+        dao.candidate.cvFileName,
+        dao.candidate.cvVersionId,
+        dao.candidate.timestamp)))
       .subscribe(result => {
-        this.properties.timestamp = moment.utc().format('YYYY-MM-DDTHH:mm:ss.SSS');
         this.properties.candidate = result;
       }, error => {
         if (error === ErrorType.NOT_FOUND) {
@@ -238,8 +240,7 @@ export class PopupComponent implements OnInit, OnDestroy {
     this.getCandidateInfo();
     this.processService.getProcess(this.requestId, this.candidateId)
       .subscribe(dao => {
-        this.properties.newProcess = new Process(dao.status, dao.unavailableReason);
-
+        this.properties.newProcess = new Process(dao.status, dao.unavailableReason, dao.timestamp);
         const phaseNotes = dao.phases.find(p => p.phase === dao.currentPhase).notes;
         this.properties.newPhaseNotes = phaseNotes === null ? '' : phaseNotes;
         this.phaseService.getPhase(this.phaseName)
@@ -247,9 +248,8 @@ export class PopupComponent implements OnInit, OnDestroy {
             this.properties.newAttributeTemplates = {};
             phaseDao.infos
               .forEach(pi => {
-                  this.properties.newAttributeTemplates[pi.name] = new PhaseAttribute(pi.name, pi.value.type);
-                }
-              );
+                this.properties.newAttributeTemplates[pi.name] = new PhaseAttribute(pi.name, pi.value.type);
+              });
             Object.keys(this.properties.newAttributeTemplates)
               .forEach(at => this.properties.newAttributeTemplates[at] = dao.phases
                 .find(phase => phase.phase === this.phaseName).infos

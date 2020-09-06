@@ -44,7 +44,7 @@ module.exports = function (router, candidatesController, validator, upload, hand
         upload.single('cv'),
         body('profileInfo').optional().isString().withMessage("Profile information must be of string type"),
         body('available').optional().isString().withMessage("Available must be of string type"),
-        body('timestamp').exists().toDate().withMessage("timestamp must exist and must be of date type")
+        body('timestamp').exists().withMessage("timestamp must exist and must be of date type")
     ], handle(candidatesController.updateCandidate))
 
     /**
