@@ -16,6 +16,7 @@ import {saveAs} from 'file-saver';
 export class StatisticsComponent {
   @ViewChild('pivot1') child: WebDataRocksPivotComponent;
   properties: StatisticsProps = new StatisticsProps();
+  currentProfileName: string;
 
   onCustomizeCell(cell: WebDataRocks.CellBuilder, data: WebDataRocks.CellData): void {
     if (data.isClassicTotalRow) {
@@ -122,9 +123,11 @@ export class StatisticsComponent {
   openRemotelyHandler() {
     const modalRef = this.modalService.open(StatisticsProfilesComponent);
     modalRef.componentInstance.isSave = false;
+    modalRef.componentInstance.currentProfileName = this.currentProfileName || 'Default';
     modalRef.componentInstance.profileChosen.subscribe(
       (profile) => {
         this.child.webDataRocks.setReport(profile.configs);
+        this.currentProfileName = profile.profileName;
       });
   }
 

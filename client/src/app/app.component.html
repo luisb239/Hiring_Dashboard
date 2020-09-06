@@ -53,7 +53,7 @@
               <a [routerLinkActive]="['active']" [routerLink]="['/search-candidate']" class="dropdown-item">
                 Search Candidates
               </a>
-              <a *ngIf='authService.isRecruiter()' [routerLinkActive]="['active']"
+              <a *ngIf='authService.isRecruiter() || authService.isTeamLeader()' [routerLinkActive]="['active']"
                  [routerLink]="['/create-candidate']" class="dropdown-item">
                 Create Candidate
               </a>

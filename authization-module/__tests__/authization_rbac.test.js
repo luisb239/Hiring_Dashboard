@@ -33,7 +33,7 @@ describe("AuthizationRbac testing", () => {
 
         await authizationRbac.init()
 
-        const can = await authizationRbac.can('guest', 'GET', 'authentications')
+        const can = await authizationRbac.can(['guest'], 'GET', 'authentications')
         console.log(can)
 
         expect(can).toBeTruthy()
@@ -49,7 +49,7 @@ describe("AuthizationRbac testing", () => {
             ["POST", "authentications"]
         ]
 
-        const canAll = await authizationRbac.canAll('guest', permissionsToCheck)
+        const canAll = await authizationRbac.canAll(['guest'], permissionsToCheck)
 
         expect(canAll).toBeTruthy()
     });
@@ -64,7 +64,7 @@ describe("AuthizationRbac testing", () => {
             ["DELETE", "users"]
         ]
 
-        const canAny = await authizationRbac.canAny('guest', permissionsToCheck)
+        const canAny = await authizationRbac.canAny(['guest'], permissionsToCheck)
 
         expect(canAny).toBeTruthy()
 

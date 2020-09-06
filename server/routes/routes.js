@@ -58,23 +58,6 @@ module.exports = function (router, controllers, authModule, upload, validator) {
         param('phase').isString().withMessage("Phase must be of string type")
     ], handle(controllers.phase.getPhase))
 
-    /**
-     * Get all workflows
-     */
-    //TODO -> not consistent -> should be /workflows, instead of /requests-properties/workflows
-    router.get(`/${requestAttributes}/${workflows}`, verifyIfAuthenticated,
-        handle(controllers.requestProps.getWorkflows))
-
-    /*
-    router.post(`/${candidates}/:id/profiles`, [
-        body('profileToAdd').exists().isString().withMessage("Profile to add to candidate")
-    ], handle(controllers.candidate.addProfileToCandidate))
-
-    router.delete(`/${candidates}/:id/profiles/:profile`,
-        handle(controllers.candidate.removeCandidateProfile))
-
-     */
-
     //TODO -> Change routes names, maybe /reasons and /status..
     // or /process-unavailable-reasons and /process-status
     router.get(`/process/reasons`, verifyIfAuthenticated, handle(controllers.process.getUnavailableReasons))

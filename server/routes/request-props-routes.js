@@ -10,6 +10,7 @@ module.exports = function (router, requestPropsController, handle, verifyIfAuthe
     const profiles = 'profiles'
     const languages = 'languages'
     const months = 'months'
+    const workflows = 'workflows'
 
     /**
      * Get all skills
@@ -45,4 +46,9 @@ module.exports = function (router, requestPropsController, handle, verifyIfAuthe
      * Get all months
      */
     router.get(`/${root}/${months}`, verifyIfAuthenticated, handle(requestPropsController.getMonths))
+    /**
+     * Get
+     */
+    router.get(`/${root}/${workflows}`, verifyIfAuthenticated,
+        handle(requestPropsController.getWorkflows))
 }

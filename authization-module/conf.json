@@ -1,0 +1,36 @@
+{
+  "tags": {
+    "allowUnknownTags": true
+  },
+  "source": {
+    "include": [
+      "./"
+    ],
+    "exclude": [
+      ".git",
+      ".meteor",
+      "node_modules"
+    ],
+    "includePattern": ".+\\.js(doc)?$",
+    "excludePattern": "(node_modules|docs)"
+  },
+  "plugins": [],
+  "templates": {
+    "cleverLinks": false,
+    "monospaceLinks": true,
+    "systemName": "remoteFileExplorer",
+    "footer": "Created by Simon Speich",
+    "copyright": "2013",
+    "navType": "vertical",
+    "theme": "spacelab",
+    "linenums": true,
+    "collapseSymbols": true,
+    "inverseNav": false
+  },
+  "opts": {
+    "encoding": "utf8",
+    "destination": "../documentation/",
+    "recurse": true,
+    "private": true
+  }
+}

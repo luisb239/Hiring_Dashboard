@@ -15,6 +15,7 @@ export class StatisticsProfilesComponent implements OnInit {
 
   @Input() isSave: boolean;
   @Input() inputReport: any;
+  @Input() currentProfileName: string;
   @Output() profileChosen = new EventEmitter<ConfigProfile>();
   properties: StatisticsProfilesProps = new StatisticsProfilesProps();
 
@@ -27,9 +28,13 @@ export class StatisticsProfilesComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.statisticsService.getUserConfigProfiles()
-      .subscribe(result =>
-        this.properties.configProfiles = result.configs.map(configDao => new ConfigProfile(configDao.profileName)));
+    if (!this.isSave) {
+      this.statisticsService.getUserConfigProfiles()
+        .subscribe(result =>
+          this.properties.configProfiles = result.configs
+            .map(configDao => new ConfigProfile(configDao.profileName))
+            .filter(config => config.profileName !== this.currentProfileName));
+    }
     this.properties.form = this.formBuilder.group({
       createProfileForm: this.formBuilder.control(''),
       getProfileForm: this.formBuilder.control('')
@@ -53,11 +58,14 @@ export class StatisticsProfilesComponent implements OnInit {
     const value = this.properties.form.value;
     this.statisticsService.getUserConfigProfileDetails(value.getProfileForm)
       .subscribe(configDao => {
-        this.properties.currentProfile =
-          new ConfigProfile(configDao.profileName, configDao.configs);
+        this.properties.currentProfile = new ConfigProfile(configDao.profileName, configDao.configs);
         this.activeModal.close('Close click');
         this.profileChosen.emit(this.properties.currentProfile);
       });
+  }
+
+  isProfileSelected(): boolean {
+    return this.properties.form.value.getProfileForm !== '';
   }
 
 }

@@ -34,17 +34,6 @@ module.exports = (app) => {
         }
     });
 
-    // let message = {
-    //     from: 'hiring.dashboard.isel@gmail.com', // listed in rfc822 message header
-    //     to: 'A43520@alunos.isel.pt', // listed in rfc822 message header
-    //     subject: "Message title",
-    //     text: "Plaintext version of the message",
-    //     html: "<p>HTML version of the message</p>"
-    // }
-    //
-    // transporter.sendMail(message, (err) => {
-    //     console.log("MESSAGE NOT SENT: " + err)
-    // })
 
     const dbOptions = {
         "host": process.env.PGHOST,
@@ -53,74 +42,136 @@ module.exports = (app) => {
         "password": process.env.PGPASSWORD,
         "connectionLimit": 5,
         "database": process.env.PGDATABASE,
-        "sgbd": "postgres"
+        "dbms": "postgres"
     }
 
     const jsonObj = {
-        "roles": ["admin", "recruiter", "jobOwner", "guest", "teamLeader"],
+        "roles": ["admin", "recruiter", "jobOwner", "guest", "teamLeader", "Colaborator"],
         // id order not guaranteed
         "permissions": [
-            {"resource": "teste", "action": "POST"},
             {"resource": "auth", "action": "GET"},
             {"resource": "auth", "action": "POST"},
 
             {"resource": "requests", "action": "GET"},
             {"resource": "requests", "action": "POST"},
             {"resource": "requests", "action": "PUT"},
+            {"resource": "requests", "action": "PATCH"},
+            {"resource": "requests", "action": "DELETE"},
 
             {"resource": "workflows", "action": "GET"},
-
             {"resource": "phases", "action": "GET"},
-
             {"resource": "requests-properties", "action": "GET"},
+            {"resource": "users", "action": "GET"},
+            {"resource": "roles", "action": "GET"},
+            {"resource": "process", "action": "GET"},
 
             {"resource": "candidates", "action": "GET"},
             {"resource": "candidates", "action": "POST"},
-            {"resource": "candidates", "action": "PUT"},
-
-            {"resource": "process", "action": "GET"},
+            {"resource": "candidates", "action": "PATCH"},
+            {"resource": "candidates", "action": "DELETE"},
 
             {"resource": "statistics", "action": "GET"},
+            {"resource": "statistics", "action": "POST"},
 
-            {"resource": "users", "action": "GET"},
-            {"resource": "users", "action": "POST"},
-
-            {"resource": "roles", "action": "GET"},
         ],
         "grants": {
-            //TODO -> guest permissions
             "guest": [
-                {"resource": "teste", "action": "POST"},
+                // login
+                {"resource": "auth", "action": "GET"},
+            ],
+            "recruiter": [
+                {"resource": "auth", "action": "GET"},
+                {"resource": "auth", "action": "POST"},
+
+                {"resource": "requests", "action": "GET"},
+                {"resource": "requests", "action": "PUT"},
+                {"resource": "requests", "action": "PATCH"},
+                {"resource": "requests", "action": "DELETE"},
+
+                {"resource": "workflows", "action": "GET"},
+                {"resource": "phases", "action": "GET"},
+                {"resource": "requests-properties", "action": "GET"},
+                {"resource": "users", "action": "GET"},
+                {"resource": "roles", "action": "GET"},
+                {"resource": "process", "action": "GET"},
+
+                {"resource": "candidates", "action": "GET"},
+                {"resource": "candidates", "action": "POST"},
+                {"resource": "candidates", "action": "PATCH"},
+                {"resource": "candidates", "action": "DELETE"},
+
+                {"resource": "statistics", "action": "GET"},
+                {"resource": "statistics", "action": "POST"},
+            ],
+            "jobOwner": [
                 {"resource": "auth", "action": "GET"},
                 {"resource": "auth", "action": "POST"},
 
                 {"resource": "requests", "action": "GET"},
                 {"resource": "requests", "action": "POST"},
                 {"resource": "requests", "action": "PUT"},
+                {"resource": "requests", "action": "PATCH"},
+                {"resource": "requests", "action": "DELETE"},
 
                 {"resource": "workflows", "action": "GET"},
                 {"resource": "phases", "action": "GET"},
                 {"resource": "requests-properties", "action": "GET"},
-                {"resource": "candidates", "action": "GET"},
-                {"resource": "candidates", "action": "POST"},
-                {"resource": "candidates", "action": "PUT"},
-                {"resource": "process", "action": "GET"},
-                {"resource": "statistics", "action": "GET"},
                 {"resource": "users", "action": "GET"},
-                {"resource": "users", "action": "POST"},
                 {"resource": "roles", "action": "GET"},
-            ],
-            "recruiter": [
-                {"role": "teamLeader"}
-            ],
-            "jobOwner": [
-                {"role": "guest"}
+                {"resource": "process", "action": "GET"},
+
+                {"resource": "candidates", "action": "GET"},
+                {"resource": "candidates", "action": "PATCH"},
+                {"resource": "candidates", "action": "DELETE"},
+
+                {"resource": "statistics", "action": "GET"},
+                {"resource": "statistics", "action": "POST"},
             ],
             "admin": [
-                {"role": "guest"}
+                {"resource": "auth", "action": "GET"},
+                {"resource": "auth", "action": "POST"},
+
+                {"resource": "requests", "action": "GET"},
+                {"resource": "requests", "action": "POST"},
+                {"resource": "requests", "action": "PUT"},
+                {"resource": "requests", "action": "PATCH"},
+                {"resource": "requests", "action": "DELETE"},
+
+                {"resource": "workflows", "action": "GET"},
+                {"resource": "phases", "action": "GET"},
+                {"resource": "requests-properties", "action": "GET"},
+                {"resource": "users", "action": "GET"},
+                {"resource": "roles", "action": "GET"},
+                {"resource": "process", "action": "GET"},
+
+                {"resource": "candidates", "action": "GET"},
+                {"resource": "candidates", "action": "POST"},
+                {"resource": "candidates", "action": "PATCH"},
+                {"resource": "candidates", "action": "DELETE"},
+
+                {"resource": "statistics", "action": "GET"},
+                {"resource": "statistics", "action": "POST"},
             ],
             "teamLeader": [
-                {"role": "guest"}
+                {"role": "recruiter"}
+            ],
+            "Colaborator": [
+                {"resource": "auth", "action": "GET"},
+                {"resource": "auth", "action": "POST"},
+
+                {"resource": "requests", "action": "GET"},
+
+                {"resource": "workflows", "action": "GET"},
+                {"resource": "phases", "action": "GET"},
+                {"resource": "requests-properties", "action": "GET"},
+                {"resource": "users", "action": "GET"},
+                {"resource": "roles", "action": "GET"},
+                {"resource": "process", "action": "GET"},
+
+                {"resource": "candidates", "action": "GET"},
+
+                {"resource": "statistics", "action": "GET"},
+                {"resource": "statistics", "action": "POST"},
             ]
         }
     }

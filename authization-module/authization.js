@@ -1,16 +1,12 @@
-'use strict'
-
 // This file is the entry point for our authentication and autorization nodejs module
 // it also calls the setup file
 
-// this should be a superclass to the functionalities classes...
+const path = require('path');
 
-const path = require('path')
-
-require('dotenv').config({path: path.resolve(__dirname, './.env')})
+require('dotenv').config({path: path.resolve(__dirname, './.env')});
 
 const
-    config = require('./common/config/config')
+    config = require('./common/config/config');
 
 const getFunctionalities = () => {
 
@@ -59,7 +55,7 @@ const getFunctionalities = () => {
              */
             userRole: require('./resources/dals/users-roles-dal'),
 
-            /** 
+            /**
              * returns rolePermission resource file to manage role's permissions
              */
             rolePermission: require('./resources/dals/roles-permissions-dal'),
@@ -74,16 +70,16 @@ const getFunctionalities = () => {
              */
             configurations: require('./resources/configurations'),
 
-            protocols: require('./resources/dals/protocols-dal'),
+            authTypes: require('./resources/dals/authentication-types-dal'),
 
             sessions: require('./resources/dals/user-session-dal'),
 
-            userList: require('./resources/dals/user-list-dal')
+            userList: require('./resources/dals/user-list-dal'),
 
-        }
+        };
 
     } else {
-        throw new Error("Make sure you call the setup method beforehand")
+        throw new Error("Make sure you call the setup method beforehand");
     }
 
 }
@@ -95,34 +91,38 @@ module.exports = {
 
         if (app && db) {
 
-            const
-                expressSession = require('express-session')
+            const expressSession = require('express-session');
 
             config.database_opts = db;
 
             // setup db entities, db connection and rbac policy
-            await require('./common/db')(rbac_opts)
+            await require('./common/db')(rbac_opts);
 
-            function extendDefaultFields(defaults, session) {
-                return {
-                    data: defaults.data,
-                    expires: defaults.expires,
-                    UserId: session.passport.user
-                };
-            }
+            /**
+             *
+             * @param defaults
+             * @param session
+             * @returns {{expires: *, data: *, UserId: *}}
+             */
+            const extendDefaultFields = (defaults, session) => ({
+                data: defaults.data,
+                expires: defaults.expires,
+                UserId: session.passport.user,
+            });
 
-            console.log(config.env === 'production')
+            console.log(config.env === 'production');
 
-            app.set('trust proxy', 1)
+            app.set('trust proxy', 1);
 
             const
                 SessionStore = require('connect-session-sequelize')(expressSession.Store),
                 sequelizeSessionStore = new SessionStore({
                     db: config.sequelize,
                     table: 'Sessions',
-                    extendDefaultFields: extendDefaultFields
+                    extendDefaultFields
                 }),
-                session_opts = {// to keep session active instead of letting it change to the idle state
+                // to keep session active instead of letting it change to the idle state
+                session_opts = {
                     resave: false,
                     //saveUninitialized to false to only create a session if a UA(User agent) made a login
                     saveUninitialized: false,
@@ -130,26 +130,26 @@ module.exports = {
                     secret: config.cookieSecret,
                     cookie: {
                         maxAge: 1000 * 60 * 60 * 24,
-                        // sameSite:'none',
-                        // secure: true
-                    }
-                }
+                        /* Uncomment to run in cloud environments
+                        sameSite: config.env === 'production' ? 'none' : false,
+                        secure: config.env === 'production'
+                         */
+                    },
+                };
 
             // setup required middleware
-            require('./common/middleware/setup-middleware')(app, expressSession(session_opts))
+            require('./common/middleware/setup-middleware')(app, expressSession(session_opts));
 
-            config.isModuleSetUp = true
+            config.isModuleSetUp = true;
 
-            return getFunctionalities()
+            return getFunctionalities();
 
         } else {
-            return new Error("Make sure you provided database connection options and express app")
+            return new Error('Make sure you provided database connection options and express app');
         }
 
     },
 
-    AuthizationRbac: require('./resources/authization-rbac').AuthizationRbac
+    AuthizationRbac: require('./resources/authization-rbac').AuthizationRbac,
 
-}
-
-
+};

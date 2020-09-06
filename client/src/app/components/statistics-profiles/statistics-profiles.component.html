@@ -21,20 +21,18 @@
                 <h5 class="inline">Profiles:</h5>
                 <label>
                     <select formControlName="getProfileForm" class="custom-select">
-                        <option *ngIf="properties.currentProfile" [selected]="true"
-                            [value]="properties.currentProfile.profileName">
-                            {{properties.currentProfile.profileName}}
-                        </option>
-                        <option *ngIf="!properties.currentProfile" [selected]="true" value="Default">
-                            Default
-                        </option>
-                        <option *ngFor="let profile of properties.configProfiles" [value]="profile.profileName">
-                            {{profile.profileName}}
-                        </option>
+                      <option *ngIf="currentProfileName" [disabled]="true" [selected]="true">
+                        {{currentProfileName}}
+                      </option>
+                      <option *ngFor="let profile of properties.configProfiles">
+                        {{profile.profileName}}
+                      </option>
                     </select>
                 </label>
             </div>
-            <button type="submit" class="btn btn-primary" (click)="chooseProfile()">Choose Profile</button>
+          <button (click)="chooseProfile()" *ngIf="isProfileSelected()" class="btn btn-primary" type="submit">Choose
+            Profile
+          </button>
         </div>
     </form>
 </div>

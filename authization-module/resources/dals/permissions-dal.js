@@ -1,88 +1,67 @@
-'use strict'
-
-const { Role, RolePermission } = require('../sequelize-model'),
+const
     tryCatch = require('../../common/util/functions-utils'),
     Permission = require('../sequelize-model').Permission,
-    config = require('../../common/config/config')
-
+    {rbac} = require('../../common/config/config');
+/**
+ * @module
+ */
 module.exports = {
 
     /**
-     *
-     * @param method
-     * @param path
-     * @param description
+     * Create a new Permission entry if the permission already exists returns the existing permission
      * @returns {Promise<void>}
+     * @param {string} action
+     * @param {string} resource
      */
-    create: async (action, resource) => tryCatch(async () => {
-        await config.rbac.createPermission(action, resource, true)
-        return await (Permission.findOrCreate({
-            where: {
-                action: action,
-                resource: resource
-            }
-        }))[0]
-    }),
+    create: (action, resource) => tryCatch(() => rbac.createPermission(action, resource, true)
+        .then(() => Permission.findOrCreate({where: {action, resource}}))
+        .then(perm => perm[0])),
+
+    //TODO: Needs testing
+    createMultiple: permissionsArray => tryCatch(() => rbac.createPermissions(permissionsArray, true).then(() => Permission.bulkCreate(permissionsArray))),
 
     /**
-     *
-     * @param method
-     * @param path
+     * Deletes the Permission through the given id
      * @returns {Promise<void>}
+     * @param {int} id
      */
-    delete: (id) =>
+    delete: id =>
         tryCatch(async () => {
-            const permission = await require('./permissions-dal').getSpecificById(id)
-            config.rbac.removeByName(permission.action + '_' + permission.resource)
-            return Permission.destroy({
-                where: {
-                    id: id
-                }
-            })
+            const {action, resource} = await require('./permissions-dal').getSpecificById(id);
+            rbac.removeByName(`${action}_${resource}`);
+            return Promise.resolve({deletedRows: await Permission.destroy({where: {id}})});
         }),
     /**
-     *
+     * Returns all existing Permissions
      * @returns {Promise<void>}
      */
-    get: () =>
-        tryCatch(() => Permission.findAll({raw: true})),
+    get: () => tryCatch(() => Permission.findAll({raw: true})),
     /**
-     *
-     * @param id
+     *  Returns a Permission by its id
+     * @param {int} id
      * @returns {Promise<void>}
      */
-    getSpecificById: (id) => tryCatch(() => Permission.findByPk(id)),
+    getSpecificById: id => tryCatch(() => Permission.findByPk(id)),
     /**
-     *
-     * @param method
-     * @param path
+     * Returns a Permission through the given resource and action.
      * @returns {Promise<*>}
+     * @param {string} action
+     * @param {string} resource
      */
-    getSpecific: (action, resource) =>
-        tryCatch(() =>
-            Permission.findOne({
-                where: {
-                    action: action,
-                    resource: resource
-                }
-            })),
+    getSpecific: (action, resource) => tryCatch(() => Permission.findOne({where: {action, resource}})),
 
-    update: async (id, action, resource) => Promise.resolve(
-        {
-            insertedRows: await tryCatch(() => Permission.update({
-                action: action,
-                resource: resource
-            }, {where: {id: id}})),
+    /**
+     * Changes the action and resource of the Permission specified by the id.
+     * @param {int} id
+     * @param {string} action
+     * @param {string} resource
+     * @returns {Promise<{resource: *, insertedRows: (Object|Error), action: *, id: *}>}
+     */
+    update: async (id, action, resource) => Promise.resolve({
+        insertedRows: await tryCatch(() => Permission.update({
             action,
             resource
-        }),
-
-    //TODO: change fields from jointed query
-    getRolesByPermission: (id) => tryCatch(() => RolePermission.findAll({
-        where: {PermissionId: id},
-        include: [Role],
-        raw: true
-    }))
+        }, {where: {id}})), action, resource, id
+    }),
 
 }
-

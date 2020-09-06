@@ -113,7 +113,7 @@ describe("Sequelize Testings", () => {
     });
 
     test("Check creation, obtaining and elimination of Protocols", async () => {
-        const proto = {protocol: 'testProtocol', active: 1}
+        const proto = {protocol: 'testProtocol', active: true}
         basicCheckByJson(proto,Protocols)
     });
 

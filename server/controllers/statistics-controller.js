@@ -33,7 +33,7 @@ module.exports = (service) => {
         const userConfigs = await service.getUserStatisticsConfigs({
             userId: req.user.id
         })
-        res.status(200).send(userConfigs)
+        res.status(200).send({configs: userConfigs})
     }
 
     async function getUserStatisticsConfigsDetails(req, res) {

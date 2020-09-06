@@ -1,14 +1,11 @@
-'use strict'
-
 const
     users = require('../../resources/dals/users-dal'),
-    userList=require('../../resources/dals/user-list-dal'),
+    userList = require('../../resources/dals/user-list-dal'),
     idps = require('../../resources/dals/idps-dal'),
     userHistories = require('../../resources/dals/users-history-dal'),
     userSession = require('../../resources/dals/user-session-dal'),
-    protocol = require('../../resources/dals/protocols-dal'),
-    moment = require('moment')
-
+    authTypes = require('../../resources/dals/authentication-types-dal'),
+    moment = require('moment');
 
 module.exports = {
 
@@ -18,28 +15,43 @@ module.exports = {
      * @param userId
      * @returns {Promise<{password: *, id: *, username: *}>}
      */
-    findUser: (userId) => users.getById(userId),
+    findUser: userId => users.getById(userId),
+
     /**
      *
      * @param idp
      * @returns {Promise<*>}
-     */
-    findUserByIdp: async (idp) => {
-        // needs endpoint
-        const user = await users.getByIdp(idp)
-        return user ? {id: user.id, idp: idp, username: user.username} : null
-    },
+     */// needs endpoint
+    findUserByIdp: idp => users.getByIdp(idp).then(user => user ? {idp, id: user.id, username: user.username} : null),
     /**
      *
      * @param username
      * @returns {Promise<{password: *, id: *, username: *}|null>}
      */
-    findCorrespondingUser: async (username) => {
+    findCorrespondingUser: async username => {
         try {
-            return await users.getByUsername(username)
+            return await users.getByUsername(username);
         } catch (error) {
-            return null
+            return null;
         }
+    },
+    findUserByIdpOrCreate: async (idpId, idpName, username, password) => {
+        const userWithIdp = await users.getByIdp(idpId);
+        if (userWithIdp) {
+            return {
+                id: userWithIdp.id, idp: idpId, username: userWithIdp.username
+            }
+        }
+        const user = await users.getByUsername(username)
+        if (user) {
+            await idps.create(idpId, idpName, user.id)
+            return {
+                id: user.id, idp_id: idpId, username
+            }
+        }
+        users.create(username, password)
+            .then(userId => idps.create(idpId, idpName, userId.id)
+                .then(() => ({id: userId.id, idp_id: idpId, username})));
     },
 
     /**
@@ -53,42 +65,24 @@ module.exports = {
      */
     createUser: async (idpId, idpName, username, password) => {
 
-        const userId = await users.create(username, password)
-
-        await idps.create(idpId, idpName, userId.id)
-
-        return {
-            id: userId.id,
-            idp_id: idpId,
-            username: username
-        }
+        const {id} = await users.create(username, password);
+        await idps.create(idpId, idpName, id);
+        return {id, username, idp_id: idpId};
     },
+
     /**
      *
      * @param userId
      * @returns {Promise<boolean>}
      */
-    isBlackListed: async (userId)=>{
-        let result=await userList.isUserBlackListed(userId)
-        result=result.filter(obj=>obj["Lists.list"]==='BLACK')
-        return result.length > 0
-    },
+    isBlackListed: userId => userList.isUserBlackListed(userId),
+
     /**
      *
      * @param userId
      * @returns {Promise<void>}
      */
-    addNotification: async (userId) => {
-        await userHistories.create(userId, moment().format("YYYY-MM-DD HH:mm:ss"), "BlackListed User tried to Login")
-    },
-    updateSession: async (userId, sessionId) => {
-        await Session.update({UserId:userId},{where:{sid:sessionId}})
-    },
-    checkProtocol: async (protocolName) => {
-        const result = await protocol.getByName(protocolName)
-        return result!=null
-    },
-    deleteUserSession : async(userId,sessionId)=>{
-        await userSession.delete(userId,sessionId)
-    }
-}
+    addNotification: userId => userHistories.create(new Date(), userId, 'BlackListed User tried to Login', userId),
+
+    checkProtocol: (protocol, idp) => authTypes.getByName(protocol, idp),
+};

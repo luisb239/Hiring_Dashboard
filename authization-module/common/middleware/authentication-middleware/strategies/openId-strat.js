@@ -1,16 +1,11 @@
+const OpenIDStrategy = require('passport-openid').Strategy;
 
-const
-    OpenIDStrategy = require('passport-openid').Strategy;
-
-const strategy = new OpenIDStrategy({
+const openIdStratBuilder = () => new OpenIDStrategy({
         returnURL: 'http://localhost:8082/homepage',
         realm: 'http://localhost:8082',
         clientID: '523982739771-2hkfdqls3uapvlf0c111i6qhnidfgt44.apps.googleusercontent.com',
         clientSecret: 'vs0R8tvgMv2w2rhuHtRPT9nK',
-    },
-    //function is empty cause ...
-    function (identifier, done) {
+    }, (identifier, done) => {/*function is empty cause ...*/
     }
 );
-
-module.exports = strategy;
+module.exports = openIdStratBuilder;

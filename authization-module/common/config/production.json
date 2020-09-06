@@ -1,16 +1,16 @@
 {
-  "google": {
+  "google_oauth2": {
     "google_client_id": "523982739771-2hkfdqls3uapvlf0c111i6qhnidfgt44.apps.googleusercontent.com",
     "google_client_secret": "vs0R8tvgMv2w2rhuHtRPT9nK",
     "callbackUrl": "http://localhost:8082/api/authentications/google/callback"
   },
-  "azureAD": {
+  "office365_oauth2": {
     "azure_client_id": "535114c4-ce91-4a25-9d26-d7700e4f0930",
     "azure_client_secret": "2W-Rgjb_xvm.jg1Ujy7-EW9_4c5dmd3c2s",
     "callbackUrl": "http://localhost:8080/hd/auth/azure/callback",
     "tenant": "e247b35f-287d-4d27-be25-2a6605c11af7"
   },
-  "saml": {
+  "office365_saml": {
     "callbackUrl": "not-defined-yet",
     "entryPoint": "https://login.microsoftonline.com/bb367ab9-9da9-455e-b938-fd65cd29f5ae/saml2",
     "issuer": "51ca8d6f-0e88-4e3c-9e49-ae2920ef2c46",

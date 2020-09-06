@@ -1,11 +1,7 @@
-'use strict'
-
-const usersDal = require('./dals/users-dal')
-
-const userRoleDal = require('../resources/dals/users-roles-dal'),
+const userRolesDal = require('../resources/dals/users-roles-dal'),
     config = require('../common/config/config'),
-    errors = require('../common/errors/app-errors')
-const rbac = require('../common/rbac')
+    errors = require('../common/errors/app-errors');
+const rbac = require('../common/rbac');
 
 module.exports = {
     /**
@@ -16,56 +12,47 @@ module.exports = {
      * @returns {Promise<*>}
      */
     check: async (req, resp, next) => {
-        const resource = req.path.split("/")[2]
-        const action = req.method
-
-        const user = req.user
-        var roles = []
+        const resource = req.path.split('/')[2];
+        const {method: action, user} = req;
+        let roles = [];
 
         if (user) {
-            roles = await usersDal.getUserRoles(user.id)
-            roles = roles.map(role => role["Roles.role"])
+            roles = (await userRolesDal.getUserActiveRoles(user.id)).map(userRole => userRole['Role.role']);
             if (roles.includes('admin')) {
-                return next()
+                return next();
+            }
+        } else {
+            roles.push('guest');
+        }
+
+        for (const item of roles) {
+            if (await config.rbac.can(item, action, resource)) {
+                return next();
             }
         }
 
-        roles.push("guest")
-
-        for (let i = 0; i < roles.length; i++) {
-            if (await config.rbac.can(roles[i], action, resource)) {
-                return next()
-            }
-        }
-        return next(errors.Unauthorized)
+        return user ? next(errors.Unauthorized) : next(errors.Forbidden);
     },
 
     getUserPermissions: async (req, resp, next) => {
-        const user = req.user
-        let permissions = []
-        var roles = []
+        const {user} = req;
+        const permissions = [];
+        let roles = [];
 
         if (user) {
-            roles = await usersDal.getUserRoles(user.id)
-            roles = roles.map(role => role["Roles.role"])
+            roles = (await userRolesDal.getUserActiveRoles(user.id)).map(userRole => userRole.role);
         }
-
-        roles.push("guest")
-
-        await Promise.all(roles.map(async role => permissions.push(await config.rbac.getScope(role))))
-        permissions = permissions.flat()
-        return permissions
+        //TODO: try this instead: return Promise.all(roles.map(config.rbac.getScope));
+        await Promise.all(roles.map(async role => permissions.push(await config.rbac.getScope(role))));
+        return permissions.flat();
     },
 
-    authorizationInfo: async (req) => {
-        const roles = userRoleDal.getUserActiveRoles(req.user.id)
+    authorizationInfo: async req => {
+        const roles = await userRolesDal.getUserActiveRoles(req.user.id);
 
-        roles.push("guest")
-        
         return req.body.permissions
-            .map(permission =>
-                JSON.parse(`${permission.resource}/${permission.action}: ${roles
-                    .some(role => rbac.can(role.role, permission.action, permission.resource))}`))
-    }
+            .map(({action, resource}) =>
+                JSON.parse(`${resource}/${action}: ${roles.some(role => rbac.can(role.role, action, resource))}`));
+    },
 
-}
+};

@@ -28,7 +28,7 @@ module.exports = function (router, controller, validator, handle, verifyIfAuthen
     /**
      * Get user's statistics configs details
      */
-    router.get(`${root}/configs/:name`, [
+    router.get(`/${root}/configs/:name`, [
         verifyIfAuthenticated,
     ], handle(controller.getUserStatisticsConfigsDetails))
 
