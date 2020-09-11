@@ -12,15 +12,14 @@ const errors = require('../services/errors/common-errors.js')
 
 describe('Testing user-service', () => {
     let service, auth
-    before(async () => {
-        await new Promise(resolve => setTimeout(resolve, 5000));
-        auth = await authModule.setup({app: express(), db: config.dbOptions, rbac_opts: config.jsonObj})
-        service = require('../services/user-service')(db.user, db.role, auth)
+    before(async (done) => {
+        //await new Promise(resolve => setTimeout(resolve, 5000));
+        await authModule.setup({app: express(), db: config.dbOptions, rbac_opts: config.jsonObj})
+        //service = require('../services/user-service')(db.user, db.role, auth)
     })
 
     describe('Testing getUsers', () => {
-
-        it('should return an array of users with the given role', () => {
+        it('should return an array of users with the given role', async () => {
             assert.ok(true)
             //const res = await service.getUsers({roleId: 1})
             //assert.ok(Array.isArray(res.users))

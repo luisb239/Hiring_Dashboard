@@ -47,8 +47,7 @@ module.exports = function (router, requestPropsController, handle, verifyIfAuthe
      */
     router.get(`/${root}/${months}`, verifyIfAuthenticated, handle(requestPropsController.getMonths))
     /**
-     * Get
+     * Get all workflows
      */
-    router.get(`/${root}/${workflows}`, verifyIfAuthenticated,
-        handle(requestPropsController.getWorkflows))
+    router.get(`/${root}/${workflows}`, verifyIfAuthenticated, handle(requestPropsController.getWorkflows))
 }

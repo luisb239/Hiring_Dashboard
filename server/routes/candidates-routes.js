@@ -4,7 +4,7 @@ module.exports = function (router, candidatesController, validator, upload, hand
 
     const root = 'candidates'
 
-    const { body, query, checkSchema } = validator
+    const {body, query, checkSchema, param} = validator
 
     /**
      * Get all candidates
@@ -28,12 +28,18 @@ module.exports = function (router, candidatesController, validator, upload, hand
     /**
      * Get candidate by id
      */
-    router.get(`/${root}/:id`, verifyIfAuthenticated, handle(candidatesController.getCandidateById))
+    router.get(`/${root}/:id`, [
+        verifyIfAuthenticated,
+        param('id').isInt()
+    ], handle(candidatesController.getCandidateById))
 
     /**
      * Download candidate's CV
      */
-    router.get(`/${root}/:id/download-cv`, verifyIfAuthenticated, handle(candidatesController.downloadCandidateCv))
+    router.get(`/${root}/:id/download-cv`, [
+        verifyIfAuthenticated,
+        param('id').isInt()
+    ], handle(candidatesController.downloadCandidateCv))
 
 
     /**
@@ -41,6 +47,7 @@ module.exports = function (router, candidatesController, validator, upload, hand
      */
     router.patch(`/${root}/:id`, [
         verifyIfAuthenticated,
+        param('id').isInt(),
         upload.single('cv'),
         body('profileInfo').optional().isString().withMessage("Profile information must be of string type"),
         body('available').optional().isString().withMessage("Available must be of string type"),
@@ -52,15 +59,18 @@ module.exports = function (router, candidatesController, validator, upload, hand
      */
     router.post(`/${root}/:id/profiles`, [
         verifyIfAuthenticated,
+        param('id').isInt(),
         body('profile').exists().isString().withMessage('Added profile must be of string type')
     ], handle(candidatesController.addCandidateProfile));
 
     /**
      * Delete Candidate Profile
      */
-    router.delete(`/${root}/:id/profiles/:profile`,
+    router.delete(`/${root}/:id/profiles/:profile`, [
         verifyIfAuthenticated,
-        handle(candidatesController.removeCandidateProfile))
+        param('id').isInt(),
+        param('profile').isString()
+    ], handle(candidatesController.removeCandidateProfile))
 
     /**
      * Create candidate

@@ -8,7 +8,7 @@ module.exports = function (router, requestsController, processController, valida
     const users = 'users'
     const phases = 'phases'
 
-    const {body, query} = validator
+    const {body, query, param} = validator
 
     /**
      * Get all requests + query filter
@@ -52,6 +52,7 @@ module.exports = function (router, requestsController, processController, valida
      */
     router.get(`/${root}/:id`, [
         verifyIfAuthenticated,
+        param('id').isInt()
     ], handle(requestsController.getRequestById))
 
     /**
@@ -73,6 +74,7 @@ module.exports = function (router, requestsController, processController, valida
      * Update Request
      */
     router.patch(`/${root}/:id`, [
+        param('id').isInt(),
         body('timestamp').exists().withMessage("Timestamp must exist"),
         body('state').optional(),
         body('stateCsl').optional(),
@@ -90,6 +92,7 @@ module.exports = function (router, requestsController, processController, valida
      */
     router.post(`/${root}/:id/languages`, [
         verifyIfAuthenticated,
+        param('id').isInt(),
         body('language').exists().isString().withMessage("Language to add must exist and be of type string"),
         body('isMandatory').exists().isBoolean().withMessage("IsMandatory must exist and be of boolean type")
     ], handle(requestsController.addLanguageToRequest))
@@ -99,6 +102,8 @@ module.exports = function (router, requestsController, processController, valida
      */
     router.delete(`/${root}/:id/languages/:language`, [
         verifyIfAuthenticated,
+        param('id').isInt(),
+        param('language').isString(),
         query('isMandatory').exists().isBoolean().withMessage("Language Mandatory boolean must exist on the query and be of type boolean")
     ], handle(requestsController.deleteLanguage))
 
@@ -108,6 +113,7 @@ module.exports = function (router, requestsController, processController, valida
     // TODO -> Change route to /requests/id (no need for /users)
     router.post(`/${root}/:id/${users}`, [
         verifyIfAuthenticated,
+        param('id').isInt(),
         body('userId').exists().isInt().withMessage("User Id must exist and be of int type"),
         body('roleId').exists().isInt().withMessage("Role Id must exist and be of int type"),
     ], handle(requestsController.addUserToRequest))
@@ -117,29 +123,36 @@ module.exports = function (router, requestsController, processController, valida
     /**
      * Get all request's processes
      */
-    router.get(`/${root}/:id/processes`,
+    router.get(`/${root}/:id/processes`, [
         verifyIfAuthenticated,
-        handle(processController.getProcessesByRequestId))
+        param('id').isInt(),
+    ], handle(processController.getProcessesByRequestId))
 
     /**
      * Get process detail
      */
-    router.get(`/${root}/:requestId/${candidates}/:candidateId/${process}`,
+    router.get(`/${root}/:requestId/${candidates}/:candidateId/${process}`, [
         verifyIfAuthenticated,
-        handle(processController.getProcessDetail))
+        param('requestId').isInt(),
+        param('candidateId').isInt(),
+    ], handle(processController.getProcessDetail))
 
     /**
      * Create process
      */
-    router.post(`/${root}/:requestId/${candidates}/:candidateId/${process}`,
+    router.post(`/${root}/:requestId/${candidates}/:candidateId/${process}`, [
         verifyIfAuthenticated,
-        handle(processController.createProcess))
+        param('requestId').isInt(),
+        param('candidateId').isInt(),
+    ], handle(processController.createProcess))
 
     /**
      * Update process
      */
     router.patch(`/${root}/:requestId/${candidates}/:candidateId/${process}`, [
         verifyIfAuthenticated,
+        param('requestId').isInt(),
+        param('candidateId').isInt(),
         body('infos').optional().isArray()
             .custom(infosArray => infosArray.every(info => info.name && info.value != null))
             .withMessage('Infos must be an array, with each element containing a name and a value property'),
@@ -154,6 +167,9 @@ module.exports = function (router, requestsController, processController, valida
      */
     router.put(`/${root}/:requestId/${candidates}/:candidateId/${process}/${phases}/:phase`, [
         verifyIfAuthenticated,
+        param('requestId').isInt(),
+        param('candidateId').isInt(),
+        param('phase').isString(),
         body('notes').isString().withMessage("Phase notes must be of string type"),
         body('timestamp').exists().withMessage("timestamp must exist")
     ], handle(processController.updateProcessPhaseNotes))

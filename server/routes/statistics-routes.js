@@ -4,7 +4,7 @@ module.exports = function (router, controller, validator, handle, verifyIfAuthen
 
     const root = 'statistics'
 
-    const {body} = validator
+    const {body, param} = validator
 
     /**
      * Get statistics of all requests
@@ -30,6 +30,7 @@ module.exports = function (router, controller, validator, handle, verifyIfAuthen
      */
     router.get(`/${root}/configs/:name`, [
         verifyIfAuthenticated,
+        param('name').isString()
     ], handle(controller.getUserStatisticsConfigsDetails))
 
     // TODO -> DELETE USER STATISTICS CONFIGS PROFILE MISSING!!
