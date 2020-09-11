@@ -8,13 +8,14 @@ const app = express()
 const cors = require('cors')
 app.use(cors())
 
-const config = require('./config.js')(app)
+const bodyParser = require('body-parser')
+app.use(bodyParser.urlencoded({extended: false}))
+app.use(bodyParser.json());
 
+const config = require('./config.js')()
 const authModule = require('../authization-module/authization')
 
-// TODO -> usar modulo npm
-
-authModule.setup({app: config.app, db: config.dbOptions, rbac_opts: config.jsonObj})
+authModule.setup({app: app, db: config.dbOptions, rbac_opts: config.jsonObj})
     .then(async (auth) => {
         const db = require('./dals')
         const services = require('./services')(db, auth, config.transporter)

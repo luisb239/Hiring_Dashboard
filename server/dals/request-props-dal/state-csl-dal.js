@@ -4,7 +4,7 @@ const schema = require('../dal-schemas/request-props-schemas/state-csl-schema.js
 
 module.exports = (query) => {
 
-    return {getStatesCsl}
+    return {getStatesCsl: getStatesCsl}
 
     async function getStatesCsl() {
         const statement = {

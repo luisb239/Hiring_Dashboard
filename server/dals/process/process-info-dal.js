@@ -5,10 +5,10 @@ const schema = require('../dal-schemas/process/process-info-schema')
 module.exports = (query) => {
 
     return {
-        getProcessInfos,
-        getProcessInfoDetail,
-        createProcessInfo,
-        updateProcessInfoValue
+        getProcessInfos: getProcessInfos,
+        getProcessInfoDetail: getProcessInfoDetail,
+        createProcessInfo: createProcessInfo,
+        updateProcessInfoValue: updateProcessInfoValue
     }
 
     async function getProcessInfos({requestId, candidateId, client}) {

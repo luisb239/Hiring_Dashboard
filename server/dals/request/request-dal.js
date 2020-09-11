@@ -11,8 +11,13 @@ const dateFormat = require('dateformat');
 module.exports = (query) => {
 
     return {
-        getRequests, getRequestById, createRequest,
-        getUserRolesInRequest, updateRequest: updateRequest, addUserAndRoleToRequest, countRequests
+        getRequests: getRequests,
+        getRequestById: getRequestById,
+        createRequest: createRequest,
+        getUserRolesInRequest: getUserRolesInRequest,
+        updateRequest: updateRequest,
+        addUserAndRoleToRequest: addUserAndRoleToRequest,
+        countRequests: countRequests
     }
 
     async function getRequests({
@@ -20,8 +25,8 @@ module.exports = (query) => {
                                    skill = null, state = null, stateCsl = null,
                                    profile = null, project = null, workflow = null,
                                    minQuantity = null, maxQuantity = null,
-                                   minProgress = null, maxProgress = null, targetDate = null,
-                                   userId = null
+                                   minProgress = null, maxProgress = null,
+                                   targetDate = null, userId = null
                                }) {
         const statement = {
             name: 'Get Requests',

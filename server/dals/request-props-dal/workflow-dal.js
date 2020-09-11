@@ -4,7 +4,7 @@ const schema = require('../dal-schemas/request-props-schemas/workflow-schema.js'
 
 module.exports = (query) => {
 
-    return {getWorkflows, getWorkflow}
+    return {getWorkflows: getWorkflows, getWorkflow: getWorkflow}
 
     async function getWorkflows() {
         const statement = {

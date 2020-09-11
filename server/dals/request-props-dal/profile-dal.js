@@ -6,10 +6,10 @@ const candidateProfileSchema = require('../dal-schemas/candidate-profile-schema.
 module.exports = (query) => {
 
     return {
-        getProfiles,
-        getCandidateProfiles,
-        addProfileToCandidate,
-        deleteProfileFromCandidate
+        getProfiles: getProfiles,
+        getCandidateProfiles: getCandidateProfiles,
+        addProfileToCandidate: addProfileToCandidate,
+        deleteProfileFromCandidate: deleteProfileFromCandidate
     }
 
     async function getProfiles() {

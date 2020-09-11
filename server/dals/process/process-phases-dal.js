@@ -7,54 +7,43 @@ const processCurrPhase = require('../dal-schemas/process/process-current-phase.j
 module.exports = (query) => {
 
     return {
-        addPhaseToProcess,
-        updateProcessCurrentPhase,
-        setProcessInitialPhase,
-        getProcessCurrentPhase,
-        getProcessPhases,
-        updatePhaseOfProcess
+        addPhaseToProcess: addPhaseToProcess,
+        updateProcessCurrentPhase: updateProcessCurrentPhase,
+        setProcessInitialPhase: setProcessInitialPhase,
+        getProcessCurrentPhase: getProcessCurrentPhase,
+        getProcessPhases: getProcessPhases,
+        updatePhaseOfProcess: updatePhaseOfProcess
     }
 
-    async function updatePhaseOfProcess({
-                                            requestId, candidateId, phase,
-                                            startDate = null, updateDate = new Date(),
-                                            notes = null, client = null
-                                        }) {
+    async function updatePhaseOfProcess({requestId, candidateId, phase, notes = null, client = null}) {
         const statement = {
             name: 'Update Phase Of Process',
             text:
                 `UPDATE ${processPhase.table} SET ` +
-                `${processPhase.startDate} = COALESCE($1, ${processPhase.startDate}), ` +
-                `${processPhase.updateDate} = COALESCE($2, ${processPhase.updateDate}), ` +
-                `${processPhase.notes} = COALESCE($3, ${processPhase.notes}) ` +
-                `WHERE ${processPhase.requestId} = $4 AND ${processPhase.candidateId} = $5 ` +
-                `AND ${processPhase.phase} = $6;`,
-            values: [startDate, updateDate, notes, requestId, candidateId, phase]
+                `${processPhase.updateDate} = CURRENT_TIMESTAMP, ` +
+                `${processPhase.notes} = COALESCE($1, ${processPhase.notes}) ` +
+                `WHERE ${processPhase.requestId} = $2 AND ${processPhase.candidateId} = $3 ` +
+                `AND ${processPhase.phase} = $4;`,
+            values: [notes, requestId, candidateId, phase]
         }
 
         const res = await query(statement, client)
         return res.rowCount
     }
 
-    async function addPhaseToProcess({
-                                         requestId, candidateId, phase, client,
-                                         startDate = new Date(), updateDate = null,
-                                         notes = null
-                                     }) {
+    async function addPhaseToProcess({requestId, candidateId, phase, client, notes = null}) {
         const statement = {
             name: 'Add Phase To Process',
             text:
                 `INSERT INTO ${processPhase.table} ` +
                 `(${processPhase.requestId}, ${processPhase.candidateId}, ` +
                 `${processPhase.phase}, ${processPhase.startDate}, ${processPhase.updateDate}, ${processPhase.notes}) ` +
-                `VALUES ($1, $2, $3, $4, $5, $6);`,
-            values: [requestId, candidateId, phase, startDate, updateDate, notes]
+                `VALUES ($1, $2, $3, CURRENT_DATE, CURRENT_TIMESTAMP, $4);`,
+            values: [requestId, candidateId, phase, notes]
         }
         await query(statement, client)
     }
 
-
-    // TODO -> CHANGE DAL FUNCTIONS TO NEW MODULE PROCESS-CURRENT-PHASE-DAL
     async function updateProcessCurrentPhase({requestId, candidateId, phase, client}) {
         const statement = {
             name: 'Update Process Current Phase',

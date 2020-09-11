@@ -7,8 +7,15 @@ module.exports = (languagesDao, monthsDao, profilesDao, projectsDao,
                   skillsDao, statesDao, statesCslDao, workflowsDao, phasesDao) => {
 
     return {
-        getLanguages, getMonths, getProfiles, getProjects,
-        getSkills, getStates, getStatesCsl, getWorkflows, getWorkflow
+        getLanguages: getLanguages,
+        getMonths: getMonths,
+        getProfiles: getProfiles,
+        getProjects: getProjects,
+        getSkills: getSkills,
+        getStates: getStates,
+        getStatesCsl: getStatesCsl,
+        getWorkflows: getWorkflows,
+        getWorkflow: getWorkflow
     }
 
     async function getLanguages() {

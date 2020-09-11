@@ -4,7 +4,7 @@ const schema = require('../dal-schemas/request-props-schemas/skill-schema.js')
 
 module.exports = (query) => {
 
-    return {getSkills}
+    return {getSkills: getSkills}
 
     async function getSkills() {
         const statement = {

@@ -5,7 +5,7 @@ const phaseInfos = require('./dal-schemas/workflow-phases-schemas/phase-info-sch
 
 module.exports = (query) => {
     return {
-        getInfosByPhase
+        getInfosByPhase: getInfosByPhase
     }
 
     async function getInfosByPhase({phase}) {

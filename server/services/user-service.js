@@ -13,11 +13,11 @@ module.exports = (userDb, roleDb, authModule) => {
 
     /**
      * Get users based on filters passed
-     * @param roleId : ?number
+     * @param roleId : number
      */
-    async function getUsers({ roleId = null }) {
+    async function getUsers({roleId}) {
         return {
-            users: await userDb.getUsers({ roleId })
+            users: await userDb.getUsers({roleId})
         }
     }
 

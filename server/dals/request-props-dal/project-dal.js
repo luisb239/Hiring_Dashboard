@@ -4,7 +4,7 @@ const schema = require('../dal-schemas/request-props-schemas/project-schema.js')
 
 module.exports = (query) => {
 
-    return {getProjects}
+    return {getProjects: getProjects}
 
     async function getProjects() {
         const statement = {

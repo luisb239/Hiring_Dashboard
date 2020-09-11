@@ -1,7 +1,7 @@
 'use strict'
 
 const commonErrors = require('./services/errors/common-errors.js')
-
+const AppError = require('./services/errors/app-error')
 const {validationResult} = require('express-validator');
 
 module.exports = function handle(controllerFunction) {
@@ -26,25 +26,31 @@ module.exports = function handle(controllerFunction) {
 }
 
 function handleError(res, error) {
-    // TODO -> Always log the stack trace -> if there is one
-    //  AppError should contain stacktrace
-    if (error.commonError === commonErrors.invalidInput || error.commonError === commonErrors.missingInput) {
-        // Bad Request
-        res.status(400).send(format(error.title, error.detail))
-    } else if (error.commonError === commonErrors.notFound) {
-        // Not Found
-        res.status(404).send(format(error.title, error.detail))
-    } else if (error.commonError === commonErrors.conflict) {
-        // Conflict
-        res.status(409).send(format(error.title, error.detail))
-    } else if (error.commonError === commonErrors.gone) {
-        // Gone
-        res.status(410).send(format(error.title, error.detail))
+    let status = 400, errorDetails
+    if (error instanceof AppError) {
+        errorDetails = format(error.title, error.detail)
+        if (error.commonError === commonErrors.businessLogic) {
+            // Bad Request
+            status = 400
+        } else if (error.commonError === commonErrors.notFound) {
+            // Not Found
+            status = 404
+        } else if (error.commonError === commonErrors.conflict) {
+            // Conflict
+            status = 409
+        } else if (error.commonError === commonErrors.gone) {
+            // Gone
+            status = 410
+        }
     } else {
         // Internal Server Error
-        console.log(error)
-        res.status(500).send(format("Internal Server Error", "Something unexpected happened!"))
+        status = 500
+        errorDetails = format("Internal Server Error", "Something unexpected happened!")
     }
+    // Always log the stacktrace if there is one
+    console.log(error.stack || error.detail || error)
+    // Send respective error
+    res.status(status).send(errorDetails)
 }
 
 function format(title, detail) {

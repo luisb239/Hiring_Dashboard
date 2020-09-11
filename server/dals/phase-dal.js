@@ -6,7 +6,9 @@ const phaseSchema = require('./dal-schemas/workflow-phases-schemas/phase-schema.
 module.exports = (query) => {
 
     return {
-        getPhasesByWorkflow, getPhase, getPhases
+        getPhasesByWorkflow: getPhasesByWorkflow,
+        getPhase: getPhase,
+        getPhases: getPhases
     }
 
     async function getPhases() {

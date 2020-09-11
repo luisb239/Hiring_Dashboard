@@ -73,7 +73,7 @@ module.exports = function (router, requestsController, processController, valida
      * Update Request
      */
     router.patch(`/${root}/:id`, [
-        body('timestamp').exists().withMessage("Timestamp must exist and be of date type"),
+        body('timestamp').exists().withMessage("Timestamp must exist"),
         body('state').optional(),
         body('stateCsl').optional(),
         body('description').optional(),
@@ -146,7 +146,7 @@ module.exports = function (router, requestsController, processController, valida
         body('newPhase').optional().isString().withMessage("newPhase must be of string type"),
         body('status').optional().isString().withMessage("status must be of string type"),
         body('unavailableReason').optional().isString().withMessage("unavailableReason must be of string type"),
-        body('timestamp').exists().withMessage("timestamp must exist and must be of date type")
+        body('timestamp').exists().withMessage("timestamp must exist")
     ], handle(processController.updateProcess))
 
     /**
@@ -155,6 +155,6 @@ module.exports = function (router, requestsController, processController, valida
     router.put(`/${root}/:requestId/${candidates}/:candidateId/${process}/${phases}/:phase`, [
         verifyIfAuthenticated,
         body('notes').isString().withMessage("Phase notes must be of string type"),
-        body('timestamp').exists().withMessage("timestamp must exist and must be of date type")
+        body('timestamp').exists().withMessage("timestamp must exist")
     ], handle(processController.updateProcessPhaseNotes))
 }

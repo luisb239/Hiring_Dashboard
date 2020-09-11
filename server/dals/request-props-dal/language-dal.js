@@ -4,7 +4,9 @@ const schema = require('../dal-schemas/request-props-schemas/language-schema.js'
 
 module.exports = (query) => {
 
-    return {getLanguages}
+    return {
+        getLanguages: getLanguages
+    }
 
     async function getLanguages() {
         const statement = {

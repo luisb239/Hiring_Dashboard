@@ -4,9 +4,9 @@ const schema = require('../dal-schemas/request-language-schema.js')
 module.exports = (query) => {
 
     return {
-        createLanguageRequirement,
-        getRequestLanguages,
-        deleteLanguageRequirement
+        createLanguageRequirement: createLanguageRequirement,
+        getRequestLanguages: getRequestLanguages,
+        deleteLanguageRequirement: deleteLanguageRequirement
     }
 
     function extract(row) {

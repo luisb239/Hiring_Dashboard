@@ -5,7 +5,7 @@ const schema = require('../dal-schemas/process/status-schema.js')
 module.exports = (query) => {
 
     return {
-        getAllStatus
+        getAllStatus: getAllStatus
     }
 
     async function getAllStatus() {

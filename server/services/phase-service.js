@@ -6,7 +6,7 @@ const errors = require('./errors/common-errors.js')
 module.exports = (phaseDb, infoDb) => {
 
     return {
-        getPhase, getPhases
+        getPhase: getPhase, getPhases: getPhases
     }
 
     async function getPhases() {

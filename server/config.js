@@ -2,14 +2,11 @@ require("dotenv").config();
 const nodemailer = require("nodemailer")
 const multer = require('multer')
 const validator = require('express-validator')
-const bodyParser = require('body-parser')
 
-module.exports = (app) => {
+module.exports = () => {
 
     const upload = multer({storage: multer.memoryStorage()})
 
-    app.use(bodyParser.urlencoded({extended: false}))
-    app.use(bodyParser.json());
 
     const transporter = nodemailer.createTransport(
         {
@@ -26,6 +23,7 @@ module.exports = (app) => {
             }
         }
     )
+    /*
     transporter.verify(function (error) {
         if (error) {
             console.log(error);
@@ -34,6 +32,7 @@ module.exports = (app) => {
         }
     });
 
+     */
 
     const dbOptions = {
         "host": process.env.PGHOST,
@@ -47,7 +46,6 @@ module.exports = (app) => {
 
     const jsonObj = {
         "roles": ["admin", "recruiter", "jobOwner", "guest", "teamLeader", "Colaborator"],
-        // id order not guaranteed
         "permissions": [
             {"resource": "auth", "action": "GET"},
             {"resource": "auth", "action": "POST"},
@@ -175,5 +173,5 @@ module.exports = (app) => {
             ]
         }
     }
-    return {app, transporter, dbOptions, jsonObj, upload, validator}
+    return {transporter, dbOptions, jsonObj, upload, validator}
 }

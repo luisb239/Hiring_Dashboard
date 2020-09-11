@@ -3,32 +3,33 @@
 const {Pool, types} = require('pg')
 const pool = new Pool()
 
-const parseTimestamps = (timestamp) => timestamp
+// By default, node-postgres, when fetching timestamps from database, will convert them to Date objects.
+// By doing this, the timestamps lose their precision (Date objects dont hold microseconds).
 
-types.setTypeParser(types.builtins.TIMESTAMP, parseTimestamps)
+// node-postgres timestamp default behavior:
+// types.setTypeParser(types.builtins.TIMESTAMP, (timestamp) => timestamp ? new Date(timestamp) : null)
+
+// And so, converting the timestamp to a Date object will also corrupt the current concurrency system in place.
+// We need to force node-postgres to not modify timestamps, and instead return them as they come from database.
+types.setTypeParser(types.builtins.TIMESTAMP, (timestamp) => timestamp)
 
 const errors = require('./errors/db-errors.js')
 const DbError = require('./errors/db-access-error.js')
 
 async function query(text, client) {
     try {
-        if (client)
-            return await client.query(text)
-        else
-            return await pool.query(text)
+        return client ? await client.query(text) : await pool.query(text)
     } catch (e) {
-        // log the error
-        console.log(e)
-        // check the pg error code and throw respective exception to service layer
-        checkAndThrowError(e)
+        throwDatabaseError(e)
     }
 }
 
-async function transaction(bodyFunction) {
+async function transaction(fn) {
     const client = await pool.connect()
     try {
         await client.query('BEGIN')
-        const result = await bodyFunction(client)
+        // PostgreSQL default isolation level -> READ COMMITTED
+        const result = await fn(client)
         await client.query('COMMIT')
         return result
     } catch (e) {
@@ -39,27 +40,15 @@ async function transaction(bodyFunction) {
     }
 }
 
-// TODO -> NEEDS REFACTORING -> Dictionary
-
-function checkAndThrowError(e) {
-    const errorCode = e.code.substr(0, 2)
-    if (errorCode === '08') {
-        throw new DbError(errors.typeErrors.connectionException)
-    } else if (errorCode === '22') {
-        throw new DbError(errors.typeErrors.invalidData)
-    } else if (errorCode === '23') {
-        if (e.code === '23503') {
-            throw new DbError(errors.typeErrors.integrityViolation, errors.detailErrors.foreignKeyViolation)
-        } else if (e.code === '23505') {
-            throw new DbError(errors.typeErrors.integrityViolation, errors.detailErrors.uniqueViolation)
-        } else throw new DbError(errors.typeErrors.integrityViolation)
-    } else if (errorCode === '42') {
-        throw new DbError(errors.typeErrors.syntaxErrorOrAccessRuleViolation)
-    } else if (errorCode === '53') {
-        throw new DbError(errors.typeErrors.insufficientResources)
-    } else if (errorCode === 'P0') {
-        throw new DbError(errors.typeErrors.pgSqlError)
-    } else throw new DbError(errors.typeErrors.internalError)
+function throwDatabaseError(e) {
+    const stack = e.stack
+    let error = errors.internalError
+    // More errors could be added
+    if (e.code.substr(0, 2) === '23') {
+        if (e.code === '23503') error = errors.foreignKeyViolation
+        if (e.code === '23505') error = errors.uniqueViolation
+    }
+    throw new DbError(error, stack)
 }
 
 const request = require('./request/request-dal.js')(query)

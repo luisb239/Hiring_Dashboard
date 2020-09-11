@@ -222,7 +222,7 @@ module.exports = (requestDb, candidateDb, processDb, phaseDb, infoDb, processUna
         // Check if newPhase is valid in the current workflow
         const validPhase = workflowPhases.find(phase => phase.phase === newPhase)
         if (!validPhase) {
-            throw new AppError(errors.invalidInput,
+            throw new AppError(errors.businessLogic,
                 "Invalid Phase",
                 `Phase ${newPhase} is not valid in the request workflow(${workflow})`)
         }

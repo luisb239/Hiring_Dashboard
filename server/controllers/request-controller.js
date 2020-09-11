@@ -71,8 +71,8 @@ module.exports = (service) => {
         })
 
         res.status(200).send({
-            message: `${req.body.language} ` + req.body.isMandatory ? 'mandatory' : 'valued' +
-                ` requirement successfully deleted from request ${req.params.id}`
+            message: `Added ${req.body.language} language requirement, as ` +
+            req.body.isMandatory ? 'mandatory' : 'valued' + `, to request ${req.params.id}`
         })
     }
 

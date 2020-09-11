@@ -5,9 +5,9 @@ const schema = require('../dal-schemas/process/process-unavailable-reasons-schem
 module.exports = (query) => {
 
     return {
-        getProcessUnavailableReason,
-        setProcessInitialUnavailableReason,
-        updateProcessUnavailableReason
+        getProcessUnavailableReason: getProcessUnavailableReason,
+        setProcessInitialUnavailableReason: setProcessInitialUnavailableReason,
+        updateProcessUnavailableReason: updateProcessUnavailableReason
     }
 
     async function getProcessUnavailableReason({requestId, candidateId, client}) {

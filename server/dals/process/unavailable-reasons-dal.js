@@ -5,7 +5,7 @@ const schema = require('../dal-schemas/process/unavailable-reasons-schema.js')
 module.exports = (query) => {
 
     return {
-        getAllUnavailableReasons
+        getAllUnavailableReasons: getAllUnavailableReasons
     }
 
 

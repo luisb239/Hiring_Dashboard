@@ -14,7 +14,10 @@ const statisticsConfigs = require('./dal-schemas/statistics-configs-schema')
 module.exports = (query) => {
 
     return {
-        getStatistics, saveConfigs, getConfigs, getConfigsDetails
+        getStatistics: getStatistics,
+        saveConfigs: saveConfigs,
+        getConfigs: getConfigs,
+        getConfigsDetails: getConfigsDetails
     }
 
     async function getStatistics() {

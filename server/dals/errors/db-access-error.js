@@ -2,11 +2,11 @@
 
 // centralized error object that derives from Node’s Error
 class dbAccessError {
-    constructor(type, error = null) {
+    constructor(type, stack) {
         Error.call(this)
         Error.captureStackTrace(this)
         this.type = type
-        this.error = error
+        this.stack = stack
         //...other properties assigned here
     }
 }

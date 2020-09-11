@@ -4,7 +4,7 @@ const schema = require('../dal-schemas/request-props-schemas/months-schema.js')
 
 module.exports = (query) => {
 
-    return {getMonths}
+    return {getMonths: getMonths}
 
     async function getMonths() {
         const statement = {
