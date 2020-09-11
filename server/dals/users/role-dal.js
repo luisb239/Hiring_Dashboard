@@ -11,7 +11,7 @@ module.exports = (query) => {
 
     async function getUserRoles({userId}) {
         const statement = {
-            name: 'Get User Roles And Type',
+            name: 'Get User Roles',
             text:
                 `SELECT * FROM ${roleSchema.table} ` +
                 `INNER JOIN ${userRoleSchema.table} AS UR ON ` +

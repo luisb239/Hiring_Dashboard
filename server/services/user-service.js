@@ -8,7 +8,7 @@ module.exports = (userDb, roleDb, authModule) => {
     return {
         getUsers: getUsers,
         getRoleByName: getRoleByName,
-        getCurrentUserRoles: getCurrentUserRoles
+        getUserRoles: getUserRoles
     }
 
     /**
@@ -29,8 +29,8 @@ module.exports = (userDb, roleDb, authModule) => {
         return roleInfo
     }
 
-    async function getCurrentUserRoles({ userId }) {
-        return await roleDb.getUserRoles({ userId })
+    async function getUserRoles({userId}) {
+        return await roleDb.getUserRoles({userId})
     }
 
 }
