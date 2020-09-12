@@ -22,8 +22,8 @@ module.exports = (requestDb, processDb, requestLanguagesDb, authModule, candidat
 
     /**
      * Get requests info based on filters passed
-     * @param pageNumber
-     * @param pageSize
+     * @param pageNumber: ?number
+     * @param pageSize: ?number
      * @param skill : String
      * @param state : String
      * @param stateCsl : String
@@ -44,7 +44,7 @@ module.exports = (requestDb, processDb, requestLanguagesDb, authModule, candidat
                                    minQuantity = null, maxQuantity = null,
                                    minProgress = null, maxProgress = null,
                                    targetDate = null, userId = null
-                               }) {
+                               } = {}) {
 
         const requests = await requestDb.getRequests({
             pageNumber, pageSize,
@@ -55,6 +55,20 @@ module.exports = (requestDb, processDb, requestLanguagesDb, authModule, candidat
         return {
             requests
         }
+    }
+
+    async function countRequests({
+                                     skill = null, state = null, stateCsl = null,
+                                     profile = null, project = null, workflow = null,
+                                     minQuantity = null, maxQuantity = null,
+                                     minProgress = null, maxProgress = null,
+                                     targetDate = null, userId = null
+                                 } = {}) {
+        const result = await requestDb.countRequests({
+            skill, state, stateCsl, profile, project, workflow, minQuantity,
+            maxQuantity, minProgress, maxProgress, targetDate, userId
+        })
+        return {count: result.count};
     }
 
     /**
@@ -107,41 +121,75 @@ module.exports = (requestDb, processDb, requestLanguagesDb, authModule, candidat
                                      project, profile, workflow, dateToSendProfile = null
                                  }) {
 
-        const request = await requestDb.createRequest({
-            quantity, description, targetDate, state: "Open", skill, stateCsl: "Asked",
-            project, profile, workflow, dateToSendProfile, progress: 0
-        })
-
-        return {
-            id: request.id
+        try {
+            const request = await requestDb.createRequest({
+                quantity, description, targetDate, state: "Open", skill, stateCsl: "Asked",
+                project, profile, workflow, dateToSendProfile, progress: 0
+            })
+            return {
+                id: request.id
+            }
+        } catch (e) {
+            if (e instanceof DbError) {
+                if (e.type === dbCommonErrors.foreignKeyViolation) {
+                    throw new AppError(errors.invalidArguments, "Could not create request",
+                        "The arguments you supplied are not valid. Try again with valid arguments.", e.stack)
+                }
+            }
+            throw e;
         }
-
     }
 
     async function updateRequest({
-                                     id, state, stateCsl, description, quantity, targetDate,
-                                     skill, project, profile, dateToSendProfile, timestamp
+                                     id, timestamp, state = null, stateCsl = null, description = null,
+                                     quantity = null, targetDate = null, skill = null, project = null,
+                                     profile = null, dateToSendProfile = null
                                  }) {
 
-        return await transaction(async (client) => {
-            const newTimestamp = await requestDb.updateRequest({
-                id, state, stateCsl, description, quantity,
-                targetDate, skill, project, profile, dateToSendProfile,
-                observedTimestamp: timestamp, client
-            })
+        const request = await requestDb.getRequestById({id: id})
+        if (!request) {
+            throw new AppError(errors.notFound, "Request not found",
+                `Request with id ${id} does not exist`)
+        }
+        if (request.timestamp !== timestamp) {
+            throw new AppError(errors.conflict, "Request not updated",
+                `Request with id ${id} has already been updated`)
+        }
 
-            if (!newTimestamp)
+        return await transaction(async (client) => {
+            let newTimestamp;
+
+            // Trying to update request
+            try {
+                newTimestamp = await requestDb.updateRequest({
+                    id, state, stateCsl, description, quantity,
+                    targetDate, skill, project, profile, dateToSendProfile, observedTimestamp: timestamp, client
+                })
+            } catch (e) {
+                if (e instanceof DbError) {
+                    if (e.type === dbCommonErrors.foreignKeyViolation) {
+                        throw new AppError(errors.invalidArguments, "Could not update request",
+                            "The arguments you supplied are not valid. Try again with valid arguments.", e.stack)
+                    }
+                }
+                throw e;
+            }
+
+            // Other transaction already updated the request
+            if (!newTimestamp) {
                 throw new AppError(errors.conflict,
                     "Request not updated",
-                    `Request ${id} has already been updated`)
+                    `Request with id ${id} has already been updated`)
+            }
+
             return {
                 newTimestamp
             }
         })
     }
 
+
     // The current user is either a job owner or an admin, or both
-    // TODO -> Middlewares constraints needed!!
     async function addRequestToUser({userId, requestId}) {
         const userRoles = await authModule.userRole.getUserActiveRoles(userId);
         let userRoleToAddToRequest;
@@ -160,17 +208,21 @@ module.exports = (requestDb, processDb, requestLanguagesDb, authModule, candidat
     async function addUserToRequest({requestId, userId, roleId, currentUsername}) {
         try {
             await requestDb.addUserAndRoleToRequest({userId, roleId, requestId})
+            const request = await requestDb.getRequestById({id: requestId})
+            await emailService.notifyAssigned({userId, request, currentUsername})
         } catch (e) {
-            if (e.error && e.error === dbCommonErrors.detailErrors.uniqueViolation) {
-                throw new AppError(errors.conflict,
-                    "Could not add user to current request",
-                    `Request ${requestId} already has user ${userId}.`)
+            if (e instanceof DbError) {
+                if (e.type === dbCommonErrors.uniqueViolation) {
+                    throw new AppError(errors.conflict, "Could not add user, with role supplied, to request",
+                        `Request ${requestId} already has user ${userId} with role ${roleId}.`, e.stack)
+                }
+                if (e.type === dbCommonErrors.foreignKeyViolation) {
+                    throw new AppError(errors.invalidArguments, "Could not add user, with role supplied, to request",
+                        "The arguments you supplied are not valid. Try again with valid arguments.", e.stack)
+                }
             }
             throw e;
         }
-
-        const request = await requestDb.getRequestById({id: requestId})
-        await emailService.notifyAssigned({userId, request, currentUsername})
     }
 
     async function addLanguageToRequest({requestId, language, isMandatory}) {
@@ -198,20 +250,6 @@ module.exports = (requestDb, processDb, requestLanguagesDb, authModule, candidat
                 "Could not delete language requirement from request",
                 `${str} ${language} requirement on request ${requestId} not found`)
         }
-    }
-
-    async function countRequests({
-                                     skill = null, state = null, stateCsl = null,
-                                     profile = null, project = null, workflow = null,
-                                     minQuantity = null, maxQuantity = null,
-                                     minProgress = null, maxProgress = null,
-                                     targetDate = null, userId = null
-                                 }) {
-        const result = await requestDb.countRequests({
-            skill, state, stateCsl, profile, project, workflow, minQuantity,
-            maxQuantity, minProgress, maxProgress, targetDate, userId
-        })
-        return {count: result.count};
     }
 
 }

@@ -29,7 +29,7 @@ function handleError(res, error) {
     let status = 400, errorDetails
     if (error instanceof AppError) {
         errorDetails = format(error.title, error.detail)
-        if (error.commonError === commonErrors.businessLogic) {
+        if (error.commonError === commonErrors.businessLogic || error.commonError === commonErrors.invalidArguments) {
             // Bad Request
             status = 400
         } else if (error.commonError === commonErrors.notFound) {

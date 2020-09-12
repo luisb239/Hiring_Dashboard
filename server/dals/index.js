@@ -41,14 +41,13 @@ async function transaction(fn) {
 }
 
 function throwDatabaseError(e) {
-    const stack = e.stack
-    let error = errors.internalError
+    let error;
     // More errors could be added
     if (e.code.substr(0, 2) === '23') {
         if (e.code === '23503') error = errors.foreignKeyViolation
         if (e.code === '23505') error = errors.uniqueViolation
     }
-    throw new DbError(error, stack)
+    throw new DbError(error || errors.internalError, e.stack || e)
 }
 
 const request = require('./request/request-dal.js')(query)
