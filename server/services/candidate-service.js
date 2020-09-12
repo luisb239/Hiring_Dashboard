@@ -22,12 +22,14 @@ module.exports = (candidateDb, profilesDb, processDb, transaction) => {
                                      notInRequest = null, available = null, profiles = null
                                  } = {}) {
         const candidates = await candidateDb.getCandidates({pageNumber, pageSize, notInRequest, available, profiles})
+
         return {
             candidates: candidates
         }
     }
 
-    async function countCandidates({available = null, profiles = null, notInRequest = null}  = {}) {
+
+    async function countCandidates({available = null, profiles = null, notInRequest = null} = {}) {
         const result = await candidateDb.countCandidates({available, profiles, notInRequest})
         return {count: result.count};
     }
@@ -41,9 +43,9 @@ module.exports = (candidateDb, profilesDb, processDb, transaction) => {
                 "Candidate not found",
                 `Candidate with id ${id} does not exist`)
 
-        const profiles = await profilesDb.getCandidateProfiles({ candidateId: id })
+        const profiles = await profilesDb.getCandidateProfiles({candidateId: id})
 
-        const processes = await processDb.getCandidateProcesses({ candidateId: id })
+        const processes = await processDb.getCandidateProcesses({candidateId: id})
 
         return {
             candidate: candidateFound,
@@ -53,12 +55,24 @@ module.exports = (candidateDb, profilesDb, processDb, transaction) => {
     }
 
     async function updateCandidate({
-        id, cvFileName = null, cvMimeType = null,
-        cvFileBuffer = null, cvEncoding = null, profileInfo = null,
-        available = null, timestamp }) {
+                                       id, cvFileName = null, cvMimeType = null,
+                                       cvFileBuffer = null, cvEncoding = null, profileInfo = null,
+                                       available = null, timestamp
+                                   }) {
         // Convert string to boolean
         if (available)
             available = (available === 'true')
+
+        const candidate = await candidateDb.getCandidateById({id: id})
+        if (!candidate) {
+            throw new AppError(errors.notFound, "Candidate not found",
+                `Candidate with id ${id} does not exist`)
+        }
+
+        if (candidate.timestamp !== timestamp) {
+            throw new AppError(errors.conflict, "Candidate not updated",
+                `Candidate with id ${id} has already been updated`)
+        }
 
         return await transaction(async (client) => {
             const newTimestamp = await candidateDb.updateCandidate({
@@ -73,6 +87,7 @@ module.exports = (candidateDb, profilesDb, processDb, transaction) => {
                 timestamp: timestamp,
                 client: client
             })
+
             if (!newTimestamp)
                 throw new AppError(errors.conflict,
                     "Conflict trying to update candidate",
@@ -83,7 +98,7 @@ module.exports = (candidateDb, profilesDb, processDb, transaction) => {
         })
     }
 
-    async function createCandidate({ name, profileInfo = null, cvFileName, cvMimeType, cvFileBuffer, cvEncoding }) {
+    async function createCandidate({name, profileInfo = null, cvFileName, cvMimeType, cvFileBuffer, cvEncoding}) {
         const candidate = await candidateDb.createCandidate({
             name: name,
             profileInfo: profileInfo,
@@ -104,12 +119,22 @@ module.exports = (candidateDb, profilesDb, processDb, transaction) => {
      * @param profile : String
      * @returns {Promise<void>}
      */
-    // TODO -> Might Throw Conflict
-    async function addCandidateProfile({ id, profile }) {
-        await profilesDb.addProfileToCandidate({
-            candidateId: id,
-            profile: profile
-        })
+    async function addCandidateProfile({id, profile}) {
+        try {
+            await profilesDb.addProfileToCandidate({
+                candidateId: id,
+                profile: profile
+            })
+        } catch (e) {
+            if (e instanceof DbError) {
+                if (e.type === dbCommonErrors.uniqueViolation) {
+                    throw new AppError(errors.conflict, "Could not add profile",
+                        "The profile you supplied has already been added.", e.stack)
+                }
+            }
+            throw e;
+        }
+
     }
 
     /**
@@ -119,15 +144,21 @@ module.exports = (candidateDb, profilesDb, processDb, transaction) => {
      * @returns {Promise<void>}
      */
     // TODO -> If delete didnt affect any row -> rowCount === 0 -> throw Gone Error
-    async function removeCandidateProfile({ id, profile }) {
-        await profilesDb.deleteProfileFromCandidate({
+    async function removeCandidateProfile({id, profile}) {
+        const rows = await profilesDb.deleteProfileFromCandidate({
             candidateId: id,
             profile: profile
         })
+        if (rows === 0) {
+            throw new AppError(errors.gone,
+                "Could not delete profile from candidate's profiles,",
+                ` profile on candidate ${id} not found`)
+        }
+        return rows
     }
 
-    async function getCandidateCv({ id }) {
-        const cvFileInfo = await candidateDb.getCandidateCvInfo({ id })
+    async function getCandidateCv({id}) {
+        const cvFileInfo = await candidateDb.getCandidateCvInfo({id})
 
         if (!cvFileInfo) {
             throw new AppError(errors.notFound,
