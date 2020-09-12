@@ -151,6 +151,7 @@ module.exports = (requestDb, processDb, requestLanguagesDb, authModule, candidat
             throw new AppError(errors.notFound, "Request not found",
                 `Request with id ${id} does not exist`)
         }
+
         if (request.timestamp !== timestamp) {
             throw new AppError(errors.conflict, "Request not updated",
                 `Request with id ${id} has already been updated`)
@@ -175,7 +176,7 @@ module.exports = (requestDb, processDb, requestLanguagesDb, authModule, candidat
                 throw e;
             }
 
-            // Other transaction already updated the request
+            // A concurrent transaction already has updated the request
             if (!newTimestamp) {
                 throw new AppError(errors.conflict,
                     "Request not updated",
@@ -230,16 +231,18 @@ module.exports = (requestDb, processDb, requestLanguagesDb, authModule, candidat
             await requestLanguagesDb.createLanguageRequirement({requestId, language, isMandatory})
         } catch (e) {
             if (e instanceof DbError) {
-                if (e.error && e.error === dbCommonErrors.detailErrors.uniqueViolation) {
-                    throw new AppError(errors.conflict,
-                        "Cannot add language requirement to current request",
+                if (e.type === dbCommonErrors.uniqueViolation) {
+                    throw new AppError(errors.conflict, "Could not add language requirement to request",
                         `Request ${requestId} already has ${language} as request's `
-                        + isMandatory ? 'mandatory' : 'valued' + ' language')
+                        + isMandatory ? 'mandatory' : 'valued' + ' language', e.stack)
                 }
-                throw e;
+                if (e.type === dbCommonErrors.foreignKeyViolation) {
+                    throw new AppError(errors.invalidArguments, "Could not add language requirement to request",
+                        "The arguments you supplied are not valid. Try again with valid arguments.", e.stack)
+                }
             }
+            throw e;
         }
-
     }
 
     async function deleteLanguage({requestId, language, isMandatory}) {

@@ -26,7 +26,7 @@ module.exports = function handle(controllerFunction) {
 }
 
 function handleError(res, error) {
-    let status = 400, errorDetails
+    let status = 500, errorDetails
     if (error instanceof AppError) {
         errorDetails = format(error.title, error.detail)
         if (error.commonError === commonErrors.businessLogic || error.commonError === commonErrors.invalidArguments) {
@@ -48,7 +48,7 @@ function handleError(res, error) {
         errorDetails = format("Internal Server Error", "Something unexpected happened!")
     }
     // Always log the stacktrace if there is one
-    console.log(error.stack || error.detail || error)
+    console.log(error.stack || error)
     // Send respective error
     res.status(status).send(errorDetails)
 }
