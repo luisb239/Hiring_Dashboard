@@ -18,23 +18,23 @@ module.exports = (candidateDb, profilesDb, processDb, transaction) => {
     }
 
     async function getCandidates({
-                                     pageNumber = null, pageSize = null,
-                                     notInRequest = null, available = null, profiles = null
-                                 }) {
-        const candidates = await candidateDb.getCandidates({pageNumber, pageSize, notInRequest, available, profiles})
+        pageNumber = null, pageSize = null,
+        notInRequest = null, available = null, profiles = null
+    }) {
+        const candidates = await candidateDb.getCandidates({ pageNumber, pageSize, notInRequest, available, profiles })
         return {
             candidates: candidates
         }
     }
 
-    async function countCandidates({available = null, profiles = null, notInRequest = null}) {
-        const result = await candidateDb.countCandidates({available, profiles, notInRequest})
-        return {count: result.count};
+    async function countCandidates({ available = null, profiles = null, notInRequest = null }) {
+        const result = await candidateDb.countCandidates({ available, profiles, notInRequest })
+        return { count: result.count };
     }
 
-    async function getCandidateById({id}) {
+    async function getCandidateById({ id }) {
 
-        const candidateFound = await candidateDb.getCandidateById({id})
+        const candidateFound = await candidateDb.getCandidateById({ id })
 
         if (!candidateFound)
             throw new AppError(errors.notFound,
@@ -60,6 +60,17 @@ module.exports = (candidateDb, profilesDb, processDb, transaction) => {
         if (available)
             available = (available === 'true')
 
+        const candidate = await candidateDb.getCandidateById({ id: id })
+        if (!candidate) {
+            throw new AppError(errors.notFound, "Candidate not found",
+                `Candidate with id ${id} does not exist`)
+        }
+
+        if (candidate.timestamp !== timestamp) {
+            throw new AppError(errors.conflict, "Candidate not updated",
+                `Candidate with id ${id} has already been updated`)
+        }
+
         return await transaction(async (client) => {
             const newTimestamp = await candidateDb.updateCandidate({
                 id: id,
@@ -73,6 +84,7 @@ module.exports = (candidateDb, profilesDb, processDb, transaction) => {
                 timestamp: timestamp,
                 client: client
             })
+
             if (!newTimestamp)
                 throw new AppError(errors.conflict,
                     "Conflict trying to update candidate",
@@ -104,12 +116,22 @@ module.exports = (candidateDb, profilesDb, processDb, transaction) => {
      * @param profile : String
      * @returns {Promise<void>}
      */
-    // TODO -> Might Throw Conflict
     async function addCandidateProfile({ id, profile }) {
-        await profilesDb.addProfileToCandidate({
-            candidateId: id,
-            profile: profile
-        })
+        try {
+            await profilesDb.addProfileToCandidate({
+                candidateId: id,
+                profile: profile
+            })
+        } catch (e) {
+            if (e instanceof DbError) {
+                if (e.type === dbCommonErrors.uniqueViolation) {
+                    throw new AppError(errors.conflict, "Could not add profile",
+                        "The profile you supplied has already been added.", e.stack)
+                }
+            }
+            throw e;
+        }
+
     }
 
     /**
@@ -120,10 +142,15 @@ module.exports = (candidateDb, profilesDb, processDb, transaction) => {
      */
     // TODO -> If delete didnt affect any row -> rowCount === 0 -> throw Gone Error
     async function removeCandidateProfile({ id, profile }) {
-        await profilesDb.deleteProfileFromCandidate({
+        const rows = await profilesDb.deleteProfileFromCandidate({
             candidateId: id,
             profile: profile
         })
+        if (rows === 0) {
+            throw new AppError(errors.gone,
+                "Could not delete profile from candidate's profiles,",
+                ` profile on candidate ${id} not found`)
+        }
     }
 
     async function getCandidateCv({ id }) {
