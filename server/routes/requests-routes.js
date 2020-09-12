@@ -52,7 +52,7 @@ module.exports = function (router, requestsController, processController, valida
      */
     router.get(`/${root}/:id`, [
         verifyIfAuthenticated,
-        param('id').isInt()
+        param('id').isInt().withMessage('id must be integer')
     ], handle(requestsController.getRequestById))
 
     /**
