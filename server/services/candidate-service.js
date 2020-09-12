@@ -20,14 +20,14 @@ module.exports = (candidateDb, profilesDb, processDb, transaction) => {
     async function getCandidates({
                                      pageNumber = null, pageSize = null,
                                      notInRequest = null, available = null, profiles = null
-                                 }) {
+                                 } = {}) {
         const candidates = await candidateDb.getCandidates({pageNumber, pageSize, notInRequest, available, profiles})
         return {
             candidates: candidates
         }
     }
 
-    async function countCandidates({available = null, profiles = null, notInRequest = null}) {
+    async function countCandidates({available = null, profiles = null, notInRequest = null}  = {}) {
         const result = await candidateDb.countCandidates({available, profiles, notInRequest})
         return {count: result.count};
     }
