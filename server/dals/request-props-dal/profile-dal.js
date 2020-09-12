@@ -51,11 +51,18 @@ module.exports = (query) => {
             text:
                 `INSERT INTO ${candidateProfileSchema.table} ` +
                 `(${candidateProfileSchema.candidateId}, ${candidateProfileSchema.profile}) ` +
-                `VALUES ($1, $2);`,
+                `VALUES ($1, $2) RETURNING *; `,
             values: [candidateId, profile]
         }
 
-        return await query(statement)
+        const res = await query(statement)
+        return extractFromCandidateProfile(res.rows[0])
+    }
+
+    function extractFromCandidateProfile(obj) {
+        return {
+            profile: obj[candidateProfileSchema.profile]
+        }
     }
 
     async function deleteProfileFromCandidate({ candidateId, profile }) {
@@ -68,6 +75,7 @@ module.exports = (query) => {
                 `${candidateProfileSchema.candidateId}, ${candidateProfileSchema.profile};`,
             values: [candidateId, profile]
         }
-        await query(statement)
+        const res = await query(statement)
+        return res.rowCount
     }
 }
