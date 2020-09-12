@@ -1,12 +1,12 @@
 import {Component, OnInit} from '@angular/core';
-import {FormArray, FormBuilder, FormControl} from '@angular/forms';
+import {FormBuilder, FormControl} from '@angular/forms';
 import {RequestPropsService} from 'src/app/services/requestProps/requestProps.service';
 import {WorkflowService} from 'src/app/services/workflow/workflow.service';
 import {RequestService} from 'src/app/services/request/request.service';
 import {Router} from '@angular/router';
 import {CreateRequestProps} from './create-request-props';
 import {AlertService} from '../../services/alert/alert.service';
-import {concatMap, defaultIfEmpty, map, mergeMap} from 'rxjs/operators';
+import {concatMap, defaultIfEmpty, map} from 'rxjs/operators';
 import {forkJoin} from 'rxjs';
 
 @Component({

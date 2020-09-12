@@ -32,7 +32,7 @@
                 <h3 class="myH3">{{workflow.workflow}}</h3>
               </div>
             </th>
-            <th>
+            <th id="1">
               <div></div>
             </th>
           </tr>
@@ -52,7 +52,7 @@
           <tr>
             <td class="title-data swim-lane bg-dark text-white" [colSpan]=workflow.phases.length-1>
               <h5 id="icon-data">
-                <img src="../../../assets/img/Icon_Refresh.svg" (click)='onRefresh($event, request)'>
+                <img src="../../../assets/img/Icon_Refresh.svg" (click)='onRefresh($event, request)' alt="Refresh">
               </h5>
               <h5 id="swim-lane-title" [routerLink]="['/request-detail', request.id]">
                 {{request.description}} [Placed: {{request.placedCandidates}}

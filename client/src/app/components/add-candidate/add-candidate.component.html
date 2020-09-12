@@ -23,11 +23,11 @@
             (click)="resetForms()">Reset Filter
     </button>
   </form>
-  <!--h3 class="table-title">Candidates</h3-->
   <div class="mat-elevation-z8">
     <table [dataSource]="dataSource" mat-table>
+      <caption style="display: none">Add Candidate</caption>
       <ng-container matColumnDef="Name">
-        <th *matHeaderCellDef class="col-un-sm" mat-header-cell> Name</th>
+        <th *matHeaderCellDef class="col-un-sm" mat-header-cell id="1"> Name</th>
         <td *matCellDef="let candidate" [routerLink]="['/candidates', candidate.id]"
             [state]="{candidateId: candidate.id}"
             class="col-un-sm"
@@ -37,7 +37,7 @@
       </ng-container>
 
       <ng-container matColumnDef="Availability">
-        <th *matHeaderCellDef class="col-un-sm" mat-header-cell> Availability</th>
+        <th *matHeaderCellDef class="col-un-sm" mat-header-cell id="2"> Availability</th>
         <td *matCellDef="let candidate" class="col-un-sm" mat-cell>
           <ngb-progressbar *ngIf="candidate.available" [showValue]="false" [value]="100"
                            type="success"></ngb-progressbar>
@@ -47,7 +47,7 @@
       </ng-container>
 
       <ng-container matColumnDef="Assign">
-        <th *matHeaderCellDef class="col-un-sm" mat-header-cell> Assign</th>
+        <th *matHeaderCellDef class="col-un-sm" mat-header-cell id="3"> Assign</th>
         <td *matCellDef="let candidate" class="col-un-sm assign td" mat-cell>
           <mat-checkbox
             (change)="onChange(candidate, $event)"

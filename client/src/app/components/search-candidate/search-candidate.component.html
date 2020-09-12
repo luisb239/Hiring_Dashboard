@@ -22,14 +22,14 @@
   </div>
   <div class="mat-elevation-z8">
     <table [dataSource]="properties.dataSource" mat-table>
-
+      <caption style="display: none">Search Candidate</caption>
       <ng-container matColumnDef="Name">
-        <th *matHeaderCellDef mat-header-cell> Name</th>
+        <th *matHeaderCellDef mat-header-cell id="1"> Name</th>
         <td *matCellDef="let candidate" mat-cell> {{candidate.name}} </td>
       </ng-container>
 
       <ng-container matColumnDef="Availability">
-        <th *matHeaderCellDef mat-header-cell> Availability</th>
+        <th *matHeaderCellDef mat-header-cell id="2"> Availability</th>
         <td *matCellDef="let candidate" mat-cell>
           <ngb-progressbar *ngIf="candidate.available" [showValue]="false" [value]="100"
                            type="success"></ngb-progressbar>

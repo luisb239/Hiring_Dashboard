@@ -5,8 +5,7 @@ import {Role} from 'src/app/model/user/user';
 
 @Component({
   selector: 'app-dashboard',
-  templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.css']
+  templateUrl: './dashboard.component.html'
 })
 export class DashboardComponent {
   returnUrl: string;

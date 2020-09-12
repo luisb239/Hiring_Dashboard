@@ -5,21 +5,20 @@ const verifyIfAuthenticated = require('../controllers/middlewares/verify_authent
 
 module.exports = function (router, controllers, authModule, upload, validator) {
 
-    const {body, param, query, checkSchema} = validator
+    const {param, query} = validator
 
     const users = 'users'
     const roles = 'roles'
     const phases = 'phases'
 
     // request attributes
-    const requestAttributes = 'requests-properties'
     const workflows = 'workflows'
 
-    const authRouter = require('./auth-routes')(router, controllers.auth, authModule, handle)
-    const requestsRouter = require('./requests-routes')(router, controllers.request, controllers.process, validator, handle, verifyIfAuthenticated)
-    const requestsPropsRouter = require('./request-props-routes')(router, controllers.requestProps, handle, verifyIfAuthenticated)
-    const statisticsRouter = require('./statistics-routes')(router, controllers.statistics, validator, handle, verifyIfAuthenticated)
-    const candidatesRouter = require('./candidates-routes')(router, controllers.candidate, validator, upload, handle, verifyIfAuthenticated)
+    require('./auth-routes')(router, controllers.auth, authModule, handle)
+    require('./requests-routes')(router, controllers.request, controllers.process, validator, handle, verifyIfAuthenticated)
+    require('./request-props-routes')(router, controllers.requestProps, handle, verifyIfAuthenticated)
+    require('./statistics-routes')(router, controllers.statistics, validator, handle, verifyIfAuthenticated)
+    require('./candidates-routes')(router, controllers.candidate, validator, upload, handle, verifyIfAuthenticated)
 
     /**
      * Get all users + query filter

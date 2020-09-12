@@ -1,7 +1,7 @@
 import {RequestList} from 'src/app/model/request/request-list';
 import {UserRole} from 'src/app/model/user/user-role';
 import {ProcessList} from 'src/app/model/process/process-list';
-import {FormArray, FormControl, FormGroup} from '@angular/forms';
+import {FormGroup} from '@angular/forms';
 import {User} from '../../model/user/user';
 import {LanguageCheckbox} from '../../model/requestProps/language-checkbox';
 

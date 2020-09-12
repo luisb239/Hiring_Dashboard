@@ -2,7 +2,7 @@ import {AfterViewInit, Component, EventEmitter, Input, OnInit, Output, ViewChild
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {CandidateService} from '../../services/candidate/candidate.service';
 import {RequestPropsService} from 'src/app/services/requestProps/requestProps.service';
-import {FormArray, FormBuilder, FormControl, FormGroup} from '@angular/forms';
+import {FormBuilder, FormGroup} from '@angular/forms';
 import {ProcessService} from '../../services/process/process.service';
 import {defaultIfEmpty, map, tap} from 'rxjs/operators';
 import {RequestService} from '../../services/request/request.service';

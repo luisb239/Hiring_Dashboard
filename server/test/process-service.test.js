@@ -152,7 +152,7 @@ describe('Testing process-service', function () {
             const notes = 'This notes have been updated as you can see'
             const phase = 'First Interview'
             const processDetails = await service.getProcessDetail({candidateId: candidateId, requestId: requestId})
-            const res = await service.updateProcessPhaseNotes({
+            await service.updateProcessPhaseNotes({
                 requestId: requestId, candidateId: candidateId,
                 phase: phase, notes: notes, timestamp: processDetails.timestamp
             })

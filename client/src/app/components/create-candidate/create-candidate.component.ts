@@ -1,12 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {CandidateService} from '../../services/candidate/candidate.service';
-import {concatMap, defaultIfEmpty, map, mergeMap} from 'rxjs/operators';
+import {concatMap, defaultIfEmpty, map} from 'rxjs/operators';
 import {RequestPropsService} from '../../services/requestProps/requestProps.service';
-import { FormBuilder } from '@angular/forms';
-import { Router } from '@angular/router';
-import { AlertService } from '../../services/alert/alert.service';
+import {FormBuilder} from '@angular/forms';
+import {Router} from '@angular/router';
+import {AlertService} from '../../services/alert/alert.service';
 import {CreateCandidateProps} from './create-candidate-props';
-import {forkJoin, pipe} from 'rxjs';
+import {forkJoin} from 'rxjs';
 
 @Component({
   selector: 'app-create-candidate',

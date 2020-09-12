@@ -53,6 +53,7 @@
         <h5>Profiles</h5>
         <div *ngIf="!properties.newCandidate && properties.candidate.profiles.length > 0" class="property">
           <table class="table-responsive-xl profileTable">
+            <caption style="display: none">Candidate Details</caption>
             <thead>
               <tr>
                 <th scope="col">Profile</th>
@@ -72,6 +73,7 @@
         </div>
         <div *ngIf="properties.newCandidate && properties.newCandidate.profiles.length > 0 " class="property">
           <table class="table-responsive-xl profileTable">
+            <caption style="display: none">Candidate Details 2</caption>
             <thead>
               <tr>
                 <th scope="col">Profile</th>

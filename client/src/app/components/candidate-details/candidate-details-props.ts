@@ -1,7 +1,5 @@
 import {Candidate} from '../../model/candidate/candidate';
-import {Request} from '../../model/request/request';
-import {Process} from '../../model/process/process';
-import {FormGroup, FormControl} from '@angular/forms';
+import {FormControl, FormGroup} from '@angular/forms';
 
 export class CandidateDetailsProps {
   candidateId: number;
