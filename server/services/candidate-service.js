@@ -3,6 +3,8 @@
 const uniqid = require('uniqid');
 const AppError = require('./errors/app-error.js')
 const errors = require('./errors/common-errors.js')
+const DbError = require('../dals/errors/db-access-error')
+const dbCommonErrors = require('../dals/errors/db-errors.js')
 
 module.exports = (candidateDb, profilesDb, processDb, transaction) => {
 
@@ -121,7 +123,7 @@ module.exports = (candidateDb, profilesDb, processDb, transaction) => {
      */
     async function addCandidateProfile({id, profile}) {
         try {
-            await profilesDb.addProfileToCandidate({
+            return await profilesDb.addProfileToCandidate({
                 candidateId: id,
                 profile: profile
             })
@@ -130,6 +132,10 @@ module.exports = (candidateDb, profilesDb, processDb, transaction) => {
                 if (e.type === dbCommonErrors.uniqueViolation) {
                     throw new AppError(errors.conflict, "Could not add profile",
                         "The profile you supplied has already been added.", e.stack)
+                }
+                if (e.type === dbCommonErrors.foreignKeyViolation) {
+                    throw new AppError(errors.invalidArguments, "Could not add profile",
+                        "The profile you supplied is invalid.", e.stack)
                 }
             }
             throw e;

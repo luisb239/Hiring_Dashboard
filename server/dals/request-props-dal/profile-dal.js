@@ -56,7 +56,13 @@ module.exports = (query) => {
         }
 
         const res = await query(statement)
-        return extract(res.rows[0])
+        return extractFromCandidateProfile(res.rows[0])
+    }
+
+    function extractFromCandidateProfile(obj) {
+        return {
+            profile: obj[candidateProfileSchema.profile]
+        }
     }
 
     async function deleteProfileFromCandidate({ candidateId, profile }) {
