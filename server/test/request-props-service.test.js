@@ -64,6 +64,7 @@ describe('Testing request-props-service', () => {
         it("should throw a 'Not Found' exception if the workflow passed on does not exist", async () => {
             try {
                 await service.getWorkflow({workflow: "NOT EXISTENT WORKFLOW"});
+                assert.fail()
             } catch (e) {
                 assert.ok(e instanceof AppError)
                 assert.strictEqual(e.commonError, errors.notFound)

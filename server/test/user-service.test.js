@@ -38,6 +38,7 @@ describe('Testing user-service', function () {
         it("should throw a 'NotFound' exception if the given role does not exist", async () => {
             try {
                 await service.getRoleByName({role: 'Non Existent Role'})
+                assert.fail()
             } catch (e) {
                 assert.ok(e instanceof AppError)
                 assert.strictEqual(e.commonError, errors.notFound)

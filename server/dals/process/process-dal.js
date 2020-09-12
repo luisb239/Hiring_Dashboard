@@ -84,7 +84,7 @@ module.exports = (query) => {
     }
 
 
-    async function getProcessStatusAndTimestamp({requestId, candidateId, client}) {
+    async function getProcessStatusAndTimestamp({requestId, candidateId}) {
         const statement = {
             name: 'Get Process Status',
             text:
@@ -93,7 +93,7 @@ module.exports = (query) => {
             values: [requestId, candidateId]
         }
 
-        const result = await query(statement, client)
+        const result = await query(statement)
 
         if (result.rowCount) {
             return extractProcessStatusAndTimestamp(result.rows[0])

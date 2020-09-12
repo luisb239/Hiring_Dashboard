@@ -20,6 +20,7 @@ describe('Testing phase-service', () => {
         it('should throw a "Not Found" exception if the phase does not exist', async () => {
             try {
                 await service.getPhase({phase: 'Non Existent Phase'})
+                assert.fail()
             } catch (e) {
                 assert.ok(e instanceof AppError)
                 assert.strictEqual(e.commonError, errors.notFound)

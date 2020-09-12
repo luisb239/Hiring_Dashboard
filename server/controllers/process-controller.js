@@ -67,7 +67,7 @@ module.exports = (processService) => {
     }
 
     async function updateProcessPhaseNotes(req, res) {
-        const newTimestamp = await processService.updateProcessPhaseNotes({
+        const {newTimestamp} = await processService.updateProcessPhaseNotes({
             requestId: req.params.requestId,
             candidateId: req.params.candidateId,
             phase: req.params.phase,

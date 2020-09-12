@@ -2,13 +2,12 @@
 
 const assert = require('assert')
 const db = require('../dals')
-
+const AppError = require('../services/errors/app-error')
+const errors = require('../services/errors/common-errors.js')
 const express = require('express')
 const config = require('../config')()
 const authModule = require('../../authization-module/authization')
 
-const AppError = require('../services/errors/app-error')
-const errors = require('../services/errors/common-errors.js')
 
 const emailServiceMock = {
     notifyStatus: ({id, oldStatus, newStatus, candidate, request}) => {
@@ -70,6 +69,7 @@ describe('Testing request-service', function () {
         it("should thrown a 'Not Found' exception if the request with the given id does not exist", async () => {
             try {
                 await service.getRequestById({id: 999999})
+                assert.fail()
             } catch (e) {
                 assert.ok(e instanceof AppError)
                 assert.strictEqual(e.commonError, errors.notFound)
@@ -96,6 +96,7 @@ describe('Testing request-service', function () {
                     profile: 'Random String',
                     workflow: 'Random String'
                 })
+                assert.fail()
             } catch (e) {
                 assert.ok(e instanceof AppError)
                 assert.strictEqual(e.commonError, errors.invalidArguments)
@@ -111,16 +112,19 @@ describe('Testing request-service', function () {
                 id: requestId, description: descriptionToUpdate, timestamp: request.request.timestamp
             })
             assert.ok(res.newTimestamp)
-
             const newRequest = await service.getRequestById({id: requestId})
             assert.strictEqual(descriptionToUpdate, newRequest.request.description)
         })
-        it("should throw 'Invalid Arguments' exception if the supplied arguments are not valid ", async () => {
+        it("should throw 'Invalid Arguments' exception if the supplied arguments are not valid", async () => {
             const request = await service.getRequestById({id: requestId})
             try {
                 await service.updateRequest({
-                    id: requestId, description: descriptionToUpdate, timestamp: request.request.timestamp
+                    id: requestId,
+                    description: descriptionToUpdate,
+                    profile: "Not a valid argument",
+                    timestamp: request.request.timestamp
                 })
+                assert.fail()
             } catch (e) {
                 assert.ok(e instanceof AppError)
                 assert.strictEqual(e.commonError, errors.invalidArguments)
@@ -131,6 +135,7 @@ describe('Testing request-service', function () {
                 await service.updateRequest({
                     id: requestId, description: descriptionToUpdate, timestamp: '2020-12-31 23:59:59.9999'
                 })
+                assert.fail()
             } catch (e) {
                 assert.ok(e instanceof AppError)
                 assert.strictEqual(e.commonError, errors.conflict)
@@ -166,6 +171,7 @@ describe('Testing request-service', function () {
                     roleId: roleId,
                     currentUsername: 'admin'
                 })
+                assert.fail()
             } catch (e) {
                 assert.ok(e instanceof AppError)
                 assert.strictEqual(e.commonError, errors.conflict)
@@ -180,6 +186,7 @@ describe('Testing request-service', function () {
                     roleId: roleId,
                     currentUsername: 'admin'
                 })
+                assert.fail()
             } catch (e) {
                 assert.ok(e instanceof AppError)
                 assert.strictEqual(e.commonError, errors.invalidArguments)
@@ -208,6 +215,7 @@ describe('Testing request-service', function () {
                 })
                 await service.addLanguageToRequest({requestId: id, language: language, isMandatory: mandatory})
                 await service.addLanguageToRequest({requestId: id, language: language, isMandatory: mandatory})
+                assert.fail()
             } catch (e) {
                 assert.ok(e instanceof AppError)
                 assert.strictEqual(e.commonError, errors.conflict)
@@ -216,6 +224,7 @@ describe('Testing request-service', function () {
         it("should throw 'Invalid Arguments' exception if arguments are not valid", async () => {
             try {
                 await service.addLanguageToRequest({requestId: 9999, language: 'Norwegian', isMandatory: true})
+                assert.fail()
             } catch (e) {
                 assert.ok(e instanceof AppError)
                 assert.strictEqual(e.commonError, errors.invalidArguments)
@@ -232,6 +241,15 @@ describe('Testing request-service', function () {
             })
             await service.addLanguageToRequest({requestId: id, language: language, isMandatory: mandatory})
             await service.deleteLanguage({requestId: id, language: language, isMandatory: mandatory})
+        });
+        it("should throw 'Gone' exception if language requirement does not exist in request", async () => {
+            try {
+                await service.deleteLanguage({requestId: 9999, language: 'Norwegian', isMandatory: true})
+                assert.fail()
+            } catch (e) {
+                assert.ok(e instanceof AppError)
+                assert.strictEqual(e.commonError, errors.gone)
+            }
         });
     })
 })

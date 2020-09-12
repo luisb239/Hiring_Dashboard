@@ -10,7 +10,7 @@ module.exports = (query) => {
         updateProcessUnavailableReason: updateProcessUnavailableReason
     }
 
-    async function getProcessUnavailableReason({requestId, candidateId, client}) {
+    async function getProcessUnavailableReason({requestId, candidateId}) {
         const statement = {
             name: 'Get Process Unavailable Reasons',
             text:
@@ -19,7 +19,7 @@ module.exports = (query) => {
             values: [requestId, candidateId]
         }
 
-        const result = await query(statement, client)
+        const result = await query(statement)
 
         if (result.rowCount) {
             return extractProcessUnavailableReason(result.rows[0])

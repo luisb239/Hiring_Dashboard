@@ -27,6 +27,7 @@ describe('Testing statistics-service', () => {
         it("should throw 'NotFound' exception if the user, or his profile, does not exist", async () => {
             try {
                 await service.getUserStatisticsConfigsDetails({userId: 999, profileName: "random string"})
+                assert.fail()
             } catch (e) {
                 assert.ok(e instanceof AppError)
                 assert.strictEqual(e.commonError, errors.notFound)
@@ -51,6 +52,7 @@ describe('Testing statistics-service', () => {
             const profileName = "Merely a test";
             try {
                 await service.saveUserStatisticsConfigs({userId: id, name: profileName, configs: '{}'})
+                assert.fail()
             } catch (e) {
                 assert.ok(e instanceof AppError)
                 assert.strictEqual(e.commonError, errors.notFound)
@@ -62,6 +64,7 @@ describe('Testing statistics-service', () => {
             try {
                 await service.saveUserStatisticsConfigs({userId: id, name: profileName, configs: '{}'})
                 await service.saveUserStatisticsConfigs({userId: id, name: profileName, configs: '{}'})
+                assert.fail()
             } catch (e) {
                 assert.ok(e instanceof AppError)
                 assert.strictEqual(e.commonError, errors.conflict)

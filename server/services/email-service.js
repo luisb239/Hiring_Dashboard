@@ -4,8 +4,6 @@ const templates = require('./email-templates.js')
 
 module.exports = (userDb, transporter) => {
 
-    // TODO -> MAKE A FILE WITH THE TEMPLATES
-
     return {
         notifyStatus: notifyStatus,
         notifyMoved: notifyMoved,
