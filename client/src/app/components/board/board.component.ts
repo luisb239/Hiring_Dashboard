@@ -94,7 +94,7 @@ export class BoardComponent implements OnInit {
   }
 
   onClick(candidateId: number, request: RequestList, phaseName: string) {
-    const modalRef = this.modalService.open(PopupComponent, { size: 'lg' });
+    const modalRef = this.modalService.open(PopupComponent);
     modalRef.componentInstance.requestId = request.id;
     modalRef.componentInstance.candidateId = candidateId;
     modalRef.componentInstance.phaseName = phaseName;
