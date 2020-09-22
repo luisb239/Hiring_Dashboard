@@ -13,11 +13,25 @@
   border-radius: 50%;
 }
 
-.available{
+.available {
   background-color: green;
 }
-.not_available{
+
+.not_available {
   background-color: darkred;
+}
+
+textarea {
+  vertical-align: top;
+}
+
+.bigger-text-area {
+  width: 20em;
+}
+
+#label-block {
+  display: block;
+  margin-bottom: 5px;
 }
 
 .property {

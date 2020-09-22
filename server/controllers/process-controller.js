@@ -75,7 +75,7 @@ module.exports = (processService) => {
             timestamp: req.body.timestamp
         })
         res.status(200).send({
-            newTimestamp: newTimestamp,
+            newTimestamp,
             message: `Phase ${req.params.phase} notes of process updated with success`
         })
     }

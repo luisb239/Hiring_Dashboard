@@ -46,5 +46,4 @@ module.exports = (statisticsDb) => {
         }
     }
 
-    // TODO -> DELETE USER statistics Configs
 }

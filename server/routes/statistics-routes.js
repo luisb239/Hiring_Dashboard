@@ -32,6 +32,4 @@ module.exports = function (router, controller, validator, handle, verifyIfAuthen
         verifyIfAuthenticated,
         param('name').isString()
     ], handle(controller.getUserStatisticsConfigsDetails))
-
-    // TODO -> DELETE USER STATISTICS CONFIGS PROFILE MISSING!!
 }

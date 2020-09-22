@@ -110,15 +110,12 @@ module.exports = function (router, requestsController, processController, valida
     /**
      * Add User to Request
      */
-    // TODO -> Change route to /requests/id (no need for /users)
     router.post(`/${root}/:id/${users}`, [
         verifyIfAuthenticated,
         param('id').isInt(),
         body('userId').exists().isInt().withMessage("User Id must exist and be of int type"),
         body('roleId').exists().isInt().withMessage("Role Id must exist and be of int type"),
     ], handle(requestsController.addUserToRequest))
-
-    // TODO -> DELETE USER FROM REQUEST ENDPOINT MISSING
 
     /**
      * Get all request's processes

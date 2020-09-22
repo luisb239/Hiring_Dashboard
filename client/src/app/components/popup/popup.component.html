@@ -50,7 +50,8 @@
         <div class="property">
           <h5>{{properties.phase.phase}} Notes</h5>
           <label>
-            <textarea formControlName="phaseNotes" name="phaseNotes" [ngModel]="properties.phase.notes"></textarea>
+            <textarea [ngModel]="properties.phase.notes" class='bigger-text-area' formControlName="phaseNotes"
+                      name="phaseNotes"></textarea>
           </label>
           <br>
           <p class="inline new-value" *ngIf="properties.newPhaseNotes !== properties.phase.notes">
@@ -62,14 +63,26 @@
       <div class="property">
         <h5>{{properties.phase.phase}} Attributes</h5>
         <div *ngFor="let attribute of properties.attributeTemplates;" style="display: block">
-          <label>{{attribute.name}}
-            <input *ngIf="attribute.type !== 'number'" [type]="attribute.type" [value]="attribute.value"
-                   class="attribute"
-                   [formControlName]="attribute.name">
-            <input *ngIf="attribute.type === 'number'" [type]="attribute.type" [value]="attribute.value"
-                   class="attribute"
-                   [formControlName]="attribute.name" min="0">
-          </label>
+          <div *ngIf="attribute.type === 'text'; else attributeIsNotText">
+            <label id="label-block">
+              {{attribute.name}}
+              <div>
+                <textarea [formControlName]="attribute.name" [ngModel]="attribute.value"
+                          class='bigger-text-area'></textarea>
+              </div>
+            </label>
+          </div>
+          <ng-template #attributeIsNotText>
+            <label>
+              {{attribute.name}}
+              <input *ngIf="attribute.type === 'number'" [formControlName]="attribute.name" [type]="attribute.type"
+                     [value]="attribute.value"
+                     class="attribute" min="0">
+              <input *ngIf="attribute.type !== 'number' && attribute.type !== 'text'" [formControlName]="attribute.name"
+                     [type]="attribute.type" [value]="attribute.value"
+                     class="attribute">
+            </label>
+          </ng-template>
           <p class="inline new-value" *ngIf="!isEqualAttributeTemplate(attribute.name)">
             {{properties.newAttributeTemplates[attribute.name] === '' ?
             '(' + attribute.name + ' has been deleted)' : properties.newAttributeTemplates[attribute.name]}}

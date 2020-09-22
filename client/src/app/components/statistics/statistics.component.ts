@@ -70,7 +70,6 @@ export class StatisticsComponent {
     private modalService: NgbModal) {
   }
 
-  // TODO improve open UI (maybe delete and customize it)
   customizeToolbar(toolbar) {
     // get all tabs from the toolbar
     let tabs = toolbar.getTabs();

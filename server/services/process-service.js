@@ -192,11 +192,10 @@ module.exports = (requestDb, candidateDb, processDb, phaseDb, infoDb, processUna
             const phaseInfos = await infoDb.getInfosByPhase({phase: workflowPhase.phase})
             const procPhase = processPhases.find(proc => proc.phase === workflowPhase.phase);
             procPhase.infos = phaseInfos.map(phaseInfo => {
-                let value = processInfos.find(procInfo => procInfo.name === phaseInfo.name);
-                value = value ? value.value : null
+                let info = processInfos.find(procInfo => procInfo.name === phaseInfo.name);
                 return {
                     name: phaseInfo.name,
-                    value: value ? value.value : null
+                    value: info ? info.value : null
                 }
             })
             return procPhase
@@ -292,16 +291,16 @@ module.exports = (requestDb, candidateDb, processDb, phaseDb, infoDb, processUna
                     requestId,
                     candidateId,
                     infoName: info.name,
-                    infoValue: `{"value" : "${info.value}"}`,
+                    infoValue: `${info.value}`,
                     client
                 })
             } else {
-                if (infoFound.value.value !== info.value) {
+                if (infoFound.value !== info.value) {
                     await processInfoDb.updateProcessInfoValue({
                         requestId,
                         candidateId,
                         infoName: info.name,
-                        infoValue: `{"value" : "${info.value}"}`,
+                        infoValue: `${info.value}`,
                         client
                     })
                 }
@@ -319,7 +318,7 @@ module.exports = (requestDb, candidateDb, processDb, phaseDb, infoDb, processUna
             throw new AppError(errors.conflict, "Process not updated",
                 `Process of candidate ${candidateId} in request ${requestId} has already been updated`)
         }
-        await transaction(async (client) => {
+        return await transaction(async (client) => {
             const phaseUpdated = await processPhaseDb.updatePhaseOfProcess({
                 requestId, candidateId, phase, notes, client
             })
@@ -341,8 +340,9 @@ module.exports = (requestDb, candidateDb, processDb, phaseDb, infoDb, processUna
                     'Could not Update Process Notes',
                     'The process notes have already been updated')
             }
+
             return {
-                newTimestamp: newTimestamp
+                newTimestamp
             }
         })
     }

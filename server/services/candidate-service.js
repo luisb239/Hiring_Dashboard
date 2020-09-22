@@ -149,7 +149,6 @@ module.exports = (candidateDb, profilesDb, processDb, transaction) => {
      * @param profile : String
      * @returns {Promise<void>}
      */
-    // TODO -> If delete didnt affect any row -> rowCount === 0 -> throw Gone Error
     async function removeCandidateProfile({id, profile}) {
         const rows = await profilesDb.deleteProfileFromCandidate({
             candidateId: id,

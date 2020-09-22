@@ -58,47 +58,18 @@ export class PopupComponent implements OnInit, OnDestroy {
 
   getCandidateAndProcessInfo() {
     this.getCandidateInfo();
-    this.processService.getProcess(this.requestId, this.candidateId)
-      .subscribe(dao => {
-        this.properties.updateForm.addControl('status', new FormControl(dao.status));
-        this.properties.updateForm.addControl('unavailableReason', new FormControl(dao.unavailableReason));
-        this.properties.process = new Process(dao.status, dao.unavailableReason, dao.timestamp);
-
-        this.processService.getReasons()
-          .subscribe(reasonDao => {
-            this.properties.reasons = reasonDao.unavailableReasons
-              .filter(res => res.unavailableReason !== this.properties.process.unavailableReason)
-              .map(res => res.unavailableReason);
-          });
-
-        this.processService.getStatus()
-          .subscribe(statusDao => {
-            this.properties.statusList = statusDao.status
-              .filter(stat => stat.status !== this.properties.process.status)
-              .map(stat => stat.status);
-          });
-
-        const phaseDetails = dao.phases.find(p => p.phase === dao.currentPhase);
-        this.properties.phase = new ProcessPhase(phaseDetails.phase,
-          phaseDetails.notes === null ? '' : phaseDetails.notes);
-      });
 
     this.phaseService.getPhase(this.phaseName)
       .subscribe(phaseDao => {
-        phaseDao.infos
-          .forEach(pi => {
-            this.properties.updateForm.addControl(pi.name, new FormControl());
-            this.properties.attributeTemplates.push(new PhaseAttribute(pi.name, pi.value.type));
-          });
-
+        // Add phase properties to update Form Control
+        phaseDao.infos.forEach(pi => {
+          this.properties.updateForm.addControl(pi.name, new FormControl());
+          this.properties.attributeTemplates.push(new PhaseAttribute(pi.name, pi.value.type));
+        });
         this.processService.getProcess(this.requestId, this.candidateId)
           .subscribe(processDao => {
-            const phase = processDao.phases
-              .find(ph => ph.phase === this.phaseName);
-            if (!phase) {
-              return;
-            }
-            const phaseInfos = phase.infos;
+            const phase = processDao.phases.find(ph => ph.phase === this.phaseName);
+            const phaseInfos = phase.infos || [];
             this.properties.attributeTemplates.forEach(at => {
               const info = phaseInfos.find(i => i.name === at.name);
               if (!info) {
@@ -107,6 +78,30 @@ export class PopupComponent implements OnInit, OnDestroy {
               at.value = info.value;
               this.properties.updateForm.get(at.name).setValue(at.value);
             });
+            // Add status to form
+            this.properties.updateForm.addControl('status', new FormControl(processDao.status));
+            // Add unavailable reasons to form
+            this.properties.updateForm.addControl('unavailableReason', new FormControl(processDao.unavailableReason));
+
+            this.properties.process = new Process(processDao.status, processDao.unavailableReason, processDao.timestamp);
+
+            this.processService.getReasons()
+              .subscribe(reasonDao => {
+                this.properties.reasons = reasonDao.unavailableReasons
+                  .filter(res => res.unavailableReason !== this.properties.process.unavailableReason)
+                  .map(res => res.unavailableReason);
+              });
+
+            this.processService.getStatus()
+              .subscribe(statusDao => {
+                this.properties.statusList = statusDao.status
+                  .filter(stat => stat.status !== this.properties.process.status)
+                  .map(stat => stat.status);
+              });
+
+            const phaseDetails = processDao.phases.find(p => p.phase === processDao.currentPhase);
+            this.properties.phase = new ProcessPhase(phaseDetails.phase, phaseDetails.notes === null ? '' : phaseDetails.notes);
+
           });
       });
   }

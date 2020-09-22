@@ -30,7 +30,6 @@ module.exports = function (router, controllers, authModule, upload, validator) {
     /**
      * Get role by name
      */
-    // TODO -> maybe find a better route..
     router.get(`/${roles}`, [
         query('role').isString().withMessage("Role Name must be a string")
     ], handle(controllers.user.getRoleByName))
@@ -57,8 +56,6 @@ module.exports = function (router, controllers, authModule, upload, validator) {
         param('phase').isString().withMessage("Phase must be of string type")
     ], handle(controllers.phase.getPhase))
 
-    //TODO -> Change routes names, maybe /reasons and /status..
-    // or /process-unavailable-reasons and /process-status
     router.get(`/process/reasons`, verifyIfAuthenticated, handle(controllers.process.getUnavailableReasons))
 
     router.get(`/process/status`, verifyIfAuthenticated, handle(controllers.process.getAllStatus))

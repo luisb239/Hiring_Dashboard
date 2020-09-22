@@ -45,7 +45,6 @@ describe('Testing statistics-service', () => {
             })
             assert.strictEqual(createdConfig.userId, id)
             assert.strictEqual(createdConfig.profileName, profileName)
-            // TODO -> delete inserted user statistics configs
         });
         it("should throw 'Not Found' exception if the user does not exist", async () => {
             const id = 999;
@@ -68,7 +67,6 @@ describe('Testing statistics-service', () => {
             } catch (e) {
                 assert.ok(e instanceof AppError)
                 assert.strictEqual(e.commonError, errors.conflict)
-                // TODO -> delete inserted user statistics configs
             }
         });
     })
