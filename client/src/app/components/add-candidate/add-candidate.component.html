@@ -20,7 +20,7 @@
     </div>
     <button type="submit" class="btn btn-primary" id="filter" style="display: block">Filter</button>
     <button id="resetRequestTable" class="btn btn-secondary reset-button reset" type="reset"
-            (click)="resetForms()">Reset Filter
+      (click)="resetForms()">Reset Filter
     </button>
   </form>
   <div class="mat-elevation-z8">
@@ -29,29 +29,25 @@
       <ng-container matColumnDef="Name">
         <th *matHeaderCellDef class="col-un-sm" mat-header-cell id="1"> Name</th>
         <td *matCellDef="let candidate" [routerLink]="['/candidates', candidate.id]"
-            [state]="{candidateId: candidate.id}"
-            class="col-un-sm"
-            (click)="activeModal.close('Close click')"
-            mat-cell> {{candidate.name}}
+          [state]="{candidateId: candidate.id}" class="col-un-sm" (click)="activeModal.close('Close click')" mat-cell>
+          {{candidate.name}}
         </td>
       </ng-container>
 
       <ng-container matColumnDef="Availability">
         <th *matHeaderCellDef class="col-un-sm" mat-header-cell id="2"> Availability</th>
         <td *matCellDef="let candidate" class="col-un-sm" mat-cell>
-          <ngb-progressbar *ngIf="candidate.available" [showValue]="false" [value]="100"
-                           type="success"></ngb-progressbar>
-          <ngb-progressbar *ngIf="!candidate.available" [showValue]="false" [value]="100"
-                           type="danger"></ngb-progressbar>
+          <ngb-progressbar *ngIf="candidate.available" [showValue]="false" [value]="100" type="success">
+          </ngb-progressbar>
+          <ngb-progressbar *ngIf="!candidate.available" [showValue]="false" [value]="100" type="danger">
+          </ngb-progressbar>
         </td>
       </ng-container>
 
       <ng-container matColumnDef="Assign">
         <th *matHeaderCellDef class="col-un-sm" mat-header-cell id="3"> Assign</th>
         <td *matCellDef="let candidate" class="col-un-sm assign td" mat-cell>
-          <mat-checkbox
-            (change)="onChange(candidate, $event)"
-            (click)="$event.stopPropagation()"
+          <mat-checkbox (change)="onChange(candidate, $event)" (click)="$event.stopPropagation()"
             [checked]="isChecked(candidate)">
           </mat-checkbox>
         </td>
@@ -61,12 +57,8 @@
       <tr *matRowDef="let row; columns: displayedColumns;" mat-row></tr>
     </table>
 
-    <mat-paginator
-      [length]="listSize"
-      [pageIndex]="0"
-      [pageSizeOptions]="[5, 10, 25, 50]"
-      [pageSize]="DEFAULT_PAGE_SIZE"
-      showFirstLastButtons>
+    <mat-paginator [length]="listSize" [pageIndex]="0" [pageSizeOptions]="[5, 10, 25, 50]"
+      [pageSize]="DEFAULT_PAGE_SIZE" showFirstLastButtons>
     </mat-paginator>
   </div>
   <div *ngIf="checkedCandidates.length > 0">
@@ -78,7 +70,8 @@
       Add Candidates ({{checkedCandidates.length}})
     </button>
   </div>
-  <a (click)="activeModal.close('Close click')" [routerLink]="['/create-candidate/']" class="general-margin">
+  <a *ngIf="this.authService.isRecruiter || this.authService.isTeamLeader" (click)="activeModal.close('Close click')"
+    [routerLink]="['/create-candidate/']" class="general-margin">
     <h6>Create Candidate</h6>
   </a>
 </div>

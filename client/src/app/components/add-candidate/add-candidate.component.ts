@@ -13,6 +13,7 @@ import {GenericDataSource} from '../datasource/generic-data-source';
 import {MatPaginator} from '@angular/material/paginator';
 import {forkJoin} from 'rxjs';
 import {CandidateDetailsDao} from '../../model/candidate/candidate-details-dao';
+import { AuthService } from 'src/app/services/auth/auth.service';
 
 @Component({
   selector: 'app-add-candidate',
@@ -40,7 +41,8 @@ export class AddCandidateComponent implements OnInit, AfterViewInit {
     private processService: ProcessService,
     private requestService: RequestService,
     private formBuilder: FormBuilder,
-    private alertService: AlertService) {
+    private alertService: AlertService,
+    public authService: AuthService) {
   }
 
   ngOnInit(): void {
