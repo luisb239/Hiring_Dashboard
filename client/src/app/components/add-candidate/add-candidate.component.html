@@ -70,10 +70,9 @@
     </mat-paginator>
   </div>
   <div *ngIf="checkedCandidates.length > 0">
-    <div *ngFor="let candidate of checkedCandidates" class="card" style="width: 18rem;height: 3rem;margin-top: 0.5rem">
-      <div (click)="removeCandidate(candidate)" class="card-body">
-        <h6 class="card-title">{{candidate.name}}</h6>
-      </div>
+    <div class="task bg-light text-dark" *ngFor="let candidate of checkedCandidates">
+      <h6 class="candidate">{{ candidate.name }}</h6>
+      <button type='button' (click)="removeCandidate(candidate)" class="btn-sm btn-danger close-btn">&times;</button>
     </div>
     <button (click)="addCandidatesToRequest()" class="btn btn-primary general-margin" id="add">
       Add Candidates ({{checkedCandidates.length}})

@@ -21,12 +21,9 @@
   background-color: lightgrey;
 }
 
-.card-body:hover {
-  background-color: orangered;
-}
-
 .reset {
   display: inline;
+  margin-bottom: 20px;
 }
 
 #add {
@@ -48,4 +45,34 @@
 
 .assign {
   text-align: center;
+}
+
+.close-btn {
+  display: none;
+}
+
+.task:hover > .close-btn {
+  display: inline;
+  margin-left: 10px;
+}
+
+.task {
+  display: block;
+  padding: 15px 12px;
+  border-bottom: solid 1px #ddd;
+  border-radius: 4px;
+  margin-top: 15px;
+  width: fit-content;
+  box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.05), 0 3px 14px 2px rgba(0, 0, 0, 0.05);
+}
+
+.candidate {
+  display: inline;
+}
+
+.mat-cell {
+  padding: 15px;
+}
+.mat-header-cell {
+  padding: 15px;
 }

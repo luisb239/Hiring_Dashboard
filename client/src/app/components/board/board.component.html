@@ -66,11 +66,11 @@
             <td class="tasks-container" cdkDropList [width]="tableContainer.offsetWidth/request.phases.length"
               *ngFor="let phase of request.phases; index as i" [cdkDropListData]="phase.candidates"
               (cdkDropListDropped)="drop($event, request, phase.name)">
-              <div class="task bg-light text-dark" *ngFor="let candidate of phase.candidates" [cdkDragData]="candidate"
-                cdkDrag (click)="onClick(candidate.id, request, phase.name)">
-                <h6>{{ candidate.name }}</h6>
-                <p class="candidate-status">{{ candidate.status }}</p>
-              </div>
+                <div class="task bg-light text-dark" *ngFor="let candidate of phase.candidates" [cdkDragData]="candidate"
+                  cdkDrag (click)="onClick(candidate.id, request, phase.name)">
+                  <h6>{{ candidate.name }}</h6>
+                  <p class="candidate-status">{{ candidate.status }}</p>
+                </div>
               <div (click)="addCandidate(request)" *ngIf="i==0" class="hidden-task">
                 <div class="hidden-text">
                   <h6><span>...</span></h6>

@@ -1,13 +1,13 @@
-import {Component, OnInit} from '@angular/core';
-import {FormBuilder, FormControl} from '@angular/forms';
-import {RequestPropsService} from 'src/app/services/requestProps/requestProps.service';
-import {WorkflowService} from 'src/app/services/workflow/workflow.service';
-import {RequestService} from 'src/app/services/request/request.service';
-import {Router} from '@angular/router';
-import {CreateRequestProps} from './create-request-props';
-import {AlertService} from '../../services/alert/alert.service';
-import {concatMap, defaultIfEmpty, map} from 'rxjs/operators';
-import {forkJoin} from 'rxjs';
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormControl } from '@angular/forms';
+import { RequestPropsService } from 'src/app/services/requestProps/requestProps.service';
+import { WorkflowService } from 'src/app/services/workflow/workflow.service';
+import { RequestService } from 'src/app/services/request/request.service';
+import { Router } from '@angular/router';
+import { CreateRequestProps } from './create-request-props';
+import { AlertService } from '../../services/alert/alert.service';
+import { concatMap, defaultIfEmpty, map } from 'rxjs/operators';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-create-request',
@@ -77,26 +77,32 @@ export class CreateRequestComponent implements OnInit {
    */
   onSubmit() {
     const value = this.properties.form.value;
-    const body = {
-      description: value.description,
-      quantity: value.quantity,
-      skill: value.skill,
-      profile: value.profile,
-      project: value.project,
-      workflow: value.workflow,
-      targetDate: value.targetDate,
-      dateToSendProfile: value.dateToSendProfile
-    };
+    if (value.description === '' || value.skill === '' ||
+      value.profile === '' || value.project === '' || value.workflow === '' ||
+      value.targetDate === '') {
+      this.alertService.warn('Please fulfill all the mandatory forms.');
+    } else {
+      const body = {
+        description: value.description,
+        quantity: value.quantity,
+        skill: value.skill,
+        profile: value.profile,
+        project: value.project,
+        workflow: value.workflow,
+        targetDate: value.targetDate,
+        dateToSendProfile: value.dateToSendProfile
+      };
 
-    this.requestService.createRequest(body)
-      .pipe(concatMap(dao =>
-        forkJoin(this.getLanguagesObservableArray(dao.id))
-          .pipe(defaultIfEmpty(null))
-          .pipe(map(() => dao))))
-      .subscribe(res => {
-        this.alertService.success('Request Created Successfully!');
-        this.router.navigate(['/request-detail', res.id]);
-      });
+      this.requestService.createRequest(body)
+        .pipe(concatMap(dao =>
+          forkJoin(this.getLanguagesObservableArray(dao.id))
+            .pipe(defaultIfEmpty(null))
+            .pipe(map(() => dao))))
+        .subscribe(res => {
+          this.alertService.success('Request Created Successfully!');
+          this.router.navigate(['/request-detail', res.id]);
+        });
+    }
   }
 
   getLanguagesObservableArray(requestId: number) {
