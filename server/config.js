@@ -7,7 +7,6 @@ module.exports = () => {
 
     const upload = multer({storage: multer.memoryStorage()})
 
-
     const transporter = nodemailer.createTransport(
         {
             pool: true,
@@ -31,7 +30,6 @@ module.exports = () => {
             console.log("SMTP Server setup was successful.");
         }
     });
-
      */
 
     const dbOptions = {

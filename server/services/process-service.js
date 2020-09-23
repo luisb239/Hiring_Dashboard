@@ -97,8 +97,7 @@ module.exports = (requestDb, candidateDb, processDb, phaseDb, infoDb, processUna
         const process = await processDb.getProcessStatusAndTimestamp({candidateId: candidateId, requestId: requestId})
         if (!process) {
             throw new AppError(errors.notFound, "Process not found",
-                `Process of candidate ${candidateId} in request ${requestId} does not exist`
-            )
+                `Process of candidate ${candidateId} in request ${requestId} does not exist`)
         }
         if (process.timestamp !== timestamp) {
             throw new AppError(errors.conflict, "Process not updated",
@@ -336,8 +335,7 @@ module.exports = (requestDb, candidateDb, processDb, phaseDb, infoDb, processUna
 
 
             if (!newTimestamp) {
-                throw new AppError(errors.conflict,
-                    'Could not Update Process Notes',
+                throw new AppError(errors.conflict, 'Could not Update Process Notes',
                     'The process notes have already been updated')
             }
 

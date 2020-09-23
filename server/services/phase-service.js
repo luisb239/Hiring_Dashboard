@@ -23,11 +23,10 @@ module.exports = (phaseDb, infoDb) => {
                 "Phase Not Found",
                 `Phase ${phase} does not exist`)
 
-        const infos = (await infoDb.getInfosByPhase({phase}))
-            .map(info => ({
-                name: info.name,
-                value: info.value
-            }))
+        const infos = (await infoDb.getInfosByPhase({phase})).map(info => ({
+            name: info.name,
+            value: info.value
+        }))
 
         return {
             phase: phaseFound.phase,

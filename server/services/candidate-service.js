@@ -115,12 +115,6 @@ module.exports = (candidateDb, profilesDb, processDb, transaction) => {
         }
     }
 
-    /**
-     * Add profile to candidate info
-     * @param id : number
-     * @param profile : String
-     * @returns {Promise<void>}
-     */
     async function addCandidateProfile({id, profile}) {
         try {
             return await profilesDb.addProfileToCandidate({
@@ -140,15 +134,8 @@ module.exports = (candidateDb, profilesDb, processDb, transaction) => {
             }
             throw e;
         }
-
     }
 
-    /**
-     * Remove profile from candidate info
-     * @param id : number
-     * @param profile : String
-     * @returns {Promise<void>}
-     */
     async function removeCandidateProfile({id, profile}) {
         const rows = await profilesDb.deleteProfileFromCandidate({
             candidateId: id,

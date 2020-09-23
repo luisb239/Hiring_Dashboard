@@ -11,10 +11,6 @@ module.exports = (userDb, roleDb, authModule) => {
         getUserRoles: getUserRoles
     }
 
-    /**
-     * Get users based on filters passed
-     * @param roleId : number
-     */
     async function getUsers({roleId}) {
         return {
             users: await userDb.getUsers({roleId})

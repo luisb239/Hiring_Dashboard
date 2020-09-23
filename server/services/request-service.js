@@ -20,23 +20,6 @@ module.exports = (requestDb, processDb, requestLanguagesDb, authModule, candidat
         addLanguageToRequest: addLanguageToRequest
     }
 
-    /**
-     * Get requests info based on filters passed
-     * @param pageNumber: ?number
-     * @param pageSize: ?number
-     * @param skill : String
-     * @param state : String
-     * @param stateCsl : String
-     * @param profile : String
-     * @param project : String
-     * @param workflow : String
-     * @param minQuantity : ?number
-     * @param maxQuantity : ?number
-     * @param minProgress : ?number
-     * @param maxProgress : ?number
-     * @param targetDate : String
-     * @param userId : ?number
-     */
     async function getRequests({
                                    pageNumber = null, pageSize = null,
                                    skill = null, state = null, stateCsl = null,
@@ -71,10 +54,6 @@ module.exports = (requestDb, processDb, requestLanguagesDb, authModule, candidat
         return {count: result.count};
     }
 
-    /**
-     * Get Info of Request with id
-     * @param id : number - Request ID
-     */
     async function getRequestById({id}) {
         const requestFound = await requestDb.getRequestById({id})
 
