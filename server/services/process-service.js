@@ -135,8 +135,26 @@ module.exports = (requestDb, candidateDb, processDb, phaseDb, infoDb, processUna
                 const candidate = await candidateDb.getCandidateById({id: candidateId, client})
                 const request = await requestDb.getRequestById({id: requestId, client})
 
-                // Email stakeholders if the candidate's process status has been updated
+
+                // Email stakeholders if the candidate's process status has been updated and update the request's progress
                 if (status) {
+                    // if either the new, or previous, process status was 'placed' we need to update
+                    // the request's progress percentage
+                    if (status === 'Placed' || process.status === 'Placed') {
+                        const processesStatus = await processDb.getAllProcessesStatusFromRequest({requestId})
+                        let numberOfPlacedCandidates = processesStatus.filter(s => s.status === 'Placed').length || 0
+                        // Since we are inside a transaction not yet committed, 'processesStatus' does not contain the new changes
+                        const correction = status === 'Placed' ? 1 : -1
+                        numberOfPlacedCandidates += correction
+                        const percentage = numberOfPlacedCandidates * 100 / request.quantity
+                        await requestDb.updateRequest({
+                            id: requestId,
+                            progress: percentage > 100 ? 100 : percentage,
+                            forceUpdate: true
+                        })
+                    }
+
+                    // Email stakeholders
                     await emailService.notifyStatus({
                         id: requestId,
                         oldStatus: process.status,

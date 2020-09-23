@@ -78,7 +78,7 @@ module.exports = (query) => {
                                      description = null, quantity = null,
                                      targetDate = null, skill = null, project = null,
                                      profile = null, dateToSendProfile = null, progress = null,
-                                     observedTimestamp, client = null
+                                     observedTimestamp, client = null, forceUpdate = false
                                  }) {
         const statement = {
             name: 'Update Request',
@@ -94,11 +94,12 @@ module.exports = (query) => {
                 `${requestSchema.profile} = COALESCE($9, ${requestSchema.profile}), ` +
                 `${requestSchema.dateToSendProfile} = COALESCE($10, ${requestSchema.dateToSendProfile}), ` +
                 `${requestSchema.progress} = COALESCE($11, ${requestSchema.progress}), ` +
-                `${requestSchema.timestamp} = CURRENT_TIMESTAMP ` +
-                `WHERE ${requestSchema.id} = $1 AND ${requestSchema.timestamp} = $12 ` +
+                `${requestSchema.timestamp} = CASE WHEN $13 IS TRUE THEN ${requestSchema.table}.${requestSchema.timestamp} ` +
+                `ELSE CURRENT_TIMESTAMP END ` +
+                `WHERE ${requestSchema.id} = $1 AND (${requestSchema.timestamp} = $12 OR $13 IS TRUE)` +
                 `RETURNING ${requestSchema.timestamp};`,
             values: [id, state, stateCsl, description, quantity, targetDate, skill,
-                project, profile, dateToSendProfile, progress, observedTimestamp]
+                project, profile, dateToSendProfile, progress, observedTimestamp, forceUpdate]
         }
         const res = await query(statement, client)
         if (res.rowCount) {
