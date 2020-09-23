@@ -180,20 +180,24 @@ export class RequestDetailComponent implements OnInit {
 
   onSubmit() {
     const values = this.properties.userForm.value.userIdx;
-    this.userService.getRoleIdByName('recruiter')
-      .pipe(concatMap(role =>
-        forkJoin(this.getObservables(values, role.id))
-          .pipe(defaultIfEmpty(null))))
-      .subscribe(() => {
-        this.alertService.success('Recruiters added to this request successfully!');
-        this.getRequestInfo(this.properties.requestId);
-      }, error => {
-        if (error === ErrorType.CONFLICT) {
-          this.alertService.error('The user you were trying to add to the request has already been added.');
-          this.alertService.info('Refreshing request details...');
+    if (values.length > 0) {
+      this.userService.getRoleIdByName('recruiter')
+        .pipe(concatMap(role =>
+          forkJoin(this.getObservables(values, role.id))
+            .pipe(defaultIfEmpty(null))))
+        .subscribe(() => {
+          this.alertService.success('Recruiters added to this request successfully!');
           this.getRequestInfo(this.properties.requestId);
-        }
-      });
+        }, error => {
+          if (error === ErrorType.CONFLICT) {
+            this.alertService.error('The user you were trying to add to the request has already been added.');
+            this.alertService.info('Refreshing request details...');
+            this.getRequestInfo(this.properties.requestId);
+          }
+        });
+    } else {
+      this.alertService.warn('Please select a recruiter first.');
+    }
   }
 
   getObservables(values, roleId: number) {
