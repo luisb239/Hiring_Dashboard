@@ -71,20 +71,20 @@ module.exports = (service) => {
     }
 
     async function addCandidateProfile(req, res) {
-        const success = await service.addCandidateProfile({
+        await service.addCandidateProfile({
             id: req.params.id,
             profile: req.body.profile
         })
-        res.status(200).send(success)
+        res.status(200).send({message: `${req.body.profile} profile added successfully to candidate with id ${req.params.id}`})
     }
 
     async function removeCandidateProfile(req, res) {
         const decodedProfile = Buffer.from(req.params.profile, 'base64').toString('binary')
-        const success = await service.removeCandidateProfile({
+        await service.removeCandidateProfile({
             id: req.params.id,
             profile: decodedProfile
         })
-        res.status(200).send(success)
+        res.status(200).send({message: `${req.body.profile} profile deleted successfully from candidate with id ${req.params.id}`})
     }
 
     async function postCandidate(req, res) {

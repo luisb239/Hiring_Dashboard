@@ -117,7 +117,7 @@ module.exports = (candidateDb, profilesDb, processDb, transaction) => {
 
     async function addCandidateProfile({id, profile}) {
         try {
-            return await profilesDb.addProfileToCandidate({
+            await profilesDb.addProfileToCandidate({
                 candidateId: id,
                 profile: profile
             })
@@ -146,7 +146,6 @@ module.exports = (candidateDb, profilesDb, processDb, transaction) => {
                 "Could not delete profile from candidate's profiles,",
                 ` profile on candidate ${id} not found`)
         }
-        return rows
     }
 
     async function getCandidateCv({id}) {
