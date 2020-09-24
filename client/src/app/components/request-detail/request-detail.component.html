@@ -28,8 +28,8 @@
                   <h5>State</h5>
                   <label>
                     <select formControlName="state">
-                      <option [selected]="true"
-                              [value]="properties.requestList.state">{{properties.requestList.state}}</option>
+                      <option [selected]="true" [value]="properties.requestList.state">{{properties.requestList.state}}
+                      </option>
                       <option *ngFor="let state of getAvailableStates()" [value]="state">{{state}}</option>
                     </select>
                   </label>
@@ -63,8 +63,8 @@
                   <h5>Skill Center</h5>
                   <label>
                     <select formControlName="skill">
-                      <option [selected]="true"
-                              [value]="properties.requestList.skill">{{properties.requestList.skill}}</option>
+                      <option [selected]="true" [value]="properties.requestList.skill">{{properties.requestList.skill}}
+                      </option>
                       <option *ngFor="let skill of getAvailableSkills()" [value]="skill">{{skill}}</option>
                     </select>
                   </label>
@@ -73,8 +73,8 @@
                   <h5>CSL State</h5>
                   <label>
                     <select formControlName="stateCsl">
-                      <option [selected]="true"
-                              [value]="properties.requestList.stateCSL">{{properties.requestList.stateCSL}}</option>
+                      <option [selected]="true" [value]="properties.requestList.stateCSL">
+                        {{properties.requestList.stateCSL}}</option>
                       <option *ngFor="let state of getAvailableStatesCsl()" [value]="state">{{state}}</option>
                     </select>
                   </label>
@@ -83,8 +83,8 @@
                   <h5>Target Date</h5>
                   <label>
                     <select formControlName="targetDate">
-                      <option [selected]="true"
-                              [value]="properties.requestList.targetDate">{{properties.requestList.targetDate}}</option>
+                      <option [selected]="true" [value]="properties.requestList.targetDate">
+                        {{properties.requestList.targetDate}}</option>
                       <option *ngFor="let date of getAvailableTargetDates()" [value]="date">{{date}}</option>
                     </select>
                   </label>
@@ -93,8 +93,8 @@
                   <h5>Profile</h5>
                   <label>
                     <select formControlName="profile">
-                      <option [selected]="true"
-                              [value]="properties.requestList.profile">{{properties.requestList.profile}}</option>
+                      <option [selected]="true" [value]="properties.requestList.profile">
+                        {{properties.requestList.profile}}</option>
                       <option *ngFor="let profile of getAvailableProfiles()" [value]="profile">{{profile}}</option>
                     </select>
                   </label>
@@ -103,7 +103,7 @@
                   <h5>Date To Send Profile</h5>
                   <label>
                     <input formControlName="dateToSendProfile" type="date"
-                           [value]="properties.requestList.dateToSendProfile">
+                      [value]="properties.requestList.dateToSendProfile">
                   </label>
                 </li>
                 <li class="list-group-item">
@@ -112,9 +112,8 @@
                     No available mandatory languages.
                   </p>
                   <div *ngFor="let language of properties.mandatoryLanguages; index as idx">
-                    <mat-checkbox (change)="languagesOnChange($event, true)"
-                                  [(ngModel)]="language.checked" [ngModelOptions]="{standalone: true}"
-                                  [value]="language.language" class="lang">
+                    <mat-checkbox (change)="languagesOnChange($event, true)" [(ngModel)]="language.checked"
+                      [ngModelOptions]="{standalone: true}" [value]="language.language" class="lang">
                       {{language.language}}
                     </mat-checkbox>
                   </div>
@@ -124,15 +123,15 @@
                     No available valued languages.
                   </p>
                   <div *ngFor="let language of properties.valuedLanguages; index as idx">
-                    <mat-checkbox (change)="languagesOnChange($event, false)"
-                                  [(ngModel)]="language.checked" [ngModelOptions]="{standalone: true}"
-                                  [value]="language.language" class="lang">
+                    <mat-checkbox (change)="languagesOnChange($event, false)" [(ngModel)]="language.checked"
+                      [ngModelOptions]="{standalone: true}" [value]="language.language" class="lang">
                       {{language.language}}
                     </mat-checkbox>
                   </div>
                 </li>
               </ul>
-              <button type="submit" class="btn btn-primary add">Update Request</button>
+              <button *ngIf="authService.isRecruiter || authService.isTeamLeader || authService.isJobOwner"
+                type="submit" class="btn btn-primary add">Update Request</button>
             </form>
           </div>
         </div>
@@ -142,44 +141,43 @@
             <table class="table">
               <caption style="display: none">Request Info</caption>
               <thead>
-              <tr>
-                <th id="email">Email</th>
-                <th id="role">Role</th>
-              </tr>
+                <tr>
+                  <th id="email">Email</th>
+                  <th id="role">Role</th>
+                </tr>
               </thead>
               <tbody>
-              <tr *ngFor="let user of properties.userRoles">
-                <td>
-                  {{user.email}}
-                </td>
-                <td>
-                  {{user.role}}
-                </td>
-              </tr>
+                <tr *ngFor="let user of properties.userRoles">
+                  <td>
+                    {{user.email}}
+                  </td>
+                  <td>
+                    {{user.role}}
+                  </td>
+                </tr>
               </tbody>
             </table>
           </div>
-          <form [formGroup]="properties.userForm" (submit)="onSubmit()"
-                *ngIf='authService.isTeamLeader()'>
+          <form [formGroup]="properties.userForm" (submit)="onSubmit()" *ngIf='authService.isTeamLeader()'>
             <table class="table-responsive-xl">
               <caption style="display: none">Available Candidates Table</caption>
               <thead>
-              <tr>
-                <th scope="col">#</th>
-                <th scope="col">Email</th>
-                <th scope="col">Assign</th>
-              </tr>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">Email</th>
+                  <th scope="col">Assign</th>
+                </tr>
               </thead>
               <tbody>
-              <tr *ngFor="let user of properties.users; index as i">
-                <th scope="row">{{ i + 1 }}</th>
-                <td class="td">
-                  {{user.userEmail}}
-                </td>
-                <td class="form-check assign td">
-                  <input (change)="usersOnChange(i, $event)" class="form-check-input" type="checkbox">
-                </td>
-              </tr>
+                <tr *ngFor="let user of properties.users; index as i">
+                  <th scope="row">{{ i + 1 }}</th>
+                  <td class="td">
+                    {{user.userEmail}}
+                  </td>
+                  <td class="form-check assign td">
+                    <input (change)="usersOnChange(i, $event)" class="form-check-input" type="checkbox">
+                  </td>
+                </tr>
             </table>
             <button type="submit" class="btn btn-primary add">Add Recruiter</button>
           </form>
@@ -188,22 +186,21 @@
             <table class="table">
               <caption style="display: none">Candidates Info</caption>
               <thead>
-              <tr>
-                <th id="name">Name</th>
-                <th id="status">Process Status</th>
-              </tr>
+                <tr>
+                  <th id="name">Name</th>
+                  <th id="status">Process Status</th>
+                </tr>
               </thead>
               <tbody>
-              <tr *ngFor="let process of properties.processes"
-                  [routerLink]="['/candidates/', process.candidateId]"
+                <tr *ngFor="let process of properties.processes" [routerLink]="['/candidates/', process.candidateId]"
                   [state]="{candidateId: process.candidateId}">
-                <td>
-                  {{process.candidateName}}
-                </td>
-                <td>
-                  {{process.status}}
-                </td>
-              </tr>
+                  <td>
+                    {{process.candidateName}}
+                  </td>
+                  <td>
+                    {{process.status}}
+                  </td>
+                </tr>
               </tbody>
             </table>
           </div>

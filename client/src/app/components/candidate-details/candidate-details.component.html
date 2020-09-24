@@ -8,7 +8,7 @@
           <h6 (click)="downloadCv()" class="inline cv">{{properties.candidate.cv}}</h6>
         </div>
         <div *ngIf="properties.newCandidate && properties.newCandidate.cvVersionId === properties.candidate.cvVersionId"
-             class="property">
+          class="property">
           <h5 class="inline">CV:</h5>
           <h6 (click)="downloadCv()" class="inline cv">{{properties.newCandidate.cv}}</h6>
         </div>
@@ -32,7 +32,7 @@
         <div class="custom-file">
           <input (change)="handleFileInput($event.target.files)" type="file" class="custom-file-input" id="file">
           <label class="custom-file-label"
-                 for="file">{{properties.fileToUpload !== null ? properties.fileToUpload.name : 'Update File'}}</label>
+            for="file">{{properties.fileToUpload !== null ? properties.fileToUpload.name : 'Update File'}}</label>
         </div>
         <div class="property">
           <h5>Available?</h5>
@@ -44,7 +44,7 @@
         <div class="property">
           <h5>Profile Information</h5>
           <textarea class="form-control inline" id="info" name="info"
-                    formControlName="info">{{properties.candidate.profileInfo}}</textarea>
+            formControlName="info">{{properties.candidate.profileInfo}}</textarea>
           <p *ngIf="properties.newCandidate && properties.newCandidate.profileInfo &&
            properties.newCandidate.profileInfo !== properties.candidate.profileInfo" class="new-value">
             {{properties.newCandidate.profileInfo}}
@@ -57,7 +57,8 @@
             <thead>
               <tr>
                 <th scope="col">Profile</th>
-                <th scope="col">Remove</th>
+                <th *ngIf="authService.isRecruiter || authService.isTeamLeader || authService.isJobOwner" scope="col">
+                  Remove</th>
               </tr>
             </thead>
             <tbody>
@@ -65,7 +66,8 @@
                 <td class="td">
                   <h6>{{profile}}</h6>
                 </td>
-                <td class="td assign">
+                <td *ngIf="authService.isRecruiter || authService.isTeamLeader || authService.isJobOwner"
+                  class="td assign">
                   <button type='button' (click)='handleProfileDelete(profile)' class="btn-sm btn-danger">X</button>
                 </td>
               </tr>
@@ -86,7 +88,8 @@
                   <h6>{{profile}}</h6>
                 </td>
                 <td class="td assign">
-                  <button type='button' (click)='handleProfileDelete(profile)' class="btn-sm btn-danger">&times;</button>
+                  <button type='button' (click)='handleProfileDelete(profile)'
+                    class="btn-sm btn-danger">&times;</button>
                 </td>
               </tr>
           </table>
@@ -102,10 +105,13 @@
             </mat-select>
           </mat-form-field>
         </div>
-        <button *ngIf="!properties.newCandidate" class="btn btn-primary updateCandidateSubmit">Update Candidate</button>
-        <button *ngIf="properties.newCandidate" class="btn btn-danger updateCandidateSubmit">Merge and Update
-          Candidate
-        </button>
+        <div *ngIf="authService.isRecruiter || authService.isTeamLeader || authService.isJobOwner">
+          <button *ngIf="!properties.newCandidate" class="btn btn-primary updateCandidateSubmit">Update
+            Candidate</button>
+          <button *ngIf="properties.newCandidate" class="btn btn-danger updateCandidateSubmit">Merge and Update
+            Candidate
+          </button>
+        </div>
       </form>
     </div>
     <div class="procs" *ngIf="hasProcesses()">

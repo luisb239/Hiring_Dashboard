@@ -17,6 +17,7 @@ import {FormBuilder} from '@angular/forms';
 import {AlertService} from 'src/app/services/alert/alert.service';
 import {Buffer} from 'buffer';
 import {ErrorType} from '../../services/common-error';
+import { AuthService } from 'src/app/services/auth/auth.service';
 
 @Component({
   selector: 'app-candidate-details',
@@ -34,7 +35,8 @@ export class CandidateDetailsComponent implements OnInit {
     private requestPropsService: RequestPropsService,
     private router: Router,
     private formBuilder: FormBuilder,
-    private alertService: AlertService
+    private alertService: AlertService,
+    public authService: AuthService
   ) {
   }
 
