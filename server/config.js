@@ -80,6 +80,7 @@ module.exports = () => {
                 {"resource": "auth", "action": "POST"},
 
                 {"resource": "requests", "action": "GET"},
+                {"resource": "requests", "action": "POST"},
                 {"resource": "requests", "action": "PUT"},
                 {"resource": "requests", "action": "PATCH"},
                 {"resource": "requests", "action": "DELETE"},
@@ -117,6 +118,7 @@ module.exports = () => {
                 {"resource": "process", "action": "GET"},
 
                 {"resource": "candidates", "action": "GET"},
+                {"resource": "candidates", "action": "POST"},
                 {"resource": "candidates", "action": "PATCH"},
                 {"resource": "candidates", "action": "DELETE"},
 

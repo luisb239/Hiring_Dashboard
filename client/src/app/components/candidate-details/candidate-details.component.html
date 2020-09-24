@@ -57,7 +57,8 @@
             <thead>
               <tr>
                 <th scope="col">Profile</th>
-                <th *ngIf="authService.isRecruiter || authService.isTeamLeader || authService.isJobOwner" scope="col">
+                <th *ngIf="authService.isRecruiter() || authService.isTeamLeader() || authService.isJobOwner()"
+                  scope="col">
                   Remove</th>
               </tr>
             </thead>
@@ -66,7 +67,7 @@
                 <td class="td">
                   <h6>{{profile}}</h6>
                 </td>
-                <td *ngIf="authService.isRecruiter || authService.isTeamLeader || authService.isJobOwner"
+                <td *ngIf="authService.isRecruiter() || authService.isTeamLeader() || authService.isJobOwner()"
                   class="td assign">
                   <button type='button' (click)='handleProfileDelete(profile)' class="btn-sm btn-danger">X</button>
                 </td>
@@ -105,7 +106,7 @@
             </mat-select>
           </mat-form-field>
         </div>
-        <div *ngIf="authService.isRecruiter || authService.isTeamLeader || authService.isJobOwner">
+        <div *ngIf="authService.isRecruiter() || authService.isTeamLeader() || authService.isJobOwner()">
           <button *ngIf="!properties.newCandidate" class="btn btn-primary updateCandidateSubmit">Update
             Candidate</button>
           <button *ngIf="properties.newCandidate" class="btn btn-danger updateCandidateSubmit">Merge and Update

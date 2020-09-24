@@ -21,6 +21,7 @@ export class HttpErrorInterceptor implements HttpInterceptor {
             this.alert.error('Your session has expired. Please log in.');
             this.authService.resetUserInfo();
             this.router.navigate(['/home']);
+            return throwError(error);
           } else {
             let errorMessage;
             let errorType: ErrorType;

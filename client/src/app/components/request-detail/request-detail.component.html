@@ -130,7 +130,7 @@
                   </div>
                 </li>
               </ul>
-              <button *ngIf="authService.isRecruiter || authService.isTeamLeader || authService.isJobOwner"
+              <button *ngIf="authService.isRecruiter() || authService.isTeamLeader() || authService.isJobOwner()"
                 type="submit" class="btn btn-primary add">Update Request</button>
             </form>
           </div>
