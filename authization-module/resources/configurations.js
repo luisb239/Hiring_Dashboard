@@ -10,7 +10,7 @@ module.exports = {
      * change google qauthentication options
      * @param newConfiguration
      */
-    changeGoogleAuthenticationOptions: newConfiguration => {
+    changeGoogleOauth2AuthenticationOptions: newConfiguration => {
         newConfiguration.callbackUrl = config.google_oauth2.callbackUrl;
         config.google_oauth2 = newConfiguration
 
@@ -18,13 +18,13 @@ module.exports = {
 
         const strat = require('../common/middleware/authentication-middleware/strategies/google-strat')();
 
-        passport.use('google', strat);
+        passport.use('google_oauth2', strat);
     },
     /**
      *
      * @param newConfiguration
      */
-    changeAzureADAuthenticationOptions: newConfiguration => {
+    changeOffice365Oauth2AuthenticationOptions: newConfiguration => {
         newConfiguration.callbackUrl = config.office365_oauth2.callbackUrl;
         config.office365_oauth2 = newConfiguration;
 
@@ -32,10 +32,10 @@ module.exports = {
 
         const strat = require('../common/middleware/authentication-middleware/strategies/azure-strat')();
 
-        passport.use('azure_ad_oauth2', strat);
+        passport.use('office365_oauth2', strat);
     },
 
-    changeSamlAuthenticationOptions: newConfiguration => {
+    changeOffice365SamlAuthenticationOptions: newConfiguration => {
         newConfiguration.callbackUrl = config.office365_saml.callbackUrl;
         config.office365_saml = newConfiguration;
 
@@ -43,7 +43,7 @@ module.exports = {
 
         const strat = require('../common/middleware/authentication-middleware/strategies/saml-strat')();
 
-        passport.use('saml', strat);
+        passport.use('office365_saml', strat);
     },
 
     getRbacOptions: async () => {
@@ -79,10 +79,10 @@ module.exports = {
         return {roles, permissions: formattedPermissions, grants: formattedGrants};
     },
 
-    getGoogleOptions: async () => getIdpOptions('google_oauth2'),
+    getGoogleOauth2Options: async () => getIdpOptions('google_oauth2'),
 
-    getAzureAdOptions: async () => getIdpOptions('office365_oauth2'),
+    getOffice365Oauth2Options: async () => getIdpOptions('office365_oauth2'),
 
-    getSamlOptions: async () => getIdpOptions('office365_saml'),
+    getOffice365SamlOptions: async () => getIdpOptions('office365_saml'),
 
 };

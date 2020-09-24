@@ -102,6 +102,7 @@ const setupSuperuser = async () => {
 };
 
 
+
 const createRbacRoles = async () => {
     const rolesNames = roleDal.get().then(roles => roles.map(role => role.role));
     config.rbac.createRoles(await rolesNames, true);
@@ -109,9 +110,8 @@ const createRbacRoles = async () => {
 
 
 const createParentGrants = async () => {
-    const {getRole, grant} = config.rbac;
     const roles = await roleDal.getWithParents();
     return Promise.all(roles.map(async ({parent_role, role}) =>
         roleDal.getSpecificById(parent_role)
-            .then(async parentRole => grant(await getRole(parentRole.role), await getRole(role)))));
+            .then(async parentRole => config.rbac.grant(await config.rbac.getRole(parentRole.role), await config.rbac.getRole(role)))));
 };

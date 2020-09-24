@@ -87,9 +87,13 @@ const getFunctionalities = () => {
 
 module.exports = {
 
-    setup: async ({ app, db, rbac_opts }) => {
+    setup: async ({app, db, rbac_opts, https, strategies}) => {
 
         if (app && db) {
+
+            strategies && Object.keys(strategies).map(
+                stratName => config[stratName] = strategies[stratName]
+            )
 
             const expressSession = require('express-session');
 
@@ -110,8 +114,6 @@ module.exports = {
                 UserId: session.passport.user,
             });
 
-            console.log(config.env === 'production');
-
             app.set('trust proxy', 1);
 
             const
@@ -130,10 +132,8 @@ module.exports = {
                     secret: config.cookieSecret,
                     cookie: {
                         maxAge: 1000 * 60 * 60 * 24,
-                        /* Uncomment to run in cloud environments
-                        sameSite: config.env === 'production' ? 'none' : false,
-                        secure: config.env === 'production'
-                         */
+                        sameSite: https ? 'none' : false,
+                        secure: https ? true : false
                     },
                 };
 

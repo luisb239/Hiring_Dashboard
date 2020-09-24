@@ -1,13 +1,14 @@
 const
     passport = require('passport'),
-    passportUtils = require('../../util/passport-utils');
+    config = require('../../config/config'),
+    passportUtils = require('../../util/passport-utils')
 
 // Setup available authentication strategies
-passport.use('saml', require('./strategies/saml-strat')());
-passport.use('openid', require('./strategies/openId-strat')());
-passport.use('azure_ad_oauth2', require('./strategies/azure-strat')());
-passport.use('google', require('./strategies/google-strat')());
+config.office365_saml.callbackUrl && passport.use('office365_saml', require('./strategies/saml-strat')())
+config.office365_oauth2.callbackUrl && passport.use('office365_oauth2', require('./strategies/azure-strat')());
+config.google_oauth2.callbackUrl && passport.use('google_oauth2', require('./strategies/google-strat')());
 passport.use('local', require('./strategies/local-strat')());
+
 
 /**
  *
@@ -24,7 +25,7 @@ const refToUser = (userRef, done) => {
  * @param user
  * @param done - callback
  */
-const userToRef=(user, done)=> {
+const userToRef = (user, done) => {
     done(null, user.id);
 };
 

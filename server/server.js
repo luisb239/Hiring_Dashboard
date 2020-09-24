@@ -15,7 +15,7 @@ app.use(bodyParser.json());
 const config = require('./config.js')()
 const authModule = require('../authization-module/authization')
 
-authModule.setup({app: app, db: config.dbOptions, rbac_opts: config.jsonObj})
+authModule.setup({app: app, db: config.dbOptions, rbac_opts: config.jsonObj, https: false, strategies: undefined})
     .then(async (auth) => {
         const db = require('./dals')
         const services = require('./services')(db, auth, config.transporter)

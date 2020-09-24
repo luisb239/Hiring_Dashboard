@@ -1,24 +1,22 @@
 {
   "google_oauth2": {
-    "google_client_id": "523982739771-2hkfdqls3uapvlf0c111i6qhnidfgt44.apps.googleusercontent.com",
-    "google_client_secret": "vs0R8tvgMv2w2rhuHtRPT9nK",
-    "callbackUrl": "http://localhost:8082/api/authentications/google/callback"
+    "client_id": null,
+    "client_secret": null,
+    "callbackUrl": null
   },
   "office365_oauth2": {
-    "azure_client_id": "535114c4-ce91-4a25-9d26-d7700e4f0930",
-    "azure_client_secret": "2W-Rgjb_xvm.jg1Ujy7-EW9_4c5dmd3c2s",
-    "callbackUrl": "http://localhost:8080/hd/auth/azure/callback",
-    "tenant": "e247b35f-287d-4d27-be25-2a6605c11af7"
+    "client_id": "535114c4-ce91-4a25-9d26-d7700e4f0930",
+    "client_secret": "2W-Rgjb_xvm.jg1Ujy7-EW9_4c5dmd3c2s",
+    "tenant": "e247b35f-287d-4d27-be25-2a6605c11af7",
+    "callbackUrl": "http://localhost:8080/hd/auth/azure/callback"
   },
   "office365_saml": {
-    "callbackUrl": "not-defined-yet",
-    "entryPoint": "https://login.microsoftonline.com/bb367ab9-9da9-455e-b938-fd65cd29f5ae/saml2",
-    "issuer": "51ca8d6f-0e88-4e3c-9e49-ae2920ef2c46",
-    "certificate": "MIIC8DCCAdigAwIBAgIQHsZCEG1T/p5BDiFviQA4VTANBgkqhkiG9w0BAQsFADA0MTIwMAYDVQQDEylNaWNyb3NvZnQgQXp1cmUgRmVkZXJhdGVkIFNTTyBDZXJ0aWZpY2F0ZTAeFw0yMDA3MTAxNjE1MDRaFw0yMzA3MTAxNjE1MDRaMDQxMjAwBgNVBAMTKU1pY3Jvc29mdCBBenVyZSBGZWRlcmF0ZWQgU1NPIENlcnRpZmljYXRlMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA2+qKxsTAwGkDGZDg3x/dm9e5yV4lWUawei9niHydgKwExz6mFoHkYm3U1aGl6MSoXN2BXVCT1Yd7BAQQWK4XymTz/YsSXPUNvYn4vszMCXu6hP+Z0Pmeuj7LNCOPFA6sHNkvmhciXFi68eQNg6nuKqkLLIyAjHMyaveiVbcBly6bSIkQ/2iB5BweDZnW4g/jy7pJelXNIhLNaeOuvogm1urwJed8kFBaI5xhMhLKfEPvOgwZlZPXq38Ie6pLMDVjh8HohKcsh4DoWrxfQzUh/tvgwMhqUP1D5bvrTEw7pzGDdmgOIVUsEuYDI8d2kwgNfxUSIw4arYncWhJrwLvPLQIDAQABMA0GCSqGSIb3DQEBCwUAA4IBAQCP9jsaY6zF26uGQeDjgrTtZ0SD8LlsO58ROYIL+jDRJvmk3bTWTiRRB6NjV4zoOJva64GJPH7A98A59QYR9enbvFm2q7odzB28V8iym5X4MJ/qeL6R6iiQk9+jeczurAhocsledoWXG89zNa1HlcUhZ66XZo2lZG5vnX/YI6af0UY0TNCF8zoqk8HsQxCP6Q34qsyNsh35WeU77/hKp8zD+oZG1fl1aGsEtIRHDiyFjSSAeRfFgPRY8CK8nDEVKFVYyvyceQLKpqY1saaTMWnwtjha8F0Z8ZQNNq/gG0NnQF8KoZSJKrZF4qnXALu7jjAnZDwEUNSkyF+gFPrJOOtj"
+    "entryPoint": null,
+    "issuer": null,
+    "certificate": null,
+    "callbackUrl": null
   },
-  "database_opts": {},
   "rbac": {},
-  "webAppUri": "http://localhost:4200",
   "isModuleSetUp": false,
   "cookieSecret": "justasecretstring"
 }

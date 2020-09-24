@@ -97,7 +97,7 @@ module.exports = (service) => {
             currentUsername: req.user.username
         })
 
-        res.status(201).send({
+        res.status(200).send({
             message: 'User added to the request successfully'
         })
     }
@@ -119,7 +119,7 @@ module.exports = (service) => {
             timestamp: req.body.timestamp
         })
 
-        res.status(201).send({
+        res.status(200).send({
             newTimestamp,
             message: `Request ${req.params.id} updated successfully`
         })

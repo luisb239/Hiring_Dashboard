@@ -27,7 +27,7 @@ module.exports = {
      * @param next
      */
     usingGoogle: (req, res, next) => {
-        passport.authenticate('google', {scope: ['profile']})(req, res, next);
+        passport.authenticate('google_oauth2', {scope: ['profile']})(req, res, next);
     },
 
     /**
@@ -37,7 +37,7 @@ module.exports = {
      * @param next
      */
     usingGoogleCallback: (req, res, next) => {
-        passport.authenticate('google', {failWithError: true}, function (err, user, info) {
+        passport.authenticate('google_oauth2', {failWithError: true}, function (err, user, info) {
             if (!user || err) {
                 return next(err);
             }
@@ -52,7 +52,7 @@ module.exports = {
      * @param next
      */
     usingSaml: (req, res, next) => {
-        passport.authenticate('saml')(req, res, next);
+        passport.authenticate('office365_saml')(req, res, next);
     },
     /**
      *
@@ -61,7 +61,7 @@ module.exports = {
      * @param next
      */
     usingSamlCallback: (req, res, next) => {
-        passport.authenticate('saml', {failWithError: true}, (err, user, info) => {
+        passport.authenticate('office365_saml', {failWithError: true}, (err, user, info) => {
             if (!user || err) {
                 return next(err);
             }
@@ -86,7 +86,7 @@ module.exports = {
      * @param next
      */
     usingOffice365: (req, res, next) => {
-        passport.authenticate('azure_ad_oauth2')(req, res, next);
+        passport.authenticate('office365_oauth2')(req, res, next);
     },
 
     /**
@@ -96,7 +96,7 @@ module.exports = {
      * @param next
      */
     usingOffice365Callback: (req, res, next) => {
-        passport.authenticate('azure_ad_oauth2', {failWithError: true}, function (err, user, info) {
+        passport.authenticate('office365_oauth2', {failWithError: true}, function (err, user, info) {
             if (!user || err) {
                 return next(err);
             }
