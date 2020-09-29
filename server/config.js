@@ -22,7 +22,7 @@ module.exports = () => {
             }
         }
     )
-    /*
+
     transporter.verify(function (error) {
         if (error) {
             console.log(error);
@@ -30,7 +30,6 @@ module.exports = () => {
             console.log("SMTP Server setup was successful.");
         }
     });
-     */
 
     const dbOptions = {
         "host": process.env.PGHOST,

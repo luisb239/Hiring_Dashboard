@@ -13,17 +13,22 @@ module.exports = (userDb, transporter) => {
     async function notifyStatus({id, oldStatus, newStatus, candidate, request}) {
         await sendMultipleEmails({
             id, emailTitle: "Candidate Status Changed",
-            emailContent: templates.statusMessage(candidate.name, request.description, oldStatus, newStatus)})
+            emailContent: templates.statusMessage(candidate.name, request.description, oldStatus, newStatus)
+        })
     }
 
     async function notifyMoved({id, oldPhase, newPhase, candidate, request}) {
-        await sendMultipleEmails({id, emailTitle: "Moved Candidate",
-            emailContent: templates.movedMessage(candidate.name, request.description, oldPhase, newPhase)})
+        await sendMultipleEmails({
+            id, emailTitle: "Moved Candidate",
+            emailContent: templates.movedMessage(candidate.name, request.description, oldPhase, newPhase)
+        })
     }
 
     async function notifyAssigned({userId, request, currentUsername}) {
-        await sendSingularEmail({userId, emailTitle: "New Request Assignment",
-            emailContent: templates.assignedMessage(request.description, currentUsername)})
+        await sendSingularEmail({
+            userId, emailTitle: "New Request Assignment",
+            emailContent: templates.assignedMessage(request.description, currentUsername)
+        })
     }
 
     async function sendMultipleEmails({id, emailTitle, emailContent}) {
@@ -51,12 +56,12 @@ module.exports = (userDb, transporter) => {
     }
 
     function sendMail(message) {
-        // transporter.sendMail(message, (error) => {
-        //     if (error) {
-        //         console.error("Message not sent. Error -> " + error)
-        //     } else {
-        //         console.log("Message Sent.")
-        //     }
-        // })
+        transporter.sendMail(message, (error) => {
+            if (error) {
+                console.error("Message not sent. Error -> " + error)
+            } else {
+                console.log("Message Sent.")
+            }
+        })
     }
 }
