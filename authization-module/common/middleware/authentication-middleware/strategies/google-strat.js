@@ -4,8 +4,8 @@ module.exports = function () {
         strategyCallback = require('./strats-utils');
 
     return new GoogleStrategy({
-            clientID: google.google_client_id,
-            clientSecret: google.google_client_secret,
+            clientID: google.client_id,
+            clientSecret: google.client_secret,
             callbackURL: google.callbackUrl,
         },
         (accessToken, refreshToken, profile, done) => strategyCallback(profile.id, 'google', profile.displayName, 'EasterEgg123', 'oauth2', 'google', done));

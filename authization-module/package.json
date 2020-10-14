@@ -9,7 +9,7 @@
     "reportFile": "test-reporter.xml",
     "indent": 4
   },
-  "version": "1.0.40",
+  "version": "1.0.52",
   "description": "Module for authentication and authorization",
   "main": "authization.js",
   "scripts": {
@@ -27,12 +27,11 @@
     "express-session": "^1.17.0",
     "express-session-sequelize": "^2.2.0",
     "jsonwebtoken": "^8.5.1",
-    "lodash": "^4.17.20",
+    "lodash": "^4.17.15",
     "mariadb": "^2.3.1",
     "moment": "^2.25.3",
     "mysql2": "^2.1.0",
     "node-cron": "^2.0.3",
-    "node-forge": "^0.10.0",
     "passport": "^0.4.1",
     "passport-azure-ad-oauth2": "0.0.4",
     "passport-google-oauth20": "^2.0.0",
@@ -45,6 +44,7 @@
     "sequelize": "^5.21.9"
   },
   "devDependencies": {
+    "express": "^4.17.1",
     "jest": "^26.0.1",
     "jest-sonar-reporter": "^2.0.0",
     "jsdoc": "^3.6.5"

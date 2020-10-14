@@ -25,7 +25,8 @@
       <ng-template #loggedIn>
         <ul class="navbar-nav">
           <li class="nav-item">
-            <a [routerLinkActive]="['active']" [routerLink]="['/board']" class="nav-link">
+            <a *ngIf='authService.isRecruiter() || authService.isTeamLeader() || authService.isJobOwner()'
+              [routerLinkActive]="['active']" [routerLink]="['/board']" class="nav-link">
               Board
             </a>
           </li>
@@ -38,8 +39,8 @@
               <a [routerLinkActive]="['active']" [routerLink]="['/all-requests']" class="dropdown-item">
                 All Requests
               </a>
-              <a *ngIf='authService.isJobOwner()' [routerLinkActive]="['active']"
-                 [routerLink]="['/create-request']" class="dropdown-item">
+              <a *ngIf='authService.isJobOwner()' [routerLinkActive]="['active']" [routerLink]="['/create-request']"
+                class="dropdown-item">
                 Create Request
               </a>
             </div>
@@ -54,7 +55,7 @@
                 Search Candidates
               </a>
               <a *ngIf='authService.isRecruiter() || authService.isTeamLeader()' [routerLinkActive]="['active']"
-                 [routerLink]="['/create-candidate']" class="dropdown-item">
+                [routerLink]="['/create-candidate']" class="dropdown-item">
                 Create Candidate
               </a>
             </div>

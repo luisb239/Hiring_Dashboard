@@ -34,6 +34,7 @@ describe("Module testing", () => {
 
         const createdUser = await modulesFunctionalities.user.create(testUser.username, testUser.password)
         modulesFunctionalities.user.delete(createdUser.id)
+        console.log(createdUser)
 
         expect(createdUser.username === testUser.username).toBeTruthy()
 

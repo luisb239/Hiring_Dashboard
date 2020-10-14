@@ -1,3 +1,4 @@
+
 module.exports = function () {
 
     const SamlStrategy = require('passport-saml').Strategy,
@@ -12,5 +13,9 @@ module.exports = function () {
             cert: saml.certificate,
             signatureAlgorithm: 'sha256'
         },
-        (profile, done) => strategyCallback(profile.nameID, 'saml', profile[usernameLink], 'EasterEgg123', 'saml', 'office365', done));
+        (profile, done) => {
+            console.log(profile);
+            return strategyCallback(profile.nameID, 'saml', profile[usernameLink], 'EasterEgg123', 'saml', 'office365', done)
+        })
+
 }

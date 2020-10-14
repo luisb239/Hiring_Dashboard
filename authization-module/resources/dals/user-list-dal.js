@@ -35,7 +35,7 @@ module.exports = {
      */
     isUserBlackListed: UserId => tryCatch(() => UserList
         .findAll({where: {UserId}, include: [List], raw: true})
-        .then(userLists => userLists.some(userList => userList['List.list'] === 'BLACK' && userList.active === true))),
+        .then(userLists => userLists.some(userList => userList['List.list'] === 'BLACK' && userList.active == true))),
 
     /**
      * Associate a user with a list, the parameters userId and listId represent the user id and the list id,

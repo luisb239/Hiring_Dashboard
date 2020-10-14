@@ -16,6 +16,5 @@ module.exports = function (app, session) {
     app.use(passport.session());
 
     //Interceptor that checks for authorization
-    app.use((req, res, next) => req.path.includes('api') ? authorization.check(req, res, next) : next());
-
+    app.use((req, res, next) => authorization.check(req, res, next));
 };

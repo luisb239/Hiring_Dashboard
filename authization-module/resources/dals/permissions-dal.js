@@ -1,3 +1,4 @@
+
 const
     tryCatch = require('../../common/util/functions-utils'),
     Permission = require('../sequelize-model').Permission,

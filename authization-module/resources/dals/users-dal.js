@@ -26,8 +26,8 @@ module.exports = {
      * @param {string} idp the id of an IDP
      * @returns {Promise<*|undefined>}
      */
-    getByIdp: idp => tryCatch(async () => {
-        const [firstIdp] = await Idp.findAll({where: {idp_id: idp}});
+    getByIdp: (idp, idpName) => tryCatch(async () => {
+        const [firstIdp] = await Idp.findAll({where: {idp_id: idp, idpname: idpName}});
         return firstIdp == null ? null : getById(firstIdp.user_id);
     }),
 
@@ -69,6 +69,8 @@ module.exports = {
      * @returns {Promise<{password: *, updater: *, username: *}>}
      */
     create: (username, password, updater) => tryCatch(() => User.create({username, password, updater})),
+
+    findOrCreate: (username, password) => tryCatch(() => User.findOrCreate({where: {username}, defaults: {password}})),
 
     createMultiple: userArray => tryCatch(() => User.bulkCreate(userArray)),
 

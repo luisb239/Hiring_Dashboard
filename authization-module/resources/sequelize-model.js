@@ -122,6 +122,7 @@ const updateSaltHashAndPassword = async user => {
 };
 
 
+
 User.beforeCreate(setSaltHashAndPassword);
 User.beforeBulkUpdate(updateSaltHashAndPassword);
 
@@ -271,6 +272,7 @@ const updateUserListHistory = async options => {
 };
 
 
+
 UserList.afterCreate(invalidateSessions);
 UserRoles.afterCreate(createUserRoleHistory);
 User.afterCreate(createUserHistory);
@@ -290,6 +292,8 @@ cron.schedule('*/5 * * * *', async () => {
     await UserRoles.update({active: false}, {where: {end_date: {[Op.lt]: new Date()}, active: true}});
     await UserList.update({active: false}, {where: {end_date: {[Op.lt]: new Date()}, active: true}});
 });
+
+
 
 
 exports.Permission = Permission;
