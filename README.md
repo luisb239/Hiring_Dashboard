@@ -1,5 +1,3 @@
-Project carried out within the scope of Project and Seminary course inserted in the Computer Science and Engineering Degree at the Instituto Superior de Engenharia de Lisboa.
-
 # Hiring Dashboard
 
 Hiring Dashboard is a Web application to support the recruitment process of an IT business.
